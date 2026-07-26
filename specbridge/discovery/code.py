@@ -38,7 +38,7 @@ _SOURCE_MAP: dict[str, tuple[str, str]] = {
 
 # Function/class definition pattern (multi-language)
 _RE_FUNC_DEF = re.compile(
-    r"^"
+    r"^\s*"
     r"(?:"
     r"(?:\s*(?:public|private|protected|static|async|export|pub|override"
     r"|abstract|virtual|sealed|internal|open)\s+)*"

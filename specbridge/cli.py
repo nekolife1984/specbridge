@@ -104,7 +104,6 @@ def impact(dir, spec_id, output_fmt):
     # If no exact match, try merging heuristic adapter for broader search
     if not find_spec_nodes(graph, spec_id):
         from specbridge.adapters.heuristic import HeuristicAdapter
-        from specbridge.adapters import merge_graphs
 
         heuristic = HeuristicAdapter()
         if heuristic is not adapter:
