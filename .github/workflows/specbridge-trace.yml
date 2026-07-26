@@ -71,14 +71,14 @@ jobs:
         run: specbridge analyze --merge --format html 2>&1
 
       - name: 📎 Upload trace artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: specbridge-trace
           path: .specbridge/trace.html
           retention-days: 7
 
       - name: 📎 Upload snapshot artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: specbridge-snapshot
           path: .specbridge/snapshot.json
