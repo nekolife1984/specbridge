@@ -1,18 +1,19 @@
 ---
 name: specbridge
 description: "Use specbridge: install, run, analyze, check drift, MCP."
-version: 1.0.0
+version: 1.1.0
 author: Hermes Agent
-tags: [specbridge, traceability, spec-driven, heuristic, mcp]
+tags: [specbridge, traceability, spec-driven, heuristic, mcp, call-graph]
 ---
 
 # specbridge — Spec↔Code Traceability Tool
 
-**specbridge** maps relationships between design documents and source code without modifying either. It detects coverage gaps, drift, impact, and boundary violations across 18 programming languages.
+**specbridge** maps relationships between design documents and source code without modifying either. It detects coverage gaps, drift, impact, boundary violations, and **transitive (indirect) impact** via call graph analysis across 18 programming languages.
 
 ## When to Use This Skill
 
 - **Analyze traceability**: "What specs does this code implement?" or "What code implements this spec?"
+- **Transitive impact**: "What files are indirectly impacted via function calls?"
 - **Check drift**: "Did the code diverge from the design docs since the last snapshot?"
 - **CI gate**: "Block this PR if specs and code are out of sync."
 - **Coverage report**: "Which specs have no implementing code yet?"
@@ -28,6 +29,9 @@ pip install git+https://github.com/nekolife1984/specbridge.git
 # Or local clone
 git clone https://github.com/nekolife1984/specbridge.git
 cd specbridge && pip install -e ".[dev]"
+
+# Optional: AST-based function extraction (Python/TS/Go/Rust)
+pip install "specbridge[ast]"
 ```
 
 ## Quick Start (for any project)
@@ -65,6 +69,8 @@ This discovers all spec sections (Markdown headings) and code files (18 language
 |---------|-------------|-------------|
 | `analyze` | Build trace graph and show coverage | First command to run; daily check |
 | `impact --spec-id <id>` | Find what implements a spec | "What files implement spec X?" |
+| `impact --spec-id <id> --call-graph` | Include transitive (indirect) impact | "What else is affected via call chains?" |
+| `call-graph --spec-id <id>` | Standalone call graph with transitive impact | Deep dive into indirect dependencies |
 | `coverage` | Show spec coverage stats | "Are all specs covered?" |
 | `snapshot` | Save current state as baseline | Before making changes |
 | `drift` | Detect changes since snapshot | "Did code diverge from specs?" |
@@ -73,6 +79,8 @@ This discovers all spec sections (Markdown headings) and code files (18 language
 | `validate-boundary` | Check `_Boundary:_` markers | "Does code stay in declared scope?" |
 | `watch` | Re-analyze on file changes | Real-time feedback during dev |
 | `config` | Show current config | Debug configuration |
+| `plugins` | List installed adapter plugins | Check plugin availability |
+| `serve` | Start MCP server for AI agents | AI agent integration |
 
 ### Common Workflows
 
@@ -94,6 +102,16 @@ specbridge impact --spec-id TraceNode   # title search
 specbridge impact --spec-id build_heuristic_graph  # heading search
 ```
 
+**Transitive (indirect) impact:**
+```bash
+# During impact analysis
+specbridge impact --spec-id 1.2.1 --call-graph --max-depth 3
+
+# Standalone call graph analysis
+specbridge call-graph --spec-id 1.2.1
+specbridge call-graph --spec-id 1.2.1 --max-depth 5 --format json
+```
+
 **CI gate (GitHub Actions):**
 ```yaml
 - run: specbridge snapshot
@@ -105,6 +123,12 @@ specbridge impact --spec-id build_heuristic_graph  # heading search
 ```bash
 specbridge analyze --merge --format html
 open .specbridge/trace.html
+```
+
+**Include dependency and call graphs:**
+```bash
+specbridge analyze --merge --deps --call-graph
+# Output: Deps: 42 import edges, Calls: 156 edges, 47 functions
 ```
 
 ## Output Interpretation
@@ -128,6 +152,32 @@ Coverage: 60.7% (259/427)
 ```
 
 Function nodes have `::` in their ID (`file.py::func_name`).
+
+### Transitive impact view
+```
+📄 Spec: docs.tasks.1
+   Direct files:     2
+     📁 src/tasks/service.py
+     📁 tests/test_tasks.py
+   🔗 Transitive files (1 hop(s)): 1
+     → src/tasks/db.py
+```
+
+## Call Graph Analysis
+
+The call graph maps **function-level caller→callee relationships** to find indirectly impacted files.
+
+### How it works
+
+1. **Lightweight builder** (built-in, no deps): scans source files for function calls matching known definitions
+2. **CRG import** (optional): reads `code-review-graph` JSON output for AST-precise graphs
+3. **BFS traversal**: starting from direct implementers, walks function calls up to `--max-depth` hops
+
+### Use cases
+
+- "If I change `db.py::save_task()`, what specs could be affected?"
+- "This function is called from 3 places — any transitive impact on my spec?"
+- CI check: "Does this PR introduce unexpected transitive coupling?"
 
 ## MCP Server (AI Agent Integration)
 
@@ -221,13 +271,8 @@ When multiple specs match, all are displayed with their implementing files.
 | No `@impl` tags being read | Files don't have spectra tags | Heuristic mode works without tags; use `--merge` |
 | `No snapshot found` | Haven't run `snapshot` yet | Run `specbridge snapshot` first |
 | `Spec 'X' not found` | Wrong spec ID format | Use fuzzy search: try a title or suffix |
+| `No call graph could be built` | No function-level nodes | Run `specbridge analyze --deps` first to extract functions |
 | JSON output error | Old `json.dump` vs `json.dumps` | Ensure you have the latest version |
-
-## Related Skills
-
-- `heuristic-traceability` — deep-dive into coverage improvement strategies
-- `spectra-traceability` — tag-based traceability with spectra framework
-- `spec-traceability` — general spec-driven traceability
 
 ## Installing This Skill into Hermes
 
@@ -236,3 +281,9 @@ When multiple specs match, all are displayed with their implementing files.
 mkdir -p ~/.hermes/skills/software-development/
 ln -sf "$(pwd)/.agents/skills/specbridge" ~/.hermes/skills/software-development/specbridge
 ```
+
+## Related Skills
+
+- `heuristic-traceability` — deep-dive into coverage improvement strategies
+- `spectra-traceability` — tag-based traceability with spectra framework
+- `spec-traceability` — general spec-driven traceability

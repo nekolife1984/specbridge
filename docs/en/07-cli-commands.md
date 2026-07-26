@@ -5,7 +5,7 @@
 
 ## 1. Overview
 
-specbridge provides a Click-based CLI with 9 commands for traceability analysis, drift detection, and project management.
+specbridge provides a Click-based CLI with **11 commands** for traceability analysis, drift detection, and project management.
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
@@ -26,6 +26,8 @@ Commands:
   config             Show current specbridge configuration.
   watch              Watch project for changes and re-analyze automatically.
   plugins            List installed specbridge adapter plugins.
+  serve              Start MCP server for AI agent integration.
+  call-graph         Build call graph and show transitive (indirect) impact for a spec.
 ```
 
 ## 2. Commands
@@ -45,6 +47,7 @@ Options:
   -m, --merge         Merge results from ALL matching adapters (not just the best one)
   --top INTEGER       Show only top N items per category (default: all)
   --deps              Build code dependency graph from imports (adds DEPENDS edges)
+  -c, --call-graph    Build call graph for transitive impact analysis
   --help              Show this message and exit.
 ```
 
@@ -68,6 +71,9 @@ $ specbridge analyze --top 5
 
 # Include code dependency graph
 $ specbridge analyze --deps
+
+# Include both dependency and call graph
+$ specbridge analyze --deps --call-graph
 ```
 
 **Behavior:**
@@ -90,6 +96,8 @@ Options:
   -d, --dir TEXT      Project directory  [default: .]
   --spec-id TEXT      Spec ID or title to analyze (e.g. "1.1", "TraceNode")  [required]
   --format TEXT       Output format (text, json)  [default: text]
+  -c, --call-graph    Include transitive (indirect) impact via call graph
+  --max-depth INTEGER Max call-graph traversal depth  [default: 3]
   --help              Show this message and exit.
 ```
 
@@ -339,7 +347,49 @@ $ specbridge plugins
 | 0 | Success (or no drift detected with `--gate`) |
 | 1 | Drift detected (`drift --gate`), no adapter found, or runtime error |
 
-## 4. Plugin SDK (`specbridge plugins`)
+## 4. Call Graph (`specbridge call-graph`)
+
+Analyze transitive (indirect) impact for a spec via function-level call graph.
+
+```
+Usage: specbridge call-graph [OPTIONS]
+
+  Build call graph and show transitive (indirect) impact for a spec.
+
+Options:
+  -d, --dir TEXT       Project directory  [default: .]
+  --spec-id TEXT       Spec ID to analyze (e.g. 1.1)  [required]
+  --max-depth INTEGER  Max call-graph traversal depth  [default: 3]
+  --format TEXT        Output format (text, json)  [default: text]
+  --help               Show this message and exit.
+```
+
+**Examples:**
+
+```
+# Basic call graph analysis
+$ specbridge call-graph --spec-id 1.2.1
+
+# Deeper traversal
+$ specbridge call-graph --spec-id 1.2.1 --max-depth 5
+
+# JSON output for CI/tooling
+$ specbridge call-graph --spec-id 1.2.1 --format json | jq '.transitive_files'
+```
+
+**Output example (text):**
+```
+🔗 Call graph: 13 functions, 28 calls
+
+📄 Spec: docs.tasks.1
+   Direct files:     2
+     📁 src/tasks/service.py
+     📁 tests/test_tasks.py
+   🔗 Transitive files (1 hop(s)): 1
+     → src/tasks/db.py
+```
+
+## 5. Plugin SDK (`specbridge plugins`)
 
 The `plugins` command discovers adapters registered via Python entry points:
 
