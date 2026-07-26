@@ -10,8 +10,6 @@ import hashlib
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
-
 
 _EXCLUDE_DIRS = frozenset({
     ".git", "node_modules", ".venv", "__pycache__", "dist", "build",
@@ -102,8 +100,8 @@ def _split_sections(text: str) -> list[dict]:
 def discover_specs(
     directory: str,
     *,
-    spec_dirs: Optional[list[str]] = None,
-    exclude_dirs: Optional[set[str]] = None,
+    spec_dirs: list[str] | None = None,
+    exclude_dirs: set[str] | None = None,
 ) -> list[SpecCandidate]:
     """Scan a project for spec documents. Returns one SpecCandidate per heading."""
     root = Path(directory).resolve()

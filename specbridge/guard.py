@@ -3,16 +3,14 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Union
-
 
 ALLOWED_WRITE_DIR = ".specbridge"
 ALLOWED_WRITE_DIRS = {ALLOWED_WRITE_DIR, ".specbridge"}
 
 
 def validate_write_path(
-    target_path: Union[str, Path],
-    project_root: Union[str, Path],
+    target_path: str | Path,
+    project_root: str | Path,
 ) -> Path:
     """Validate that *target_path* is inside the allowed write directory.
 
@@ -52,7 +50,7 @@ def validate_write_path(
         raise PermissionError(
             f"Write blocked: {target} is outside the project root {root}. "
             f"specbridge only writes to .specbridge/ within the project."
-        )
+        ) from None
 
     # Inside project root but not in .specbridge/ — still block
     raise PermissionError(

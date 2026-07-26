@@ -13,6 +13,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from specbridge.adapters._base import ProjectAdapter, register
+from specbridge.core import TraceGraph
 from specbridge.infer import build_heuristic_graph
 
 
@@ -38,6 +39,5 @@ class HeuristicAdapter(ProjectAdapter):
             return 0.4
         return 0.0
 
-    def analyze(self, directory: str) -> "TraceGraph":
-        from specbridge.infer import build_heuristic_graph
+    def analyze(self, directory: str) -> TraceGraph:
         return build_heuristic_graph(directory)

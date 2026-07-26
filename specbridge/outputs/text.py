@@ -1,12 +1,12 @@
 """Plain text output."""
 
-from specbridge.core import TraceGraph, NodeType
+from specbridge.core import NodeType, TraceGraph
 
 
 def render_text(graph: TraceGraph) -> str:
     """Render the full trace graph as human-readable text."""
     lines: list[str] = []
-    lines.append(f"specbridge — Trace Graph")
+    lines.append("specbridge — Trace Graph")
     lines.append(f"{'=' * 40}")
     lines.append(f"Nodes: {len(graph.nodes)} | Edges: {len(graph.edges)}")
     lines.append("")

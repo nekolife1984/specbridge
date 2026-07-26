@@ -9,8 +9,6 @@ import hashlib
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
-
 
 _SOURCE_MAP: dict[str, tuple[str, str]] = {
     ".py":   ("#",    "Python"),
@@ -122,9 +120,7 @@ def _extract_func_blocks(text: str, lines: list[str]) -> list[FuncBlock]:
         # Determine kind
         if line.lstrip().startswith(("class ", "trait ", "interface ", "struct ", "enum ", "record ")):
             kind = "class"
-        elif "def " in line or "fn " in line:
-            kind = "function"
-        elif "function " in line:
+        elif "def " in line or "fn " in line or "function " in line:
             kind = "function"
         else:
             kind = "function"
@@ -156,8 +152,8 @@ def _extract_func_blocks(text: str, lines: list[str]) -> list[FuncBlock]:
 def discover_code(
     directory: str,
     *,
-    source_dirs: Optional[list[str]] = None,
-    exclude_dirs: Optional[set[str]] = None,
+    source_dirs: list[str] | None = None,
+    exclude_dirs: set[str] | None = None,
 ) -> list[CodeCandidate]:
     root = Path(directory).resolve()
     if source_dirs is None:

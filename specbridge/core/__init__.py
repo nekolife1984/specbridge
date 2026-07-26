@@ -10,7 +10,6 @@ from __future__ import annotations
 import uuid
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 
 class NodeType(str, Enum):
@@ -39,9 +38,9 @@ class EdgeStrength(str, Enum):
 class SourceRef:
     """Points to the physical location of a traceable element."""
     file: str                        # relative path from project root
-    line: Optional[int] = None
-    column: Optional[int] = None
-    label: Optional[str] = None      # e.g. heading name, function name
+    line: int | None = None
+    column: int | None = None
+    label: str | None = None      # e.g. heading name, function name
 
 
 @dataclass

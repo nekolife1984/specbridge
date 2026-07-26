@@ -11,10 +11,8 @@ Supports:
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
-
 
 # Languages that use // (C-style)
 _SLASH_COMMENT_EXT = frozenset({
@@ -138,7 +136,7 @@ def _extract_source_tags(path: Path, rel: str) -> list[Tag]:
 def extract_tags_from_dir(
     directory: str,
     *,
-    exclude_dirs: Optional[set[str]] = None,
+    exclude_dirs: set[str] | None = None,
 ) -> list[Tag]:
     """Recursively scan *directory* for all known tags."""
     if exclude_dirs is None:

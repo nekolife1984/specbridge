@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
-
-import pytest
 
 from specbridge.analyzers.drift import (
     DriftReport,
@@ -14,8 +11,6 @@ from specbridge.analyzers.drift import (
     load_snapshot,
     save_snapshot,
 )
-from specbridge.discovery.code import discover_code
-from specbridge.discovery.spec import discover_specs
 
 
 class TestSnapshot:

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 
 from specbridge.analyzers import (
@@ -14,7 +12,6 @@ from specbridge.analyzers import (
 from specbridge.core import (
     EdgeRelation,
     EdgeStrength,
-    Evidence,
     NodeType,
     SourceRef,
     TraceEdge,

@@ -4,10 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
-from specbridge.adapters import detect_adapter, heuristic
-from specbridge.adapters._base import ProjectAdapter
+from specbridge.adapters import detect_adapter
 from specbridge.adapters.heuristic import HeuristicAdapter
 from specbridge.core import NodeType, TraceGraph
 

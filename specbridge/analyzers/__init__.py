@@ -1,6 +1,6 @@
 """Analysis utilities."""
 
-from specbridge.core import TraceGraph, NodeType, EdgeRelation
+from specbridge.core import EdgeRelation, NodeType, TraceGraph
 
 
 def find_orphan_specs(graph: TraceGraph) -> list[str]:
@@ -24,8 +24,7 @@ def find_orphan_code(graph: TraceGraph) -> list[str]:
     )}
     orphans = []
     for nid, node in graph.nodes.items():
-        if node.type in (NodeType.CODE, NodeType.TEST):
-            if nid not in linked_specs and not graph.edges_from(nid):
+        if node.type in (NodeType.CODE, NodeType.TEST) and nid not in linked_specs and not graph.edges_from(nid):
                 orphans.append(nid)
     return orphans
 

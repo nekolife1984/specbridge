@@ -8,8 +8,8 @@ import click
 
 from specbridge import __version__
 from specbridge.core import NodeType
-from specbridge.outputs.text import render_text
 from specbridge.outputs.json_out import render_json
+from specbridge.outputs.text import render_text
 
 
 @click.group()
@@ -49,6 +49,8 @@ def analyze(dir, output_fmt, merge):
             click.echo("❌ No recognized SSD framework found.", err=True)
             raise click.Abort()
         graph = adapter.analyze(str(root))
+
+    from specbridge.analyzers import coverage_summary
 
     spec_count = len(graph.nodes_by_type(NodeType.SPEC))
     code_count = len(graph.nodes_by_type(NodeType.CODE))
@@ -91,7 +93,7 @@ def impact(dir, spec_id, output_fmt):
     edges = graph.edges_to(spec_node.id)
     if not edges:
         click.echo(f"📄 {spec_node.id}: {spec_node.title}")
-        click.echo(f"   (no implementing artifacts found)")
+        click.echo("   (no implementing artifacts found)")
         return
 
     click.echo(f"📄 {spec_node.id}: {spec_node.title}")
@@ -123,7 +125,7 @@ def impact(dir, spec_id, output_fmt):
 def coverage(dir, output_fmt):
     """Show spec coverage statistics."""
     from specbridge.adapters import detect_adapter
-    from specbridge.analyzers import coverage_summary, find_orphan_specs, find_orphan_code
+    from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
 
     root = Path(dir).resolve()
     adapter = detect_adapter(str(root))
@@ -145,18 +147,18 @@ def coverage(dir, output_fmt):
         }, indent=2, ensure_ascii=False))
         return
 
-    click.echo(f"📊 Spec Coverage")
+    click.echo("📊 Spec Coverage")
     click.echo(f"{'=' * 40}")
     click.echo(f"  Total specs:  {cov['total']}")
     click.echo(f"  Covered:      {cov['covered']}")
     click.echo(f"  Orphan specs: {cov['orphan']}")
     click.echo(f"  Coverage:     {cov['coverage_pct']}%")
     if orphans_spec:
-        click.echo(f"\n🟡 Orphan specs (no code ref):")
+        click.echo("\n🟡 Orphan specs (no code ref):")
         for nid in orphans_spec:
             click.echo(f"   - {nid}")
     if orphans_code:
-        click.echo(f"\n🟡 Orphan code files (no spec ref):")
+        click.echo("\n🟡 Orphan code files (no spec ref):")
         for nid in orphans_code[:10]:
             click.echo(f"   - {nid}")
         if len(orphans_code) > 10:
@@ -198,7 +200,7 @@ def drift(dir, snapshot_path, gate, output_fmt, git_base):
         _drift_git(str(root), git_base, gate)
         return
 
-    from specbridge.analyzers.drift import load_snapshot, compute_drift
+    from specbridge.analyzers.drift import compute_drift, load_snapshot
 
     if snapshot_path:
         snap_path = Path(snapshot_path)
@@ -208,7 +210,7 @@ def drift(dir, snapshot_path, gate, output_fmt, git_base):
             snapshot = json.loads(snap_path.read_text(encoding="utf-8"))
         except Exception as e:
             click.echo(f"❌ Failed to load snapshot: {e}", err=True)
-            raise click.Abort()
+            raise click.Abort() from e
     else:
         snapshot = load_snapshot(str(root))
         if snapshot is None:
@@ -233,6 +235,7 @@ def drift(dir, snapshot_path, gate, output_fmt, git_base):
 def _drift_git(project_dir: str, git_base: str, gate: bool) -> None:
     """Git-based drift detection (alternative to snapshot comparison)."""
     import subprocess
+
     from specbridge.adapters import detect_adapter
 
     root = Path(project_dir).resolve()
@@ -244,7 +247,7 @@ def _drift_git(project_dir: str, git_base: str, gate: bool) -> None:
         )
     except subprocess.CalledProcessError as e:
         click.echo(f"❌ git diff failed: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
     changed = [f for f in result.stdout.strip().split("\n") if f]
     if not changed:
@@ -262,9 +265,9 @@ def _drift_git(project_dir: str, git_base: str, gate: bool) -> None:
     for cf in changed:
         for nid, node in graph.nodes.items():
             if node.type == NodeType.CODE and node.source.file == cf:
-                for e in graph.edges_from(nid):
-                    if e.relation.value in ("implements",):
-                        affected.append({"file": cf, "spec_id": e.dst_id})
+                for edge in graph.edges_from(nid):
+                    if edge.relation.value in ("implements",):
+                        affected.append({"file": cf, "spec_id": edge.dst_id})
 
     if not affected:
         click.echo("✅ No spec-impacting changes detected.")

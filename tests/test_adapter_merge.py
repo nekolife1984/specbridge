@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from specbridge.adapters._base import (
     detect_all,
     merge_graphs,

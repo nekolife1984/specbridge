@@ -2,18 +2,15 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
-from specbridge.discovery.spec import discover_specs
-from specbridge.discovery.code import discover_code
 from specbridge.analyzers import coverage_summary, find_orphan_specs
-from specbridge.infer import build_heuristic_graph
 from specbridge.core import NodeType
-
+from specbridge.discovery.code import discover_code
+from specbridge.discovery.spec import discover_specs
+from specbridge.infer import build_heuristic_graph
 
 SNAPSHOT_RELPATH = ".specbridge/snapshot.json"
 
@@ -25,8 +22,8 @@ def build_snapshot(
     directory: str,
     *,
     reason: str = "",
-    spec_dirs: Optional[list[str]] = None,
-    source_dirs: Optional[list[str]] = None,
+    spec_dirs: list[str] | None = None,
+    source_dirs: list[str] | None = None,
 ) -> dict:
     """Build a snapshot of the current project state with hashes."""
     specs = discover_specs(directory, spec_dirs=spec_dirs)
@@ -96,7 +93,7 @@ def save_snapshot(snapshot: dict, project_dir: str) -> Path:
     return path
 
 
-def load_snapshot(project_dir: str) -> Optional[dict]:
+def load_snapshot(project_dir: str) -> dict | None:
     path = Path(project_dir).resolve() / SNAPSHOT_RELPATH
     if not path.exists():
         return None
@@ -125,8 +122,8 @@ class DriftReport:
         self.resolved_orphan_specs: list[str] = []
         self.new_orphan_code: list[str] = []
         self.resolved_orphan_code: list[str] = []
-        self.coverage_before: Optional[dict] = None
-        self.coverage_after: Optional[dict] = None
+        self.coverage_before: dict | None = None
+        self.coverage_after: dict | None = None
 
     @property
     def has_drift(self) -> bool:
@@ -160,7 +157,7 @@ class DriftReport:
             for s in self.specs_changed:
                 lines.append(f"     ~ {s['id']}: \"{s['old_title']}\" → \"{s['new_title']}\"")
                 if s.get("body_hash_changed"):
-                    lines.append(f"       (body also changed)")
+                    lines.append("       (body also changed)")
 
         if self.specs_body_changed:
             lines.append(f"📝  Changed spec body ({len(self.specs_body_changed)}):")
@@ -188,7 +185,7 @@ class DriftReport:
                 if c.get("removed"):
                     lines.append(f"     - {c['file']}: {', '.join(c['removed'][:5])}")
                 if c.get("file_hash_changed"):
-                    lines.append(f"       (file content changed)")
+                    lines.append("       (file content changed)")
 
         if self.code_funcs_changed:
             lines.append(f"⚡  Changed function bodies ({len(self.code_funcs_changed)}):")
@@ -253,8 +250,8 @@ def compute_drift(
     snapshot: dict,
     directory: str,
     *,
-    spec_dirs: Optional[list[str]] = None,
-    source_dirs: Optional[list[str]] = None,
+    spec_dirs: list[str] | None = None,
+    source_dirs: list[str] | None = None,
 ) -> DriftReport:
     """Compare snapshot against current state."""
     report = DriftReport()
@@ -369,7 +366,7 @@ def compute_drift(
         codes=curr_codes if curr_codes else None,
         spec_dirs=spec_dirs, source_dirs=source_dirs,
     )
-    from specbridge.analyzers import coverage_summary, find_orphan_specs, find_orphan_code
+    from specbridge.analyzers import coverage_summary, find_orphan_specs
 
     report.coverage_before = snapshot.get("coverage", {})
     after_cov = coverage_summary(graph_now)

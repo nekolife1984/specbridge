@@ -9,24 +9,22 @@ No tags, no annotations — pure heuristics:
 
 from __future__ import annotations
 
-import re
 import os
+import re
 from pathlib import Path
-from typing import Optional
 
 from specbridge.core import (
     EdgeRelation,
     EdgeStrength,
     Evidence,
+    NodeType,
     SourceRef,
     TraceEdge,
-    TraceNode,
     TraceGraph,
-    NodeType,
+    TraceNode,
 )
-from specbridge.discovery.spec import SpecCandidate, discover_specs
 from specbridge.discovery.code import CodeCandidate, discover_code
-
+from specbridge.discovery.spec import SpecCandidate, discover_specs
 
 # Weights for different heuristic signals
 _W_DIRNAME = 0.6
@@ -59,10 +57,10 @@ def _dirname(file_path: str) -> str:
 def build_heuristic_graph(
     project_dir: str,
     *,
-    specs: Optional[list[SpecCandidate]] = None,
-    codes: Optional[list[CodeCandidate]] = None,
-    spec_dirs: Optional[list[str]] = None,
-    source_dirs: Optional[list[str]] = None,
+    specs: list[SpecCandidate] | None = None,
+    codes: list[CodeCandidate] | None = None,
+    spec_dirs: list[str] | None = None,
+    source_dirs: list[str] | None = None,
 ) -> TraceGraph:
     """Build a TraceGraph using only structural heuristics.
 

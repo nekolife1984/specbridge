@@ -4,11 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from specbridge.adapters.spectra import SpectraAdapter
 from specbridge.core import NodeType
-from specbridge.core.extract import Tag, extract_tags_from_file, RE_BOUNDARY
+from specbridge.core.extract import RE_BOUNDARY, extract_tags_from_file
 
 
 class TestBoundaryExtract:
@@ -119,6 +117,7 @@ class TestBoundarySpectraAdapter:
     def test_boundary_validation(self, tmp_project_spectra: Path) -> None:
         """validate-boundary CLI detects violations."""
         from click.testing import CliRunner
+
         from specbridge.cli import cli
 
         auth_md = tmp_project_spectra / "docs" / "auth.md"
@@ -139,6 +138,7 @@ class TestBoundarySpectraAdapter:
     def test_boundary_valid(self, tmp_project_spectra: Path) -> None:
         """Code inside boundary passes validation."""
         from click.testing import CliRunner
+
         from specbridge.cli import cli
 
         auth_md = tmp_project_spectra / "docs" / "auth.md"

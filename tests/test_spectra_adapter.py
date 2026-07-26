@@ -4,9 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
-from specbridge.adapters._base import ProjectAdapter, detect_adapter
 from specbridge.adapters.spectra import SpectraAdapter
 from specbridge.core import NodeType, TraceGraph
 

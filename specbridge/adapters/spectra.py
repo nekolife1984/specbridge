@@ -23,7 +23,6 @@ from specbridge.core import (
 )
 from specbridge.core.extract import extract_tags_from_file
 
-
 _TRACE_MAPPING_RELPATH = ".spectra/trace-mapping.yaml"
 
 # Language profiles: line-comment character per extension

@@ -4,9 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
-from specbridge.discovery.code import CodeCandidate, discover_code
+from specbridge.discovery.code import discover_code
 
 
 class TestDiscoverCode:

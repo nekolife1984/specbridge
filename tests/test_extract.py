@@ -4,10 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from specbridge.core.extract import (
-    Tag,
     extract_tags_from_dir,
     extract_tags_from_file,
 )

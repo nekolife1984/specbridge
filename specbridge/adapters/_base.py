@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from specbridge.core import TraceGraph
 
@@ -34,7 +33,7 @@ def all_adapters() -> list[type[ProjectAdapter]]:
     return list(_ADAPTERS)
 
 
-def detect_adapter(directory: str) -> Optional[ProjectAdapter]:
+def detect_adapter(directory: str) -> ProjectAdapter | None:
     """Pick the best adapter for *directory*."""
     scored = []
     for cls in _ADAPTERS:
