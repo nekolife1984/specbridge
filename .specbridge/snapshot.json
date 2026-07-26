@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-26T17:32:51",
-  "reason": "",
+  "timestamp": "2026-07-26T17:36:17",
+  "reason": "Add .agents/skills to spec_dirs: skills now traceable",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",

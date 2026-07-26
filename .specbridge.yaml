@@ -1,5 +1,6 @@
 spec_dirs:
   - docs
+  - .agents/skills
 source_dirs:
   - specbridge
   - tests
