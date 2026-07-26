@@ -175,6 +175,45 @@ That's it. No tags, no annotations — specbridge infers what it can out of the 
 
 ---
 
+## Pre-commit Hook (Drift Gate)
+
+specbridge includes a **pre-commit hook** that automatically checks for trace drift before every commit. If the code has changed but the corresponding spec hasn't been updated (or vice versa), the commit is blocked.
+
+```
+git commit ─→ specbridge drift --git-base HEAD --gate ─→ driftなし → コミットOK
+                                                     └→ driftあり → ❌ コミットブロック
+```
+
+**Install:**
+
+```bash
+# One-command installer (symlinks hook + Hermes skill):
+bash scripts/install-hooks.sh
+
+# Or manually:
+ln -sf ../../.agents/scripts/pre-commit.specbridge.sh .git/hooks/pre-commit
+```
+
+**What happens when drift is detected:**
+
+```text
+❌ specbridge: Drift detected between snapshot and your changes!
+   Run 'specbridge drift' to see details.
+   If changes are intentional, run 'specbridge snapshot' to update baseline
+   and include .specbridge/snapshot.json in your commit.
+```
+
+The hook uses **git-base mode** (`drift --git-base HEAD`) — only files changed since the last commit are analysed, making it lightweight even on large projects.
+
+**Manual baseline setup (first time):**
+
+```bash
+specbridge snapshot          # Take the initial snapshot
+git add .specbridge/         # Track the baseline
+```
+
+---
+
 ## AI Agent Skill
 
 specbridge ships with an **AI agent skill** at `.agents/skills/specbridge/SKILL.md` that teaches AI coding agents how to use the tool — install, run analysis, check drift, set up CI gates, and use the MCP server.
@@ -193,7 +232,7 @@ This symlinks both the pre-commit hook and the skill into `~/.hermes/skills/`. A
 ln -sf "$(pwd)/.agents/skills/specbridge" ~/.hermes/skills/software-development/specbridge
 ```
 
-Or reference the skill file directly at `.agents/skills/specbridge/SKILL.md`.
+Or reference `.agents/skills/specbridge/SKILL.md` directly.
 
 ---
 

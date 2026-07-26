@@ -169,6 +169,45 @@ max_output_nodes: 40
 
 ---
 
+## Pre-commit Hook（ドリフトゲート）
+
+specbridge には **pre-commit hook** が同梱されています。コミットのたびに自動でトレースドリフトをチェックし、コードと設計書の乖離を防止します。
+
+```
+git commit ─→ specbridge drift --git-base HEAD --gate ─→ driftなし → コミットOK
+                                                     └→ driftあり → ❌ コミットブロック
+```
+
+**インストール方法:**
+
+```bash
+# ワンコマンドインストーラー（hook + Hermes スキルをシンボリックリンク）:
+bash scripts/install-hooks.sh
+
+# 手動:
+ln -sf ../../.agents/scripts/pre-commit.specbridge.sh .git/hooks/pre-commit
+```
+
+**ドリフト検出時の表示:**
+
+```text
+❌ specbridge: Drift detected between snapshot and your changes!
+   Run 'specbridge drift' to see details.
+   If changes are intentional, run 'specbridge snapshot' to update baseline
+   and include .specbridge/snapshot.json in your commit.
+```
+
+hook は **git-base モード**（`drift --git-base HEAD`）を使用 — 前回コミットから変更があったファイルだけを分析するので、大規模プロジェクトでも軽量です。
+
+**初回ベースライン設定:**
+
+```bash
+specbridge snapshot          # 初期スナップショット作成
+git add .specbridge/         # ベースラインを追跡
+```
+
+---
+
 ## AIエージェントスキル
 
 specbridge には **AIエージェントスキル** が `.agents/skills/specbridge/SKILL.md` に同梱されています。このスキルはAIエージェントにツールの使い方（インストール、分析、ドリフトチェック、CI設定、MCPサーバー連携）を教えます。
