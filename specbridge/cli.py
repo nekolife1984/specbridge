@@ -480,5 +480,26 @@ def watch(dir, interval):
     observer.join()
 
 
+@cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+def serve(dir):
+    """Start MCP server for AI agent integration.
+
+    Exposes specbridge tools (analyze, impact, coverage, drift, validate_boundary)
+    via the Model Context Protocol. Requires: pip install specbridge[mcp]
+    """
+    import asyncio
+    try:
+        from specbridge.mcp_server import run_mcp_server
+    except ImportError as exc:
+        click.echo(f"❌ MCP dependencies not installed: {exc}", err=True)
+        click.echo("   Run: pip install specbridge[mcp]", err=True)
+        raise click.Abort() from None
+
+    click.echo(f"🔌 Starting specbridge MCP server for {dir} ...", err=True)
+    click.echo("   Connect via stdio transport.", err=True)
+    asyncio.run(run_mcp_server(str(dir)))
+
+
 if __name__ == "__main__":
     cli()
