@@ -31,7 +31,11 @@ def cli() -> None:
 @click.option("--deps", is_flag=True, default=False,
               help="Build code dependency graph from imports (adds DEPENDS edges)",
               show_default=True)
-def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool) -> None:
+@click.option("--call-graph", "-c", is_flag=True, default=False,
+              help="Build call graph for transitive impact analysis",
+              show_default=True)
+def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
+            call_graph: bool) -> None:
     """Analyze a project and build a trace graph."""
     from specbridge.adapters import detect_adapter, detect_all, merge_graphs
 
@@ -64,6 +68,15 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool)
         dep_count = len(graph.edges) - before
         click.echo(f"   Deps:   {dep_count} import edges", err=True)
 
+    if call_graph:
+        from specbridge.analyzers.call_graph import build_call_graph
+        cg = build_call_graph(graph, str(root))
+        edge_count = len(cg.edges)
+        node_count = len(cg.nodes)
+        click.echo(f"   Calls:  {edge_count} edges, {node_count} functions", err=True)
+        # Store call graph reference for downstream commands
+        # (call graph will be rebuilt from the trace graph when needed)
+
     spec_count = len(graph.nodes_by_type(NodeType.SPEC))
     code_count = len(graph.nodes_by_type(NodeType.CODE))
     test_count = len(graph.nodes_by_type(NodeType.TEST))
@@ -90,7 +103,13 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool)
 @click.option("--spec-id", required=True, help="Spec ID to analyze (e.g. 1.1)")
 @click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
               help="Output format", show_default=True)
-def impact(dir: str, spec_id: str, output_fmt: str) -> None:
+@click.option("--call-graph", "-c", is_flag=True, default=False,
+              help="Include transitive (indirect) impact via call graph",
+              show_default=True)
+@click.option("--max-depth", type=int, default=3,
+              help="Max call-graph traversal depth for transitive impact",
+              show_default=True)
+def impact(dir: str, spec_id: str, output_fmt: str, call_graph: bool, max_depth: int) -> None:
     """Find what implements a given spec."""
     from specbridge.adapters import detect_adapter
 
@@ -122,6 +141,21 @@ def impact(dir: str, spec_id: str, output_fmt: str) -> None:
         click.echo("   Try a more specific ID (e.g. '07-cli-commands.1.1' or a partial title).", err=True)
         raise click.Abort()
 
+    # Transitive impact via call graph
+    transitive_files: list[str] = []
+    transitives: list[tuple[str, str]] = []
+    if call_graph:
+        from specbridge.analyzers.call_graph import build_call_graph, transitive_impact
+        cg = build_call_graph(graph, str(root))
+        if cg.nodes:
+            ti = transitive_impact(graph, cg, spec_id, max_depth=max_depth)
+            transitive_files = ti["transitive_files"]
+            transitives = ti["transitive_edges"]
+            if transitive_files:
+                click.echo(f"\n   🔗 Transitive impact ({ti['hops']} hop(s)):")
+                for f in transitive_files:
+                    click.echo(f"      → {f}")
+
     for spec_node in spec_nodes:
         edges = graph.edges_to(spec_node.id)
         if not edges:
@@ -145,13 +179,17 @@ def impact(dir: str, spec_id: str, output_fmt: str) -> None:
         results = []
         for spec_node in spec_nodes:
             edges = graph.edges_to(spec_node.id)
-            results.append({
+            entry: dict[str, Any] = {
                 "spec_id": spec_node.id,
                 "title": spec_node.title,
                 "edges": [{"src": e.src_id, "relation": e.relation.value, "strength": e.strength.value,
                            "evidence": [{"kind": ev.kind, "value": ev.value} for ev in e.evidence]}
                           for e in edges],
-            })
+            }
+            if transitive_files:
+                entry["transitive_files"] = transitive_files
+                entry["transitive_edges"] = transitives
+            results.append(entry)
         click.echo(_json.dumps(results if len(results) > 1 else results[0], indent=2, ensure_ascii=False))
 
 
@@ -563,6 +601,62 @@ def serve(dir: str) -> None:
     click.echo(f"🔌 Starting specbridge MCP server for {dir} ...", err=True)
     click.echo("   Connect via stdio transport.", err=True)
     asyncio.run(run_mcp_server(str(dir)))
+
+
+@cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+@click.option("--spec-id", required=True, help="Spec ID to analyze (e.g. 1.1)")
+@click.option("--max-depth", type=int, default=3,
+              help="Max call-graph traversal depth", show_default=True)
+@click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
+              help="Output format", show_default=True)
+def call_graph(dir: str, spec_id: str, max_depth: int, output_fmt: str) -> None:
+    """Build call graph and show transitive (indirect) impact for a spec.
+
+    Analyzes function-level call relationships in the codebase to
+    find files that are indirectly impacted by changes to a spec.
+    """
+    from specbridge.adapters import detect_adapter
+    from specbridge.analyzers.call_graph import build_call_graph, transitive_impact
+    from specbridge.core import find_spec_nodes
+
+    root = Path(dir).resolve()
+    adapter = detect_adapter(str(root))
+    if adapter is None:
+        click.echo("❌ No recognized SSD framework found.", err=True)
+        raise click.Abort()
+
+    graph = adapter.analyze(str(root))
+
+    spec_nodes = find_spec_nodes(graph, spec_id)
+    if not spec_nodes:
+        click.echo(f"❌ Spec '{spec_id}' not found.", err=True)
+        raise click.Abort()
+
+    cg = build_call_graph(graph, str(root))
+    if not cg.nodes:
+        click.echo("⚠️  No call graph could be built — no function-level nodes found.", err=True)
+        click.echo("   Run `specbridge analyze --deps` first to extract function blocks.", err=True)
+        raise click.Abort()
+
+    click.echo(f"🔗 Call graph: {len(cg.nodes)} functions, {len(cg.edges)} calls", err=True)
+
+    ti = transitive_impact(graph, cg, spec_id, max_depth=max_depth)
+    direct = ti["direct_files"]
+    transitive = ti["transitive_files"]
+    hops = ti["hops"]
+
+    click.echo(f"\n📄 Spec: {spec_id}")
+    click.echo(f"   Direct files:     {len(direct)}")
+    for f in direct:
+        click.echo(f"     📁 {f}")
+    click.echo(f"   🔗 Transitive files ({hops} hop(s)): {len(transitive)}")
+    for f in transitive:
+        click.echo(f"     → {f}")
+
+    if output_fmt == "json":
+        import json as _json
+        click.echo(_json.dumps(ti, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":
