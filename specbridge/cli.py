@@ -149,11 +149,11 @@ def coverage(dir, output_fmt):
 
     if output_fmt == "json":
         import json as _json
-        _json.dump({
+        click.echo(_json.dumps({
             **cov,
             "orphan_specs": orphans_spec,
             "orphan_code": orphans_code,
-        }, indent=2, ensure_ascii=False)
+        }, indent=2, ensure_ascii=False))
         return
 
     click.echo(f"📊 Spec Coverage")
