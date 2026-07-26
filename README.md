@@ -150,7 +150,8 @@ specbridge/
 │   └── skills/
 │       └── specbridge/
 │           └── SKILL.md             # AI agent skill for using specbridge
-└── tests/              # 169+ tests
+├── AGENTS.md            # AI agent workflow guide (read by all agents)
+└── tests/              # 198+ tests
 ```
 
 ---
@@ -238,6 +239,26 @@ ln -sf "$(pwd)/.agents/skills/specbridge" ~/.hermes/skills/software-development/
 ```
 
 Or reference `.agents/skills/specbridge/SKILL.md` directly.
+
+### Setting up AGENTS.md for your project
+
+To make **any AI agent** (Hermes, Claude Code, OpenCode, Cursor, Codex) follow specbridge conventions, add an `AGENTS.md` to your project root:
+
+```markdown
+# Project Guide
+
+This project uses **specbridge** for spec↔code traceability.
+
+## 必須ルール（コード変更前後）
+
+1. `specbridge snapshot --reason "..."` で現状を保存
+2. コードを書く
+3. `specbridge drift` で解離チェック
+4. 解離があれば設計書を先に直す
+5. `git commit`（pre-commit hook が自動チェック）
+```
+
+See [AGENTS.md](AGENTS.md) in the specbridge repo for a complete example.
 
 ---
 
