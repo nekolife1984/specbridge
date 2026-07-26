@@ -94,6 +94,7 @@ class SpecCandidate:
     auto_id: str            # 例："auth.auth.1.2"
     title: str              # クリーン 例："Login"
     line: int               # 1始まり
+    parent_chain: list[str] | None  # 例：["データモデル", "型階層"]
     body_text: str          # セクション全文
     body_hash: str          # SHA256[:16]
     body_hash_content: str  # 見出し行なしのSHA256[:16]
@@ -142,16 +143,18 @@ _RE_FUNC_DEF = re.compile(
     r"|mixin|extension|typedef|record)"
     r"\s+([A-Za-z_]\w*)"
     r")"
-    r".*?(?::|=>|=|{)",
+    r".*?(?:\(|: |:|=>|=|{)",        # `(` で複数行シグネチャ対応
     re.MULTILINE,
 )
 ```
 
 この正規表現は以下を処理します：
-- **Python**: `def login():`, `class User:`
+- **Python**: `def login():`, `class User:`, `def build_graph(`（複数行パラメータ）
 - **TypeScript**: `function login()`, `class User {`
 - **Go**: `func Login()`, `type User struct {`
 - **Rust**: `fn login()`, `struct User`
+
+`(` を終端文字に追加した理由は、`def build_heuristic_graph(\n    project_dir: str, ...` のように `def` 行に `:`、`=>`、`=`、`{` が含まれない複数行関数シグネチャをキャプチャするためです。
 - **Java**: `public class User`, `void login()`
 - その他多数
 

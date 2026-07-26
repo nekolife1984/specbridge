@@ -21,13 +21,28 @@ flowchart TB
         KW["keyword  ──── 0.2"]
     end
 
-    RESULT["TraceGraph with edges<br/>(IMPLEMENTS / VERIFIES)"]
+    subgraph ENRICH["Content Enrichment"]
+        PC["parent heading chain"]
+        BT["body text tokens"]
+        FP["func body previews"]
+    end
 
-    SPC --> MATCH
-    COD --> MATCH
+    SPC --> PC --> MATCH
+    COD --> BT --> MATCH
+    COD --> FP --> MATCH
     MATCH --> SCORE
-    SCORE --> RESULT
+    SCORE --> RESULT["TraceGraph with edges<br/>(IMPLEMENTS / VERIFIES)"]
 ```
+
+**Key improvements over basic heading matching:**
+
+| Enrichment | Source | Effect |
+|-----------|--------|--------|
+| **Parent heading chain** | Spec heading hierarchy | Deep sections inherit broader context (e.g. "TraceNode" also gets "Data Model" + "Type Hierarchy") |
+| **Body text tokens** | Spec section body (first 300 chars) | Captures class/function names mentioned in prose |
+| **Function body previews** | Code function docstrings | Matches spec prose that describes code behavior |
+| **`__init__.py` → parent dir** | Code file path | `core/__init__.py` is matched as `core`, not `__init__` |
+| **Subset bonus** | Symbol × heading overlap | `spec_tokens ⊆ code_keywords` → boosts Jaccard score to ≥0.85 |
 
 ## 2. Algorithm: `build_heuristic_graph()`
 
@@ -57,7 +72,22 @@ This allows callers (like drift detection) to pass pre-computed candidates and a
 Each `SpecCandidate` → `TraceNode(type=SPEC, framework_origin="heuristic")`
 Each `CodeCandidate` → `TraceNode(type=CODE or TEST, framework_origin="heuristic")`
 
-### Step 3: Score every spec–code pair
+### Step 3: Build enriched spec tokens
+
+Before scoring, each spec's heading text is enriched with additional content:
+
+```python
+spec_text = f"{sc.title} {sc.heading_text}"
+if sc.parent_chain:
+    spec_text += " " + " ".join(sc.parent_chain)   # parent headings
+if sc.body_text:
+    spec_text += " " + sc.body_text[:300]            # first 300 chars of body
+spec_tokens = _tokenize(spec_text)
+```
+
+This means a spec section `"TraceNode"` under `"Type Hierarchy"` under `"Data Model"` would produce tokens from: `trace node type hierarchy data model` plus body content mentioning `TraceNode`, `@dataclass`, etc.
+
+### Step 4: Score every spec–code pair
 
 For each `SpecCandidate` × `CodeCandidate` pair, compute a confidence score using four signals:
 
@@ -82,6 +112,8 @@ Compares the immediate parent directory of the spec file and the code file.
 
 Compares the stem (filename without extension) of the spec and code files.
 
+**Special handling for `__init__.py`:** when the code file is named `__init__.py`, the parent directory name is used as the stem instead. For example, `core/__init__.py` is matched as `core`, `analyzers/__init__.py` as `analyzers`.
+
 **Scoring:**
 - **Exact match** (`login.md` ↔ `login.py`): conf = 1.0 × weight
 - **Partial match** (`login.md` ↔ `login_helper.py`): conf = 0.5 × weight
@@ -91,18 +123,28 @@ Compares the stem (filename without extension) of the spec and code files.
 
 Compares symbols extracted from code (function/class names) against tokenized heading text from specs.
 
+**Code-side tokens** are enriched with function body previews (first 80 chars of each function's body text), so docstrings and inline comments contribute to matching.
+
+```python
+code_text = f"{cc.file} {' '.join(cc.symbols)}"
+if cc.functions:
+    code_text += " " + " ".join(f.body_preview for f in cc.functions)
+code_keywords = _tokenize(code_text)
+```
+
 **Scoring:**
 ```
-overlap = spec_tokens & code_tokens
-jaccard = len(overlap) / len(spec_tokens | code_tokens)
-conf = min(jaccard × 3, 1.0) × weight
+overlap = spec_tokens & code_keywords
+jaccard = len(overlap) / len(spec_tokens | code_keywords)
+score = min(jaccard × 3, 1.0)
 ```
+Then apply the **subset bonus**: if `spec_tokens ⊆ code_keywords` (all spec heading tokens appear in code symbols), score is boosted to at least **0.85**. This prevents large `__init__.py` files with many symbols from diluting the Jaccard across irrelevant tokens.
 
 The ×3 multiplier boosts partial matches quickly toward 1.0.
 
 ### 3.4 Heading ↔ File Stem Keyword Overlap (`_W_KEYWORD = 0.2`)
 
-Compares tokenized spec heading text against tokenized code file stem.
+Compares tokenized spec heading text against tokenized code file stem. For `__init__.py` files, the parent directory name is used as the stem (same rule as Signal 2).
 
 **Scoring:** Same Jaccard-based formula as symbol matching, with ×3 boost.
 
@@ -121,18 +163,21 @@ def _score_edge(sc, cc, spec_tokens, project_dir):
         weighted_score += 0.6 * 0.6       # partial
     total_weight += 0.6
 
-    # Signal 2: File name
+    # Signal 2: File name (__init__.py uses parent dir)
     if spec_stem.lower() == code_stem.lower():
         weighted_score += 0.4 * 1.0       # exact
     elif spec_stem.lower() in code_stem.lower() or ...:
         weighted_score += 0.4 * 0.5       # partial
     total_weight += 0.4
 
-    # Signal 3: Symbol overlap
+    # Signal 3: Symbol overlap (enriched with func body previews)
     overlap = spec_tokens & code_keywords
     if overlap:
         jaccard = len(overlap) / len(spec_tokens | code_keywords)
-        weighted_score += 0.3 * min(jaccard * 3, 1.0)
+        score = min(jaccard * 3, 1.0)
+        if spec_tokens.issubset(code_keywords):
+            score = max(score, 0.85)      # subset bonus
+        weighted_score += 0.3 * score
     total_weight += 0.3
 
     # Signal 4: Keyword overlap
@@ -152,7 +197,16 @@ def _score_edge(sc, cc, spec_tokens, project_dir):
 
 ```python
 def _tokenize(text: str) -> set[str]:
-    """Split text into lowercase tokens, removing stopwords."""
+    """Split text into lowercase tokens, removing stopwords.
+
+    Splits CamelCase and underscore-separated identifiers so that
+    e.g. ``ProjectAdapter`` yields ``{'project', 'adapter'}``
+    and ``detect_adapter`` yields ``{'detect', 'adapter'}``.
+    """
+    # Insert space between lowercase–uppercase transitions (CamelCase split)
+    text = re.sub(r"([a-z])([A-Z])", r"\1 \2", text)
+    # Split on underscores so snake_case tokens become separate words
+    text = text.replace("_", " ")
     tokens = set(re.findall(r"[a-zA-Z_][a-zA-Z0-9_]{2,}", text.lower()))
     return tokens - _STOPWORDS
 ```
@@ -164,7 +218,7 @@ are, was, be, has, have, do, does, should, will,
 with, as, at, by, from, it, its, this, that
 ```
 
-Only tokens ≥ 3 characters are retained.
+Only tokens ≥ 3 characters are retained. CamelCase identifiers like `ProjectAdapter` are split into `project` + `adapter` before stopword removal, dramatically improving cross-lingual matching (e.g., Japanese docs with English CamelCase terms).
 
 ## 5. Edge Classification
 
@@ -188,16 +242,26 @@ A weighted average normalizes the score to 0.0–1.0 regardless of how many sign
 
 Jaccard similarity on short texts (headings are usually 2–5 words, file stems 1–3 words) is naturally low. The ×3 multiplier maps typical overlaps (e.g. 2/8 tokens = 0.25) to a useful range (0.75).
 
+### Why subset bonus?
+
+Large `__init__.py` files export many symbols (8+), which dilutes Jaccard similarity to well below 0.15 even when the spec heading perfectly matches one of the symbols. The subset bonus (`spec_tokens ⊆ code_keywords`) detects this case and guarantees a minimum score of 0.85 for the symbol signal, raising overall confidence above threshold.
+
 ## 7. Evidence Chain
 
 Every edge carries a list of `Evidence` objects that explain *why* the relationship was inferred:
 
 ```
-Edge from "src/auth/login.py" → "auth.auth.1.2"
-  Evidence 1: kind="heuristic:dirname", value="dir 'auth' matches"   [from spec file]
-  Evidence 2: kind="heuristic:filename", value="basename 'auth' ≈ 'login' (partial)" [from spec file]
-  Evidence 3: kind="heuristic:keyword", value="keyword overlap: login" [from spec file]
+Edge from "specbridge/core/__init__.py → docs.en.02-data-model.1.2.1"
+  Evidence 1: kind="heuristic:symbol", value="keyword overlap: trace, node"
+  Evidence 2: kind="heuristic:subset", value="all spec tokens found in code symbols"
 ```
+
+Evidence kinds include:
+- `heuristic:dirname` — directory name match
+- `heuristic:filename` — file name match
+- `heuristic:symbol` — symbol/heading keyword overlap (with optional subset bonus)
+- `heuristic:keyword` — file stem keyword overlap
+- `heuristic:subset` — all spec tokens covered by code symbols (bonus)
 
 This transparency is a core principle — users always see the reasoning behind each inferred relationship.
 

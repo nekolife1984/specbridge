@@ -94,6 +94,7 @@ class SpecCandidate:
     auto_id: str            # e.g. "auth.auth.1.2"
     title: str              # Cleaned e.g. "Login"
     line: int               # 1-indexed
+    parent_chain: list[str] | None  # e.g. ["Data Model", "Type Hierarchy"]
     body_text: str          # Full section text
     body_hash: str          # SHA256[:16]
     body_hash_content: str  # SHA256[:16] without heading
@@ -142,18 +143,20 @@ _RE_FUNC_DEF = re.compile(
     r"|mixin|extension|typedef|record)"
     r"\s+([A-Za-z_]\w*)"
     r")"
-    r".*?(?::|=>|=|{)",
+    r".*?(?:\(|: |:|=>|=|{)",        # note: `(` supports multi-line sigs
     re.MULTILINE,
 )
 ```
 
 This regex handles:
-- **Python**: `def login():`, `class User:`
+- **Python**: `def login():`, `class User:`, `def build_graph(` (multi-line param)
 - **TypeScript**: `function login()`, `class User {`
 - **Go**: `func Login()`, `type User struct {`
 - **Rust**: `fn login()`, `struct User`
 - **Java**: `public class User`, `void login()`
 - And many more.
+
+The `(` terminator was added to capture multi-line function signatures like `def build_heuristic_graph(\n    project_dir: str, ...` where the `def` line doesn't contain `:`, `=>`, `=`, or `{`.
 
 ### 3.4 Import Extraction
 

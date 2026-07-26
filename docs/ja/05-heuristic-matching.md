@@ -21,13 +21,28 @@ flowchart TB
         KW["キーワード   ── 0.2"]
     end
 
-    RESULT["TraceGraph with edges<br/>(IMPLEMENTS / VERIFIES)"]
+    subgraph ENRICH["コンテンツ拡充"]
+        PC["親見出しチェーン"]
+        BT["本文トークン"]
+        FP["関数ボディプレビュー"]
+    end
 
-    SPC --> MATCH
-    COD --> MATCH
+    SPC --> PC --> MATCH
+    COD --> BT --> MATCH
+    COD --> FP --> MATCH
     MATCH --> SCORE
-    SCORE --> RESULT
+    SCORE --> RESULT["TraceGraph with edges<br/>(IMPLEMENTS / VERIFIES)"]
 ```
+
+**基本の見出しマッチングからの主な改善点:**
+
+| 拡充 | ソース | 効果 |
+|------|--------|------|
+| **親見出しチェーン** | 仕様の見出し階層 | 深いセクションが広い文脈を継承（例：「TraceNode」に「Data Model」＋「Type Hierarchy」が追加される） |
+| **本文トークン** | 仕様セクションの本文（先頭300文字） | 文章中に登場するクラス名や関数名をキャプチャ |
+| **関数ボディプレビュー** | コード関数のdocstring | コードの動作を説明する仕様の文章とマッチング |
+| **`__init__.py` → 親ディレクトリ** | コードファイルパス | `core/__init__.py` を `__init__` ではなく `core` としてマッチ |
+| **サブセットボーナス** | シンボル × 見出しの重複 | `spec_tokens ⊆ code_keywords` → Jaccardスコアを0.85以上にブースト |
 
 ## 2. アルゴリズム: `build_heuristic_graph()`
 
@@ -57,7 +72,22 @@ def build_heuristic_graph(
 各 `SpecCandidate` → `TraceNode(type=SPEC, framework_origin="heuristic")`
 各 `CodeCandidate` → `TraceNode(type=CODE or TEST, framework_origin="heuristic")`
 
-### ステップ3: すべての spec–code ペアをスコアリング
+### ステップ3: 拡充された仕様トークンを構築
+
+スコアリングの前に、各仕様の見出しテキストを追加コンテンツで拡充します：
+
+```python
+spec_text = f"{sc.title} {sc.heading_text}"
+if sc.parent_chain:
+    spec_text += " " + " ".join(sc.parent_chain)   # 親見出し
+if sc.body_text:
+    spec_text += " " + sc.body_text[:300]            # 本文の先頭300文字
+spec_tokens = _tokenize(spec_text)
+```
+
+例えば「Data Model」→「Type Hierarchy」→「TraceNode」という階層の場合、`trace node type hierarchy data model` に加えて、本文の `TraceNode`、`@dataclass` などのトークンが生成されます。
+
+### ステップ4: すべての spec–code ペアをスコアリング
 
 各 `SpecCandidate` × `CodeCandidate` ペアについて、4つの信号を使用して信頼度スコアを計算：
 
@@ -82,6 +112,8 @@ confidence = weighted_score / total_weight
 
 仕様ファイルとコードファイルのステム（拡張子を除いたファイル名）を比較。
 
+**`__init__.py` の特別処理:** コードファイルが `__init__.py` の場合、親ディレクトリ名をステムとして使用します。例えば `core/__init__.py` は `core`、`analyzers/__init__.py` は `analyzers` としてマッチングされます。
+
 **スコアリング:**
 - **完全一致**（`login.md` ↔ `login.py`）: conf = 1.0 × 重み
 - **部分一致**（`login.md` ↔ `login_helper.py`）: conf = 0.5 × 重み
@@ -91,18 +123,28 @@ confidence = weighted_score / total_weight
 
 コードから抽出したシンボル（関数名/クラス名）と、仕様の見出しテキストをトークン化したものとを比較。
 
+**コード側のトークン**は関数ボディプレビュー（各関数の本文の最初80文字）で拡充されるため、docstringやインラインコメントもマッチングに貢献します。
+
+```python
+code_text = f"{cc.file} {' '.join(cc.symbols)}"
+if cc.functions:
+    code_text += " " + " ".join(f.body_preview for f in cc.functions)
+code_keywords = _tokenize(code_text)
+```
+
 **スコアリング:**
 ```
-overlap = spec_tokens & code_tokens
-jaccard = len(overlap) / len(spec_tokens | code_tokens)
-conf = min(jaccard × 3, 1.0) × 重み
+overlap = spec_tokens & code_keywords
+jaccard = len(overlap) / len(spec_tokens | code_keywords)
+score = min(jaccard × 3, 1.0)
 ```
+次に**サブセットボーナス**を適用：`spec_tokens ⊆ code_keywords`（すべての仕様見出しトークンがコードシンボルに含まれる）の場合、スコアを少なくとも **0.85** にブースト。これにより、多数のシンボルを持つ大きな `__init__.py` ファイルでJaccardが薄まるのを防ぎます。
 
 ×3の乗数により、部分的な一致が迅速に1.0に近づきます。
 
 ### 3.4 見出し ↔ ファイルステムキーワード重複（`_W_KEYWORD = 0.2`）
 
-トークン化された仕様見出しテキストと、トークン化されたコードファイルのステムを比較。
+トークン化された仕様見出しテキストと、トークン化されたコードファイルのステムを比較。`__init__.py` の場合は親ディレクトリ名をステムとして使用します（信号2と同じルール）。
 
 **スコアリング:** シンボルマッチングと同じJaccardベースの式で、×3ブースト。
 
@@ -121,18 +163,21 @@ def _score_edge(sc, cc, spec_tokens, project_dir):
         weighted_score += 0.6 * 0.6       # 部分一致
     total_weight += 0.6
 
-    # 信号2: ファイル名
+    # 信号2: ファイル名（__init__.py は親ディレクトリ名を使用）
     if spec_stem.lower() == code_stem.lower():
         weighted_score += 0.4 * 1.0       # 完全一致
     elif spec_stem.lower() in code_stem.lower() or ...:
         weighted_score += 0.4 * 0.5       # 部分一致
     total_weight += 0.4
 
-    # 信号3: シンボル重複
+    # 信号3: シンボル重複（関数ボディプレビューで拡充）
     overlap = spec_tokens & code_keywords
     if overlap:
         jaccard = len(overlap) / len(spec_tokens | code_keywords)
-        weighted_score += 0.3 * min(jaccard * 3, 1.0)
+        score = min(jaccard * 3, 1.0)
+        if spec_tokens.issubset(code_keywords):
+            score = max(score, 0.85)      # サブセットボーナス
+        weighted_score += 0.3 * score
     total_weight += 0.3
 
     # 信号4: キーワード重複
@@ -152,7 +197,16 @@ def _score_edge(sc, cc, spec_tokens, project_dir):
 
 ```python
 def _tokenize(text: str) -> set[str]:
-    """テキストを小文字トークンに分割し、ストップワードを除去。"""
+    """テキストを小文字トークンに分割し、ストップワードを除去。
+
+    CamelCaseとアンダースコア区切りの識別子を分割するため、
+    例えば ``ProjectAdapter`` は ``{'project', 'adapter'}`` に、
+    ``detect_adapter`` は ``{'detect', 'adapter'}`` になります。
+    """
+    # CamelCase分割のため小文字→大文字の境界にスペースを挿入
+    text = re.sub(r"([a-z])([A-Z])", r"\1 \2", text)
+    # snake_caseを分割するためアンダースコアをスペースに変換
+    text = text.replace("_", " ")
     tokens = set(re.findall(r"[a-zA-Z_][a-zA-Z0-9_]{2,}", text.lower()))
     return tokens - _STOPWORDS
 ```
@@ -164,7 +218,7 @@ are, was, be, has, have, do, does, should, will,
 with, as, at, by, from, it, its, this, that
 ```
 
-3文字以上のトークンのみ保持されます。
+3文字以上のトークンのみ保持されます。`ProjectAdapter` のようなCamelCase識別子はストップワード除去前に `project` + `adapter` に分割されるため、言語をまたがったマッチング（例：日本語のドキュメントに登場する英語のCamelCase用語）が大幅に改善されます。
 
 ## 5. エッジの分類
 
@@ -188,16 +242,26 @@ with, as, at, by, from, it, its, this, that
 
 短いテキスト（見出しは通常2〜5語、ファイルステムは1〜3語）ではJaccard類似度は自然に低くなります。×3乗数は、典型的な重複（例：2/8トークン = 0.25）を有用な範囲（0.75）にマッピングします。
 
+### なぜサブセットボーナスなのか？
+
+大きな `__init__.py` ファイルは多数のシンボル（8個以上）をエクスポートするため、仕様の見出しがそのうちの1つと完全に一致していてもJaccard類似度が0.15を大きく下回ります。サブセットボーナス（`spec_tokens ⊆ code_keywords`）はこのケースを検出し、シンボル信号の最小スコアを0.85に保証して、全体の信頼度をしきい値以上に引き上げます。
+
 ## 7. 証拠チェーン
 
 すべてのエッジは、関係が*なぜ*推論されたかを説明する `Evidence` オブジェクトのリストを持ちます：
 
 ```
-Edge from "src/auth/login.py" → "auth.auth.1.2"
-  Evidence 1: kind="heuristic:dirname", value="dir 'auth' matches"   [仕様ファイルから]
-  Evidence 2: kind="heuristic:filename", value="basename 'auth' ≈ 'login' (partial)" [仕様ファイルから]
-  Evidence 3: kind="heuristic:keyword", value="keyword overlap: login" [仕様ファイルから]
+Edge from "specbridge/core/__init__.py → docs.en.02-data-model.1.2.1"
+  Evidence 1: kind="heuristic:symbol", value="keyword overlap: trace, node"
+  Evidence 2: kind="heuristic:subset", value="all spec tokens found in code symbols"
 ```
+
+証拠の種類:
+- `heuristic:dirname` — ディレクトリ名の一致
+- `heuristic:filename` — ファイル名の一致
+- `heuristic:symbol` — シンボル/見出しキーワードの重複（オプションでサブセットボーナス）
+- `heuristic:keyword` — ファイルステムキーワードの重複
+- `heuristic:subset` — すべての仕様トークンがコードシンボルに含まれる（ボーナス）
 
 この透明性は中核的な原則であり、ユーザーは推論された各関係の背後にある理由を常に確認できます。
 
