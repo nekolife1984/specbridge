@@ -180,7 +180,7 @@ def build_heuristic_graph(
                         confidence=conf,
                         metadata={"func_name": func.name, "file": cc.file, "line": func.line},
                     ))
-                evidence: list[Evidence] = [
+                func_evidence: list[Evidence] = [
                     Evidence(
                         kind="heuristic:funcname",
                         value=f"function '{func.name}' matches spec '{sc.title}'",
@@ -194,7 +194,7 @@ def build_heuristic_graph(
                     dst_id=sc.auto_id,
                     relation=relation,
                     strength=strength,
-                    evidence=evidence,
+                    evidence=func_evidence,
                 ))
 
     return graph

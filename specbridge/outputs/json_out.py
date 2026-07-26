@@ -9,13 +9,13 @@ from typing import Any
 from specbridge.core import TraceGraph
 
 
-def _node_dict(n: Any) -> dict:
+def _node_dict(n: Any) -> dict[str, Any]:
     d = asdict(n)
     d["type"] = n.type.value
     return d
 
 
-def _edge_dict(e: Any) -> dict:
+def _edge_dict(e: Any) -> dict[str, Any]:
     d = asdict(e)
     d["relation"] = e.relation.value
     d["strength"] = e.strength.value

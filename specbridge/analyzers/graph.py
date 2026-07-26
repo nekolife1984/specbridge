@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
 
 from specbridge.core import NodeType, TraceGraph
@@ -43,7 +44,7 @@ def _resolve_import(
     imp: str,
     source_file: str,
     root: Path,
-    code_nodes: dict[str, tuple[str, object]],
+    code_nodes: Mapping[str, tuple[str, object]],
     stem_to_file: dict[str, list[str]],
 ) -> str | None:
     """Resolve an import string to a file path in the project.

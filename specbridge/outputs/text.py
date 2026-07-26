@@ -1,5 +1,7 @@
 """Plain text output."""
 
+from typing import Any
+
 from specbridge.core import NodeType, TraceGraph
 
 
@@ -22,12 +24,12 @@ def render_text(graph: TraceGraph, max_nodes: int | None = None) -> str:
         lines.append(f"Coverage: {cov['coverage_pct']}% ({cov['covered']}/{cov['total']})")
     lines.append("")
 
-    def _maybe_truncate(items: list, label: str, max_n: int | None) -> tuple[list, bool]:
+    def _maybe_truncate(items: list[Any], label: str, max_n: int | None) -> tuple[list[Any], bool]:
         if max_n is not None and len(items) > max_n:
             return items[:max_n], True
         return items, False
 
-    def _is_func_node(n) -> bool:
+    def _is_func_node(n: Any) -> bool:
         """Function-level nodes have '::' in their ID."""
         return "::" in n.id
 
@@ -41,7 +43,7 @@ def render_text(graph: TraceGraph, max_nodes: int | None = None) -> str:
             impls = [e for e in edges_to if e.relation.value in ("implements", "verifies", "satisfies")]
             lines.append(f"  {n.id:20s}  [{len(impls)} refs]  {n.title}")
         if truncated:
-            lines.append(f"  ... and {len(specs) - max_nodes} more specs")
+            lines.append(f"  ... and {len(specs) - (max_nodes or 0)} more specs")
         lines.append("")
 
     # Code files (file-level only, not function-level)
@@ -57,7 +59,7 @@ def render_text(graph: TraceGraph, max_nodes: int | None = None) -> str:
             else:
                 lines.append(f"  {n.id:40s}  (unlinked)")
         if truncated:
-            lines.append(f"  ... and {len(codes) - max_nodes} more code files")
+            lines.append(f"  ... and {len(codes) - (max_nodes or 0)} more code files")
         lines.append("")
 
     # Function refs (function-level nodes)
@@ -73,7 +75,7 @@ def render_text(graph: TraceGraph, max_nodes: int | None = None) -> str:
             else:
                 lines.append(f"  {n.id:45s}  (unlinked)")
         if truncated:
-            lines.append(f"  ... and {len(funcs) - max_nodes} more functions")
+            lines.append(f"  ... and {len(funcs) - (max_nodes or 0)} more functions")
         lines.append("")
 
     # Tests
@@ -87,7 +89,7 @@ def render_text(graph: TraceGraph, max_nodes: int | None = None) -> str:
                 targets = ", ".join(e.dst_id for e in edges_from)
                 lines.append(f"  {n.id:40s} → {targets}")
         if truncated:
-            lines.append(f"  ... and {len(tests) - max_nodes} more test files")
+            lines.append(f"  ... and {len(tests) - (max_nodes or 0)} more test files")
         lines.append("")
 
     return "\n".join(lines)

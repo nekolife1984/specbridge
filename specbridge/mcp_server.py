@@ -14,7 +14,7 @@ Usage:
 from __future__ import annotations
 
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from specbridge.adapters import detect_all, merge_graphs
 from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
@@ -37,7 +37,9 @@ def create_mcp_server(project_dir: str = ".") -> object:
 
     server = Server("specbridge")
 
-    def _analyze_graph():
+    from specbridge.core import TraceGraph
+
+    def _analyze_graph() -> TraceGraph:
         """Run all adapters and merge results."""
         scored = detect_all(str(root))
         if not scored:
@@ -45,7 +47,7 @@ def create_mcp_server(project_dir: str = ".") -> object:
         graphs = [adapter.analyze(str(root)) for _, adapter in scored]
         return merge_graphs(graphs)
 
-    @server.list_tools()
+    @server.list_tools()  # type: ignore[no-untyped-call, untyped-decorator]
     async def handle_list_tools() -> list[Tool]:
         return [
             Tool(
@@ -93,8 +95,8 @@ def create_mcp_server(project_dir: str = ".") -> object:
             ),
         ]
 
-    @server.call_tool()
-    async def handle_call_tool(name: str, arguments: dict) -> list[TextContent]:
+    @server.call_tool()  # type: ignore[untyped-decorator]
+    async def handle_call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:  # type: ignore[return]
         if name == "analyze":
             graph = _analyze_graph()
             specs = len(graph.nodes_by_type(NodeType.SPEC))
@@ -219,4 +221,4 @@ async def run_mcp_server(project_dir: str = ".") -> None:
     server = create_mcp_server(project_dir)
 
     async with stdio_server() as (read_stream, write_stream):
-        await server.run(read_stream, write_stream, server.create_initialization_options())
+        await server.run(read_stream, write_stream, server.create_initialization_options())  # type: ignore[attr-defined]

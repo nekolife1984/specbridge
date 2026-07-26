@@ -65,7 +65,7 @@ RE_SATISFIES_HTML = re.compile(r"<!--\s*@satisfies\s+(.+?)\s*-->")
 RE_BOUNDARY = re.compile(r"^_Boundary:_\s+(.+)$", re.MULTILINE)
 
 # Shared regex patterns for comment extraction (used by both tokenize and regex paths)
-_SOURCE_PATTERNS: list[tuple[re.Pattern, str]] = [
+_SOURCE_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (RE_IMPL_COMMENT, "impl"),
     (RE_MODULE_COMMENT, "module"),
     (RE_FEATURE_COMMENT, "feature"),

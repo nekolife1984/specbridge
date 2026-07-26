@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 DEFAULT_SPEC_DIRS = ["docs", "spec", "specs"]
 DEFAULT_SOURCE_DIRS = ["src", "lib", "app"]
@@ -64,10 +65,10 @@ class SpecbridgeConfig:
     def _from_pyproject(cls, path: Path) -> SpecbridgeConfig:
         """Parse [tool.specbridge] from pyproject.toml."""
         try:
-            import tomllib  # Python 3.11+
+            import tomllib  # type: ignore[import-not-found]  # Python 3.11+
         except ImportError:
             try:
-                import tomli as tomllib  # backport
+                import tomli as tomllib  # type: ignore[import-not-found]  # backport
             except ImportError:
                 return cls()
         try:
@@ -78,7 +79,7 @@ class SpecbridgeConfig:
         return cls._from_dict(data)
 
     @classmethod
-    def _from_dict(cls, data: dict) -> SpecbridgeConfig:
+    def _from_dict(cls, data: dict[str, Any]) -> SpecbridgeConfig:
         """Convert parsed dict to config, merging with defaults."""
         return cls(
             spec_dirs=data.get("spec_dirs", list(DEFAULT_SPEC_DIRS)),
