@@ -659,5 +659,59 @@ def call_graph(dir: str, spec_id: str, max_depth: int, output_fmt: str) -> None:
         click.echo(_json.dumps(ti, indent=2, ensure_ascii=False))
 
 
+@cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory to set up", show_default=True)
+@click.option("--ci", is_flag=True, default=False,
+              help="Also create GitHub Actions CI workflow", show_default=True)
+def setup(dir: str, ci: bool) -> None:
+    """One‑command setup: install hook, create config, deploy AGENTS.md.
+
+    Runs the interactive setup script that:
+
+    \\b
+    - Creates .specbridge.yaml (auto‑detects source/spec dirs)
+    - Installs pre‑commit drift hook
+    - Deploys AGENTS.md for AI agent workflow guidance
+    - Deploys Hermes skill (if ~/.hermes/ exists)
+    - Takes initial snapshot
+    - Optionally sets up GitHub Actions CI
+
+    Equivalent to: \\b bash scripts/setup.sh
+    """
+    root = Path(dir).resolve()
+    if not root.exists():
+        click.echo(f"❌ Directory '{root}' does not exist.", err=True)
+        raise click.Abort()
+
+    # Locate the setup.sh script relative to the specbridge installation
+    # Try several locations: alongside the package, in the repo, via pip show
+    candidates = [
+        Path(__file__).resolve().parent.parent / "scripts" / "setup.sh",
+        Path(__file__).resolve().parent.parent.parent / "scripts" / "setup.sh",
+        Path.cwd() / "scripts" / "setup.sh",
+    ]
+    setup_script: Path | None = None
+    for c in candidates:
+        if c.exists():
+            setup_script = c
+            break
+
+    if setup_script is None:
+        click.echo("❌ Could not find scripts/setup.sh", err=True)
+        click.echo("   Download it manually:", err=True)
+        click.echo("     curl -fsSL https://raw.githubusercontent.com/nekolife1984/specbridge/main/scripts/setup.sh | bash", err=True)
+        raise click.Abort()
+
+    import subprocess
+    env = {**dict(**{"CI_SETUP": "1"} if ci else {})}
+    result = subprocess.run(
+        ["bash", str(setup_script), str(root)],
+        env={**{}, **env},
+    )
+    if result.returncode != 0:
+        click.echo("❌ Setup script failed.", err=True)
+        raise click.Abort()
+
+
 if __name__ == "__main__":
     cli()

@@ -57,6 +57,12 @@
 - [x] **Watch mode** — `specbridge watch` for live file monitoring
 - [x] **Config** — `.specbridge.yaml` support with `config` CLI
 
+## v0.7 — Project Setup & Onboarding
+
+- [x] **One‑command setup script** (`scripts/setup.sh`) — creates `.specbridge.yaml`, installs hook, deploys AGENTS.md + Hermes skill, takes snapshot
+- [x] **`specbridge setup` CLI command** — wraps setup script for post‑install convenience
+- [x] **`AGENTS.md`** — universal AI agent workflow guide (read by Hermes, OpenCode, Claude Code, Cursor, Codex)
+
 ## v1.0 — Stabilization
 
 - [x] Plugin SDK for community adapters (entry-point discovery, `plugins` CLI, example plugin)
