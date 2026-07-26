@@ -59,19 +59,26 @@ def _dirname(file_path: str) -> str:
 def build_heuristic_graph(
     project_dir: str,
     *,
+    specs: Optional[list[SpecCandidate]] = None,
+    codes: Optional[list[CodeCandidate]] = None,
     spec_dirs: Optional[list[str]] = None,
     source_dirs: Optional[list[str]] = None,
 ) -> TraceGraph:
     """Build a TraceGraph using only structural heuristics.
 
     This is the PRIMARY entry point for the no-tag heuristic adapter.
+
+    Pass pre-discovered *specs* and *codes* to avoid redundant re-discovery
+    (used by drift detection which already has them).
     """
     graph = TraceGraph()
 
-    # 1. Discover spec candidates
-    specs = discover_specs(project_dir, spec_dirs=spec_dirs)
-    # 2. Discover code candidates
-    codes = discover_code(project_dir, source_dirs=source_dirs)
+    # 1. Discover spec candidates (unless pre-provided)
+    if specs is None:
+        specs = discover_specs(project_dir, spec_dirs=spec_dirs)
+    # 2. Discover code candidates (unless pre-provided)
+    if codes is None:
+        codes = discover_code(project_dir, source_dirs=source_dirs)
 
     # 3. Convert spec candidates → TraceNodes
     for sc in specs:
