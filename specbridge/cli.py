@@ -20,8 +20,8 @@ def cli():
 
 @cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory to analyze", show_default=True)
-@click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
-              help="Output format", show_default=True)
+@click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json", "html"]),
+              help="Output format (text, json, or html)", show_default=True)
 @click.option("--merge", "-m", is_flag=True, default=False,
               help="Merge results from ALL matching adapters (not just the best one)",
               show_default=True)
@@ -60,6 +60,15 @@ def analyze(dir, output_fmt, merge, top):
 
     if output_fmt == "json":
         click.echo(render_json(graph))
+    elif output_fmt == "html":
+        from specbridge.outputs.html import render_html
+        html = render_html(graph)
+        out_path = root / ".specbridge" / "trace.html"
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(html, encoding="utf-8")
+        click.echo(f"   📊 HTML graph saved to: {out_path}", err=True)
+        import webbrowser
+        webbrowser.open(f"file://{out_path.resolve()}")
     else:
         click.echo(render_text(graph, max_nodes=top))
 
