@@ -11,26 +11,6 @@ from specbridge.core import NodeType
 from specbridge.outputs.text import render_text
 from specbridge.outputs.json_out import render_json
 
-# Lazy imports for adapters/analyzers so CLI boots fast
-_adapters: list | None = None
-_analyzers: list | None = None
-
-
-def _get_adapters():
-    global _adapters
-    if _adapters is None:
-        from specbridge.adapters import detect_adapter
-        _adapters = [detect_adapter]  # just the resolver
-    return _adapters
-
-
-def _get_analyzers():
-    global _analyzers
-    if _analyzers is None:
-        from specbridge.analyzers import coverage_summary, find_orphan_specs, find_orphan_code
-        _analyzers = [coverage_summary, find_orphan_specs, find_orphan_code]
-    return _analyzers
-
 
 @click.group()
 @click.version_option(version=__version__, prog_name="specbridge")
@@ -55,10 +35,8 @@ def analyze(dir, output_fmt):
         click.echo("❌ No recognized SSD framework found.", err=True)
         raise click.Abort()
 
-    click.echo(f"   Using adapter: {adapter.__class__.__name__}", err=True)
     graph = adapter.analyze(str(root))
 
-    # Summary
     spec_count = len(graph.nodes_by_type(NodeType.SPEC))
     code_count = len(graph.nodes_by_type(NodeType.CODE))
     test_count = len(graph.nodes_by_type(NodeType.TEST))
@@ -69,7 +47,6 @@ def analyze(dir, output_fmt):
     if cov["total"] > 0:
         click.echo(f"   Coverage: {cov['coverage_pct']}% ({cov['covered']}/{cov['total']})", err=True)
 
-    # Output
     if output_fmt == "json":
         click.echo(render_json(graph))
     else:
@@ -93,7 +70,6 @@ def impact(dir, spec_id, output_fmt):
 
     graph = adapter.analyze(str(root))
 
-    # Find the spec node
     spec_node = graph.nodes.get(spec_id) or graph.nodes.get(f"spec::{spec_id}")
     if spec_node is None:
         click.echo(f"❌ Spec '{spec_id}' not found in trace graph.", err=True)
@@ -176,17 +152,78 @@ def coverage(dir, output_fmt):
 
 @cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
-@click.option("--git-base", default="main", help="Git base ref to diff against", show_default=True)
-@click.option("--gate", is_flag=True, help="Exit with code 1 if drift detected")
-def drift(dir, git_base, gate):
-    """Detect changes that affect specs."""
-    import json as _json
-    import subprocess
-    from pathlib import Path
+@click.option("--reason", default="", help="Description of why snapshot was taken")
+def snapshot(dir, reason):
+    """Take a structural snapshot of specs and code."""
+    from specbridge.analyzers.drift import build_snapshot, save_snapshot
 
     root = Path(dir).resolve()
+    click.echo(f"📸 Snapshotting {root} ...", err=True)
 
-    # git diff
+    snap = build_snapshot(str(root), reason=reason)
+    path = save_snapshot(snap, str(root))
+
+    click.echo(f"   Specs: {len(snap['specs'])} | Code files: {len(snap['code'])}")
+    click.echo(f"   Coverage: {snap['coverage']['coverage_pct']}%")
+    click.echo(f"   Saved: {path}")
+
+
+@cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+@click.option("--snapshot", "snapshot_path", default=None,
+              help="Path to snapshot file (default: .specbridge/snapshot.json)")
+@click.option("--gate", is_flag=True, help="Exit with code 1 if drift detected")
+@click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
+              help="Output format", show_default=True)
+@click.option("--git-base", default=None,
+              help="Git base ref to diff against (alternative to snapshot comparison)")
+def drift(dir, snapshot_path, gate, output_fmt, git_base):
+    """Detect changes between snapshot and current state."""
+    root = Path(dir).resolve()
+
+    if git_base:
+        _drift_git(str(root), git_base, gate)
+        return
+
+    from specbridge.analyzers.drift import load_snapshot, compute_drift
+
+    if snapshot_path:
+        snap_path = Path(snapshot_path)
+        click.echo(f"   Loading snapshot: {snap_path}", err=True)
+        try:
+            import json
+            snapshot = json.loads(snap_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            click.echo(f"❌ Failed to load snapshot: {e}", err=True)
+            raise click.Abort()
+    else:
+        snapshot = load_snapshot(str(root))
+        if snapshot is None:
+            click.echo("❌ No snapshot found. Run 'specbridge snapshot' first.", err=True)
+            raise click.Abort()
+
+    click.echo(f"🔍 Comparing {root} against snapshot from {snapshot.get('timestamp', '?')} ...", err=True)
+
+    report = compute_drift(snapshot, str(root))
+
+    if output_fmt == "json":
+        import json as _json
+        click.echo(_json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+    else:
+        click.echo("")
+        click.echo(report.render_text())
+
+    if gate and report.has_drift:
+        raise SystemExit(1)
+
+
+def _drift_git(project_dir: str, git_base: str, gate: bool) -> None:
+    """Git-based drift detection (alternative to snapshot comparison)."""
+    import subprocess
+    from specbridge.adapters import detect_adapter
+
+    root = Path(project_dir).resolve()
+
     try:
         result = subprocess.run(
             ["git", "diff", "--name-only", git_base],
@@ -201,8 +238,6 @@ def drift(dir, git_base, gate):
         click.echo("✅ No changes detected.")
         return
 
-    # Load trace graph and find affected specs
-    from specbridge.adapters import detect_adapter
     adapter = detect_adapter(str(root))
     if adapter is None:
         click.echo("❌ No recognized SSD framework found.", err=True)
