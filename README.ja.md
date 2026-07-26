@@ -169,6 +169,28 @@ max_output_nodes: 40
 
 ---
 
+## AIエージェントスキル
+
+specbridge には **AIエージェントスキル** が `.agents/skills/specbridge/SKILL.md` に同梱されています。このスキルはAIエージェントにツールの使い方（インストール、分析、ドリフトチェック、CI設定、MCPサーバー連携）を教えます。
+
+**Hermes Agent へのインストール:**
+
+```bash
+bash scripts/install-hooks.sh
+```
+
+これで pre-commit hook とスキルの両方が `~/.hermes/skills/` にシンボリックリンクされます。エージェントは `specbridge` スキルをロードして使い方のドキュメントを参照できます。
+
+**手動インストール（その他のエージェント）:**
+
+```bash
+ln -sf "$(pwd)/.agents/skills/specbridge" ~/.hermes/skills/software-development/specbridge
+```
+
+またはスキルファイルを直接 `.agents/skills/specbridge/SKILL.md` から参照してください。
+
+---
+
 ## アーキテクチャ
 
 ```text

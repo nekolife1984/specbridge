@@ -139,6 +139,12 @@ specbridge/
 ├── examples/
 │   └── todo-app/       # Runnable demo project
 ├── docs/               # Design docs (EN + JA, 11 categories)
+├── .agents/
+│   ├── scripts/
+│   │   └── pre-commit.specbridge.sh   # Pre-commit drift hook
+│   └── skills/
+│       └── specbridge/
+│           └── SKILL.md             # AI agent skill for using specbridge
 └── tests/              # 169+ tests
 ```
 
@@ -166,6 +172,28 @@ max_output_nodes: 40
 ```
 
 That's it. No tags, no annotations — specbridge infers what it can out of the box.
+
+---
+
+## AI Agent Skill
+
+specbridge ships with an **AI agent skill** at `.agents/skills/specbridge/SKILL.md` that teaches AI coding agents how to use the tool — install, run analysis, check drift, set up CI gates, and use the MCP server.
+
+**Install into Hermes Agent:**
+
+```bash
+bash scripts/install-hooks.sh
+```
+
+This symlinks both the pre-commit hook and the skill into `~/.hermes/skills/`. Agents can then load the `specbridge` skill to get full usage documentation.
+
+**Manual install (other agents):**
+
+```bash
+ln -sf "$(pwd)/.agents/skills/specbridge" ~/.hermes/skills/software-development/specbridge
+```
+
+Or reference the skill file directly at `.agents/skills/specbridge/SKILL.md`.
 
 ---
 
