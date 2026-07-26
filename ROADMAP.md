@@ -30,9 +30,9 @@
 - [x] Code dependency graph (`build_code_dependency_graph` via imports)
 - [x] Function-level traceability (`_resolve_import` + stem matching)
 - [x] HTML interactive graph output (`outputs/html.py` — D3.js force-directed layout)
-- [ ] TypeScript/JavaScript AST parser (via tree-sitter)
-- [ ] Go AST parser
-- [ ] Rust AST parser
+- [x] **TypeScript/JavaScript AST parser** (via tree-sitter)
+- [x] **Go AST parser**
+- [x] **Rust AST parser**
 - [ ] CRG-style call-graph import for indirect impact
 
 ## v0.4 — Confidence + heuristics (complete)
