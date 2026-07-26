@@ -27,7 +27,10 @@ def cli():
               show_default=True)
 @click.option("--top", type=int, default=None,
               help="Show only top N items per category (default: all)", show_default=True)
-def analyze(dir, output_fmt, merge, top):
+@click.option("--deps", is_flag=True, default=False,
+              help="Build code dependency graph from imports (adds DEPENDS edges)",
+              show_default=True)
+def analyze(dir, output_fmt, merge, top, deps):
     """Analyze a project and build a trace graph."""
     from specbridge.adapters import detect_adapter, detect_all, merge_graphs
 
@@ -51,6 +54,14 @@ def analyze(dir, output_fmt, merge, top):
             click.echo("❌ No recognized SSD framework found.", err=True)
             raise click.Abort()
         graph = adapter.analyze(str(root))
+
+    # Build code dependency graph if requested
+    if deps:
+        from specbridge.analyzers.graph import build_code_dependency_graph
+        before = len(graph.edges)
+        build_code_dependency_graph(graph, str(root))
+        dep_count = len(graph.edges) - before
+        click.echo(f"   Deps:   {dep_count} import edges", err=True)
 
     spec_count = len(graph.nodes_by_type(NodeType.SPEC))
     code_count = len(graph.nodes_by_type(NodeType.CODE))

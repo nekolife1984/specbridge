@@ -2,3 +2,4 @@ spec_dirs:
   - docs
 source_dirs:
   - src
+  - tests
