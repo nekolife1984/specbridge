@@ -315,7 +315,13 @@ def validate_boundary(dir):
             if not src or not src.source.file:
                 continue
             code_path = src.source.file
-            inside = any(code_path.startswith(b["path"]) for b in boundaries)
+            import fnmatch
+            inside = any(
+                fnmatch.fnmatch(code_path, b["path"])
+                if any(c in b["path"] for c in "*?[")
+                else code_path.startswith(b["path"])
+                for b in boundaries
+            )
             if not inside:
                 boundary_issues.append({
                     "spec_id": nid,

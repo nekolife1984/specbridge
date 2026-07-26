@@ -3,7 +3,7 @@
 
 Users can create tasks with a title and description.
 
-_Boundary:_ src/tasks/
+_Boundary:_ src/tasks/*
 
 ## API Design
 <!-- @design TaskCreateRequest -->
@@ -28,4 +28,4 @@ Empty titles are rejected with 400 Bad Request.
 
 Users can list all tasks, sorted by creation date.
 
-_Boundary:_ src/tasks/
+_Boundary:_ src/tasks/*
