@@ -39,9 +39,19 @@ mcp = [
 watch = [
     "watchdog>=4.0",
 ]
+ast = [
+    "tree-sitter>=0.21",
+    "tree-sitter-python>=0.21",
+]
 
 [project.scripts]
 specbridge = "specbridge.cli:cli"
+
+# ── Plugin SDK ──────────────────────────────────────────────────────
+# External packages register specbridge adapters via entry points:
+#   [project.entry-points."specbridge.adapters"]
+#   my_adapter = "my_package.my_adapter:MyAdapter"
+[project.entry-points."specbridge.adapters"]
 
 [build-system]
 requires = ["hatchling"]

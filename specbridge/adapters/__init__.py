@@ -10,7 +10,9 @@ from specbridge.adapters._base import (  # noqa: F401
     all_adapters,
     detect_adapter,
     detect_all,
+    discover_plugins,
     merge_graphs,
+    plugin_adapters,
     register,
 )
 
@@ -19,7 +21,9 @@ __all__ = [
     "all_adapters",
     "detect_adapter",
     "detect_all",
+    "discover_plugins",
     "merge_graphs",
+    "plugin_adapters",
     "register",
     "heuristic",
     "spectra",

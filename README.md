@@ -87,9 +87,9 @@ $ specbridge analyze --dir . --format json | jq '.edges'
 
 See [ROADMAP.md](ROADMAP.md) for:
 - **v0.2**: cc-sdd adapter, plain-markdown adapter, custom adapter via YAML
-- **v0.3**: AST parsers (Python, TypeScript, Go), HTML graph output
-- **v0.5**: MCP server for AI agent integration
-- **v1.0**: Plugin SDK, incremental analysis, documentation site
+- **v0.3**: AST parsers (TypeScript, Go, Rust), import-graph call analysis
+- **v0.5**: incremental analysis, performance improvements
+- **v1.0**: Stable API, comprehensive language coverage, documentation site
 
 ## Architecture
 
@@ -114,6 +114,61 @@ See [ROADMAP.md](ROADMAP.md) for:
 │  CLI output / .specbridge/snapshot.json      │
 └──────────────────────────────────────────────┘
 ```
+
+## Writing a Plugin
+
+Extend specbridge with custom adapters packaged as Python packages.
+
+### Step-by-step
+
+1. **Create a package** with a `pyproject.toml`.
+2. **Subclass `ProjectAdapter`** — implement `detect()` and `analyze()`:
+
+   ```python
+   from specbridge.adapters._base import ProjectAdapter, register
+   from specbridge.core import TraceGraph
+
+   @register
+   class MyAdapter(ProjectAdapter):
+       def detect(self, directory: str) -> float:
+           return 0.8 if Path(directory, ".my-marker").exists() else 0.0
+
+       def analyze(self, directory: str) -> TraceGraph:
+           # … build and return a TraceGraph …
+           return TraceGraph()
+   ```
+
+   The `@register` decorator is optional if you declare an entry point (see below).
+   The `detect()` score should be **0.0–1.0**; the highest-scoring adapter wins.
+
+3. **Declare the entry point** in `pyproject.toml`:
+
+   ```toml
+   [project.entry-points."specbridge.adapters"]
+   my_adapter = "my_package.my_adapter:MyAdapter"
+   ```
+
+4. **Install** the plugin package in the same Python environment as specbridge:
+
+   ```bash
+   pip install -e /path/to/my-plugin
+   ```
+
+5. **Verify** it's loaded:
+
+   ```bash
+   specbridge plugins
+   specbridge plugins --refresh   # if installed while specbridge was already running
+   ```
+
+### Best practices
+
+- Keep `detect()` **fast** — it runs on every `analyze`/`impact`/`coverage` call.
+- Use the `@register` decorator *or* the entry point, not both (entry point is preferred for distributable plugins).
+- Handle parse errors gracefully — return an empty `TraceGraph()` rather than crashing.
+- See [`examples/example-plugin/`](examples/example-plugin/) for a complete working example.
+
+---
 
 ## License
 

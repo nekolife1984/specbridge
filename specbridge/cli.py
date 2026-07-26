@@ -492,6 +492,38 @@ def watch(dir, interval):
 
 
 @cli.command()
+@click.option("--refresh", is_flag=True, help="Re-scan installed packages for new plugins")
+def plugins(refresh):
+    """List installed specbridge adapter plugins."""
+    from specbridge.adapters import all_adapters, discover_plugins, plugin_adapters
+
+    count = 0
+    if refresh:
+        count = discover_plugins()
+        if count:
+            click.echo(f"🔌 Discovered {count} new plugin adapter(s).", err=True)
+
+    builtins = [c for c in all_adapters()
+                if c.__name__ not in dict(plugin_adapters())]
+    plugins_loaded = plugin_adapters()
+
+    click.echo("📦 specbridge Adapters")
+    click.echo(f"{'=' * 50}")
+    click.echo(f"\n🏠 Built-in ({len(builtins)}):")
+    for cls in builtins:
+        click.echo(f"   • {cls.__name__}")
+
+    if plugins_loaded:
+        click.echo(f"\n🔌 Plugins ({len(plugins_loaded)}):")
+        for name, pkg in plugins_loaded:
+            click.echo(f"   • {name}  (from {pkg})")
+    else:
+        click.echo("\n🔌 Plugins (0)")
+        click.echo("   No external plugins installed.")
+        click.echo("   See: https://github.com/nekolife1984/specbridge#writing-a-plugin")
+
+
+@cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
 def serve(dir):
     """Start MCP server for AI agent integration.

@@ -1,0 +1,12 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "specbridge-example-plugin"
+version = "0.1.0"
+description = "Example specbridge adapter plugin"
+requires-python = ">=3.10"
+
+[project.entry-points."specbridge.adapters"]
+example = "example_adapter:ExampleAdapter"

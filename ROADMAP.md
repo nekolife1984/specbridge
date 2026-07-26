@@ -42,8 +42,8 @@
 
 ## v1.0 — Stabilization
 
+- [x] **Plugin SDK for community adapters** (entry-point discovery, `specbridge plugins` CLI, example plugin)
 - [ ] Comprehensive language coverage (17 languages)
-- [ ] Plugin SDK for community adapters
 - [ ] Stable core model API
 - [ ] Performance: incremental analysis, caching
 - [ ] Documentation site
