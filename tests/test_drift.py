@@ -184,6 +184,42 @@ class TestDriftCompute:
         report = compute_drift(snap, str(project))
         assert not report.has_drift
 
+    def test_drift_rename_spec(self, tmp_project_heuristic: Path) -> None:
+        """Renaming a spec via depth change is detected as rename (same body_hash, different ID)."""
+        project = tmp_project_heuristic
+        snap = build_snapshot(str(project))
+
+        # Change "## Password Reset" (depth 2 → id docs.auth.1.1) to
+        # "# Password Reset" (depth 1 → id docs.auth.2). Same body but different ID.
+        auth_file = project / "docs" / "auth.md"
+        auth_file.write_text(
+            "# User Login\n\nUsers authenticate with email and password.\n\n"
+            "# Password Reset\n\nUsers can reset via email link.\n"
+        )
+
+        report = compute_drift(snap, str(project))
+        assert len(report.specs_renamed) >= 1
+        renamed = report.specs_renamed[0]
+        assert "Password Reset" in renamed["old_title"]
+        assert "Password Reset" in renamed["new_title"]
+        assert renamed["old_id"] != renamed["new_id"]
+        assert "docs.auth.1.1" in renamed["old_id"]
+        assert "docs.auth.2" in renamed["new_id"]
+
+    def test_drift_rename_doesnt_swallow_unrelated(self, tmp_project_heuristic: Path) -> None:
+        """Adding a truly new spec with different body is not seen as rename."""
+        project = tmp_project_heuristic
+        snap = build_snapshot(str(project))
+
+        # Add a completely new spec file
+        (project / "docs" / "new.md").write_text(
+            "# Brand New Feature\n\nCompletely different content.\n"
+        )
+
+        report = compute_drift(snap, str(project))
+        assert len(report.specs_added) >= 1
+        assert len(report.specs_renamed) == 0
+
 
 class TestDriftReport:
     """DriftReport rendering."""

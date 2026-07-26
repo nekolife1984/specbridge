@@ -36,7 +36,8 @@ class SpecCandidate:
     line: int
     # Section body (between this heading and the next, or EOF)
     body_text: str = ""
-    body_hash: str = ""       # SHA256 of body_text
+    body_hash: str = ""       # SHA256 of body_text (including heading line)
+    body_hash_content: str = ""  # SHA256 of body without heading line
     body_line_count: int = 0
     body_preview: str = ""    # first 80 chars of body
 
@@ -162,6 +163,10 @@ def _parse_sections(fpath: Path, text: str, root: Path) -> list[SpecCandidate]:
 
         body = sec["body"]
         body_hash = hashlib.sha256(body.encode("utf-8")).hexdigest()[:16]
+        # Body hash without the heading line (for rename detection)
+        body_lines_for_hash = body.split("\n")
+        body_without_heading = "\n".join(body_lines_for_hash[1:]) if len(body_lines_for_hash) > 1 else ""
+        body_hash_content = hashlib.sha256(body_without_heading.encode("utf-8")).hexdigest()[:16]
         body_lines = body.count("\n") + 1 - 1  # exclude heading line itself
         # Actually body includes the heading line, so body_lines = total lines - 1 (heading)
         preview = body.strip()[:80].replace("\n", " ")
@@ -175,6 +180,7 @@ def _parse_sections(fpath: Path, text: str, root: Path) -> list[SpecCandidate]:
             line=sec["line"],
             body_text=body,
             body_hash=body_hash,
+            body_hash_content=body_hash_content,
             body_line_count=body_lines,
             body_preview=preview,
         ))

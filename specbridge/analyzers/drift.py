@@ -44,6 +44,7 @@ def build_snapshot(
                 "line": s.line,
                 # Section body hash (heading + body text)
                 "body_hash": s.body_hash,
+                "body_hash_content": s.body_hash_content,
                 "body_line_count": s.body_line_count,
                 "body_preview": s.body_preview,
             }
@@ -114,6 +115,7 @@ class DriftReport:
         self.specs_removed: list[dict] = []
         self.specs_changed: list[dict] = []        # title changed
         self.specs_body_changed: list[dict] = []   # body changed, title same
+        self.specs_renamed: list[dict] = []        # removed + added with same body_hash
         self.code_added: list[dict] = []
         self.code_removed: list[dict] = []
         self.code_symbols_changed: list[dict] = []
@@ -129,7 +131,7 @@ class DriftReport:
     def has_drift(self) -> bool:
         return any([
             self.specs_added, self.specs_removed, self.specs_changed,
-            self.specs_body_changed,
+            self.specs_body_changed, self.specs_renamed,
             self.code_added, self.code_removed, self.code_symbols_changed,
             self.code_funcs_changed,
             self.new_orphan_specs, self.resolved_orphan_specs,
@@ -142,6 +144,12 @@ class DriftReport:
             return "✅ No drift detected — project state matches snapshot."
 
         # ── Spec changes ──
+        if self.specs_renamed:
+            lines.append(f"✏️  Renamed specs ({len(self.specs_renamed)}):")
+            for s in self.specs_renamed:
+                lines.append(f"     ~ \"{s['old_title']}\" → \"{s['new_title']}\"  ({s['file']})")
+            lines.append("")
+
         if self.specs_added:
             lines.append(f"📄  New specs ({len(self.specs_added)}):")
             for s in self.specs_added:
@@ -233,6 +241,7 @@ class DriftReport:
             "specs_removed": self.specs_removed,
             "specs_changed": self.specs_changed,
             "specs_body_changed": self.specs_body_changed,
+            "specs_renamed": self.specs_renamed,
             "code_added": self.code_added,
             "code_removed": self.code_removed,
             "code_symbols_changed": self.code_symbols_changed,
@@ -302,7 +311,31 @@ def compute_drift(
                 "id": cs.auto_id,
                 "title": cs.title,
                 "file": cs.file,
+                "body_hash": cs.body_hash,
+                "body_hash_content": cs.body_hash_content,
             })
+
+    # ── Rename detection: match removed → added by body_hash_content ──
+    if report.specs_removed and report.specs_added:
+        removed_by_hash: dict[str, dict] = {
+            s["body_hash_content"]: s for s in report.specs_removed
+            if s.get("body_hash_content")
+        }
+        truly_added: list[dict] = []
+        for added in report.specs_added:
+            match = removed_by_hash.get(added.get("body_hash_content"))
+            if match:
+                report.specs_renamed.append({
+                    "old_id": match["id"],
+                    "new_id": added["id"],
+                    "old_title": match["title"],
+                    "new_title": added["title"],
+                    "file": added["file"],
+                    "body_hash_content": added.get("body_hash_content", ""),
+                })
+            else:
+                truly_added.append(added)
+        report.specs_added = truly_added
 
     # ── Code ──
     for cf, snap_c in snap_code.items():
