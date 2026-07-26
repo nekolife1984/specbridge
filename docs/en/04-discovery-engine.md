@@ -205,33 +205,64 @@ Directories excluded from scanning: `.git`, `node_modules`, `.venv`, `__pycache_
 
 ## 4. AST-Based Enhancement (`discovery/ast.py`)
 
-An optional enhancement using **tree-sitter** for more accurate Python analysis:
+An optional enhancement using **tree-sitter** for more accurate multi-language function extraction:
 
-```python
-# Requires: pip install specbridge[ast]
-# Provides tree-sitter Python grammar for precise AST parsing
+```bash
+# Install tree-sitter with language grammars
+pip install specbridge[ast]
 ```
+
+| Language | Grammar Package | Node Types Extracted |
+|----------|----------------|---------------------|
+| **Python** | `tree-sitter-python` | `function_definition`, `class_definition`, decorated definitions |
+| **TypeScript/JavaScript** | `tree-sitter-typescript` | `function_declaration`, `class_declaration`, `method_definition`, `arrow_function` (via `lexical_declaration`), `generator_function_declaration` |
+| **TSX/JSX** | `tree-sitter-typescript` (`language_tsx`) | Same as TypeScript, plus JSX syntax |
+| **Go** | `tree-sitter-go` | `function_declaration`, `method_declaration` |
+| **Rust** | `tree-sitter-rust` | `function_item`, `struct_item`, `enum_item`, `trait_item`, `impl_item`, `type_item`, `const_item` |
 
 ### When to Use
 
-- **tree-sitter is available** (recommended): Handles nested functions, decorators, complex syntax correctly
+- **tree-sitter is available** (recommended): Handles nested functions, decorators, complex syntax correctly — more accurate than regex
 - **tree-sitter unavailable** (fallback): Falls back to the regex-based `_extract_func_blocks()` from `code.py`
 
 ### Architecture
 
+All language parsers follow the same pattern, dispatched automatically by file extension via `extract_functions()`:
+
 ```
-extract_functions_python(file_path)
+extract_functions(file_path)
+    │
+    ├── .py    → extract_functions_python()
+    ├── .ts/.tsx/.js/.jsx/.mjs/.cjs  → extract_functions_typescript()
+    ├── .go    → extract_functions_go()
+    ├── .rs    → extract_functions_rust()
+    └── other  → fall back to regex _extract_func_blocks()
+
+Each language parser:
     │
     ├──▶ Tree-sitter available?
-    │       YES → Parse with tree-sitter-python grammar
-    │              → Walk AST for function_definition, class_definition
-    │              → Extract body text + hash
+    │       YES → Parse with language grammar
+    │              → Walk AST for function/class/struct/enum definitions
+    │              → Extract body text + SHA256[:16] hash
     │
     └──▶ NO → Fall back to _extract_functions_regex_fallback()
-                 → Uses code.py's regex approach
+                 → Uses code.py's multi-language regex approach
 ```
 
 **Depth limit**: AST traversal is capped at 200 levels to prevent infinite recursion on pathological inputs.
+
+### Name Resolution
+
+Each language grammar uses different node types for identifiers:
+
+| Language | Function Name Node | Class Name Node | Method Name Node |
+|----------|-------------------|----------------|-----------------|
+| Python | `name` (field) | `name` (field) | `name` (field) |
+| TypeScript | `identifier` | `type_identifier` | `property_identifier` |
+| Go | `identifier` | — | `field_identifier` |
+| Rust | `identifier` | `type_identifier` | `type_identifier` (in `impl_item`) |
+
+The `_find_child_by_types()` helper tries candidate node types in order, making the walker grammar-agnostic.
 
 ## 5. Tag Extraction (`core/extract.py`)
 

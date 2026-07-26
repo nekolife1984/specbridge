@@ -5,7 +5,7 @@
 
 ## 1. 概要
 
-specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための9つのコマンドを持ちます。
+specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**11のコマンド**を持ちます。
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
@@ -26,6 +26,8 @@ Commands:
   config             現在のspecbridge設定を表示
   watch              プロジェクトの変更を監視し自動再分析
   plugins            インストール済みのアダプタプラグインを一覧表示
+  serve              AIエージェント統合用のMCPサーバーを起動
+  call-graph         コールグラフを構築し推移的（間接）影響を表示
 ```
 
 ## 2. コマンド
@@ -45,6 +47,7 @@ Options:
   -m, --merge         一致する全アダプタの結果をマージ
   --top INTEGER       カテゴリごとに上位N件のみ表示（デフォルト：すべて）
   --deps              インポートからコード依存関係グラフを構築
+  -c, --call-graph    推移的影響分析のためのコールグラフを構築
   --help              ヘルプを表示
 ```
 
@@ -68,6 +71,9 @@ $ specbridge analyze --top 5
 
 # コード依存関係グラフを含める
 $ specbridge analyze --deps
+
+# 依存関係＋コールグラフの両方を含める
+$ specbridge analyze --deps --call-graph
 ```
 
 **動作:**
@@ -90,6 +96,8 @@ Options:
   -d, --dir TEXT      プロジェクトディレクトリ  [default: .]
   --spec-id TEXT      分析する仕様IDまたはタイトル（例："1.1", "TraceNode"）[必須]
   --format TEXT       出力形式 (text, json)  [default: text]
+  -c, --call-graph    コールグラフによる推移的（間接）影響を含める
+  --max-depth INTEGER コールグラフ探索の最大深さ  [default: 3]
   --help              ヘルプを表示
 ```
 
@@ -330,6 +338,61 @@ $ specbridge plugins
 🔌 Plugin adapters (0):
    (none)
 ```
+
+### 2.10 `call-graph`
+
+関数レベルのコールグラフを構築し、specに対する推移的（間接）影響を分析します。
+
+```
+Usage: specbridge call-graph [OPTIONS]
+
+  コールグラフを構築し推移的（間接）影響を表示
+
+Options:
+  -d, --dir TEXT       プロジェクトディレクトリ  [default: .]
+  --spec-id TEXT       分析する仕様ID（例：1.1）[必須]
+  --max-depth INTEGER  コールグラフ探索の最大深さ  [default: 3]
+  --format TEXT        出力形式 (text, json)  [default: text]
+  --help               ヘルプを表示
+```
+
+**例:**
+
+```
+# 基本分析
+$ specbridge call-graph --spec-id 1.2.1
+
+# より深い探索
+$ specbridge call-graph --spec-id 1.2.1 --max-depth 5
+
+# JSON出力
+$ specbridge call-graph --spec-id 1.2.1 --format json
+```
+
+**出力例:**
+
+```
+🔗 Call graph: 13 functions, 28 calls
+
+📄 Spec: docs.tasks.1
+   Direct files:     2
+     📁 src/tasks/service.py
+     📁 tests/test_tasks.py
+   🔗 Transitive files (1 hop(s)): 1
+     → src/tasks/db.py
+```
+
+### 推移的影響（`impact --call-graph`）
+
+`impact` コマンドに `--call-graph` フラグを付けると、直接の実装ファイルに加えて間接的な影響を受けるファイルも表示されます：
+
+```bash
+$ specbridge impact --spec-id 1.2.1 --call-graph
+🔗 Transitive impact (1 hop(s)):
+      → src/tasks/db.py
+📄 docs.tasks.1.2.1: Title Validation
+  [INFERRED] src/tasks/service.py  (implements)
+  ...
 
 ## 3. 終了コード
 

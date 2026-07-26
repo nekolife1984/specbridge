@@ -209,33 +209,64 @@ class CodeCandidate:
 
 ## 4. ASTベース拡張 (`discovery/ast.py`)
 
-より正確なPython分析のための**tree-sitter**を使用したオプションの拡張：
+**tree-sitter**を使用したオプションの拡張で、複数言語の関数抽出をより正確に行います：
 
-```python
-# インストール: pip install specbridge[ast]
-# tree-sitter Pythonグラマーによる正確なAST解析を提供
+```bash
+# tree-sitterと言語グラマーをインストール
+pip install specbridge[ast]
 ```
+
+| 言語 | グラマーパッケージ | 抽出するASTノードタイプ |
+|------|-----------------|----------------------|
+| **Python** | `tree-sitter-python` | `function_definition`, `class_definition`, decorated definitions |
+| **TypeScript/JavaScript** | `tree-sitter-typescript` | `function_declaration`, `class_declaration`, `method_definition`, `arrow_function`, `generator_function_declaration` |
+| **TSX/JSX** | `tree-sitter-typescript` (`language_tsx`) | TypeScriptと同じ、JSX構文対応 |
+| **Go** | `tree-sitter-go` | `function_declaration`, `method_declaration` |
+| **Rust** | `tree-sitter-rust` | `function_item`, `struct_item`, `enum_item`, `trait_item`, `impl_item`, `type_item`, `const_item` |
 
 ### 使用タイミング
 
-- **tree-sitter利用可能**（推奨）：ネストされた関数、デコレータ、複雑な構文を正確に処理
+- **tree-sitter利用可能**（推奨）：ネストされた関数、デコレータ、複雑な構文を正確に処理。正規表現より高精度
 - **tree-sitter利用不可**（フォールバック）：`code.py` の正規表現ベース `_extract_func_blocks()` にフォールバック
 
 ### アーキテクチャ
 
+全言語パーサーは同じパターンに従い、`extract_functions()` によって拡張子から自動ディスパッチされます：
+
 ```
-extract_functions_python(file_path)
+extract_functions(file_path)
+    │
+    ├── .py    → extract_functions_python()
+    ├── .ts/.tsx/.js/.jsx/.mjs/.cjs  → extract_functions_typescript()
+    ├── .go    → extract_functions_go()
+    ├── .rs    → extract_functions_rust()
+    └── other  → 正規表現 _extract_func_blocks() にフォールバック
+
+各言語パーサー:
     │
     ├──▶ Tree-sitter利用可能？
-    │       YES → tree-sitter-python グラマーで解析
-    │              → ASTを走査（function_definition, class_definition）
-    │              → 本文テキスト + ハッシュを抽出
+    │       YES → 言語グラマーで解析
+    │              → ASTを走査（function/class/struct/enum定義）
+    │              → 本文テキスト + SHA256[:16] ハッシュを抽出
     │
     └──▶ NO → _extract_functions_regex_fallback() にフォールバック
-                 → code.py の正規表現アプローチを使用
+                 → code.py の複数言語対応正規表現を使用
 ```
 
 **深さ制限**: ASTの走査は200レベルに制限され、異常な入力による無限再帰を防止します。
+
+### 名前解決
+
+言語ごとに識別子のノードタイプが異なります：
+
+| 言語 | 関数名ノード | クラス名ノード | メソッド名ノード |
+|------|------------|--------------|----------------|
+| Python | `name` (フィールド) | `name` (フィールド) | `name` (フィールド) |
+| TypeScript | `identifier` | `type_identifier` | `property_identifier` |
+| Go | `identifier` | — | `field_identifier` |
+| Rust | `identifier` | `type_identifier` | `type_identifier` (`impl_item`内) |
+
+`_find_child_by_types()` ヘルパーが候補のノードタイプを順に試すことで、ウォーカーを言語非依存にしています。
 
 ## 5. タグ抽出 (`core/extract.py`)
 
