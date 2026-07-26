@@ -89,6 +89,8 @@ def build_snapshot(
 def save_snapshot(snapshot: dict, project_dir: str) -> Path:
     root = Path(project_dir).resolve()
     path = root / SNAPSHOT_RELPATH
+    from specbridge.guard import validate_write_path
+    validate_write_path(path, root)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(snapshot, indent=2, ensure_ascii=False))
     return path
