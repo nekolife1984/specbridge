@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING
 from specbridge.adapters import detect_all, merge_graphs
 from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
 from specbridge.analyzers.drift import build_snapshot, compute_drift, load_snapshot, save_snapshot
-from specbridge.core import NodeType
+from specbridge.core import NodeType, find_spec_nodes
 
 if TYPE_CHECKING:
     from mcp.types import TextContent, Tool  # noqa: F401
@@ -114,22 +114,24 @@ def create_mcp_server(project_dir: str = ".") -> object:
         elif name == "impact":
             spec_id = arguments["spec_id"]
             graph = _analyze_graph()
-            node = graph.nodes.get(spec_id) or graph.nodes.get(f"spec::{spec_id}")
-            if node is None:
+            nodes = find_spec_nodes(graph, spec_id)
+            if not nodes:
                 return [TextContent(type="text", text=f"Spec '{spec_id}' not found.")]
 
-            edges = graph.edges_to(node.id) or graph.edges_to(
-                spec_id.replace("spec::", "")
-            )
-            if not edges:
-                return [TextContent(type="text", text=f"Spec {spec_id}: no implementing artifacts found.")]
+            for node in nodes:
+                edges = graph.edges_to(node.id) or graph.edges_to(
+                    spec_id.replace("spec::", "")
+                )
+                lines = [f"Spec {node.id}: {node.title} (confidence: {node.confidence})"]
+                if not edges:
+                    lines.append("  (no implementing artifacts found)")
+                    continue
 
-            lines = [f"Spec {spec_id}: {node.title} (confidence: {node.confidence})"]
-            for e in sorted(edges, key=lambda x: x.strength.value):
-                src = graph.nodes.get(e.src_id)
-                file_part = f" in {src.source.file}" if src else ""
-                lines.append(f"  [{e.strength.value.upper():8s}] {e.relation.value}{file_part}")
-            return [TextContent(type="text", text="\n".join(lines))]
+                for e in sorted(edges, key=lambda x: x.strength.value):
+                    src = graph.nodes.get(e.src_id)
+                    file_part = f" in {src.source.file}" if src else ""
+                    lines.append(f"  [{e.strength.value.upper():8s}] {e.relation.value}{file_part}")
+                return [TextContent(type="text", text="\n".join(lines))]
 
         elif name == "coverage":
             graph = _analyze_graph()

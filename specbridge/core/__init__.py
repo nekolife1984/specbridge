@@ -94,3 +94,38 @@ class TraceGraph:
 
     def edges_from(self, node_id: str) -> list[TraceEdge]:
         return [e for e in self.edges if e.src_id == node_id]
+
+
+def find_spec_nodes(graph: TraceGraph, query: str) -> list[TraceNode]:
+    """Find spec nodes by exact ID, suffix match, or title match.
+
+    Resolution order:
+      1. Exact node ID match (e.g. ``docs.en.07-cli-commands.1.1``)
+      2. ``spec::`` prefix match (e.g. ``1.1`` → ``spec::1.1``)
+      3. ID suffix match (e.g. ``1.1`` → ``docs.en.07-cli-commands.1.1``)
+      4. Title substring match (e.g. ``TraceNode``)
+      5. Heading text substring match (fallback)
+    """
+    # 1-2. Exact ID or spec:: prefix
+    node = graph.nodes.get(query) or graph.nodes.get(f"spec::{query}")
+    if node:
+        return [node]
+
+    specs = graph.nodes_by_type(NodeType.SPEC)
+
+    # 3. Suffix match: query matches the trailing part of an ID
+    suffix_matches = [n for n in specs if n.id.endswith(f".{query}")]
+    if suffix_matches:
+        return sorted(suffix_matches, key=lambda x: x.id)
+
+    # 4. Title substring match
+    title_matches = [n for n in specs if query.lower() in n.title.lower()]
+    if title_matches:
+        return sorted(title_matches, key=lambda x: x.id)
+
+    # 5. Heading text substring match (fallback)
+    heading_matches = [
+        n for n in specs
+        if query.lower() in n.metadata.get("heading_text", "").lower()
+    ]
+    return sorted(heading_matches, key=lambda x: x.id)

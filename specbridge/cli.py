@@ -7,45 +7,9 @@ from pathlib import Path
 import click
 
 from specbridge import __version__
-from specbridge.core import NodeType
+from specbridge.core import NodeType, find_spec_nodes
 from specbridge.outputs.json_out import render_json
 from specbridge.outputs.text import render_text
-
-
-def _find_spec_nodes(graph, query: str) -> list:
-    """Find spec nodes by exact ID, suffix match, or title match.
-
-    Resolution order:
-      1. Exact node ID match (e.g. ``docs.en.07-cli-commands.1.1``)
-      2. ``spec::`` prefix match (e.g. ``1.1`` → ``spec::1.1``)
-      3. ID suffix match (e.g. ``1.1`` → ``docs.en.07-cli-commands.1.1``)
-      4. Title substring match (e.g. ``TraceNode``)
-    """
-    from specbridge.core import NodeType
-
-    # 1-2. Exact ID or spec:: prefix
-    node = graph.nodes.get(query) or graph.nodes.get(f"spec::{query}")
-    if node:
-        return [node]
-
-    specs = graph.nodes_by_type(NodeType.SPEC)
-
-    # 3. Suffix match: query matches the trailing part of an ID
-    suffix_matches = [n for n in specs if n.id.endswith(f".{query}")]
-    if suffix_matches:
-        return sorted(suffix_matches, key=lambda x: x.id)
-
-    # 4. Title substring match
-    title_matches = [n for n in specs if query.lower() in n.title.lower()]
-    if title_matches:
-        return sorted(title_matches, key=lambda x: x.id)
-
-    # 5. Heading text substring match (fallback)
-    heading_matches = [
-        n for n in specs
-        if query.lower() in n.metadata.get("heading_text", "").lower()
-    ]
-    return sorted(heading_matches, key=lambda x: x.id)
 
 
 @click.group()
@@ -138,7 +102,7 @@ def impact(dir, spec_id, output_fmt):
     graph = adapter.analyze(str(root))
 
     # If no exact match, try merging heuristic adapter for broader search
-    if not _find_spec_nodes(graph, spec_id):
+    if not find_spec_nodes(graph, spec_id):
         from specbridge.adapters.heuristic import HeuristicAdapter
         from specbridge.adapters import merge_graphs
 
@@ -152,7 +116,7 @@ def impact(dir, spec_id, output_fmt):
             for e in extra.edges:
                 graph.edges.append(e)
 
-    spec_nodes = _find_spec_nodes(graph, spec_id)
+    spec_nodes = find_spec_nodes(graph, spec_id)
     if not spec_nodes:
         click.echo(f"❌ Spec '{spec_id}' not found in trace graph.", err=True)
         click.echo("   Try a more specific ID (e.g. '07-cli-commands.1.1' or a partial title).", err=True)
