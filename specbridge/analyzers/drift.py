@@ -11,7 +11,7 @@ from typing import Optional
 from specbridge.discovery.spec import discover_specs
 from specbridge.discovery.code import discover_code
 from specbridge.analyzers import coverage_summary, find_orphan_specs
-from specbridge.bridge import build_heuristic_graph
+from specbridge.infer import build_heuristic_graph
 from specbridge.core import NodeType
 
 
