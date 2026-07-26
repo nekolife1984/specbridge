@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from specbridge.analyzers import coverage_summary, find_orphan_specs
 from specbridge.core import NodeType
@@ -24,7 +25,7 @@ def build_snapshot(
     reason: str = "",
     spec_dirs: list[str] | None = None,
     source_dirs: list[str] | None = None,
-) -> dict:
+) -> dict[str, Any]:
     """Build a snapshot of the current project state with hashes."""
     specs = discover_specs(directory, spec_dirs=spec_dirs)
     codes = discover_code(directory, source_dirs=source_dirs)
@@ -84,7 +85,7 @@ def build_snapshot(
     return snapshot
 
 
-def save_snapshot(snapshot: dict, project_dir: str) -> Path:
+def save_snapshot(snapshot: dict[str, Any], project_dir: str) -> Path:
     root = Path(project_dir).resolve()
     path = root / SNAPSHOT_RELPATH
     from specbridge.guard import validate_write_path
@@ -94,12 +95,12 @@ def save_snapshot(snapshot: dict, project_dir: str) -> Path:
     return path
 
 
-def load_snapshot(project_dir: str) -> dict | None:
+def load_snapshot(project_dir: str) -> dict[str, Any] | None:
     path = Path(project_dir).resolve() / SNAPSHOT_RELPATH
     if not path.exists():
         return None
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"))  # type: ignore[no-any-return]
     except (json.JSONDecodeError, OSError):
         return None
 
@@ -110,22 +111,22 @@ def load_snapshot(project_dir: str) -> dict | None:
 class DriftReport:
     """Structured drift comparison result."""
 
-    def __init__(self):
-        self.specs_added: list[dict] = []
-        self.specs_removed: list[dict] = []
-        self.specs_changed: list[dict] = []        # title changed
-        self.specs_body_changed: list[dict] = []   # body changed, title same
-        self.specs_renamed: list[dict] = []        # removed + added with same body_hash
-        self.code_added: list[dict] = []
-        self.code_removed: list[dict] = []
-        self.code_symbols_changed: list[dict] = []
-        self.code_funcs_changed: list[dict] = []   # function body hash changed
+    def __init__(self) -> None:
+        self.specs_added: list[dict[str, Any]] = []
+        self.specs_removed: list[dict[str, Any]] = []
+        self.specs_changed: list[dict[str, Any]] = []        # title changed
+        self.specs_body_changed: list[dict[str, Any]] = []   # body changed, title same
+        self.specs_renamed: list[dict[str, Any]] = []        # removed + added with same body_hash
+        self.code_added: list[dict[str, Any]] = []
+        self.code_removed: list[dict[str, Any]] = []
+        self.code_symbols_changed: list[dict[str, Any]] = []
+        self.code_funcs_changed: list[dict[str, Any]] = []   # function body hash changed
         self.new_orphan_specs: list[str] = []
         self.resolved_orphan_specs: list[str] = []
         self.new_orphan_code: list[str] = []
         self.resolved_orphan_code: list[str] = []
-        self.coverage_before: dict | None = None
-        self.coverage_after: dict | None = None
+        self.coverage_before: dict[str, Any] | None = None
+        self.coverage_after: dict[str, Any] | None = None
 
     @property
     def has_drift(self) -> bool:
@@ -234,7 +235,7 @@ class DriftReport:
 
         return "\n".join(lines)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "has_drift": self.has_drift,
             "specs_added": self.specs_added,
@@ -256,7 +257,7 @@ class DriftReport:
 
 
 def compute_drift(
-    snapshot: dict,
+    snapshot: dict[str, Any],
     directory: str,
     *,
     spec_dirs: list[str] | None = None,
@@ -317,13 +318,14 @@ def compute_drift(
 
     # ── Rename detection: match removed → added by body_hash_content ──
     if report.specs_removed and report.specs_added:
-        removed_by_hash: dict[str, dict] = {
+        removed_by_hash: dict[str, dict[str, Any]] = {
             s["body_hash_content"]: s for s in report.specs_removed
             if s.get("body_hash_content")
         }
-        truly_added: list[dict] = []
+        truly_added: list[dict[str, Any]] = []
         for added in report.specs_added:
-            match = removed_by_hash.get(added.get("body_hash_content"))
+            key: str | None = added.get("body_hash_content")
+            match = removed_by_hash.get(key) if key else None
             if match:
                 report.specs_renamed.append({
                     "old_id": match["id"],
@@ -339,24 +341,24 @@ def compute_drift(
 
     # ── Code ──
     for cf, snap_c in snap_code.items():
-        curr = curr_code_map.get(cf)
-        if curr is None:
+        curr_code = curr_code_map.get(cf)
+        if curr_code is None:
             report.code_removed.append(snap_c)
         else:
             # File-level hash
-            file_hash_changed = curr.file_hash != snap_c.get("file_hash", "")
+            file_hash_changed = curr_code.file_hash != snap_c.get("file_hash", "")
 
             # Symbol changes
             old_syms = set(snap_c.get("symbols", []))
-            new_syms = set(curr.symbols)
+            new_syms = set(curr_code.symbols)
             added_syms = new_syms - old_syms
             removed_syms = old_syms - new_syms
 
             # Function body hashes
             snap_funcs = {f["name"]: f for f in snap_c.get("functions", [])}
-            changed_funcs: list[dict] = []
+            changed_funcs: list[dict[str, Any]] = []
 
-            for cf_func in curr.functions:
+            for cf_func in curr_code.functions:
                 snap_f = snap_funcs.get(cf_func.name)
                 if snap_f and cf_func.body_hash != snap_f["body_hash"]:
                     changed_funcs.append({
@@ -368,7 +370,7 @@ def compute_drift(
                     })
 
             if added_syms or removed_syms or (file_hash_changed and not (added_syms or removed_syms)):
-                entry: dict = {"file": cf}
+                entry: dict[str, Any] = {"file": cf}
                 if added_syms:
                     entry["added"] = sorted(added_syms)
                 if removed_syms:

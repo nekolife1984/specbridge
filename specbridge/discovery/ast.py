@@ -22,8 +22,8 @@ _TS_AVAILABLE = False
 _TS_PYTHON = None
 
 try:
-    import tree_sitter_python as _ts_python
-    from tree_sitter import Language, Parser
+    import tree_sitter_python as _ts_python  # type: ignore[import-not-found]
+    from tree_sitter import Language, Parser  # type: ignore[import-not-found]
 
     _TS_AVAILABLE = True
     _TS_PYTHON = Language(_ts_python.language())
@@ -120,10 +120,10 @@ def _find_child(node: object, field_name: str) -> object | None:
     """Find a child node by type name."""
     for child in getattr(node, "children", []):
         if getattr(child, "type", "") == field_name:
-            return child
+            return child  # type: ignore[no-any-return]
         field = getattr(child, "field_name", None)
         if field is not None and field == field_name:
-            return child
+            return child  # type: ignore[no-any-return]
     return None
 
 

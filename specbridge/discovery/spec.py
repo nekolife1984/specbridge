@@ -10,6 +10,7 @@ import hashlib
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 _EXCLUDE_DIRS = frozenset({
     ".git", "node_modules", ".venv", "__pycache__", "dist", "build",
@@ -58,9 +59,9 @@ def _auto_id(prefix: str, text: str) -> str:
     return f"{prefix}{slug}" if prefix else slug
 
 
-def _split_sections(text: str) -> list[dict]:
+def _split_sections(text: str) -> list[dict[str, Any]]:
     """Split markdown into (heading_line_no, depth, heading_raw, body_lines)."""
-    sections: list[dict] = []
+    sections: list[dict[str, Any]] = []
     lines = text.split("\n")
     current_idx = 0  # line index where current section starts
     current_depth = 0

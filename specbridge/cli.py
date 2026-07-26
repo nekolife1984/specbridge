@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import click
 
@@ -14,7 +15,7 @@ from specbridge.outputs.text import render_text
 
 @click.group()
 @click.version_option(version=__version__, prog_name="specbridge")
-def cli():
+def cli() -> None:
     """Spec ↔ Code bridge: read-only traceability analyzer for SSD."""
 
 
@@ -30,7 +31,7 @@ def cli():
 @click.option("--deps", is_flag=True, default=False,
               help="Build code dependency graph from imports (adds DEPENDS edges)",
               show_default=True)
-def analyze(dir, output_fmt, merge, top, deps):
+def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool) -> None:
     """Analyze a project and build a trace graph."""
     from specbridge.adapters import detect_adapter, detect_all, merge_graphs
 
@@ -49,11 +50,11 @@ def analyze(dir, output_fmt, merge, top, deps):
             graphs.append(g)
         graph = merge_graphs(graphs)
     else:
-        adapter = detect_adapter(str(root))
-        if adapter is None:
+        detected = detect_adapter(str(root))
+        if detected is None:
             click.echo("❌ No recognized SSD framework found.", err=True)
             raise click.Abort()
-        graph = adapter.analyze(str(root))
+        graph = detected.analyze(str(root))
 
     # Build code dependency graph if requested
     if deps:
@@ -89,7 +90,7 @@ def analyze(dir, output_fmt, merge, top, deps):
 @click.option("--spec-id", required=True, help="Spec ID to analyze (e.g. 1.1)")
 @click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
               help="Output format", show_default=True)
-def impact(dir, spec_id, output_fmt):
+def impact(dir: str, spec_id: str, output_fmt: str) -> None:
     """Find what implements a given spec."""
     from specbridge.adapters import detect_adapter
 
@@ -158,7 +159,7 @@ def impact(dir, spec_id, output_fmt):
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
 @click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
               help="Output format", show_default=True)
-def coverage(dir, output_fmt):
+def coverage(dir: str, output_fmt: str) -> None:
     """Show spec coverage statistics."""
     from specbridge.adapters import detect_adapter
     from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
@@ -204,7 +205,7 @@ def coverage(dir, output_fmt):
 @cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
 @click.option("--reason", default="", help="Description of why snapshot was taken")
-def snapshot(dir, reason):
+def snapshot(dir: str, reason: str) -> None:
     """Take a structural snapshot of specs and code."""
     from specbridge.analyzers.drift import build_snapshot, save_snapshot
 
@@ -228,7 +229,7 @@ def snapshot(dir, reason):
               help="Output format", show_default=True)
 @click.option("--git-base", default=None,
               help="Git base ref to diff against (alternative to snapshot comparison)")
-def drift(dir, snapshot_path, gate, output_fmt, git_base):
+def drift(dir: str, snapshot_path: str | None, gate: bool, output_fmt: str, git_base: str | None) -> None:
     """Detect changes between snapshot and current state."""
     root = Path(dir).resolve()
 
@@ -297,7 +298,7 @@ def _drift_git(project_dir: str, git_base: str, gate: bool) -> None:
 
     graph = adapter.analyze(str(root))
 
-    affected: list[dict] = []
+    affected: list[dict[str, Any]] = []
     for cf in changed:
         for nid, node in graph.nodes.items():
             if node.type == NodeType.CODE and node.source.file == cf:
@@ -320,7 +321,7 @@ def _drift_git(project_dir: str, git_base: str, gate: bool) -> None:
 
 @cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
-def validate_boundary(dir):
+def validate_boundary(dir: str) -> None:
     """Validate that code refs stay within declared _Boundary:_ markers."""
     from specbridge.adapters import detect_adapter
     from specbridge.core import NodeType
@@ -386,7 +387,7 @@ def validate_boundary(dir):
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
 @click.option("--yaml", "yaml_output", is_flag=True, default=False,
               help="Output config as YAML")
-def config(dir, yaml_output):
+def config(dir: str, yaml_output: bool) -> None:
     """Show current specbridge configuration."""
     from specbridge.config import SpecbridgeConfig
 
@@ -412,7 +413,7 @@ def config(dir, yaml_output):
         source = ".specbridge.yaml"
     elif pyproject.exists():
         try:
-            import tomllib
+            import tomllib  # type: ignore[import-not-found]
             py_data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
             if "tool" in py_data and "specbridge" in py_data["tool"]:
                 source = "pyproject.toml [tool.specbridge]"
@@ -432,7 +433,7 @@ def config(dir, yaml_output):
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
 @click.option("--interval", type=float, default=2.0,
               help="Debounce interval in seconds", show_default=True)
-def watch(dir, interval):
+def watch(dir: str, interval: float) -> None:
     """Watch project for changes and re-analyze automatically.
 
     Requires the optional 'watch' extra: pip install specbridge[watch]
@@ -444,20 +445,20 @@ def watch(dir, interval):
     root = Path(dir).resolve()
 
     try:
-        from watchdog.events import FileSystemEventHandler
-        from watchdog.observers import Observer
+        from watchdog.events import FileSystemEventHandler  # type: ignore[import-not-found]
+        from watchdog.observers import Observer  # type: ignore[import-not-found]
     except ImportError:
         click.echo("❌ watchdog not installed. Run: pip install specbridge[watch]",
                     err=True)
         raise click.Abort() from None
 
-    class SpecbridgeHandler(FileSystemEventHandler):
-        def __init__(self):
+    class SpecbridgeHandler(FileSystemEventHandler):  # type: ignore[misc]
+        def __init__(self) -> None:
             self._last_run = 0.0
             import time
             self._time = time
 
-        def on_any_event(self, event):
+        def on_any_event(self, event: Any) -> None:
             # Ignore directory and .specbridge changes to avoid re-trigger loops
             if event.is_directory:
                 return
@@ -513,7 +514,7 @@ def watch(dir, interval):
 
 @cli.command()
 @click.option("--refresh", is_flag=True, help="Re-scan installed packages for new plugins")
-def plugins(refresh):
+def plugins(refresh: bool) -> None:
     """List installed specbridge adapter plugins."""
     from specbridge.adapters import all_adapters, discover_plugins, plugin_adapters
 
@@ -545,7 +546,7 @@ def plugins(refresh):
 
 @cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
-def serve(dir):
+def serve(dir: str) -> None:
     """Start MCP server for AI agent integration.
 
     Exposes specbridge tools (analyze, impact, coverage, drift, validate_boundary)

@@ -1,5 +1,7 @@
 """Analysis utilities."""
 
+from typing import Any
+
 from specbridge.core import EdgeRelation, NodeType, TraceGraph
 
 
@@ -29,7 +31,7 @@ def find_orphan_code(graph: TraceGraph) -> list[str]:
     return orphans
 
 
-def coverage_summary(graph: TraceGraph) -> dict:
+def coverage_summary(graph: TraceGraph) -> dict[str, int | float]:
     """Compute spec coverage stats."""
     specs = graph.nodes_by_type(NodeType.SPEC)
     if not specs:

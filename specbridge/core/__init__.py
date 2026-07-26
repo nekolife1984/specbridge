@@ -10,6 +10,7 @@ from __future__ import annotations
 import uuid
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Any
 
 
 class NodeType(str, Enum):
@@ -59,7 +60,7 @@ class TraceNode:
     source: SourceRef
     framework_origin: str            # "spectra", "cc-sdd", "plain", …
     confidence: float = 1.0          # 0.0 ~ 1.0
-    metadata: dict = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
