@@ -4,6 +4,10 @@
 > **バージョン:** 0.0.1.dev0
 
 ## 1. 概要
+<!-- @impl specbridge/adapters/_base.py::merge_graphs -->
+<!-- @impl specbridge/analyzers/__init__.py::coverage_summary -->
+<!-- @impl specbridge/analyzers/__init__.py::find_orphan_code -->
+<!-- @impl tests/test_adapter_merge.py::TestMergeCLI -->
 
 `outputs/` モジュールは `TraceGraph` を3つの形式にレンダリングします。CLIの `--format` オプションで選択されるか、プログラムから使用されます。
 
@@ -139,6 +143,7 @@ def render_json(graph: TraceGraph, indent: int = 2) -> str:
 - **ヘッダー** — 仕様/コード/テスト/エッジ数を表示
 
 ### D3.jsの実装
+<!-- @impl specbridge/outputs/html.py::render_html -->
 
 HTMLはCDN（`https://d3js.org/d3.v7.min.js`）から読み込まれるD3.js v7を使用します。グラフは以下を使用：
 

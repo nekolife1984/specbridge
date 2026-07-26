@@ -4,6 +4,10 @@
 > **バージョン:** 0.0.1.dev0
 
 ## 1. 概要
+<!-- @impl specbridge/adapters/_base.py::ProjectAdapter -->
+<!-- @impl specbridge/adapters/_base.py::all_adapters -->
+<!-- @impl specbridge/adapters/_base.py::detect_adapter -->
+<!-- @impl tests/conftest.py::tmp_project_heuristic -->
 
 発見レイヤーはプロジェクトディレクトリをスキャンし、仕様書とソースコードファイルの**候補**を抽出する役割を担います。これらの候補は推論エンジン（ヒューリスティックマッチング用）またはタグベースのアダプタによって消費されます。
 

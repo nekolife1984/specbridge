@@ -4,6 +4,10 @@
 > **バージョン:** 0.0.1.dev0
 
 ## 1. 概要
+<!-- @impl specbridge/adapters/heuristic.py::HeuristicAdapter -->
+<!-- @impl specbridge/analyzers/drift.py -->
+<!-- @impl specbridge/analyzers/drift.py::build_snapshot -->
+<!-- @impl tests/test_drift.py::TestDriftCompute -->
 
 specbridgeは、保存されたスナップショットと現在のプロジェクト状態の間の変更を特定するためのドリフト検出を提供します。これにより、CIゲート（「仕様にドリフトがあるか？」）、プレコミット検証、および変更影響分析が可能になります。
 
@@ -88,6 +92,10 @@ flowchart TB
 ```
 
 ### ハッシュ戦略
+<!-- @impl specbridge/analyzers/drift.py -->
+<!-- @impl specbridge/analyzers/drift.py::build_snapshot -->
+<!-- @impl specbridge/analyzers/drift.py::compute_drift -->
+<!-- @impl tests/test_analyzers.py::three_spec_graph -->
 
 詳細な変更検出のための3層のハッシュ：
 

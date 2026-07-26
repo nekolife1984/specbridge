@@ -4,6 +4,10 @@
 > **バージョン:** 0.0.1.dev0
 
 ## 1. 概要
+<!-- @impl specbridge/adapters/_base.py::ProjectAdapter -->
+<!-- @impl specbridge/cli.py::cli -->
+<!-- @impl specbridge/cli.py::config -->
+<!-- @impl tests/test_code_discovery.py::TestDiscoverCode -->
 
 specbridgeは階層的な設定システムと厳格な読み取り専用ガードを使用して、ツールが仕様やソースコードを決して変更しないことを保証します。
 

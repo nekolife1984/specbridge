@@ -4,6 +4,10 @@
 > **バージョン:** 0.0.1.dev0
 
 ## 1. 概要
+<!-- @impl specbridge/adapters/_base.py::all_adapters -->
+<!-- @impl specbridge/adapters/_base.py::detect_all -->
+<!-- @impl specbridge/adapters/_base.py::merge_graphs -->
+<!-- @impl tests/conftest.py::generate_chart -->
 
 コアデータモデルは、トレーサビリティグラフを形成する3つの主要な型で構成されます：
 
@@ -14,6 +18,10 @@ TraceGraph
 ```
 
 ## 2. 型階層
+<!-- @impl specbridge/adapters/_base.py::all_adapters -->
+<!-- @impl specbridge/adapters/_base.py::register -->
+<!-- @impl specbridge/core/__init__.py::NodeType -->
+<!-- @impl tests/conftest.py::generate_chart -->
 
 ### 2.1 TraceNode
 
@@ -226,6 +234,10 @@ class Tag:
 ```
 
 ## 4. ドリフト検出の型
+<!-- @impl specbridge/analyzers/drift.py::DriftReport -->
+<!-- @impl specbridge/analyzers/drift.py::compute_drift -->
+<!-- @impl specbridge/cli.py::_drift_git -->
+<!-- @impl tests/conftest.py::generate_chart -->
 
 ### 4.1 DriftReport
 
@@ -256,6 +268,10 @@ class DriftReport:
 ```
 
 ## 5. 設定型
+<!-- @impl specbridge/cli.py::config -->
+<!-- @impl specbridge/config.py::SpecbridgeConfig -->
+<!-- @impl specbridge/outputs/html.py::_graph_data -->
+<!-- @impl tests/conftest.py::generate_chart -->
 
 ### 5.1 SpecbridgeConfig
 

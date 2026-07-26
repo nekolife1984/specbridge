@@ -4,6 +4,10 @@
 > **バージョン:** 0.0.1.dev0
 
 ## 1. 概要
+<!-- @impl specbridge/adapters/_base.py::detect_adapter -->
+<!-- @impl specbridge/adapters/_base.py::detect_all -->
+<!-- @impl specbridge/adapters/_base.py::register -->
+<!-- @impl tests/test_heuristic_adapter.py::TestAdapterRegistry -->
 
 specbridgeは**アダプタパターン**を使用して複数のSSD（Spec-Driven Development）フレームワークをサポートします。各アダプタは特定のフレームワークのプロジェクト構造を検出・分析する方法を把握しています。このシステムはPythonのエントリポイントを介して拡張可能で、サードパーティパッケージがspecbridge本体を変更せずに独自のアダプタを登録できます。
 
@@ -47,6 +51,10 @@ class ProjectAdapter(ABC):
 - **0.0〜1.0のスコアを返す** — 0.0は「このプロジェクトは処理できない」を意味する。高いスコアが優先される。
 
 ## 3. 標準搭載アダプタ
+<!-- @impl specbridge/adapters/__init__.py -->
+<!-- @impl specbridge/adapters/_base.py::ProjectAdapter -->
+<!-- @impl specbridge/adapters/_base.py::all_adapters -->
+<!-- @impl tests/test_adapter_merge.py::TestDetectAll -->
 
 ### 3.1 HeuristicAdapter（プライマリ）
 
@@ -107,6 +115,10 @@ class SpectraAdapter(ProjectAdapter):
 | `_Boundary:_ src/path/` | Markdown仕様書 | 許可される実装パスを宣言 |
 
 ## 4. アダプタ登録
+<!-- @impl specbridge/adapters/_base.py::ProjectAdapter -->
+<!-- @impl specbridge/adapters/_base.py::all_adapters -->
+<!-- @impl specbridge/adapters/_base.py::detect_adapter -->
+<!-- @impl tests/test_adapter_merge.py::TestMergeCLI -->
 
 ### 4.1 `@register` デコレータ
 
@@ -136,6 +148,10 @@ my_adapter = "my_package.my_adapter:MyAdapter"
 プラグイン発見は**遅延ロード**です — `all_adapters()` または `detect_adapter()` への最初のアクセス時に1回だけ実行されます。
 
 ## 5. アダプタ選択
+<!-- @impl specbridge/adapters/_base.py::ProjectAdapter -->
+<!-- @impl specbridge/adapters/_base.py::all_adapters -->
+<!-- @impl specbridge/adapters/_base.py::detect_adapter -->
+<!-- @impl tests/test_adapter_merge.py::TestMergeCLI -->
 
 ### 5.1 単一アダプタ（デフォルト）
 

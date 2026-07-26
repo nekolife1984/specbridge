@@ -28,6 +28,9 @@ specbridgeのテストスイートは `pytest` を使用し、すべての主要
 | `test_plugin_discovery.py` | `adapters/_base.py` | エントリポイント経由のプラグイン発見 |
 
 ## 3. テストカテゴリ
+<!-- @impl specbridge/analyzers/__init__.py::find_orphan_code -->
+<!-- @impl specbridge/discovery/code.py::_is_test_file -->
+<!-- @impl tests/conftest.py::test_authenticate -->
 
 ### 3.1 単体テスト
 
@@ -75,6 +78,7 @@ specbridgeのテストスイートは `pytest` を使用し、すべての主要
 - `snapshot_data`: ドリフトテスト用の事前構築済みスナップショット辞書
 
 ## 5. テストの実行
+<!-- @impl tests/__init__.py -->
 
 ```bash
 # 標準テスト実行

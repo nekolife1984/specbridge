@@ -4,6 +4,10 @@
 > **バージョン:** 0.0.1.dev0
 
 ## 1. 概要
+<!-- @impl specbridge/adapters/_base.py::ProjectAdapter -->
+<!-- @impl specbridge/adapters/_base.py::merge_graphs -->
+<!-- @impl specbridge/adapters/heuristic.py -->
+<!-- @impl tests/test_analyzers.py::three_spec_graph -->
 
 ヒューリスティックマッチングエンジン（`infer/__init__.py`）は**タグ不要優先**アプローチの中核です。仕様書とコードの候補を発見し、4つの構造的信号を使ってそれらの関係を推論して `TraceGraph` を構築します — **タグやアノテーションは一切不要**です。
 
@@ -98,6 +102,10 @@ confidence = weighted_score / total_weight
 `confidence >= _MIN_CONFIDENCE (0.15)` の場合、エッジをグラフに追加。
 
 ## 3. 4つの信号
+<!-- @impl specbridge/adapters/heuristic.py -->
+<!-- @impl specbridge/adapters/heuristic.py::HeuristicAdapter -->
+<!-- @impl specbridge/infer/__init__.py::build_heuristic_graph -->
+<!-- @impl tests/conftest.py::tmp_project_heuristic -->
 
 ### 3.1 ディレクトリ名マッチング（`_W_DIRNAME = 0.6`）
 
@@ -229,16 +237,23 @@ with, as, at, by, from, it, its, this, that
 | < 0.15 | （エッジなし） | — | — |
 
 ## 6. 設計判断
+<!-- @impl specbridge/adapters/heuristic.py -->
+<!-- @impl specbridge/adapters/heuristic.py::HeuristicAdapter -->
+<!-- @impl specbridge/core/__init__.py::EdgeRelation -->
+<!-- @impl tests/conftest.py::tmp_project_heuristic -->
 
 ### なぜ最小値0.15なのか？
 
 最小しきい値（`_MIN_CONFIDENCE = 0.15`）は偽陰性を避けるために意図的に低く設定されています。ユーザーは出力時に `--top N` でフィルタリングでき、エッジの `strength` フィールドによりダウンストリームツールが何を信頼するか判断できます。
 
 ### なぜ合計ではなく加重平均なのか？
+<!-- @impl specbridge/adapters/heuristic.py -->
+<!-- @impl specbridge/core/__init__.py::NodeType -->
 
 加重平均は、発火した信号の数に関係なくスコアを0.0〜1.0に正規化します。これにより、1つの信号タイプ（例：ディレクトリ名マッチングのみ）しかないプロジェクトが不利になるのを防ぎます。
 
 ### なぜJaccardに×3ブーストなのか？
+<!-- @impl specbridge/adapters/heuristic.py -->
 
 短いテキスト（見出しは通常2〜5語、ファイルステムは1〜3語）ではJaccard類似度は自然に低くなります。×3乗数は、典型的な重複（例：2/8トークン = 0.25）を有用な範囲（0.75）にマッピングします。
 
@@ -266,6 +281,10 @@ Edge from "specbridge/core/__init__.py → docs.en.02-data-model.1.2.1"
 この透明性は中核的な原則であり、ユーザーは推論された各関係の背後にある理由を常に確認できます。
 
 ## 8. パフォーマンス特性
+<!-- @impl specbridge/adapters/_base.py::ProjectAdapter -->
+<!-- @impl specbridge/adapters/_base.py::all_adapters -->
+<!-- @impl specbridge/adapters/_base.py::detect_all -->
+<!-- @impl tests/conftest.py::tmp_project_heuristic -->
 
 - **時間計算量**: O(S × C)（S = 仕様候補数、C = コード候補数）
 - **マッチング中のI/Oなし**（すべてのデータは既に発見済み）

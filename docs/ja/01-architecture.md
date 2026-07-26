@@ -83,6 +83,8 @@ flowchart TB
 | `guard.py` | 書き込みパスが `.specbridge/` 内であることを検証 | `validate_write_path()` |
 
 ## 4. データフロー
+<!-- @impl specbridge/outputs/html.py::_graph_data -->
+<!-- @impl tests/conftest.py::generate_chart -->
 
 ### 読み取りパス（メインフロー）
 
