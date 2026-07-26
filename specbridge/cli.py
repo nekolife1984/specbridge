@@ -12,6 +12,42 @@ from specbridge.outputs.json_out import render_json
 from specbridge.outputs.text import render_text
 
 
+def _find_spec_nodes(graph, query: str) -> list:
+    """Find spec nodes by exact ID, suffix match, or title match.
+
+    Resolution order:
+      1. Exact node ID match (e.g. ``docs.en.07-cli-commands.1.1``)
+      2. ``spec::`` prefix match (e.g. ``1.1`` → ``spec::1.1``)
+      3. ID suffix match (e.g. ``1.1`` → ``docs.en.07-cli-commands.1.1``)
+      4. Title substring match (e.g. ``TraceNode``)
+    """
+    from specbridge.core import NodeType
+
+    # 1-2. Exact ID or spec:: prefix
+    node = graph.nodes.get(query) or graph.nodes.get(f"spec::{query}")
+    if node:
+        return [node]
+
+    specs = graph.nodes_by_type(NodeType.SPEC)
+
+    # 3. Suffix match: query matches the trailing part of an ID
+    suffix_matches = [n for n in specs if n.id.endswith(f".{query}")]
+    if suffix_matches:
+        return sorted(suffix_matches, key=lambda x: x.id)
+
+    # 4. Title substring match
+    title_matches = [n for n in specs if query.lower() in n.title.lower()]
+    if title_matches:
+        return sorted(title_matches, key=lambda x: x.id)
+
+    # 5. Heading text substring match (fallback)
+    heading_matches = [
+        n for n in specs
+        if query.lower() in n.metadata.get("heading_text", "").lower()
+    ]
+    return sorted(heading_matches, key=lambda x: x.id)
+
+
 @click.group()
 @click.version_option(version=__version__, prog_name="specbridge")
 def cli():
@@ -101,20 +137,37 @@ def impact(dir, spec_id, output_fmt):
 
     graph = adapter.analyze(str(root))
 
-    spec_node = graph.nodes.get(spec_id) or graph.nodes.get(f"spec::{spec_id}")
-    if spec_node is None:
+    # If no exact match, try merging heuristic adapter for broader search
+    if not _find_spec_nodes(graph, spec_id):
+        from specbridge.adapters.heuristic import HeuristicAdapter
+        from specbridge.adapters import merge_graphs
+
+        heuristic = HeuristicAdapter()
+        if heuristic is not adapter:
+            extra = heuristic.analyze(str(root))
+            # Merge nodes and edges into graph directly
+            for nid, node in extra.nodes.items():
+                if nid not in graph.nodes:
+                    graph.add_node(node)
+            for e in extra.edges:
+                graph.edges.append(e)
+
+    spec_nodes = _find_spec_nodes(graph, spec_id)
+    if not spec_nodes:
         click.echo(f"❌ Spec '{spec_id}' not found in trace graph.", err=True)
+        click.echo("   Try a more specific ID (e.g. '07-cli-commands.1.1' or a partial title).", err=True)
         raise click.Abort()
 
-    edges = graph.edges_to(spec_node.id)
-    if not edges:
-        click.echo(f"📄 {spec_node.id}: {spec_node.title}")
-        click.echo("   (no implementing artifacts found)")
-        return
+    for spec_node in spec_nodes:
+        edges = graph.edges_to(spec_node.id)
+        if not edges:
+            click.echo(f"📄 {spec_node.id}: {spec_node.title}")
+            click.echo("   (no implementing artifacts found)")
+            continue
 
-    click.echo(f"📄 {spec_node.id}: {spec_node.title}")
-    click.echo(f"   Confidence: {spec_node.confidence}")
-    click.echo(f"   Source: {spec_node.source.file}")
+        click.echo(f"📄 {spec_node.id}: {spec_node.title}")
+        click.echo(f"   Confidence: {spec_node.confidence}")
+        click.echo(f"   Source: {spec_node.source.file}")
 
     for e in sorted(edges, key=lambda x: x.strength.value):
         src = graph.nodes.get(e.src_id)
@@ -125,13 +178,17 @@ def impact(dir, spec_id, output_fmt):
 
     if output_fmt == "json":
         import json as _json
-        _json.dump({
-            "spec_id": spec_node.id,
-            "title": spec_node.title,
-            "edges": [{"src": e.src_id, "relation": e.relation.value, "strength": e.strength.value,
-                        "evidence": [{"kind": ev.kind, "value": ev.value} for ev in e.evidence]}
-                       for e in edges],
-        }, indent=2, ensure_ascii=False)
+        results = []
+        for spec_node in spec_nodes:
+            edges = graph.edges_to(spec_node.id)
+            results.append({
+                "spec_id": spec_node.id,
+                "title": spec_node.title,
+                "edges": [{"src": e.src_id, "relation": e.relation.value, "strength": e.strength.value,
+                           "evidence": [{"kind": ev.kind, "value": ev.value} for ev in e.evidence]}
+                          for e in edges],
+            })
+        click.echo(_json.dumps(results if len(results) > 1 else results[0], indent=2, ensure_ascii=False))
 
 
 @cli.command()
