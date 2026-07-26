@@ -63,11 +63,13 @@ Run full spec-code trace analysis on the project.
 
 ### 3.2 `impact`
 
-Find what implements a given spec.
+Find what implements a given spec. Supports **fuzzy spec resolution** — you can search by ID suffix, title, or heading text.
 
-- **Required parameter**: `spec_id` — e.g. "1.1" or "spec::1.1"
-- **Returns**: List of implementing code/test files with confidence and evidence
-- **Use case**: Agent asks "what implements spec 1.1?"
+- **Required parameter**: `spec_id` — e.g. `"1.1"`, `"TraceNode"`, `"build_heuristic_graph"`
+- **Resolution order**: exact ID → `spec::` prefix → ID suffix match → title substring → heading text
+- **Multiple matches**: when more than one spec matches, all are returned with their implementing artifacts
+- **Returns**: List of implementing code/test files with confidence and evidence, including function-level edges
+- **Use case**: Agent asks "what implements spec TraceNode?"
 
 ### 3.3 `coverage`
 

@@ -79,7 +79,7 @@ $ specbridge analyze --deps
 
 ### 2.2 `impact`
 
-特定の仕様を実装するコード/テストファイルを検索します。
+特定の仕様を実装するコード/テストファイルを検索します。**あいまい検索**に対応しており、完全な階層IDを知らなくても検索できます。
 
 ```
 Usage: specbridge impact [OPTIONS]
@@ -88,24 +88,49 @@ Usage: specbridge impact [OPTIONS]
 
 Options:
   -d, --dir TEXT      プロジェクトディレクトリ  [default: .]
-  --spec-id TEXT      分析する仕様ID（例：1.1）[必須]
+  --spec-id TEXT      分析する仕様IDまたはタイトル（例："1.1", "TraceNode"）[必須]
   --format TEXT       出力形式 (text, json)  [default: text]
   --help              ヘルプを表示
 ```
 
+**検索解決順序:**
+
+| 優先度 | 方法 | 入力例 → マッチ結果 |
+|--------|------|---------------------|
+| 1 | ID完全一致 | `docs.en.02-data-model.1.2.1` |
+| 2 | `spec::` 接頭辞 | `1.1` → `spec::1.1` |
+| 3 | ID後方一致 | `1.2.1` → `docs.en.02-data-model.1.2.1` など |
+| 4 | タイトル部分一致 | `TraceNode` → タイトルに "TraceNode" を含むspec |
+| 5 | 見出しテキスト | `build_heuristic_graph` → 見出しに含むspec |
+
+複数のspecがマッチした場合、すべての結果と実装アーティファクトが表示されます。
+
 **例:**
 
 ```
-$ specbridge impact --spec-id 1.1
-📄 auth.auth.1.1: ユーザー認証
-   Confidence: 0.95
-   Source: docs/auth/auth.md
-  [EXPLICIT] src/auth/login.py  (implements)
-            ∵ tag:impl: AUTH-1
-  [EXPLICIT] tests/test_auth.py  (verifies)
-            ∵ tag:verifies: 1.1
+# ID後方一致（1.2.1 で終わる全specを検索）
+$ specbridge impact --spec-id 1.2.1
+📄 docs.en.02-data-model.1.2.1: TraceNode
+📄 docs.en.03-adapter-plugin-system.1.2.1: Contract
+...
 
-$ specbridge impact --spec-id 1.1 --format json
+# タイトル検索
+$ specbridge impact --spec-id TraceNode
+📄 docs.en.02-data-model.1.2.1: TraceNode
+  [INFERRED] specbridge/core/__init__.py  (implements)
+            ∵ heuristic:funcname: function 'TraceNode' matches spec 'TraceNode'
+
+# 完全IDで検索
+$ specbridge impact --spec-id docs.en.02-data-model.1.2.1
+
+# 関数レベル結果も表示
+$ specbridge impact --spec-id build_heuristic_graph
+📄 docs.en.05-heuristic-matching.1.2: Algorithm: `build_heuristic_graph()`
+  [INFERRED] specbridge/infer/__init__.py  (implements)
+            ∵ heuristic:funcname: function 'build_heuristic_graph' matches spec
+
+# JSON出力（複数マッチも処理）
+$ specbridge impact --spec-id 1.2.1 --format json
 ```
 
 ### 2.3 `coverage`

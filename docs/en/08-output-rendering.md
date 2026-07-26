@@ -41,6 +41,18 @@ Coverage: 83.3% (10/12)
   tests/test_auth.py                  → auth.auth.1.1
 ```
 
+**With function-level matching:**
+
+When `build_heuristic_graph()` is used (heuristic adapter), function-level nodes appear in a dedicated section:
+
+```
+🔧 Function refs:
+  specbridge/core/__init__.py::TraceNode      → docs.en.02-data-model.1.2.1
+  specbridge/infer/__init__.py::_tokenize     → docs.en.05-heuristic-matching.1.4
+```
+
+Function nodes are identified by `::` in their ID (`file.py::function_name`). They appear alongside file-level edges and include evidence from `heuristic:funcname` matches.
+
 **With `--top N`:**
 
 If `max_nodes` is set, only the top N items per category are shown with a truncation note:

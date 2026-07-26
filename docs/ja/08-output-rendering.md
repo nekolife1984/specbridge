@@ -41,6 +41,18 @@ Coverage: 83.3% (10/12)
   tests/test_auth.py                  → auth.auth.1.1
 ```
 
+**関数レベルマッチング使用時:**
+
+ヒューリスティックアダプタ使用時は、関数レベルのノードが専用セクションに表示されます：
+
+```
+🔧 Function refs:
+  specbridge/core/__init__.py::TraceNode      → docs.en.02-data-model.1.2.1
+  specbridge/infer/__init__.py::_tokenize     → docs.en.05-heuristic-matching.1.4
+```
+
+関数ノードはIDに `::` を含む（`file.py::function_name`）ことで識別されます。ファイルレベルのエッジと共に表示され、`heuristic:funcname` マッチのエビデンスを含みます。
+
 **`--top N` 使用時:**
 
 `max_nodes` が設定されている場合、カテゴリごとに上位N件のみが表示され、切り捨て注釈が付きます：

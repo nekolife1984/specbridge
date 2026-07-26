@@ -79,7 +79,7 @@ $ specbridge analyze --deps
 
 ### 2.2 `impact`
 
-Find which code/test files implement a specific specification.
+Find which code/test files implement a specific specification. Supports **fuzzy spec ID resolution** — you don't need the full hierarchical ID.
 
 ```
 Usage: specbridge impact [OPTIONS]
@@ -88,24 +88,50 @@ Usage: specbridge impact [OPTIONS]
 
 Options:
   -d, --dir TEXT      Project directory  [default: .]
-  --spec-id TEXT      Spec ID to analyze (e.g. 1.1)  [required]
+  --spec-id TEXT      Spec ID or title to analyze (e.g. "1.1", "TraceNode")  [required]
   --format TEXT       Output format (text, json)  [default: text]
   --help              Show this message and exit.
 ```
 
+**Spec resolution order:**
+
+| Priority | Method | Example input → matched |
+|----------|--------|------------------------|
+| 1 | Exact node ID | `docs.en.02-data-model.1.2.1` |
+| 2 | `spec::` prefix | `1.1` → `spec::1.1` |
+| 3 | ID suffix match | `1.2.1` → `docs.en.02-data-model.1.2.1`, `docs.en.03-...1.2.1` ... |
+| 4 | Title substring | `TraceNode` → any spec with "TraceNode" in title |
+| 5 | Heading text | `build_heuristic_graph` → heading containing that text |
+
+When multiple specs match, all are displayed with their implementing artifacts.
+
 **Examples:**
 
 ```
-$ specbridge impact --spec-id 1.1
-📄 auth.auth.1.1: User Authentication
-   Confidence: 0.95
-   Source: docs/auth/auth.md
-  [EXPLICIT] src/auth/login.py  (implements)
-            ∵ tag:impl: AUTH-1
-  [EXPLICIT] tests/test_auth.py  (verifies)
-            ∵ tag:verifies: 1.1
+# By ID suffix (finds all specs ending with 1.2.1)
+$ specbridge impact --spec-id 1.2.1
+📄 docs.en.02-data-model.1.2.1: TraceNode
+📄 docs.en.03-adapter-plugin-system.1.2.1: Contract
+📄 docs.en.04-discovery-engine.1.2.1: What It Does
+...
 
-$ specbridge impact --spec-id 1.1 --format json
+# By title
+$ specbridge impact --spec-id TraceNode
+📄 docs.en.02-data-model.1.2.1: TraceNode
+  [INFERRED] specbridge/core/__init__.py  (implements)
+            ∵ heuristic:funcname: function 'TraceNode' matches spec 'TraceNode'
+
+# By full ID (exact match)
+$ specbridge impact --spec-id docs.en.02-data-model.1.2.1
+
+# Function-level results shown
+$ specbridge impact --spec-id build_heuristic_graph
+📄 docs.en.05-heuristic-matching.1.2: Algorithm: `build_heuristic_graph()`
+  [INFERRED] specbridge/infer/__init__.py  (implements)
+            ∵ heuristic:funcname: function 'build_heuristic_graph' matches spec
+
+# JSON output (handles multiple matches)
+$ specbridge impact --spec-id 1.2.1 --format json
 ```
 
 ### 2.3 `coverage`

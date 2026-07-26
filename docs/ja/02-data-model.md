@@ -142,6 +142,12 @@ class TraceGraph:
 | `edges_to` | `(node_id: str) -> list[TraceEdge]` | このノードへの全エッジ（入力） |
 | `edges_from` | `(node_id: str) -> list[TraceEdge]` | このノードからの全エッジ（出力） |
 
+**ユーティリティ関数:**
+
+| 関数 | シグネチャ | 説明 |
+|------|-----------|------|
+| `find_spec_nodes` | `(graph: TraceGraph, query: str) -> list[TraceNode]` | あいまい検索でspecノードを検索（完全ID → `spec::` 接頭辞 → ID後方一致 → タイトル → 見出しテキスト） |
+
 ## 3. 発見処理の中間型
 
 TraceNodeに変換される前の中間表現。

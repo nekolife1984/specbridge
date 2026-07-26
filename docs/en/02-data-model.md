@@ -142,6 +142,12 @@ class TraceGraph:
 | `edges_to` | `(node_id: str) -> list[TraceEdge]` | All edges targeting this node (incoming) |
 | `edges_from` | `(node_id: str) -> list[TraceEdge]` | All edges originating from this node (outgoing) |
 
+**Utility function:**
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `find_spec_nodes` | `(graph: TraceGraph, query: str) -> list[TraceNode]` | Finds spec nodes by fuzzy search (exact ID → `spec::` prefix → ID suffix → title → heading text) |
+
 ## 3. Discovery Candidates (Intermediate Types)
 
 These are intermediate representations used by the discovery pipeline before being converted to TraceNodes.
