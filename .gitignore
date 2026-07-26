@@ -16,8 +16,6 @@ venv/
 .coverage
 htmlcov/
 
-# specbridge output (when run inside a project)
-.specbridge/
 
 # IDE
 .vscode/
