@@ -9,10 +9,17 @@ def render_text(graph: TraceGraph, max_nodes: int | None = None) -> str:
     When *max_nodes* is set, only the top N items per category are shown
     and a truncation note is appended.
     """
+    from specbridge.analyzers import coverage_summary
+
     lines: list[str] = []
     lines.append("specbridge — Trace Graph")
     lines.append(f"{'=' * 40}")
     lines.append(f"Nodes: {len(graph.nodes)} | Edges: {len(graph.edges)}")
+
+    # Coverage summary
+    cov = coverage_summary(graph)
+    if cov["total"] > 0:
+        lines.append(f"Coverage: {cov['coverage_pct']}% ({cov['covered']}/{cov['total']})")
     lines.append("")
 
     def _maybe_truncate(items: list, label: str, max_n: int | None) -> tuple[list, bool]:

@@ -52,17 +52,11 @@ def analyze(dir, output_fmt, merge, top):
             raise click.Abort()
         graph = adapter.analyze(str(root))
 
-    from specbridge.analyzers import coverage_summary
-
     spec_count = len(graph.nodes_by_type(NodeType.SPEC))
     code_count = len(graph.nodes_by_type(NodeType.CODE))
     test_count = len(graph.nodes_by_type(NodeType.TEST))
     click.echo(f"\n   Nodes: {len(graph.nodes)} | Edges: {len(graph.edges)}", err=True)
     click.echo(f"   Specs: {spec_count} | Code refs: {code_count} | Tests: {test_count}", err=True)
-
-    cov = coverage_summary(graph)
-    if cov["total"] > 0:
-        click.echo(f"   Coverage: {cov['coverage_pct']}% ({cov['covered']}/{cov['total']})", err=True)
 
     if output_fmt == "json":
         click.echo(render_json(graph))
