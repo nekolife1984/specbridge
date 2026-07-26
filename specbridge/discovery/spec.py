@@ -34,6 +34,9 @@ class SpecCandidate:
     auto_id: str
     title: str
     line: int
+    # Parent heading texts (from top-level down to immediate parent)
+    # e.g. for "### 2.1 TraceNode": parent_chain = ["Data Model", "Type Hierarchy"]
+    parent_chain: list[str] | None = None
     # Section body (between this heading and the next, or EOF)
     body_text: str = ""
     body_hash: str = ""       # SHA256 of body_text (including heading line)
@@ -146,6 +149,7 @@ def _parse_sections(fpath: Path, text: str, root: Path) -> list[SpecCandidate]:
 
     result: list[SpecCandidate] = []
     counters: dict[int, int] = {}
+    heading_chain: dict[int, str] = {}  # depth → heading text for parent tracking
 
     for sec in sections:
         depth = sec["depth"]
@@ -155,6 +159,13 @@ def _parse_sections(fpath: Path, text: str, root: Path) -> list[SpecCandidate]:
         counters[depth] = counters.get(depth, 0) + 1
         for d in range(depth + 1, 7):
             counters.pop(d, None)
+
+        # Update heading chain: set this level, clear deeper
+        heading_chain[depth] = raw
+        for d in range(depth + 1, 7):
+            heading_chain.pop(d, None)
+        # Build parent chain (texts from level 1 up to depth-1)
+        parent_chain = [heading_chain[d] for d in range(1, depth) if d in heading_chain]
 
         num_parts = [str(counters[d]) for d in range(1, depth + 1) if d in counters]
         hier_id = ".".join(num_parts)
@@ -175,6 +186,7 @@ def _parse_sections(fpath: Path, text: str, root: Path) -> list[SpecCandidate]:
             file=rel,
             heading_depth=depth,
             heading_text=raw,
+            parent_chain=parent_chain,
             auto_id=auto_id,
             title=title or raw,
             line=sec["line"],

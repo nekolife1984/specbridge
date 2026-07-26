@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-26T16:05:58",
-  "reason": "Initial self-analysis baseline",
+  "timestamp": "2026-07-26T16:31:54",
+  "reason": "After strategies 4-6: parent chain + body tokens + code function body matching",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",

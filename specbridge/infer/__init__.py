@@ -125,7 +125,14 @@ def build_heuristic_graph(
 
     # 5. Match specs ↔ code
     for sc in specs:
-        spec_tokens = _tokenize(f"{sc.title} {sc.heading_text}")
+        # Build spec tokens from title, heading text, parent chain, and body content
+        spec_text = f"{sc.title} {sc.heading_text}"
+        if sc.parent_chain:
+            spec_text += " " + " ".join(sc.parent_chain)
+        if sc.body_text:
+            # Include first 300 characters of body for content-level matching
+            spec_text += " " + sc.body_text[:300]
+        spec_tokens = _tokenize(spec_text)
 
         for cc in codes:
             conf, evidence = _score_edge(sc, cc, spec_tokens, project_dir)
@@ -203,7 +210,11 @@ def _score_edge(
     total_weight += _W_FILENAME
 
     # --- Signal 3: Symbol ↔ heading keyword match ---
-    code_keywords = _tokenize(f"{cc.file} {' '.join(cc.symbols)}")
+    # Include function body previews for content-level matching
+    code_text = f"{cc.file} {' '.join(cc.symbols)}"
+    if cc.functions:
+        code_text += " " + " ".join(f.body_preview for f in cc.functions)
+    code_keywords = _tokenize(code_text)
     if spec_tokens and code_keywords:
         overlap = spec_tokens & code_keywords
         if overlap:
