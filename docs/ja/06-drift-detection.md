@@ -7,35 +7,28 @@
 
 specbridgeは、保存されたスナップショットと現在のプロジェクト状態の間の変更を特定するためのドリフト検出を提供します。これにより、CIゲート（「仕様にドリフトがあるか？」）、プレコミット検証、および変更影響分析が可能になります。
 
-```
-                        時間
-                    ──────────▶
+```mermaid
+flowchart TB
+    subgraph SNAP["スナップショット (t₀)"]
+        S1["discover_specs()"]
+        S2["discover_code()"]
+        S3["build_graph()"]
+    end
 
-スナップショット (t₀)              現在の状態 (t₁)
-┌──────────────────┐             ┌──────────────────┐
-│ discover_specs()  │             │ discover_specs()  │
-│ discover_code()   │             │ discover_code()   │
-│ build_graph()     │             │ build_graph()     │
-└────────┬─────────┘             └────────┬─────────┘
-         │                                 │
-         └──────────────┬─────────────────┘
-                        │
-                        ▼
-              ┌────────────────────┐
-              │   compute_drift()  │
-              │   ───────────────  │
-              │   ハッシュを比較    │
-              │   セクションごと    │
-              └────────┬───────────┘
-                       │
-                       ▼
-              ┌────────────────────┐
-              │   DriftReport      │
-              │   ───────────────  │
-              │   .has_drift       │
-              │   .render_text()   │
-              │   .to_dict()      │
-              └────────────────────┘
+    subgraph CURR["現在の状態 (t₁)"]
+        C1["discover_specs()"]
+        C2["discover_code()"]
+        C3["build_graph()"]
+    end
+
+    COMP["compute_drift()<br/>ハッシュを比較 セクションごと"]
+    REPORT["DriftReport<br/>.has_drift<br/>.render_text()<br/>.to_dict()"]
+
+    S1 --> S2 --> S3
+    C1 --> C2 --> C3
+    S3 --> COMP
+    C3 --> COMP
+    COMP --> REPORT
 ```
 
 ## 2. スナップショットモデル

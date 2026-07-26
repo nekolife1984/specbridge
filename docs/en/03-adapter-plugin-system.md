@@ -7,28 +7,18 @@
 
 specbridge uses the **Adapter pattern** to support multiple SSD (Spec-Driven Development) frameworks. Each adapter knows how to detect and analyze a specific framework's project structure. The system is extensible via Python entry points — third-party packages can register their own adapters without modifying specbridge itself.
 
-```
-┌──────────────────────────────────────────────┐
-│               Adapter Layer                    │
-│                                                │
-│  ┌──────────────┐   ┌──────────────┐          │
-│  │ Heuristic    │   │  Spectra     │          │
-│  │ (built-in)   │   │  (built-in)  │          │
-│  └──────┬───────┘   └──────┬───────┘          │
-│         │                  │                   │
-│         ▼                  ▼                   │
-│  ┌──────────────────────────────────────────┐  │
-│  │       ProjectAdapter (ABC)                │  │
-│  │  ┌─ detect(directory) → float            │  │
-│  │  └─ analyze(directory) → TraceGraph      │  │
-│  └──────────────────────────────────────────┘  │
-│         │                                       │
-│         ▼                                       │
-│  ┌──────────────────────────────────────────┐  │
-│  │       Plugin Discovery                    │  │
-│  │  entry_points(group="specbridge.adapters")│  │
-│  └──────────────────────────────────────────┘  │
-└──────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph AL["Adapter Layer"]
+        HE["Heuristic (built-in)"]
+        SP["Spectra (built-in)"]
+        ABC["ProjectAdapter (ABC)<br/>├─ detect(directory) → float<br/>└─ analyze(directory) → TraceGraph"]
+        PD["Plugin Discovery<br/>entry_points(group='specbridge.adapters')"]
+
+        HE --> ABC
+        SP --> ABC
+        ABC --> PD
+    end
 ```
 
 ## 2. Abstract Base: `ProjectAdapter`
@@ -183,39 +173,14 @@ Called by: `analyze --merge`, `watch`, MCP server.
 
 ## 6. Plugin Discovery Lifecycle
 
-```
-┌─────────────┐
-│ Python starts │
-└──────┬──────┘
-       │
-       ▼
-┌──────────────────┐
-│ Import adapters/ │
-│ __init__.py      │
-│  → eager-imports │
-│    heuristic.py  │  ← @register fires
-│    spectra.py    │  ← @register fires
-└──────┬──────────┘
-       │
-       ▼  (first call to all_adapters() or detect_adapter())
-┌──────────────────────┐
-│ _ensure_plugins_     │
-│ discovered()         │
-│  → discover_plugins()│
-│    → importlib       │
-│      entry_points()  │
-│        "specbridge.  │
-│         adapters"    │
-│    → ep.load()       │
-│    → register(cls)   │
-└──────────────────────┘
-       │
-       ▼
-┌──────────────────┐
-│ All adapters     │
-│ available for    │
-│ selection        │
-└──────────────────┘
+```mermaid
+flowchart TB
+    START["Python starts"]
+    IMPORT["Import adapters/__init__.py<br/>→ eager-imports heuristic.py ← @register fires<br/>→ eager-imports spectra.py ← @register fires"]
+    DISCOVER["(first call to all_adapters() or detect_adapter())<br/>_ensure_plugins_discovered()<br/>→ discover_plugins()<br/>  → importlib entry_points('specbridge.adapters')<br/>  → ep.load()<br/>  → register(cls)"]
+    DONE["All adapters available for selection"]
+
+    START --> IMPORT --> DISCOVER --> DONE
 ```
 
 ## 7. Creating a Plugin (Step-by-Step)

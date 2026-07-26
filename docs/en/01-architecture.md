@@ -9,67 +9,62 @@ specbridge is a **framework-agnostic, read-only traceability analyzer** that map
 
 ## 2. High-Level Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     User Interfaces                          │
-│  ┌──────────┐  ┌──────────────┐  ┌──────────────────────┐   │
-│  │ CLI      │  │ MCP Server   │  │ (Plugin SDK)         │   │
-│  │ (click)  │  │ (stdio MCP)  │  │ entry_points hook    │   │
-│  └────┬─────┘  └──────┬───────┘  └──────────┬───────────┘   │
-│       │               │                     │                │
-├───────┼───────────────┼─────────────────────┼────────────────┤
-│       ▼               ▼                     ▼                │
-│  ┌────────────────────────────────────────────────────┐      │
-│  │               Output Renderers                      │      │
-│  │  text.py  │  json_out.py  │  html.py (D3.js)       │      │
-│  └─────────────────────┬──────────────────────────────┘      │
-│                        │                                      │
-│  ┌─────────────────────▼──────────────────────────────┐      │
-│  │              Analysis Layer                         │      │
-│  │  ┌──────────────┐  ┌──────────┐  ┌───────────┐    │      │
-│  │  │ Coverage     │  │  Drift   │  │ Dep Graph │    │      │
-│  │  │ (orphans, %) │  │(snapshot │  │ (imports) │    │      │
-│  │  │              │  │ compare) │  │           │    │      │
-│  │  └──────────────┘  └──────────┘  └───────────┘    │      │
-│  └─────────────────────┬──────────────────────────────┘      │
-│                        │                                      │
-│  ┌─────────────────────▼──────────────────────────────┐      │
-│  │           Inference Engine (infer/)                 │      │
-│  │  build_heuristic_graph() — 4-signal scoring        │      │
-│  │  (dirname, filename, symbol, keyword matching)     │      │
-│  └─────────────────────┬──────────────────────────────┘      │
-│                        │                                      │
-│  ┌─────────────────────▼──────────────────────────────┐      │
-│  │              Discovery Layer                        │      │
-│  │  ┌───────────────┐  ┌──────────────┐  ┌────────┐  │      │
-│  │  │ Spec Discovery│  │Code Discovery│  │ AST    │  │      │
-│  │  │ (markdown     │  │(18 languages,│  │(tree-  │  │      │
-│  │  │  headings)    │  │ regex symbol│  │ sitter)│  │      │
-│  │  └───────────────┘  └──────────────┘  └────────┘  │      │
-│  └─────────────────────┬──────────────────────────────┘      │
-│                        │                                      │
-│  ┌─────────────────────▼──────────────────────────────┐      │
-│  │               Adapter Layer                         │      │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────┐ │      │
-│  │  │ Heuristic    │  │  Spectra     │  │ Plugins  │ │      │
-│  │  │ (no-tag,     │  │  (@impl,     │  │(entry    │ │      │
-│  │  │  primary)    │  │  trace-map)  │  │ points)  │ │      │
-│  │  └──────────────┘  └──────────────┘  └──────────┘ │      │
-│  └─────────────────────┬──────────────────────────────┘      │
-│                        │                                      │
-│  ┌─────────────────────▼──────────────────────────────┐      │
-│  │                Core Model (core/)                   │      │
-│  │  TraceNode | TraceEdge | TraceGraph | Evidence     │      │
-│  │  Tag Extractor (tokenize + regex multi-lang)       │      │
-│  └────────────────────────────────────────────────────┘      │
-└─────────────────────────────────────────────────────────────┘
-               │
-               ▼
-     ┌─────────────────┐
-     │ Config + Guard  │
-     │ config.py       │
-     │ guard.py        │
-     └─────────────────┘
+```mermaid
+flowchart TB
+    subgraph UI["User Interfaces"]
+        CLI["CLI (click)"]
+        MCP["MCP Server (stdio MCP)"]
+        SDK["Plugin SDK (entry_points)"]
+    end
+
+    subgraph OUT["Output Renderers"]
+        TEXT["text.py"]
+        JSON["json_out.py"]
+        HTML["html.py (D3.js)"]
+    end
+
+    subgraph AL["Analysis Layer"]
+        COV["Coverage<br/>(orphans, %)"]
+        DRIFT["Drift<br/>(snapshot compare)"]
+        DEP["Dep Graph<br/>(imports)"]
+    end
+
+    subgraph INF["Inference Engine (infer/)"]
+        HEUR["build_heuristic_graph()<br/>4-signal scoring<br/>(dirname, filename, symbol, keyword)"]
+    end
+
+    subgraph DISC["Discovery Layer"]
+        SD["Spec Discovery<br/>(markdown headings)"]
+        CD["Code Discovery<br/>(18 languages, regex symbol)"]
+        AST["AST<br/>(tree-sitter)"]
+    end
+
+    subgraph ADAPT["Adapter Layer"]
+        HE["Heuristic<br/>(no-tag, primary)"]
+        SP["Spectra<br/>(@impl, trace-map)"]
+        PL["Plugins<br/>(entry points)"]
+    end
+
+    subgraph CORE["Core Model (core/)"]
+        MODEL["TraceNode | TraceEdge<br/>TraceGraph | Evidence"]
+        TAGEX["Tag Extractor<br/>(tokenize + regex multi-lang)"]
+    end
+
+    subgraph CFG["Config + Guard"]
+        CONFIG["config.py"]
+        GUARD["guard.py"]
+    end
+
+    CLI --> OUT
+    MCP --> OUT
+    SDK --> OUT
+
+    OUT --> AL
+    AL --> INF
+    INF --> DISC
+    DISC --> ADAPT
+    ADAPT --> CORE
+    CORE --> CFG
 ```
 
 ## 3. Module Responsibilities
@@ -91,60 +86,71 @@ specbridge is a **framework-agnostic, read-only traceability analyzer** that map
 
 ### Read Path (primary flow)
 
-```
-Project directory
-    │
-    ├──▶ Adapter Detection
-    │       detect_adapter(root) → scores all adapters, picks best
-    │
-    ├──▶ Adapter.analyze(root)
-    │       ├──▶ Spec Discovery
-    │       │       discover_specs() → scan docs/ for *.md → heading parse → SpecCandidate[]
-    │       │
-    │       ├──▶ Code Discovery
-    │       │       discover_code() → scan src/ for 18 lang ext → symbol/import extract → CodeCandidate[]
-    │       │
-    │       └──▶ Inference Engine (if heuristic) or Tag Extraction (if spectra)
-    │               build_heuristic_graph() → match spec ↔ code → TraceGraph
-    │               or
-    │               extract_tags_from_dir() → @impl / <!-- @spec --> → build TraceGraph
-    │
-    └──▶ CLI analyzes the TraceGraph for impact/coverage/etc.
+```mermaid
+flowchart TB
+    PROJ["Project directory"]
+    AD["Adapter Detection<br/>detect_adapter(root) → scores all adapters, picks best"]
+    AN["Adapter.analyze(root)"]
+    SPS["Spec Discovery<br/>discover_specs() → scan docs/ for *.md<br/>→ heading parse → SpecCandidate[]"]
+    CD["Code Discovery<br/>discover_code() → scan src/ for 18 lang ext<br/>→ symbol/import extract → CodeCandidate[]"]
+    INF["Inference Engine (if heuristic)<br/>build_heuristic_graph() → match spec ↔ code → TraceGraph<br/>or<br/>Tag Extraction (if spectra)<br/>extract_tags_from_dir() → @impl / <!-- @spec -->"]
+    CLI2["CLI analyzes the TraceGraph<br/>for impact/coverage/etc."]
+
+    PROJ --> AD
+    AD --> AN
+    AN --> SPS
+    AN --> CD
+    AN --> INF
+    SPS --> INF
+    CD --> INF
+    INF --> CLI2
 ```
 
 ### Snapshot / Drift Flow
 
-```
-specbridge snapshot
-    │
-    ├──▶ discover_specs() + discover_code()
-    ├──▶ build_heuristic_graph() + coverage_summary()
-    ├──▶ Hash each spec section body (SHA256[:16])
-    ├──▶ Hash each code file (SHA256[:16]) + each function body
-    └──▶ Save to .specbridge/snapshot.json
+```mermaid
+flowchart LR
+    subgraph SNAP["specbridge snapshot"]
+        A1["discover_specs() + discover_code()"]
+        A2["build_heuristic_graph() + coverage_summary()"]
+        A3["Hash each spec section body (SHA256[:16])"]
+        A4["Hash each code file (SHA256[:16]) + each function body"]
+        A5["Save to .specbridge/snapshot.json"]
+        A1 --> A2 --> A3 --> A4 --> A5
+    end
 
-specbridge drift
-    │
-    ├──▶ Load .specbridge/snapshot.json
-    ├──▶ Re-discover current state (specs + code)
-    ├──▶ Compare section by section (hash diff)
-    │   ├── added / removed / changed / renamed specs
-    │   ├── added / removed / changed code files
-    │   ├── function body hash changes
-    │   └── orphan coverage delta
-    └──▶ Return DriftReport (text / JSON / gate exit code)
+    subgraph DRI["specbridge drift"]
+        B1["Load .specbridge/snapshot.json"]
+        B2["Re-discover current state (specs + code)"]
+        B3["Compare section by section (hash diff)"]
+        B4["added / removed / changed / renamed specs"]
+        B5["added / removed / changed code files"]
+        B6["function body hash changes"]
+        B7["orphan coverage delta"]
+        B8["Return DriftReport (text / JSON / gate exit code)"]
+
+        B1 --> B2 --> B3
+        B3 --> B4
+        B3 --> B5
+        B3 --> B6
+        B3 --> B7
+        B4 --> B8
+        B5 --> B8
+        B6 --> B8
+        B7 --> B8
+    end
 ```
 
 ### Adapter Merge Flow
 
-```
-specbridge analyze --merge
-    │
-    ├──▶ detect_all(root) → all adapters with score > 0
-    ├──▶ For each: adapter.analyze(root) → TraceGraph
-    ├──▶ merge_graphs(graphs) → union of nodes + concatenate edges
-    │       (later adapter's nodes overwrite same-ID nodes from earlier ones)
-    └──▶ Output merged TraceGraph
+```mermaid
+flowchart TB
+    DA["detect_all(root) → all adapters with score > 0"]
+    LOOP["For each: adapter.analyze(root) → TraceGraph"]
+    MG["merge_graphs(graphs) → union of nodes + concatenate edges<br/>(later adapter's nodes overwrite same-ID nodes)"]
+    OUT["Output merged TraceGraph"]
+
+    DA --> LOOP --> MG --> OUT
 ```
 
 ## 5. Key Design Principles

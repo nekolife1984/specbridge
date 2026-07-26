@@ -9,69 +9,62 @@ specbridgeは**フレームワーク非依存、読み取り専用のトレー�
 
 ## 2. 全体アーキテクチャ
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     ユーザーインターフェース                  │
-│  ┌──────────┐  ┌──────────────┐  ┌──────────────────────┐   │
-│  │ CLI      │  │ MCP Server   │  │ (プラグインSDK)      │   │
-│  │ (click)  │  │ (stdio MCP)  │  │ entry_points フック  │   │
-│  └────┬─────┘  └──────┬───────┘  └──────────┬───────────┘   │
-│       │               │                     │                │
-├───────┼───────────────┼─────────────────────┼────────────────┤
-│       ▼               ▼                     ▼                │
-│  ┌────────────────────────────────────────────────────┐      │
-│  │              出力レンダラー                          │      │
-│  │  text.py  │  json_out.py  │  html.py (D3.js)       │      │
-│  └─────────────────────┬──────────────────────────────┘      │
-│                        │                                      │
-│  ┌─────────────────────▼──────────────────────────────┐      │
-│  │             分析レイヤー                             │      │
-│  │  ┌──────────────┐  ┌──────────┐  ┌───────────┐    │      │
-│  │  │ カバレッジ   │  │  ドリフト│  │ 依存関係  │    │      │
-│  │  │ (孤立, %)   │  │(スナップ │  │ (import)  │    │      │
-│  │  │              │  │ ショット │  │           │    │      │
-│  │  │              │  │ 比較)    │  │           │    │      │
-│  │  └──────────────┘  └──────────┘  └───────────┘    │      │
-│  └─────────────────────┬──────────────────────────────┘      │
-│                        │                                      │
-│  ┌─────────────────────▼──────────────────────────────┐      │
-│  │           推論エンジン (infer/)                      │      │
-│  │  build_heuristic_graph() — 4信号スコアリング       │      │
-│  │  (ディレクトリ名, ファイル名, シンボル, キーワード) │      │
-│  └─────────────────────┬──────────────────────────────┘      │
-│                        │                                      │
-│  ┌─────────────────────▼──────────────────────────────┐      │
-│  │             発見レイヤー                             │      │
-│  │  ┌───────────────┐  ┌──────────────┐  ┌────────┐  │      │
-│  │  │ 仕様発見      │  │コード発見    │  │ AST   │  │      │
-│  │  │ (Markdown     │  │(18言語,      │  │(tree- │  │      │
-│  │  │  見出し)      │  │ 正規表現     │  │ sitter)│  │      │
-│  │  └───────────────┘  └──────────────┘  └────────┘  │      │
-│  └─────────────────────┬──────────────────────────────┘      │
-│                        │                                      │
-│  ┌─────────────────────▼──────────────────────────────┐      │
-│  │              アダプタレイヤー                        │      │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────┐ │      │
-│  │  │ ヒューリス   │  │  Spectra    │  │ プラグ   │ │      │
-│  │  │ ティック     │  │  (@impl,    │  │ イン     │ │      │
-│  │  │ (タグ不要,   │  │  trace-map) │  │(entry    │ │      │
-│  │  │  プライマリ) │  │             │  │ points)  │ │      │
-│  │  └──────────────┘  └──────────────┘  └──────────┘ │      │
-│  └─────────────────────┬──────────────────────────────┘      │
-│                        │                                      │
-│  ┌─────────────────────▼──────────────────────────────┐      │
-│  │              コアモデル (core/)                     │      │
-│  │  TraceNode | TraceEdge | TraceGraph | Evidence     │      │
-│  │  タグ抽出 (tokenize + 正規表現 多言語対応)         │      │
-│  └────────────────────────────────────────────────────┘      │
-└─────────────────────────────────────────────────────────────┘
-               │
-               ▼
-     ┌─────────────────┐
-     │ 設定 + ガード    │
-     │ config.py        │
-     │ guard.py         │
-     └─────────────────┘
+```mermaid
+flowchart TB
+    subgraph UI["ユーザーインターフェース"]
+        CLI["CLI (click)"]
+        MCP["MCP Server (stdio MCP)"]
+        SDK["Plugin SDK (entry_points)"]
+    end
+
+    subgraph OUT["出力レンダラー"]
+        TEXT["text.py"]
+        JSON["json_out.py"]
+        HTML["html.py (D3.js)"]
+    end
+
+    subgraph AL["分析レイヤー"]
+        COV["Coverage<br/>(孤立, %)"]
+        DRIFT["Drift<br/>(スナップショット比較)"]
+        DEP["Dep Graph<br/>(import)"]
+    end
+
+    subgraph INF["推論エンジン (infer/)"]
+        HEUR["build_heuristic_graph()<br/>4信号スコアリング<br/>(ディレクトリ名, ファイル名, シンボル, キーワード)"]
+    end
+
+    subgraph DISC["発見レイヤー"]
+        SD["Spec Discovery<br/>(Markdown見出し)"]
+        CD["Code Discovery<br/>(18言語, 正規表現)"]
+        AST["AST<br/>(tree-sitter)"]
+    end
+
+    subgraph ADAPT["アダプタレイヤー"]
+        HE["Heuristic<br/>(タグ不要, プライマリ)"]
+        SP["Spectra<br/>(@impl, trace-map)"]
+        PL["Plugins<br/>(entry points)"]
+    end
+
+    subgraph CORE["コアモデル (core/)"]
+        MODEL["TraceNode | TraceEdge<br/>TraceGraph | Evidence"]
+        TAGEX["Tag Extractor<br/>(tokenize + 正規表現 多言語対応)"]
+    end
+
+    subgraph CFG["設定 + ガード"]
+        CONFIG["config.py"]
+        GUARD["guard.py"]
+    end
+
+    CLI --> OUT
+    MCP --> OUT
+    SDK --> OUT
+
+    OUT --> AL
+    AL --> INF
+    INF --> DISC
+    DISC --> ADAPT
+    ADAPT --> CORE
+    CORE --> CFG
 ```
 
 ## 3. モジュール責務
@@ -93,60 +86,71 @@ specbridgeは**フレームワーク非依存、読み取り専用のトレー�
 
 ### 読み取りパス（メインフロー）
 
-```
-プロジェクトディレクトリ
-    │
-    ├──▶ アダプタ検出
-    │       detect_adapter(root) → 全アダプタスコアリング → 最高を選択
-    │
-    ├──▶ Adapter.analyze(root)
-    │       ├──▶ 仕様発見
-    │       │       discover_specs() → docs/*.md をスキャン → 見出し解析 → SpecCandidate[]
-    │       │
-    │       ├──▶ コード発見
-    │       │       discover_code() → src/ を18言語拡張子でスキャン → シンボル/import抽出 → CodeCandidate[]
-    │       │
-    │       └──▶ 推論エンジン（ヒューリスティック）または タグ抽出（spectra）
-    │               build_heuristic_graph() → spec ↔ code マッチング → TraceGraph
-    │               または
-    │               extract_tags_from_dir() → @impl / <!-- @spec --> → TraceGraph構築
-    │
-    └──▶ CLIがTraceGraphを分析（impact/coverage等）
+```mermaid
+flowchart TB
+    PROJ["プロジェクトディレクトリ"]
+    AD["アダプタ検出<br/>detect_adapter(root) → 全アダプタスコアリング → 最高を選択"]
+    AN["Adapter.analyze(root)"]
+    SPS["仕様発見<br/>discover_specs() → docs/*.md をスキャン<br/>→ 見出し解析 → SpecCandidate[]"]
+    CD["コード発見<br/>discover_code() → src/ を18言語拡張子でスキャン<br/>→ シンボル/import抽出 → CodeCandidate[]"]
+    INF["推論エンジン（ヒューリスティック）<br/>build_heuristic_graph() → spec ↔ code マッチング → TraceGraph<br/>または<br/>タグ抽出（spectra）<br/>extract_tags_from_dir() → @impl / <!-- @spec -->"]
+    CLI2["CLIがTraceGraphを分析（impact/coverage等）"]
+
+    PROJ --> AD
+    AD --> AN
+    AN --> SPS
+    AN --> CD
+    AN --> INF
+    SPS --> INF
+    CD --> INF
+    INF --> CLI2
 ```
 
 ### スナップショット / ドリフトフロー
 
-```
-specbridge snapshot
-    │
-    ├──▶ discover_specs() + discover_code()
-    ├──▶ build_heuristic_graph() + coverage_summary()
-    ├──▶ 各仕様セクション本文をハッシュ化 (SHA256[:16])
-    ├──▶ 各コードファイルをハッシュ化 (SHA256[:16]) + 各関数本文
-    └──▶ .specbridge/snapshot.json に保存
+```mermaid
+flowchart LR
+    subgraph SNAP["specbridge snapshot"]
+        A1["discover_specs() + discover_code()"]
+        A2["build_heuristic_graph() + coverage_summary()"]
+        A3["各仕様セクション本文をハッシュ化 (SHA256[:16])"]
+        A4["各コードファイルをハッシュ化 (SHA256[:16]) + 各関数本文"]
+        A5[".specbridge/snapshot.json に保存"]
+        A1 --> A2 --> A3 --> A4 --> A5
+    end
 
-specbridge drift
-    │
-    ├──▶ .specbridge/snapshot.json を読み込み
-    ├──▶ 現在の状態を再発見（仕様 + コード）
-    ├──▶ セクションごとに比較（ハッシュ差分）
-    │   ├── 追加 / 削除 / 変更 / リネームされた仕様
-    │   ├── 追加 / 削除 / 変更されたコードファイル
-    │   ├── 関数本文のハッシュ変化
-    │   └── 孤立カバレッジの差分
-    └──▶ DriftReport を返す（text / JSON / gate終了コード）
+    subgraph DRI["specbridge drift"]
+        B1[".specbridge/snapshot.json を読み込み"]
+        B2["現在の状態を再発見（仕様 + コード）"]
+        B3["セクションごとに比較（ハッシュ差分）"]
+        B4["追加 / 削除 / 変更 / リネームされた仕様"]
+        B5["追加 / 削除 / 変更されたコードファイル"]
+        B6["関数本文のハッシュ変化"]
+        B7["孤立カバレッジの差分"]
+        B8["DriftReport を返す（text / JSON / gate終了コード）"]
+
+        B1 --> B2 --> B3
+        B3 --> B4
+        B3 --> B5
+        B3 --> B6
+        B3 --> B7
+        B4 --> B8
+        B5 --> B8
+        B6 --> B8
+        B7 --> B8
+    end
 ```
 
 ### アダプタマージフロー
 
-```
-specbridge analyze --merge
-    │
-    ├──▶ detect_all(root) → スコア > 0 の全アダプタ
-    ├──▶ 各アダプタ: adapter.analyze(root) → TraceGraph
-    ├──▶ merge_graphs(graphs) → ノードの和集合 + エッジの連結
-    │       （後続アダプタのノードが同じIDの先行ノードを上書き）
-    └──▶ マージされた TraceGraph を出力
+```mermaid
+flowchart TB
+    DA["detect_all(root) → スコア > 0 の全アダプタ"]
+    LOOP["各アダプタ: adapter.analyze(root) → TraceGraph"]
+    MG["merge_graphs(graphs) → ノードの和集合 + エッジの連結<br/>（後続アダプタのノードが同じIDの先行ノードを上書き）"]
+    OUT["マージされた TraceGraph を出力"]
+
+    DA --> LOOP --> MG --> OUT
 ```
 
 ## 5. 設計原則

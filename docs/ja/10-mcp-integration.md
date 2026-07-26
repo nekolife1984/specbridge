@@ -7,33 +7,14 @@
 
 specbridgeはMCP（Model Context Protocol）サーバを提供し、その分析機能をAIエージェント向けのツールとして公開します。これにより、MCPプロトコルをサポートするIDE、チャットインターフェース、自動化ワークフローとの統合が可能になります。
 
-```
-┌────────────────────┐
-│   AI Agent         │
-│ (Claude, Hermes,  │
-│  Cursor, etc.)     │
-└────────┬───────────┘
-         │ MCP Protocol (stdio)
-         ▼
-┌────────────────────┐
-│  specbridge MCP    │
-│  Server            │
-│  (mcp_server.py)   │
-│                    │
-│  ツール:          │
-│  - analyze        │
-│  - impact         │
-│  - coverage       │
-│  - drift          │
-│  - validate_      │
-│    boundary       │
-└────────┬───────────┘
-         │
-         ▼
-┌────────────────────┐
-│  プロジェクトDir   │
-│  (読み取り専用)    │
-└────────────────────┘
+```mermaid
+flowchart TB
+    AGENT["AI Agent<br/>(Claude, Hermes, Cursor, etc.)"]
+    MCP_SERV["specbridge MCP Server<br/>(mcp_server.py)<br/><br/>ツール:<br/>- analyze<br/>- impact<br/>- coverage<br/>- drift<br/>- validate_boundary"]
+    PROJ["プロジェクトDir<br/>(読み取り専用)"]
+
+    AGENT -->|"MCP Protocol (stdio)"| MCP_SERV
+    MCP_SERV --> PROJ
 ```
 
 ## 2. アーキテクチャ
@@ -147,21 +128,33 @@ async def handle_list_tools() -> list[Tool]:
 
 各ツールコールは以下の内部フローに従います：
 
-```
-ツールコール受信
-    │
-    ├──▶ detect_all(root) を実行 → 一致するアダプタのリスト
-    ├──▶ 各 adapter.analyze(root) を実行 → TraceGraph のリスト
-    ├──▶ merge_graphs(graphs) → 単一のマージ済み TraceGraph
-    │
-    ├──▶ analyze用: グラフから統計情報を抽出
-    ├──▶ impact用: specノード + エッジを検索
-    ├──▶ coverage用: coverage_summary + 孤立を計算
-    ├──▶ drift用: スナップショット読み込み + compute_drift（または新規スナップショット）
-    └──▶ validate_boundary用: _Boundary:_ マーカーに対してコード参照をチェック
-        │
-        ▼
-    TextContent レスポンスを返す
+```mermaid
+flowchart TB
+    CALL["ツールコール受信"]
+    DA["detect_all(root) を実行 → 一致するアダプタのリスト"]
+    AN["各 adapter.analyze(root) を実行 → TraceGraph のリスト"]
+    MG["merge_graphs(graphs) → 単一のマージ済み TraceGraph"]
+
+    BRANCH{"ツール種別?"}
+    ANA["analyze用: グラフから統計情報を抽出"]
+    IMP["impact用: specノード + エッジを検索"]
+    COV["coverage用: coverage_summary + 孤立を計算"]
+    DRI["drift用: スナップショット読み込み + compute_drift（または新規スナップショット）"]
+    VB["validate_boundary用: _Boundary:_ マーカーに対してコード参照をチェック"]
+
+    RESP["TextContent レスポンスを返す"]
+
+    CALL --> DA --> AN --> MG --> BRANCH
+    BRANCH -->|analyze| ANA
+    BRANCH -->|impact| IMP
+    BRANCH -->|coverage| COV
+    BRANCH -->|drift| DRI
+    BRANCH -->|validate_boundary| VB
+    ANA --> RESP
+    IMP --> RESP
+    COV --> RESP
+    DRI --> RESP
+    VB --> RESP
 ```
 
 ## 6. 統合パターン

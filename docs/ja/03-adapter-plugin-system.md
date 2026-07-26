@@ -7,29 +7,18 @@
 
 specbridgeは**アダプタパターン**を使用して複数のSSD（Spec-Driven Development）フレームワークをサポートします。各アダプタは特定のフレームワークのプロジェクト構造を検出・分析する方法を把握しています。このシステムはPythonのエントリポイントを介して拡張可能で、サードパーティパッケージがspecbridge本体を変更せずに独自のアダプタを登録できます。
 
-```
-┌──────────────────────────────────────────────┐
-│               アダプタレイヤー                 │
-│                                                │
-│  ┌──────────────┐   ┌──────────────┐          │
-│  │ ヒューリス   │   │  Spectra     │          │
-│  │ ティック     │   │  (内蔵)      │          │
-│  │ (内蔵)       │   │              │          │
-│  └──────┬───────┘   └──────┬───────┘          │
-│         │                  │                   │
-│         ▼                  ▼                   │
-│  ┌──────────────────────────────────────────┐  │
-│  │       ProjectAdapter (ABC)                │  │
-│  │  ┌─ detect(directory) → float            │  │
-│  │  └─ analyze(directory) → TraceGraph      │  │
-│  └──────────────────────────────────────────┘  │
-│         │                                       │
-│         ▼                                       │
-│  ┌──────────────────────────────────────────┐  │
-│  │       プラグイン発見                       │  │
-│  │  entry_points(group="specbridge.adapters")│  │
-│  └──────────────────────────────────────────┘  │
-└──────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph AL["アダプタレイヤー"]
+        HE["Heuristic (内蔵)"]
+        SP["Spectra (内蔵)"]
+        ABC["ProjectAdapter (ABC)<br/>├─ detect(directory) → float<br/>└─ analyze(directory) → TraceGraph"]
+        PD["プラグイン発見<br/>entry_points(group='specbridge.adapters')"]
+
+        HE --> ABC
+        SP --> ABC
+        ABC --> PD
+    end
 ```
 
 ## 2. 抽象基底クラス: `ProjectAdapter`
@@ -184,39 +173,14 @@ def merge_graphs(graphs: list[TraceGraph]) -> TraceGraph:
 
 ## 6. プラグイン発見のライフサイクル
 
-```
-┌─────────────┐
-│ Python起動   │
-└──────┬──────┘
-       │
-       ▼
-┌──────────────────┐
-│ adapters/ を     │
-│ インポート       │
-│ → heuristic.py   │  ← @register 発火
-│   を先行インポート│
-│ → spectra.py     │  ← @register 発火
-│   を先行インポート│
-└──────┬──────────┘
-       │
-       ▼  (最初の all_adapters() または detect_adapter() 呼び出し時)
-┌──────────────────────┐
-│ _ensure_plugins_     │
-│ discovered()         │
-│  → discover_plugins()│
-│    → importlib       │
-│      entry_points()  │
-│        "specbridge.  │
-│         adapters"    │
-│    → ep.load()       │
-│    → register(cls)   │
-└──────────────────────┘
-       │
-       ▼
-┌──────────────────┐
-│ 全アダプタが     │
-│ 選択可能に       │
-└──────────────────┘
+```mermaid
+flowchart TB
+    START["Python起動"]
+    IMPORT["adapters/ をインポート<br/>→ heuristic.py を先行インポート ← @register 発火<br/>→ spectra.py を先行インポート ← @register 発火"]
+    DISCOVER["(最初の all_adapters() または detect_adapter() 呼び出し時)<br/>_ensure_plugins_discovered()<br/>→ discover_plugins()<br/>  → importlib entry_points('specbridge.adapters')<br/>  → ep.load()<br/>  → register(cls)"]
+    DONE["全アダプタが選択可能に"]
+
+    START --> IMPORT --> DISCOVER --> DONE
 ```
 
 ## 7. プラグイン作成手順

@@ -7,26 +7,26 @@
 
 The heuristic matching engine (`infer/__init__.py`) is the core of the **no-tag-first** approach. It builds a `TraceGraph` by discovering specs and code candidates, then inferring relationships between them using four structural signals — with **no tags or annotations required**.
 
-```
-SpecCandidate[]                          CodeCandidate[]
-     │                                        │
-     │    build_heuristic_graph()              │
-     │                                        │
-     └──────────────┬─────────────────────────┘
-                    │
-                    ▼
-     ┌─────────────────────────────────────┐
-     │      4 Signals × Weighted Scoring    │
-     │                                     │
-     │  dirname  ──── 0.6                  │
-     │  filename ──── 0.4                  │
-     │  symbol   ──── 0.3                  │
-     │  keyword  ──── 0.2                  │
-     └─────────────────────────────────────┘
-                    │
-                    ▼
-          TraceGraph with edges
-          (IMPLEMENTS / VERIFIES)
+```mermaid
+flowchart TB
+    SPC["SpecCandidate[]"]
+    COD["CodeCandidate[]"]
+
+    MATCH["build_heuristic_graph()"]
+
+    subgraph SCORE["4 Signals × Weighted Scoring"]
+        DIR["dirname  ──── 0.6"]
+        FN["filename ──── 0.4"]
+        SYM["symbol   ──── 0.3"]
+        KW["keyword  ──── 0.2"]
+    end
+
+    RESULT["TraceGraph with edges<br/>(IMPLEMENTS / VERIFIES)"]
+
+    SPC --> MATCH
+    COD --> MATCH
+    MATCH --> SCORE
+    SCORE --> RESULT
 ```
 
 ## 2. Algorithm: `build_heuristic_graph()`

@@ -7,26 +7,26 @@
 
 ヒューリスティックマッチングエンジン（`infer/__init__.py`）は**タグ不要優先**アプローチの中核です。仕様書とコードの候補を発見し、4つの構造的信号を使ってそれらの関係を推論して `TraceGraph` を構築します — **タグやアノテーションは一切不要**です。
 
-```
-SpecCandidate[]                          CodeCandidate[]
-     │                                        │
-     │    build_heuristic_graph()              │
-     │                                        │
-     └──────────────┬─────────────────────────┘
-                    │
-                    ▼
-     ┌─────────────────────────────────────┐
-     │     4信号 × 重み付きスコアリング     │
-     │                                     │
-     │  ディレクトリ名 ── 0.6              │
-     │  ファイル名   ── 0.4                │
-     │  シンボル     ── 0.3                │
-     │  キーワード   ── 0.2                │
-     └─────────────────────────────────────┘
-                    │
-                    ▼
-          TraceGraph with edges
-          (IMPLEMENTS / VERIFIES)
+```mermaid
+flowchart TB
+    SPC["SpecCandidate[]"]
+    COD["CodeCandidate[]"]
+
+    MATCH["build_heuristic_graph()"]
+
+    subgraph SCORE["4信号 × 重み付きスコアリング"]
+        DIR["ディレクトリ名 ── 0.6"]
+        FN["ファイル名   ── 0.4"]
+        SYM["シンボル     ── 0.3"]
+        KW["キーワード   ── 0.2"]
+    end
+
+    RESULT["TraceGraph with edges<br/>(IMPLEMENTS / VERIFIES)"]
+
+    SPC --> MATCH
+    COD --> MATCH
+    MATCH --> SCORE
+    SCORE --> RESULT
 ```
 
 ## 2. アルゴリズム: `build_heuristic_graph()`

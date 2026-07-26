@@ -7,34 +7,28 @@
 
 The discovery layer is responsible for scanning a project directory and extracting **candidates** for both specification documents and source code files. These candidates are then consumed by the inference engine (for heuristic matching) or directly by tag-based adapters.
 
-```
-        ┌─────────────────────┐
-        │  Project Directory   │
-        └──────────┬──────────┘
-                   │
-        ┌──────────┴──────────┐
-        ▼                     ▼
-┌───────────────┐   ┌──────────────────┐
-│ Spec Discovery│   │  Code Discovery  │
-│ (spec.py)     │   │  (code.py)       │
-│               │   │                  │
-│ docs/*.md     │   │ src/**/*.py      │
-│ spec/*.md     │   │ src/**/*.ts      │
-│ specs/*.md    │   │ ... (18 lang)    │
-│               │   │                  │
-│ ▼             │   │ ▼                │
-│ SpecCandidate │   │ CodeCandidate    │
-│ [].append     │   │ [].append        │
-└───────┬───────┘   └────────┬─────────┘
-        │                    │
-        │     ┌──────────────┘
-        ▼     ▼
-┌──────────────────┐
-│  Inference Engine │
-│  (infer/)         │
-│  or Tag Adapter   │
-│  (spectra)        │
-└──────────────────┘
+```mermaid
+flowchart TB
+    PD["Project Directory"]
+
+    subgraph Spec["Spec Discovery (spec.py)"]
+        SD["docs/*.md<br/>spec/*.md<br/>specs/*.md"]
+        SC["SpecCandidate[]"]
+        SD --> SC
+    end
+
+    subgraph Code["Code Discovery (code.py)"]
+        CD["src/**/*.py<br/>src/**/*.ts<br/>... (18 lang)"]
+        CC["CodeCandidate[]"]
+        CD --> CC
+    end
+
+    IE["Inference Engine (infer/)<br/>or Tag Adapter (spectra)"]
+
+    PD --> Spec
+    PD --> Code
+    SC --> IE
+    CC --> IE
 ```
 
 ## 2. Spec Discovery (`discovery/spec.py`)

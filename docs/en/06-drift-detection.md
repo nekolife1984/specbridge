@@ -7,35 +7,28 @@
 
 specbridge provides drift detection to identify changes between a saved snapshot and the current project state. This enables CI gates ("has any spec drifted?"), pre-commit validation, and change impact analysis.
 
-```
-                        Time
-                    ──────────▶
+```mermaid
+flowchart TB
+    subgraph SNAP["Snapshot (t₀)"]
+        S1["discover_specs()"]
+        S2["discover_code()"]
+        S3["build_graph()"]
+    end
 
-Snapshot (t₀)                         Current State (t₁)
-┌──────────────────┐                  ┌──────────────────┐
-│ discover_specs()  │                  │ discover_specs()  │
-│ discover_code()   │                  │ discover_code()   │
-│ build_graph()     │                  │ build_graph()     │
-└────────┬─────────┘                  └────────┬─────────┘
-         │                                      │
-         └──────────────┬──────────────────────┘
-                        │
-                        ▼
-              ┌────────────────────┐
-              │   compute_drift()  │
-              │   ───────────────  │
-              │   Compare hashes   │
-              │   section by sec.  │
-              └────────┬───────────┘
-                       │
-                       ▼
-              ┌────────────────────┐
-              │   DriftReport      │
-              │   ───────────────  │
-              │   .has_drift       │
-              │   .render_text()   │
-              │   .to_dict()      │
-              └────────────────────┘
+    subgraph CURR["Current State (t₁)"]
+        C1["discover_specs()"]
+        C2["discover_code()"]
+        C3["build_graph()"]
+    end
+
+    COMP["compute_drift()<br/>Compare hashes section by section"]
+    REPORT["DriftReport<br/>.has_drift<br/>.render_text()<br/>.to_dict()"]
+
+    S1 --> S2 --> S3
+    C1 --> C2 --> C3
+    S3 --> COMP
+    C3 --> COMP
+    COMP --> REPORT
 ```
 
 ## 2. Snapshot Model

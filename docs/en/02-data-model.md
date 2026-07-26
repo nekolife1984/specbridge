@@ -268,43 +268,56 @@ class SpecbridgeConfig:
 
 ## 6. Relationship Diagram
 
-```
-                    ┌─────────────────────────────────────┐
-                    │           TraceGraph                 │
-                    │  ┌──────────────┐  ┌──────────────┐  │
-                    │  │  nodes: dict │  │  edges: list │  │
-                    │  │  (str→Node)  │  │  (TraceEdge) │  │
-                    │  └──────┬───────┘  └──────┬───────┘  │
-                    └─────────┼──────────────────┼──────────┘
-                              │                  │
-                    ┌─────────▼──────┐  ┌────────▼─────────┐
-                    │   TraceNode    │  │    TraceEdge      │
-                    │  ────────────  │  │   ────────────    │
-                    │  id: str       │  │  src_id: str      │
-                    │  type: NodeType│  │  dst_id: str      │
-                    │  title: str    │──│▶ relation: EdgeRel│
-                    │  source: SrcRef│  │  strength: EdgeStr│
-                    │  confidence:fl │  │  evidence: Evid[] │
-                    │  framework_org │  └────────────────────┘
-                    │  metadata:dict │
-                    └───┬────────────┘
-                        │
-              ┌─────────▼──────────┐
-              │    SourceRef        │
-              │   ────────────      │
-              │  file: str          │
-              │  line: int│None     │
-              │  column: int│None   │
-              │  label: str│None    │
-              └────────────────────┘
+```mermaid
+classDiagram
+    class TraceGraph {
+        +dict nodes
+        +list edges
+        +add_node(node) str
+        +add_edge(edge)
+        +nodes_by_type(t) list
+        +edges_to(node_id) list
+        +edges_from(node_id) list
+    }
 
-              ┌────────────────────┐
-              │    Evidence         │
-              │   ────────────      │
-              │  kind: str          │
-              │  value: str         │
-              │  source: SourceRef  │
-              └────────────────────┘
+    class TraceNode {
+        +str id
+        +NodeType type
+        +str title
+        +SourceRef source
+        +str framework_origin
+        +float confidence
+        +dict metadata
+    }
+
+    class TraceEdge {
+        +str src_id
+        +str dst_id
+        +EdgeRelation relation
+        +EdgeStrength strength
+        +list evidence
+    }
+
+    class SourceRef {
+        +str file
+        +int line
+        +int column
+        +str label
+    }
+
+    class Evidence {
+        +str kind
+        +str value
+        +SourceRef source
+    }
+
+    TraceGraph "1" *-- "many" TraceNode : contains
+    TraceGraph "1" *-- "many" TraceEdge : contains
+    TraceNode "1" --> "1" SourceRef : has
+    TraceEdge "1" --> "1" TraceNode : src
+    TraceEdge "1" --> "1" TraceNode : dst
+    TraceEdge "1" --> "many" Evidence : supported by
+    Evidence "1" --> "1" SourceRef : sourced at
 ```
 
 ## 7. Serialization

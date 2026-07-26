@@ -7,33 +7,14 @@
 
 specbridge provides an MCP (Model Context Protocol) server that exposes its analysis capabilities as tools for AI agents. This enables integration with IDEs, chat interfaces, and automated workflows that support the MCP protocol.
 
-```
-┌────────────────────┐
-│   AI Agent         │
-│ (Claude, Hermes,  │
-│  Cursor, etc.)     │
-└────────┬───────────┘
-         │ MCP Protocol (stdio)
-         ▼
-┌────────────────────┐
-│  specbridge MCP    │
-│  Server            │
-│  (mcp_server.py)   │
-│                    │
-│  Tools:           │
-│  - analyze        │
-│  - impact         │
-│  - coverage       │
-│  - drift          │
-│  - validate_      │
-│    boundary       │
-└────────┬───────────┘
-         │
-         ▼
-┌────────────────────┐
-│  Project Directory │
-│  (read-only)       │
-└────────────────────┘
+```mermaid
+flowchart TB
+    AGENT["AI Agent<br/>(Claude, Hermes, Cursor, etc.)"]
+    MCP_SERV["specbridge MCP Server<br/>(mcp_server.py)<br/><br/>Tools:<br/>- analyze<br/>- impact<br/>- coverage<br/>- drift<br/>- validate_boundary"]
+    PROJ["Project Directory<br/>(read-only)"]
+
+    AGENT -->|"MCP Protocol (stdio)"| MCP_SERV
+    MCP_SERV --> PROJ
 ```
 
 ## 2. Architecture
@@ -147,21 +128,33 @@ async def handle_list_tools() -> list[Tool]:
 
 Each tool call follows this internal flow:
 
-```
-Tool call received
-    │
-    ├──▶ Run detect_all(root) → list of matching adapters
-    ├──▶ Run each adapter.analyze(root) → list of TraceGraphs
-    ├──▶ merge_graphs(graphs) → single merged TraceGraph
-    │
-    ├──▶ For analyze: extract stats from graph
-    ├──▶ For impact: find spec node + edges
-    ├──▶ For coverage: compute coverage_summary + orphans
-    ├──▶ For drift: load snapshot + compute_drift (or take new snapshot)
-    └──▶ For validate_boundary: check code refs against _Boundary:_ markers
-        │
-        ▼
-    Return TextContent response
+```mermaid
+flowchart TB
+    CALL["Tool call received"]
+    DA["Run detect_all(root) → list of matching adapters"]
+    AN["Run each adapter.analyze(root) → list of TraceGraphs"]
+    MG["merge_graphs(graphs) → single merged TraceGraph"]
+
+    BRANCH{"Tool type?"}
+    ANA["analyze: extract stats from graph"]
+    IMP["impact: find spec node + edges"]
+    COV["coverage: compute coverage_summary + orphans"]
+    DRI["drift: load snapshot + compute_drift (or take new snapshot)"]
+    VB["validate_boundary: check code refs against _Boundary:_ markers"]
+
+    RESP["Return TextContent response"]
+
+    CALL --> DA --> AN --> MG --> BRANCH
+    BRANCH -->|analyze| ANA
+    BRANCH -->|impact| IMP
+    BRANCH -->|coverage| COV
+    BRANCH -->|drift| DRI
+    BRANCH -->|validate_boundary| VB
+    ANA --> RESP
+    IMP --> RESP
+    COV --> RESP
+    DRI --> RESP
+    VB --> RESP
 ```
 
 ## 6. Integration Patterns
