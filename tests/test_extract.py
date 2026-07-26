@@ -310,14 +310,12 @@ class TestExtractStringLiteralSafety:
             "def login(): pass\n"
         )
         tags = extract_tags_from_file(py_file, project)
-        # Known limitation: regex-based extractor can't distinguish
-        # f-string content from real comments. AST-based parsing needed.
-        assert len(tags) >= 0
-        # Note: This will match because regex doesn't parse string context.
-        # A future fix should use AST-based per-language extractors.
+        # Python's tokenize distinguishes COMMENT from STRING tokens,
+        # so f-string contents are correctly ignored.
+        assert tags == []
 
     def test_docstring_not_matched(self, tmp_project_heuristic: Path) -> None:
-        """@impl inside a docstring is extracted (caveat)."""
+        """@impl inside a docstring is NOT matched (tokenize-aware)."""
         project = tmp_project_heuristic
         py_file = project / "src" / "auth" / "login.py"
         py_file.write_text(
@@ -325,9 +323,8 @@ class TestExtractStringLiteralSafety:
             "def login(): pass\n"
         )
         tags = extract_tags_from_file(py_file, project)
-        # This is a known limitation: docstrings contain # but get matched.
-        # We note the behaviour rather than asserting not found.
-        assert isinstance(tags, list)
+        # Docstring is a STRING token, not COMMENT — correctly ignored
+        assert tags == []
 
     def test_comment_example_not_matched(self, tmp_project_heuristic: Path) -> None:
         """@impl inside a code example in comments is still matched (caveat)."""

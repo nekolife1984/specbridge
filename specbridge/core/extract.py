@@ -6,11 +6,18 @@ Supports:
   - HTML comments: <!-- @spec 1 -->, <!-- @design AuthService -->
   - Verifies:      # @verifies 1.1, // @verifies 1.1
   - Satisfies:     <!-- @satisfies 1.1, 1.2 -->
+  - Boundaries:    _Boundary:_ src/path/
+
+Python files use tokenize-based extraction to avoid matching
+tags inside string literals (f-strings, docstrings, etc).
+Other languages use regex-based extraction.
 """
 
 from __future__ import annotations
 
+import io
 import re
+import tokenize
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -35,6 +42,9 @@ _SPEC_EXT = frozenset({".md", ".mdx", ".rst"})
 # All source extensions we scan
 _SOURCE_EXT = _SLASH_COMMENT_EXT | _HASH_COMMENT_EXT
 
+# Only .py uses tokenize-based extraction
+_PYTHON_EXT = frozenset({".py"})
+
 
 # Regex patterns
 RE_IMPL_COMMENT = re.compile(
@@ -53,6 +63,14 @@ RE_SPEC_HTML = re.compile(r"<!--\s*@spec\s+(.+?)\s*-->")
 RE_DESIGN_HTML = re.compile(r"<!--\s*@design\s+(.+?)\s*-->")
 RE_SATISFIES_HTML = re.compile(r"<!--\s*@satisfies\s+(.+?)\s*-->")
 RE_BOUNDARY = re.compile(r"^_Boundary:_\s+(.+)$", re.MULTILINE)
+
+# Shared regex patterns for comment extraction (used by both tokenize and regex paths)
+_SOURCE_PATTERNS: list[tuple[re.Pattern, str]] = [
+    (RE_IMPL_COMMENT, "impl"),
+    (RE_MODULE_COMMENT, "module"),
+    (RE_FEATURE_COMMENT, "feature"),
+    (RE_VERIFIES_COMMENT, "verifies"),
+]
 
 
 @dataclass
@@ -108,29 +126,74 @@ def _extract_spec_tags(path: Path, rel: str) -> list[Tag]:
     return tags
 
 
-def _extract_source_tags(path: Path, rel: str) -> list[Tag]:
-    """Extract #///-comment tags from source code."""
+# ── Tokenize-based Python extractor ──────────────────────────────────
+
+
+def _extract_python_comments(text: str) -> list[tuple[int, str]]:
+    """Extract actual comment lines from Python source using tokenize.
+
+    Returns list of (line_number_1_indexed, comment_text).
+    Only returns COMMENT tokens, ignoring STRING tokens (docstrings, f-strings, etc).
+    """
+    comments: list[tuple[int, str]] = []
+    try:
+        tokens = tokenize.generate_tokens(io.StringIO(text).readline)
+        for tok in tokens:
+            if tok.type == tokenize.COMMENT:
+                comments.append((tok.start[0], tok.line))
+    except (tokenize.TokenError, IndentationError):
+        # Fall back to regex if tokenize fails (e.g. syntax errors in source)
+        pass
+    return comments
+
+
+def _extract_python_source_tags(path: Path, rel: str) -> list[Tag]:
+    """Extract tags from Python source using tokenize (only real comments)."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except Exception:
+        return []
+
+    tags: list[Tag] = []
+    comments = _extract_python_comments(text)
+
+    for lineno, line in comments:
+        for pattern, kind in _SOURCE_PATTERNS:
+            m = pattern.search(line)
+            if m:
+                tags.append(Tag(kind=kind, value=m.group(1).strip(), file=rel, line=lineno))
+                break  # one tag kind per comment line
+
+    return tags
+
+
+# ── Regex-based source extractor (all non-Python source files) ─────────
+
+
+def _extract_regex_source_tags(path: Path, rel: str) -> list[Tag]:
+    """Extract tags from non-Python source using regex."""
     tags: list[Tag] = []
     try:
         text = path.read_text(encoding="utf-8")
     except Exception:
         return tags
 
-    # Strip HTML comments first to avoid false positives in .md
-    # (though for source files this is a no-op)
-    body = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
-
-    for pattern, kind in [
-        (RE_IMPL_COMMENT, "impl"),
-        (RE_MODULE_COMMENT, "module"),
-        (RE_FEATURE_COMMENT, "feature"),
-        (RE_VERIFIES_COMMENT, "verifies"),
-    ]:
-        for m in pattern.finditer(body):
-            lineno = body[: m.start()].count("\n") + 1
+    for pattern, kind in _SOURCE_PATTERNS:
+        for m in pattern.finditer(text):
+            lineno = text[: m.start()].count("\n") + 1
             tags.append(Tag(kind=kind, value=m.group(1).strip(), file=rel, line=lineno))
 
     return tags
+
+
+def _extract_source_tags(path: Path, rel: str) -> list[Tag]:
+    """Extract tags from source code — tokenize for Python, regex for others."""
+    if path.suffix in _PYTHON_EXT:
+        return _extract_python_source_tags(path, rel)
+    return _extract_regex_source_tags(path, rel)
+
+
+# ── Directory scanner ─────────────────────────────────────────────────
 
 
 def extract_tags_from_dir(
