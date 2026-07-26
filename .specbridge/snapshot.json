@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-26T16:49:24",
-  "reason": "After adding pre-commit hook + CI trace gate",
+  "timestamp": "2026-07-26T16:56:45",
+  "reason": "Prepare for limited release: README, CONTRIBUTING, todo-app demo",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",

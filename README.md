@@ -1,95 +1,173 @@
 # specbridge
 
-> **Spec ↔ Code bridge.** Framework-agnostic, read-only traceability tool for spec-driven development.
+> **Spec ↔ Code bridge.** Framework-agnostic, read-only traceability analyzer for spec-driven development.
 
-`specbridge` is a **read-only traceability analyzer** that maps the relationships between your specifications and source code. It never modifies your specs or code — it only writes to its own `.specbridge/` management directory.
+![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
+[![ci](https://github.com/nekolife1984/specbridge/actions/workflows/ci.yml/badge.svg)](https://github.com/nekolife1984/specbridge/actions)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## Why?
+`specbridge` maps the relationships between your specifications and source code — **without modifying either**. It's a read-only tool that detects spec↔code coverage, drift, impact, and boundary violations.
 
-If you have a spec-driven development workflow but want to:
+---
 
-- **Audit** spec↔code coverage without committing to one SSD framework
-- **Analyze impact** when a spec or code file changes
-- **Detect drift** between specs and reality
-- **Validate boundaries** (code refs must stay within declared paths)
-- **Get a unified view** across heterogeneous projects (merge multiple adapters)
-- **Keep your specs and code untouched** (read-only is the core principle)
-
-…then `specbridge` is for you.
-
-## Quick start
+## Install (limited release)
 
 ```bash
-# Analyze a project (spectra framework + heuristic fallback)
-$ specbridge analyze --dir /path/to/project
-
-# Merge results from all matching adapters
-$ specbridge analyze --dir /path/to/project --merge
-
-# Impact analysis: which files implement spec 1.1?
-$ specbridge impact --spec-id 1.1
-
-# Coverage report: which specs have no code?
-$ specbridge coverage
-
-# Take a structural snapshot of the current state
-$ specbridge snapshot
-
-# Drift detection against a snapshot
-$ specbridge drift
-
-# Drift detection against a git base
-$ specbridge drift --git-base main
-
-# Validate that code refs stay within declared _Boundary:_ markers
-$ specbridge validate-boundary
-
-# JSON output for piping
-$ specbridge analyze --dir . --format json | jq '.edges'
+pip install git+https://github.com/nekolife1984/specbridge.git
 ```
 
-## Core principles
+Or clone and install locally:
 
-1. **Read-only by default** — never modifies specs or code. All output goes to `.specbridge/`. Protected by `validate_write_path`.
-2. **Framework-agnostic** — supports multiple SSD formats via adapters (spectra, heuristic).
-3. **Multi-language** — Python, TypeScript, Go, Rust, Java, Ruby, C/C++, C#, Swift, Kotlin, Dart, PHP.
-4. **Output flexibility** — text for humans, JSON for tooling.
-5. **No magic** — every inferred relationship has a confidence score and source of evidence.
-6. **Boundary validation** — declare `_Boundary:_ src/path/` in spec docs; `specbridge validate-boundary` checks code refs stay within them.
+```bash
+git clone https://github.com/nekolife1984/specbridge.git
+cd specbridge
+pip install -e .
+```
 
-## Status
+---
 
-**v0.1 — Skeleton + spectra adapter + heuristic bridge.**
+## Quickstart (3 minutes)
 
-### Implemented
+### 1. Try the example project
 
-| Feature | CLI | Status |
-|---------|-----|--------|
-| Core model (TraceNode, TraceEdge, Evidence) | — | ✅ |
-| Tag extractor (multi-language: `#`, `//`, `<!-- -->`) | — | ✅ |
-| spectra adapter (`@impl`, `<!-- @spec -->`, `@verifies`, `@module`, `@feature`, `@satisfies`) | `analyze` | ✅ |
-| Heuristic adapter (name-based matching, no tags required) | `analyze` | ✅ |
-| Adapter merge mode (combine all adapters) | `analyze --merge` | ✅ |
-| Impact analysis | `impact` | ✅ |
-| Coverage report | `coverage` | ✅ |
-| Structural snapshot | `snapshot` | ✅ |
-| Drift detection (spec body/code func/file hash) | `drift` | ✅ |
-| Drift gate (CI-friendly exit code) | `drift --gate` | ✅ |
-| Git-based drift | `drift --git-base` | ✅ |
-| `_Boundary:_` parsing | — | ✅ |
-| Boundary validation | `validate-boundary` | ✅ |
-| Read-only write guard (`.specbridge/` only) | — | ✅ |
-| JSON output | `--format json` | ✅ |
-| Multi-language code discovery | — | ✅ |
-| Snapshot I/O (`.specbridge/snapshot.json`) | — | ✅ |
+```bash
+cd examples/todo-app
+specbridge analyze --merge
+```
 
-### Planned
+You'll see output like:
 
-See [ROADMAP.md](ROADMAP.md) for:
-- **v0.2**: cc-sdd adapter, plain-markdown adapter, custom adapter via YAML
-- **v0.3**: AST parsers (TypeScript, Go, Rust), import-graph call analysis
-- **v0.5**: incremental analysis, performance improvements
-- **v1.0**: Stable API, comprehensive language coverage, documentation site
+```
+Nodes: 9 | Edges: 16
+Coverage: 100.0%
+```
+
+That's specbridge reading the Markdown specs (`docs/tasks.md`) and Python code (`src/tasks/service.py`), then linking them via `@impl` tags and filename heuristics.
+
+### 2. Run it on your own project
+
+Create a `.specbridge.yaml` in your project root:
+
+```yaml
+spec_dirs:
+  - docs           # Where your spec documents live
+source_dirs:
+  - src            # Where your source code lives
+  - tests          # (optional) test files
+```
+
+Then run:
+
+```bash
+specbridge analyze --merge
+```
+
+### 3. See what else you can do
+
+```bash
+specbridge coverage                  # Coverage stats (text)
+specbridge impact --spec-id 1.1      # What implements this spec?
+specbridge snapshot                  # Save a baseline
+specbridge drift --git-base main     # Detect changes since a git ref
+specbridge validate-boundary         # Check _Boundary:_ markers
+```
+
+---
+
+## What is specbridge good for?
+
+| Use case | Command | Why it matters |
+|----------|---------|----------------|
+| **Audit coverage** | `specbridge coverage` | Which specs have no implementing code? |
+| **Impact analysis** | `specbridge impact --spec-id 1.1` | What files change if spec 1.1 changes? |
+| **Drift detection** | `specbridge drift --git-base main` | Did code diverge from specs? |
+| **CI gate** | `specbridge drift --gate` | Block PRs with undrifted changes |
+| **Boundary validation** | `specbridge validate-boundary` | Code refs staying in declared scope? |
+| **No tags required** | `specbridge analyze --merge` | Works even on projects without SSD tags |
+| **MCP / AI agent** | `specbridge serve` | Let AI agents query traceability |
+
+---
+
+## Key features
+
+- **Read-only**: Never touches your specs or code. All output goes to `.specbridge/`.
+- **Dual mode**: Tag-based (spectra `@impl`, `@verifies`) **and** heuristic (filename/symbol matching, no tags needed).
+- **Multi-language**: Python, TypeScript, Go, Rust, Java, Ruby, C/C++, C#, Swift, Kotlin, Dart, PHP — 18 languages.
+- **3 output formats**: text (terminal), JSON (jq/CI), HTML (interactive D3.js graph).
+- **Plugin SDK**: Write custom adapters as pip-installable packages.
+
+---
+
+## Demo: see it in action
+
+```bash
+# Clone once
+git clone https://github.com/nekolife1984/specbridge.git
+cd specbridge
+pip install -e .
+
+# Run the example
+specbridge analyze --dir examples/todo-app --merge
+
+# Show coverage
+specbridge coverage --dir examples/todo-app
+
+# HTML graph (open .specbridge/trace.html in browser)
+specbridge analyze --dir examples/todo-app --merge --format html
+
+# Watch mode (live update on file changes)
+specbridge watch --dir examples/todo-app --merge
+```
+
+---
+
+## Project structure
+
+```
+specbridge/
+├── specbridge/         # Core library
+│   ├── cli.py          # Click-based CLI (10 commands)
+│   ├── core/           # Data model (TraceNode, TraceEdge, TraceGraph)
+│   ├── adapters/       # Plugin registry + built-in adapters
+│   ├── infer/          # Heuristic matching engine
+│   ├── discovery/      # Spec/code file scanning (18 languages)
+│   ├── analyzers/      # Coverage, drift, import graph
+│   ├── outputs/        # Text, JSON, HTML rendering
+│   ├── guard.py        # Read-only write validation
+│   ├── config.py       # .specbridge.yaml loader
+│   └── mcp_server.py   # MCP server for AI agents
+├── examples/
+│   └── todo-app/       # Runnable demo project
+├── docs/               # Design docs (EN + JA, 11 categories)
+└── tests/              # 169+ tests
+```
+
+---
+
+## Required setup
+
+Every project needs a `.specbridge.yaml` (or `[tool.specbridge]` in `pyproject.toml`):
+
+```yaml
+spec_dirs:
+  - docs
+  - specs
+source_dirs:
+  - src
+  - lib
+  - app
+exclude_dirs:
+  - .git
+  - node_modules
+  - .venv
+  - .specbridge
+min_confidence: 0.15
+max_output_nodes: 40
+```
+
+That's it. No tags, no annotations — specbridge infers what it can out of the box.
+
+---
 
 ## Architecture
 
@@ -100,7 +178,7 @@ See [ROADMAP.md](ROADMAP.md) for:
                │ read (input)
                ▼
 ┌──────────────────────────────────────────────┐
-│  ★ specbridge (this tool) ★                  │
+│  ★ specbridge ★                               │
 │  ├─ adapters/  (registry + per-framework)    │
 │  ├─ infer/     (heuristic bridge)            │
 │  ├─ core/      (model + tag extractor)       │
@@ -115,58 +193,41 @@ See [ROADMAP.md](ROADMAP.md) for:
 └──────────────────────────────────────────────┘
 ```
 
-## Writing a Plugin
+---
 
-Extend specbridge with custom adapters packaged as Python packages.
+## Documentation
 
-### Step-by-step
+Full design docs are in [`docs/`](docs/) (EN + JA, 11 categories):
 
-1. **Create a package** with a `pyproject.toml`.
-2. **Subclass `ProjectAdapter`** — implement `detect()` and `analyze()`:
+| Doc | Description |
+|-----|-------------|
+| [Architecture](docs/en/01-architecture.md) | High-level design & data flow |
+| [Data Model](docs/en/02-data-model.md) | TraceNode, TraceEdge, TraceGraph |
+| [Adapter Plugin System](docs/en/03-adapter-plugin-system.md) | Plugin SDK, built-in adapters |
+| [Discovery Engine](docs/en/04-discovery-engine.md) | Spec/code scanning, symbol extraction |
+| [Heuristic Matching](docs/en/05-heuristic-matching.md) | No-tag inference algorithm |
+| [Drift Detection](docs/en/06-drift-detection.md) | Snapshot, drift, rename detection |
+| [CLI Commands](docs/en/07-cli-commands.md) | All 10 commands reference |
+| [Output Rendering](docs/en/08-output-rendering.md) | Text, JSON, HTML output formats |
+| [Configuration](docs/en/09-configuration.md) | .specbridge.yaml, layered config |
+| [MCP Integration](docs/en/10-mcp-integration.md) | AI agent integration |
+| [Testing Strategy](docs/en/11-testing-strategy.md) | Test architecture |
 
-   ```python
-   from specbridge.adapters._base import ProjectAdapter, register
-   from specbridge.core import TraceGraph
+---
 
-   @register
-   class MyAdapter(ProjectAdapter):
-       def detect(self, directory: str) -> float:
-           return 0.8 if Path(directory, ".my-marker").exists() else 0.0
+## Feedback (limited release)
 
-       def analyze(self, directory: str) -> TraceGraph:
-           # … build and return a TraceGraph …
-           return TraceGraph()
-   ```
+This is a private beta. Feedback, bugs, and feature requests welcome:
 
-   The `@register` decorator is optional if you declare an entry point (see below).
-   The `detect()` score should be **0.0–1.0**; the highest-scoring adapter wins.
+- **GitHub Issues**: https://github.com/nekolife1984/specbridge/issues
+- **Direct**: nekolife@gmail.com
 
-3. **Declare the entry point** in `pyproject.toml`:
+When reporting an issue, include:
 
-   ```toml
-   [project.entry-points."specbridge.adapters"]
-   my_adapter = "my_package.my_adapter:MyAdapter"
-   ```
-
-4. **Install** the plugin package in the same Python environment as specbridge:
-
-   ```bash
-   pip install -e /path/to/my-plugin
-   ```
-
-5. **Verify** it's loaded:
-
-   ```bash
-   specbridge plugins
-   specbridge plugins --refresh   # if installed while specbridge was already running
-   ```
-
-### Best practices
-
-- Keep `detect()` **fast** — it runs on every `analyze`/`impact`/`coverage` call.
-- Use the `@register` decorator *or* the entry point, not both (entry point is preferred for distributable plugins).
-- Handle parse errors gracefully — return an empty `TraceGraph()` rather than crashing.
-- See [`examples/example-plugin/`](examples/example-plugin/) for a complete working example.
+```bash
+specbridge --version
+specbridge config
+```
 
 ---
 
