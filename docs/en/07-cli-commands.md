@@ -5,7 +5,7 @@
 
 ## 1. Overview
 
-specbridge provides a Click-based CLI with **11 commands** for traceability analysis, drift detection, and project management.
+specbridge provides a Click-based CLI with **12 commands** for traceability analysis, drift detection, and project management.
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
@@ -28,6 +28,7 @@ Commands:
   plugins            List installed specbridge adapter plugins.
   serve              Start MCP server for AI agent integration.
   call-graph         Build call graph and show transitive (indirect) impact for a spec.
+  setup              One‑command project setup (config, hook, AGENTS.md, snapshot).
 ```
 
 ## 2. Commands
@@ -389,7 +390,54 @@ $ specbridge call-graph --spec-id 1.2.1 --format json | jq '.transitive_files'
      → src/tasks/db.py
 ```
 
-## 5. Plugin SDK (`specbridge plugins`)
+## 5. Project Setup (`specbridge setup`)
+
+One‑command project bootstrap that creates config, installs hooks, deploys AI agent files, and takes the first snapshot.
+
+```
+Usage: specbridge setup [OPTIONS]
+
+  One‑command setup: install hook, create config, deploy AGENTS.md.
+
+Options:
+  -d, --dir TEXT   Project directory to set up  [default: .]
+  --ci             Also create GitHub Actions CI workflow
+  --help           Show this message and exit.
+```
+
+**What it does:**
+
+| Step | Action |
+|------|--------|
+| 1 | Installs `specbridge` (if not already installed) |
+| 2 | Detects source dirs (`src/`, `lib/`, `app/`) and spec dirs (`docs/`, `spec/`) |
+| 3 | Creates `.specbridge.yaml` with detected paths |
+| 4 | Installs pre-commit drift hook |
+| 5 | Deploys `AGENTS.md` for AI agent workflow guidance |
+| 6 | Deploys Hermes skill (if `~/.hermes/` exists) |
+| 7 | Takes initial snapshot (`.specbridge/snapshot.json`) |
+| 8 | Optionally creates GitHub Actions CI workflow (`--ci`) |
+
+**Examples:**
+
+```
+# Basic setup (interactive)
+$ specbridge setup
+
+# Setup a specific project
+$ specbridge setup --dir /path/to/project
+
+# Setup with CI workflow
+$ specbridge setup --ci
+```
+
+Also available as a standalone script (no `pip install` needed):
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/nekolife1984/specbridge/main/scripts/setup.sh)
+```
+
+## 6. Plugin SDK (`specbridge plugins`)
 
 The `plugins` command discovers adapters registered via Python entry points:
 
@@ -400,7 +448,7 @@ $ specbridge plugins --refresh
    MyAdapter (from my-specbridge-plugin)
 ```
 
-## 5. Help
+## 7. Help
 
 Every command supports `--help`:
 

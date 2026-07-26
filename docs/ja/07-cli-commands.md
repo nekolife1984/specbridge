@@ -5,7 +5,7 @@
 
 ## 1. 概要
 
-specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**11のコマンド**を持ちます。
+specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**12のコマンド**を持ちます。
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
@@ -28,6 +28,7 @@ Commands:
   plugins            インストール済みのアダプタプラグインを一覧表示
   serve              AIエージェント統合用のMCPサーバーを起動
   call-graph         コールグラフを構築し推移的（間接）影響を表示
+  setup              ワンコマンドセットアップ（設定、フック、AGENTS.md、スナップショット）
 ```
 
 ## 2. コマンド
@@ -401,7 +402,54 @@ $ specbridge impact --spec-id 1.2.1 --call-graph
 | 0 | 成功（または `--gate` でドリフトなし） |
 | 1 | ドリフト検出（`drift --gate`）、アダプタが見つからない、または実行時エラー |
 
-## 4. プラグインSDK（`specbridge plugins`）
+## 5. プロジェクトセットアップ（`specbridge setup`）
+
+ワンコマンドでプロジェクトを初期化。設定ファイル作成、フックインストール、AIエージェント用ファイル展開、初回スナップショットを自動実行します。
+
+```
+Usage: specbridge setup [OPTIONS]
+
+  One‑command setup: install hook, create config, deploy AGENTS.md.
+
+Options:
+  -d, --dir TEXT   セットアップするプロジェクトディレクトリ  [default: .]
+  --ci             GitHub Actions CIワークフローも作成
+  --help           ヘルプを表示
+```
+
+**実行内容:**
+
+| ステップ | 処理 |
+|---------|------|
+| 1 | specbridge をインストール（未インストール時） |
+| 2 | ソースディレクトリ（`src/`, `lib/`, `app/`）と仕様ディレクトリ（`docs/`, `spec/`）を自動検出 |
+| 3 | `.specbridge.yaml` を作成 |
+| 4 | pre-commit drift hook をインストール |
+| 5 | `AGENTS.md` を展開（AIエージェント向けワークフローガイド） |
+| 6 | Hermes スキルを展開（`~/.hermes/` がある場合） |
+| 7 | 初回スナップショットを取得（`.specbridge/snapshot.json`） |
+| 8 | GitHub Actions CIワークフローをオプションで作成（`--ci`） |
+
+**例:**
+
+```
+# 基本セットアップ（対話式）
+$ specbridge setup
+
+# 特定のプロジェクトをセットアップ
+$ specbridge setup --dir /path/to/project
+
+# CIワークフローも作成
+$ specbridge setup --ci
+```
+
+pip不要のスタンドアロンスクリプトも利用可能：
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/nekolife1984/specbridge/main/scripts/setup.sh)
+```
+
+## 6. プラグインSDK（`specbridge plugins`）
 
 `plugins` コマンドはPythonエントリポイントを介して登録されたアダプタを検出します：
 
@@ -412,7 +460,7 @@ $ specbridge plugins --refresh
    MyAdapter (from my-specbridge-plugin)
 ```
 
-## 5. ヘルプ
+## 7. ヘルプ
 
 すべてのコマンドが `--help` をサポート：
 

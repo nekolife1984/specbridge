@@ -24,9 +24,30 @@ cd specbridge
 pip install -e .
 ```
 
+After installation, the fastest way to set up a project is:
+
+```bash
+# Interactive setup: detects dirs, installs hook, deploys AGENTS.md
+specbridge setup
+```
+
+Or use the standalone script (no pre-install needed):
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/nekolife1984/specbridge/main/scripts/setup.sh)
+```
+
 ---
 
 ## Quickstart (3 minutes)
+
+### 0. One-command setup
+
+```bash
+specbridge setup
+```
+
+This creates `.specbridge.yaml`, installs the pre-commit drift hook, deploys `AGENTS.md` for AI agents, and takes the first snapshot — all in one go.
 
 ### 1. Try the example project
 
@@ -133,7 +154,7 @@ specbridge watch --dir examples/todo-app --merge
 ```
 specbridge/
 ├── specbridge/         # Core library
-│   ├── cli.py          # Click-based CLI (10 commands)
+│   ├── cli.py          # Click-based CLI (12 commands)
 │   ├── core/           # Data model (TraceNode, TraceEdge, TraceGraph)
 │   ├── adapters/       # Plugin registry + built-in adapters
 │   ├── infer/          # Heuristic matching engine
@@ -195,7 +216,10 @@ git commit ─→ specbridge drift --git-base HEAD --gate ─→ driftなし →
 **Install:**
 
 ```bash
-# One-command installer (symlinks hook + Hermes skill):
+# Recommended: one‑command setup (creates config, installs hook, deploys AGENTS.md)
+specbridge setup
+
+# Or install hook only:
 bash scripts/install-hooks.sh
 
 # Or manually:
@@ -229,6 +253,10 @@ specbridge ships with an **AI agent skill** at `.agents/skills/specbridge/SKILL.
 **Install into Hermes Agent:**
 
 ```bash
+# Recommended: specbridge setup handles this automatically
+specbridge setup
+
+# Or manually:
 bash scripts/install-hooks.sh
 ```
 
