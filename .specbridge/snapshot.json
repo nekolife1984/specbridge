@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-26T20:04:52",
-  "reason": "Add @impl annotations to Japanese docs to fix EN↔JA coverage gap",
+  "timestamp": "2026-07-26T20:05:03",
+  "reason": "",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
