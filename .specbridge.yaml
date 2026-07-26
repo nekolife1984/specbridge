@@ -1,0 +1,29 @@
+spec_dirs:
+  - docs
+source_dirs:
+  - specbridge
+  - tests
+exclude_dirs:
+  - .git
+  - node_modules
+  - .venv
+  - __pycache__
+  - dist
+  - build
+  - .spectra
+  - .specbridge
+  - .artgraph
+  - .trace
+  - examples
+  - venv
+  - env
+  - .tox
+  - .mypy_cache
+  - .ruff_cache
+  - .pytest_cache
+  - .egg-info
+  - site-packages
+  - coverage
+  - htmlcov
+min_confidence: 0.15
+max_output_nodes: 40

@@ -44,7 +44,16 @@ _STOPWORDS = frozenset({
 
 
 def _tokenize(text: str) -> set[str]:
-    """Split text into lowercase tokens, removing stopwords."""
+    """Split text into lowercase tokens, removing stopwords.
+
+    Splits CamelCase and underscore-separated identifiers so that
+    e.g. ``ProjectAdapter`` yields ``{'project', 'adapter'}``
+    and ``detect_adapter`` yields ``{'detect', 'adapter'}``.
+    """
+    # Insert space between lowercase–uppercase transitions (CamelCase split)
+    text = re.sub(r"([a-z])([A-Z])", r"\1 \2", text)
+    # Split on underscores so snake_case tokens become separate words
+    text = text.replace("_", " ")
     tokens = set(re.findall(r"[a-zA-Z_][a-zA-Z0-9_]{2,}", text.lower()))
     return tokens - _STOPWORDS
 

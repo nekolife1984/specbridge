@@ -40,4 +40,11 @@ class HeuristicAdapter(ProjectAdapter):
         return 0.0
 
     def analyze(self, directory: str) -> TraceGraph:
-        return build_heuristic_graph(directory)
+        from specbridge.config import SpecbridgeConfig
+
+        cfg = SpecbridgeConfig.load(directory)
+        return build_heuristic_graph(
+            directory,
+            spec_dirs=cfg.spec_dirs,
+            source_dirs=cfg.source_dirs,
+        )
