@@ -3,46 +3,64 @@
 from specbridge.core import NodeType, TraceGraph
 
 
-def render_text(graph: TraceGraph) -> str:
-    """Render the full trace graph as human-readable text."""
+def render_text(graph: TraceGraph, max_nodes: int | None = None) -> str:
+    """Render the full trace graph as human-readable text.
+
+    When *max_nodes* is set, only the top N items per category are shown
+    and a truncation note is appended.
+    """
     lines: list[str] = []
     lines.append("specbridge — Trace Graph")
     lines.append(f"{'=' * 40}")
     lines.append(f"Nodes: {len(graph.nodes)} | Edges: {len(graph.edges)}")
     lines.append("")
 
+    def _maybe_truncate(items: list, label: str, max_n: int | None) -> tuple[list, bool]:
+        if max_n is not None and len(items) > max_n:
+            return items[:max_n], True
+        return items, False
+
     # Specs
     specs = graph.nodes_by_type(NodeType.SPEC)
     if specs:
         lines.append("📄 Specs:")
-        for n in sorted(specs, key=lambda x: x.id):
+        displayed, truncated = _maybe_truncate(specs, "specs", max_nodes)
+        for n in sorted(displayed, key=lambda x: x.id):
             edges_to = graph.edges_to(n.id)
             impls = [e for e in edges_to if e.relation.value in ("implements", "verifies", "satisfies")]
             lines.append(f"  {n.id:20s}  [{len(impls)} refs]  {n.title}")
+        if truncated:
+            lines.append(f"  ... and {len(specs) - max_nodes} more specs")
         lines.append("")
 
     # Code
     codes = graph.nodes_by_type(NodeType.CODE)
     if codes:
         lines.append("📁 Code refs:")
-        for n in sorted(codes, key=lambda x: x.id):
+        displayed, truncated = _maybe_truncate(codes, "code", max_nodes)
+        for n in sorted(displayed, key=lambda x: x.id):
             edges_from = graph.edges_from(n.id)
             if edges_from:
                 targets = ", ".join(e.dst_id for e in edges_from)
                 lines.append(f"  {n.id:40s} → {targets}")
             else:
                 lines.append(f"  {n.id:40s}  (unlinked)")
+        if truncated:
+            lines.append(f"  ... and {len(codes) - max_nodes} more code files")
         lines.append("")
 
     # Tests
     tests = graph.nodes_by_type(NodeType.TEST)
     if tests:
         lines.append("🧪 Test refs:")
-        for n in sorted(tests, key=lambda x: x.id):
+        displayed, truncated = _maybe_truncate(tests, "tests", max_nodes)
+        for n in sorted(displayed, key=lambda x: x.id):
             edges_from = graph.edges_from(n.id)
             if edges_from:
                 targets = ", ".join(e.dst_id for e in edges_from)
                 lines.append(f"  {n.id:40s} → {targets}")
+        if truncated:
+            lines.append(f"  ... and {len(tests) - max_nodes} more test files")
         lines.append("")
 
     return "\n".join(lines)

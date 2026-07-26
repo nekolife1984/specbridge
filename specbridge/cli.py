@@ -25,7 +25,9 @@ def cli():
 @click.option("--merge", "-m", is_flag=True, default=False,
               help="Merge results from ALL matching adapters (not just the best one)",
               show_default=True)
-def analyze(dir, output_fmt, merge):
+@click.option("--top", type=int, default=None,
+              help="Show only top N items per category (default: all)", show_default=True)
+def analyze(dir, output_fmt, merge, top):
     """Analyze a project and build a trace graph."""
     from specbridge.adapters import detect_adapter, detect_all, merge_graphs
 
@@ -65,7 +67,7 @@ def analyze(dir, output_fmt, merge):
     if output_fmt == "json":
         click.echo(render_json(graph))
     else:
-        click.echo(render_text(graph))
+        click.echo(render_text(graph, max_nodes=top))
 
 
 @cli.command()
@@ -367,7 +369,7 @@ def config(dir, yaml_output):
     pyproject = root / "pyproject.toml"
     source = "defaults"
     if yaml_path.exists():
-        source = f".specbridge.yaml"
+        source = ".specbridge.yaml"
     elif pyproject.exists():
         try:
             import tomllib

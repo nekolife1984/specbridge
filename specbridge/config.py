@@ -10,8 +10,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
-
 
 DEFAULT_SPEC_DIRS = ["docs", "spec", "specs"]
 DEFAULT_SOURCE_DIRS = ["src", "lib", "app"]

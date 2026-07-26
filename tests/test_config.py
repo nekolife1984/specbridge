@@ -4,10 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 from specbridge.config import (
-    DEFAULT_EXCLUDE_DIRS,
     DEFAULT_MIN_CONFIDENCE,
     DEFAULT_SOURCE_DIRS,
     DEFAULT_SPEC_DIRS,
@@ -119,6 +116,7 @@ class TestConfigCLI:
 
     def test_config_command_defaults(self, tmp_path: Path) -> None:
         from click.testing import CliRunner
+
         from specbridge.cli import cli
 
         runner = CliRunner()
@@ -129,6 +127,7 @@ class TestConfigCLI:
 
     def test_config_command_shows_source(self, tmp_path: Path) -> None:
         from click.testing import CliRunner
+
         from specbridge.cli import cli
 
         project = tmp_path / "proj"
@@ -142,6 +141,7 @@ class TestConfigCLI:
 
     def test_config_command_yaml(self, tmp_path: Path) -> None:
         from click.testing import CliRunner
+
         from specbridge.cli import cli
 
         project = tmp_path / "proj"
