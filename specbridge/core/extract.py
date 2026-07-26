@@ -21,7 +21,8 @@ _SLASH_COMMENT_EXT = frozenset({
     ".c", ".h", ".cpp", ".hpp", ".cs",
     ".ts", ".tsx", ".js", ".jsx",
     ".go", ".rs", ".kt", ".swift",
-    ".java", ".scala",
+    ".java", ".scala", ".dart",
+    ".php", ".phtml",
 })
 
 # Languages that use # (hash-style)
@@ -39,7 +40,7 @@ _SOURCE_EXT = _SLASH_COMMENT_EXT | _HASH_COMMENT_EXT
 
 # Regex patterns
 RE_IMPL_COMMENT = re.compile(
-    r"(?:#|//)\s*@impl\s+([a-zA-Z0-9_./,-]+(?:\s*,\s*[a-zA-Z0-9_./,-]+)*)",
+    r"(?:#|//)\s*@impl\s+([a-zA-Z0-9_./-]+(?:\s*,\s*[a-zA-Z0-9_./-]+)*)",
 )
 RE_MODULE_COMMENT = re.compile(
     r"(?:#|//)\s*@module\s+([a-zA-Z0-9_./,-]+)",
@@ -48,7 +49,7 @@ RE_FEATURE_COMMENT = re.compile(
     r"(?:#|//)\s*@feature\s+([a-zA-Z0-9_./,-]+)",
 )
 RE_VERIFIES_COMMENT = re.compile(
-    r"(?:#|//)\s*@verifies\s+([a-zA-Z0-9_./,-]+(?:\s*,\s*[a-zA-Z0-9_./,-]+)*)",
+    r"(?:#|//)\s*@verifies\s+([a-zA-Z0-9_./-]+(?:\s*,\s*[a-zA-Z0-9_./-]+)*)",
 )
 RE_SPEC_HTML = re.compile(r"<!--\s*@spec\s+(.+?)\s*-->")
 RE_DESIGN_HTML = re.compile(r"<!--\s*@design\s+(.+?)\s*-->")

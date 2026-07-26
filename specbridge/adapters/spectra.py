@@ -45,8 +45,16 @@ class SpectraAdapter(ProjectAdapter):
         tm = root / _TRACE_MAPPING_RELPATH
         if tm.exists():
             return 0.95
-        # Even without trace-mapping.yaml, if there are @impl tags it could be spectra
-        return 0.3
+        # Quick scan for @impl tags without full analysis
+        for ext in _SOURCE_EXT:
+            tagged = list(root.rglob(f"*{ext}"))
+            if any(f.is_file() and "@impl" in f.read_text(encoding="utf-8", errors="ignore")
+                   for f in tagged):
+                return 0.7
+        # If .spectra/ directory exists, might still be spectra
+        if (root / ".spectra").exists():
+            return 0.5
+        return 0.0
 
     def analyze(self, directory: str) -> TraceGraph:
         graph = TraceGraph()

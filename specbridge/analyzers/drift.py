@@ -10,7 +10,7 @@ from typing import Optional
 
 from specbridge.discovery.spec import discover_specs
 from specbridge.discovery.code import discover_code
-from specbridge.analyzers import coverage_summary
+from specbridge.analyzers import coverage_summary, find_orphan_specs
 from specbridge.bridge import build_heuristic_graph
 from specbridge.core import NodeType
 
@@ -76,6 +76,7 @@ def build_snapshot(
             }
             for c in codes
         ],
+        "orphan_spec_ids": sorted(find_orphan_specs(graph)),
         "coverage": {
             **cov,
             "spec_count": len(specs),
@@ -370,9 +371,12 @@ def compute_drift(
     report.coverage_after = after_cov
 
     curr_orphan_specs = set(find_orphan_specs(graph_now))
+    prev_orphan_specs = set(snapshot.get("orphan_spec_ids", []))
     common_specs = set(snap_specs.keys()) & {s.auto_id for s in curr_specs}
     for sid in common_specs:
-        if sid in curr_orphan_specs:
+        if sid in curr_orphan_specs and sid not in prev_orphan_specs:
             report.new_orphan_specs.append(sid)
+        elif sid not in curr_orphan_specs and sid in prev_orphan_specs:
+            report.resolved_orphan_specs.append(sid)
 
     return report

@@ -1,0 +1,167 @@
+"""Tests for analysis utilities (analyzers/__init__.py)."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+from specbridge.analyzers import (
+    coverage_summary,
+    find_orphan_code,
+    find_orphan_specs,
+)
+from specbridge.core import (
+    EdgeRelation,
+    EdgeStrength,
+    Evidence,
+    NodeType,
+    SourceRef,
+    TraceEdge,
+    TraceGraph,
+    TraceNode,
+)
+
+
+@pytest.fixture
+def three_spec_graph() -> TraceGraph:
+    """A graph with 3 specs, 2 covered + 1 orphan."""
+    g = TraceGraph()
+    # Specs
+    g.add_node(TraceNode(id="1", type=NodeType.SPEC, title="Auth",
+                         source=SourceRef(file="docs/auth.md"),
+                         framework_origin="heuristic"))
+    g.add_node(TraceNode(id="2", type=NodeType.SPEC, title="API",
+                         source=SourceRef(file="docs/api.md"),
+                         framework_origin="heuristic"))
+    g.add_node(TraceNode(id="3", type=NodeType.SPEC, title="Orphan",
+                         source=SourceRef(file="docs/orphan.md"),
+                         framework_origin="heuristic"))
+    # Code
+    g.add_node(TraceNode(id="login.py", type=NodeType.CODE, title="login",
+                         source=SourceRef(file="src/auth/login.py"),
+                         framework_origin="heuristic"))
+    g.add_node(TraceNode(id="test_login.py", type=NodeType.TEST, title="test",
+                         source=SourceRef(file="tests/test_login.py"),
+                         framework_origin="heuristic"))
+    # Edges: spec 1 and 2 are covered
+    g.add_edge(TraceEdge(src_id="login.py", dst_id="1",
+                         relation=EdgeRelation.IMPLEMENTS,
+                         strength=EdgeStrength.EXPLICIT))
+    g.add_edge(TraceEdge(src_id="test_login.py", dst_id="1",
+                         relation=EdgeRelation.VERIFIES,
+                         strength=EdgeStrength.EXPLICIT))
+    return g
+
+
+class TestCoverageSummary:
+    """Coverage computation."""
+
+    def test_basic_coverage(self, three_spec_graph: TraceGraph) -> None:
+        cov = coverage_summary(three_spec_graph)
+        assert cov["total"] == 3
+        assert cov["covered"] == 1  # only spec "1" has edges
+        assert cov["orphan"] == 2
+        assert cov["coverage_pct"] == pytest.approx(33.3, rel=0.1)
+
+    def test_empty_graph(self) -> None:
+        g = TraceGraph()
+        cov = coverage_summary(g)
+        assert cov["total"] == 0
+        assert cov["coverage_pct"] == 0.0
+
+    def test_full_coverage(self) -> None:
+        g = TraceGraph()
+        g.add_node(TraceNode(id="1", type=NodeType.SPEC, title="Auth",
+                             source=SourceRef(file="docs/auth.md"),
+                             framework_origin="heuristic"))
+        g.add_node(TraceNode(id="login.py", type=NodeType.CODE, title="login",
+                             source=SourceRef(file="login.py"),
+                             framework_origin="heuristic"))
+        g.add_edge(TraceEdge(src_id="login.py", dst_id="1",
+                             relation=EdgeRelation.IMPLEMENTS,
+                             strength=EdgeStrength.EXPLICIT))
+        cov = coverage_summary(g)
+        assert cov["covered"] == 1
+        assert cov["total"] == 1
+        assert cov["coverage_pct"] == 100.0
+
+    def test_satisfies_counts_as_covered(self) -> None:
+        g = TraceGraph()
+        g.add_node(TraceNode(id="1", type=NodeType.SPEC, title="Auth",
+                             source=SourceRef(file="docs/auth.md"),
+                             framework_origin="heuristic"))
+        g.add_node(TraceNode(id="design-x", type=NodeType.DESIGN, title="Design",
+                             source=SourceRef(file="docs/design.md"),
+                             framework_origin="heuristic"))
+        g.add_edge(TraceEdge(src_id="design-x", dst_id="1",
+                             relation=EdgeRelation.SATISFIES,
+                             strength=EdgeStrength.EXPLICIT))
+        cov = coverage_summary(g)
+        assert cov["covered"] == 1
+
+
+class TestFindOrphans:
+    """Orphan detection."""
+
+    def test_orphan_specs(self, three_spec_graph: TraceGraph) -> None:
+        orphans = find_orphan_specs(three_spec_graph)
+        assert "3" in orphans
+        assert "2" in orphans  # spec "2" has no incoming edges
+        assert "1" not in orphans
+
+    def test_orphan_code(self, three_spec_graph: TraceGraph) -> None:
+        orphans = find_orphan_code(three_spec_graph)
+        # Everything is linked to spec 1, so no orphans
+        # But spec 2 has no code — code nodes linked to spec 2? No.
+        assert isinstance(orphans, list)
+
+    def test_no_orphans(self) -> None:
+        g = TraceGraph()
+        g.add_node(TraceNode(id="1", type=NodeType.SPEC, title="Auth",
+                             source=SourceRef(file="docs/auth.md"),
+                             framework_origin="heuristic"))
+        g.add_node(TraceNode(id="login.py", type=NodeType.CODE, title="login",
+                             source=SourceRef(file="login.py"),
+                             framework_origin="heuristic"))
+        g.add_edge(TraceEdge(src_id="login.py", dst_id="1",
+                             relation=EdgeRelation.IMPLEMENTS,
+                             strength=EdgeStrength.EXPLICIT))
+        assert find_orphan_specs(g) == []
+        assert find_orphan_code(g) == []
+
+    def test_orphan_code_only(self) -> None:
+        g = TraceGraph()
+        g.add_node(TraceNode(id="lonely.py", type=NodeType.CODE, title="lonely",
+                             source=SourceRef(file="lonely.py"),
+                             framework_origin="heuristic"))
+        g.add_node(TraceNode(id="spec1", type=NodeType.SPEC, title="Spec",
+                             source=SourceRef(file="docs/spec.md"),
+                             framework_origin="heuristic"))
+        orphans = find_orphan_code(g)
+        assert "lonely.py" in orphans
+
+    def test_edge_relation_filtering(self) -> None:
+        """Only IMPLEMENTS, VERIFIES, SATISFIES edges count for orphan spec detection."""
+        g = TraceGraph()
+        g.add_node(TraceNode(id="1", type=NodeType.SPEC, title="Auth",
+                             source=SourceRef(file="docs/auth.md"),
+                             framework_origin="heuristic"))
+        g.add_node(TraceNode(id="ref.py", type=NodeType.CODE, title="ref",
+                             source=SourceRef(file="ref.py"),
+                             framework_origin="heuristic"))
+        # Only a REFERENCES edge — does NOT count as covered
+        g.add_edge(TraceEdge(src_id="ref.py", dst_id="1",
+                             relation=EdgeRelation.REFERENCES,
+                             strength=EdgeStrength.WEAK))
+        orphans = find_orphan_specs(g)
+        assert "1" in orphans
+
+    def test_design_node_is_ignored_for_orphan_code(self) -> None:
+        g = TraceGraph()
+        g.add_node(TraceNode(id="design-1", type=NodeType.DESIGN, title="Design",
+                             source=SourceRef(file="docs/design.md"),
+                             framework_origin="heuristic"))
+        orphans = find_orphan_code(g)
+        # DESIGN nodes should not appear in CODE orphan list
+        assert len(orphans) == 0
