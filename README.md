@@ -72,6 +72,7 @@ specbridge drift --git-base main     # Detect changes since a git ref
 specbridge validate-boundary         # Check _Boundary:_ markers
 specbridge impact --spec-id 1.1 --call-graph  # Transitive (indirect) impact
 specbridge call-graph --spec-id 1.1  # Call graph analysis standalone
+specbridge setup                     # One‑command project setup
 ```
 
 ---
@@ -87,8 +88,9 @@ specbridge call-graph --spec-id 1.1  # Call graph analysis standalone
 | **Drift detection** | `specbridge drift --git-base main` | Did code diverge from specs? |
 | **CI gate** | `specbridge drift --gate` | Block PRs with undrifted changes |
 | **Boundary validation** | `specbridge validate-boundary` | Code refs staying in declared scope? |
-| **No tags required** | `specbridge analyze --merge` | Works even on projects without SSD tags |
-| **MCP / AI agent** | `specbridge serve` | Let AI agents query traceability |
+|| **No tags required** | `specbridge analyze --merge` | Works even on projects without SSD tags |
+|| **MCP / AI agent** | `specbridge serve` | Let AI agents query traceability |
+|| **One‑command setup** | `specbridge setup` | Auto‑configure project in 30 seconds |
 
 ---
 
