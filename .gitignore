@@ -23,5 +23,9 @@ htmlcov/
 *.swp
 .DS_Store
 
+# Environment
+.env
+.env.*
+
 # OS
 Thumbs.db
