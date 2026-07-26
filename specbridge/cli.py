@@ -340,5 +340,51 @@ def validate_boundary(dir):
     click.echo("\nTip: Add _Boundary:_ src/path/ or move the @impl to a file inside the boundary.")
 
 
+@cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+@click.option("--yaml", "yaml_output", is_flag=True, default=False,
+              help="Output config as YAML")
+def config(dir, yaml_output):
+    """Show current specbridge configuration."""
+    from specbridge.config import SpecbridgeConfig
+
+    root = Path(dir).resolve()
+    cfg = SpecbridgeConfig.load(str(root))
+
+    if yaml_output:
+        import yaml
+        click.echo(yaml.dump({
+            "spec_dirs": cfg.spec_dirs,
+            "source_dirs": cfg.source_dirs,
+            "exclude_dirs": sorted(cfg.exclude_dirs),
+            "min_confidence": cfg.min_confidence,
+            "max_output_nodes": cfg.max_output_nodes,
+        }, default_flow_style=False))
+        return
+
+    # Detect config source
+    yaml_path = root / ".specbridge.yaml"
+    pyproject = root / "pyproject.toml"
+    source = "defaults"
+    if yaml_path.exists():
+        source = f".specbridge.yaml"
+    elif pyproject.exists():
+        try:
+            import tomllib
+            py_data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+            if "tool" in py_data and "specbridge" in py_data["tool"]:
+                source = "pyproject.toml [tool.specbridge]"
+        except Exception:
+            pass
+
+    click.echo(f"📋 specbridge config ({source})")
+    click.echo(f"{'=' * 40}")
+    click.echo(f"  spec_dirs:        {cfg.spec_dirs}")
+    click.echo(f"  source_dirs:      {cfg.source_dirs}")
+    click.echo(f"  exclude_dirs:     {len(cfg.exclude_dirs)} patterns")
+    click.echo(f"  min_confidence:   {cfg.min_confidence}")
+    click.echo(f"  max_output_nodes: {cfg.max_output_nodes}")
+
+
 if __name__ == "__main__":
     cli()
