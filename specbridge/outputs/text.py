@@ -27,6 +27,10 @@ def render_text(graph: TraceGraph, max_nodes: int | None = None) -> str:
             return items[:max_n], True
         return items, False
 
+    def _is_func_node(n) -> bool:
+        """Function-level nodes have '::' in their ID."""
+        return "::" in n.id
+
     # Specs
     specs = graph.nodes_by_type(NodeType.SPEC)
     if specs:
@@ -40,8 +44,8 @@ def render_text(graph: TraceGraph, max_nodes: int | None = None) -> str:
             lines.append(f"  ... and {len(specs) - max_nodes} more specs")
         lines.append("")
 
-    # Code
-    codes = graph.nodes_by_type(NodeType.CODE)
+    # Code files (file-level only, not function-level)
+    codes = [n for n in graph.nodes_by_type(NodeType.CODE) if not _is_func_node(n)]
     if codes:
         lines.append("📁 Code refs:")
         displayed, truncated = _maybe_truncate(codes, "code", max_nodes)
@@ -54,6 +58,22 @@ def render_text(graph: TraceGraph, max_nodes: int | None = None) -> str:
                 lines.append(f"  {n.id:40s}  (unlinked)")
         if truncated:
             lines.append(f"  ... and {len(codes) - max_nodes} more code files")
+        lines.append("")
+
+    # Function refs (function-level nodes)
+    funcs = [n for n in graph.nodes_by_type(NodeType.CODE) if _is_func_node(n)]
+    if funcs:
+        lines.append("🔧 Function refs:")
+        displayed, truncated = _maybe_truncate(funcs, "funcs", max_nodes)
+        for n in sorted(displayed, key=lambda x: x.id):
+            edges_from = graph.edges_from(n.id)
+            if edges_from:
+                targets = ", ".join(e.dst_id for e in edges_from)
+                lines.append(f"  {n.id:45s} → {targets}")
+            else:
+                lines.append(f"  {n.id:45s}  (unlinked)")
+        if truncated:
+            lines.append(f"  ... and {len(funcs) - max_nodes} more functions")
         lines.append("")
 
     # Tests

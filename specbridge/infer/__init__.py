@@ -23,7 +23,7 @@ from specbridge.core import (
     TraceGraph,
     TraceNode,
 )
-from specbridge.discovery.code import CodeCandidate, discover_code
+from specbridge.discovery.code import CodeCandidate, FuncBlock, discover_code
 from specbridge.discovery.spec import SpecCandidate, discover_specs
 
 # Weights for different heuristic signals
@@ -151,6 +151,52 @@ def build_heuristic_graph(
                 evidence=evidence,
             ))
 
+    # 6. Match specs ↔ individual code functions (function-level traceability)
+    for sc in specs:
+        spec_text = f"{sc.title} {sc.heading_text}"
+        if sc.parent_chain:
+            spec_text += " " + " ".join(sc.parent_chain)
+        if sc.body_text:
+            spec_text += " " + sc.body_text[:300]
+        spec_tokens = _tokenize(spec_text)
+
+        for cc in codes:
+            if not cc.functions:
+                continue
+            for func in cc.functions:
+                func_id = f"{cc.file}::{func.name}"
+                func_tokens = _tokenize(f"{func.name} {func.body_preview}")
+                conf = _score_func_edge(sc, func, spec_tokens, func_tokens)
+                if conf < _MIN_CONFIDENCE:
+                    continue
+                # Add function node (skip if already added)
+                if func_id not in graph.nodes:
+                    graph.add_node(TraceNode(
+                        id=func_id,
+                        type=NodeType.CODE,
+                        title=f"{func.name}()",
+                        source=SourceRef(file=cc.file, line=func.line),
+                        framework_origin="heuristic",
+                        confidence=conf,
+                        metadata={"func_name": func.name, "file": cc.file, "line": func.line},
+                    ))
+                evidence: list[Evidence] = [
+                    Evidence(
+                        kind="heuristic:funcname",
+                        value=f"function '{func.name}' matches spec '{sc.title}'",
+                        source=SourceRef(file=cc.file, line=func.line),
+                    ),
+                ]
+                relation = EdgeRelation.VERIFIES if cc.is_test else EdgeRelation.IMPLEMENTS
+                strength = EdgeStrength.WEAK if conf < 0.4 else EdgeStrength.INFERRED
+                graph.add_edge(TraceEdge(
+                    src_id=func_id,
+                    dst_id=sc.auto_id,
+                    relation=relation,
+                    strength=strength,
+                    evidence=evidence,
+                ))
+
     return graph
 
 
@@ -255,3 +301,31 @@ def _score_edge(
 
     confidence = weighted_score / total_weight
     return round(min(confidence, 1.0), 4), evidence
+
+
+def _score_func_edge(
+    sc: SpecCandidate,
+    func: FuncBlock,
+    spec_tokens: set[str],
+    func_tokens: set[str],
+) -> float:
+    """Score a single function/class definition against a spec candidate.
+
+    Focuses on function name ↔ spec heading matching.
+    Returns a confidence score (0.0–1.0).
+    """
+    if not spec_tokens or not func_tokens:
+        return 0.0
+
+    overlap = spec_tokens & func_tokens
+    if not overlap:
+        return 0.0
+
+    jaccard = len(overlap) / len(spec_tokens | func_tokens)
+    score = jaccard * 3  # same boost as file-level symbol matching
+
+    # Strong bonus if function name is a perfect match for spec heading
+    if spec_tokens.issubset(func_tokens) or func_tokens.issubset(spec_tokens):
+        score = max(score, 0.9)
+
+    return round(min(score, 1.0), 4)

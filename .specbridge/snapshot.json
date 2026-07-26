@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-26T16:56:45",
-  "reason": "",
+  "timestamp": "2026-07-26T17:08:06",
+  "reason": "Function-level traceability: nodes +162, coverage 60.7%->91.1%",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
