@@ -33,7 +33,7 @@
 - [x] **TypeScript/JavaScript AST parser** (via tree-sitter)
 - [x] **Go AST parser**
 - [x] **Rust AST parser**
-- [ ] CRG-style call-graph import for indirect impact
+- [x] **CRG-style call-graph import for indirect impact**
 
 ## v0.4 — Confidence + heuristics (complete)
 
