@@ -184,7 +184,8 @@ def _score_edge(
 
     # --- Signal 2: File name matching ---
     spec_stem = Path(sc.file).stem
-    code_stem = Path(cc.file).stem
+    code_path = Path(cc.file)
+    code_stem = code_path.parent.name if code_path.stem == "__init__" else code_path.stem
     if spec_stem.lower() == code_stem.lower():
         weighted_score += _W_FILENAME * 1.0
         evidence.append(Evidence(
@@ -207,7 +208,13 @@ def _score_edge(
         overlap = spec_tokens & code_keywords
         if overlap:
             jaccard = len(overlap) / len(spec_tokens | code_keywords)
-            weighted_score += _W_SYMBOL * min(jaccard * 3, 1.0)
+            score = jaccard * 3
+            # Subset bonus: if ALL spec heading tokens appear in code symbols,
+            # it's a strong signal that this code file "is about" this spec topic.
+            # Without this, large __init__.py files dilute Jaccard with many symbols.
+            if spec_tokens.issubset(code_keywords):
+                score = max(score, 0.85)
+            weighted_score += _W_SYMBOL * min(score, 1.0)
             evidence.append(Evidence(
                 kind="heuristic:symbol",
                 value=f"keyword overlap: {', '.join(sorted(overlap)[:5])}",
@@ -216,7 +223,10 @@ def _score_edge(
     total_weight += _W_SYMBOL
 
     # --- Signal 4: Heading text ↔ file stem keyword match ---
-    file_keywords = _tokenize(Path(cc.file).stem)
+    stem = Path(cc.file).stem
+    if stem == "__init__":
+        stem = Path(cc.file).parent.name
+    file_keywords = _tokenize(stem)
     if spec_tokens and file_keywords:
         overlap = spec_tokens & file_keywords
         if overlap:

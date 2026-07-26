@@ -46,7 +46,7 @@ _RE_FUNC_DEF = re.compile(
     r"|mixin|extension|typedef|record)"
     r"\s+([A-Za-z_]\w*)"
     r")"
-    r".*?(?::|=>|=|{)",
+    r".*?(?:\(|: |:|=>|=|{)",
     re.MULTILINE,
 )
 
