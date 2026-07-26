@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-26T16:35:00",
-  "reason": "Update snapshot after all 6 heuristic strategies + doc updates",
+  "timestamp": "2026-07-26T16:49:24",
+  "reason": "After adding pre-commit hook + CI trace gate",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",

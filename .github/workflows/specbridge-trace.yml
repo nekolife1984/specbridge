@@ -1,0 +1,95 @@
+# specbridge traceability gate
+#
+# Runs on every pull request to main: checks spec↔code drift,
+# validates boundaries, and reports coverage changes.
+#
+# Depends on: ci.yml (pytest + mypy + ruff)
+# This workflow focuses on traceability, not code quality.
+
+name: trace
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  trace-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install specbridge
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: 📸 Snapshot (baseline)
+        run: specbridge snapshot
+        continue-on-error: true
+
+      - name: 🔍 Detect drift
+        id: drift
+        run: |
+          if specbridge drift --gate 2>&1; then
+            echo "status=clean" >> $GITHUB_OUTPUT
+            echo "✅ No drift detected."
+          else
+            echo "status=dirty" >> $GITHUB_OUTPUT
+            echo "❌ Drift detected!"
+            specbridge drift 2>&1
+          fi
+
+      - name: 📊 Coverage report
+        id: coverage
+        run: |
+          specbridge analyze --merge --top 10 2>&1
+          echo "---"
+          specbridge analyze --merge --format json 2>/dev/null | \
+            python3 -c "
+          import json, sys
+          data = json.load(sys.stdin)
+          nodes = data['nodes']
+          edges = data['edges']
+          total = sum(1 for n in nodes if n['type'] == 'spec')
+          covered = sum(1 for n in nodes if n['type'] == 'spec'
+                        and any(e['dst_id'] == n['id'] for e in edges))
+          pct = round(covered / total * 100, 1) if total else 0
+          print(f'Coverage: {pct}% ({covered}/{total})')
+          "
+
+      - name: 🗺️ Build trace HTML
+        run: specbridge analyze --merge --format html 2>&1
+
+      - name: 📎 Upload trace artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: specbridge-trace
+          path: .specbridge/trace.html
+          retention-days: 7
+
+      - name: 📎 Upload snapshot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: specbridge-snapshot
+          path: .specbridge/snapshot.json
+          retention-days: 7
+
+      - name: ❌ Fail on drift
+        if: steps.drift.outputs.status == 'dirty'
+        run: |
+          echo "::error::Drift detected! Update the snapshot or fix the drift."
+          exit 1
+
+      - name: ✅ Drift gate passed
+        if: steps.drift.outputs.status == 'clean'
+        run: echo "Traceability gate passed ✓"
