@@ -54,6 +54,7 @@ RE_VERIFIES_COMMENT = re.compile(
 RE_SPEC_HTML = re.compile(r"<!--\s*@spec\s+(.+?)\s*-->")
 RE_DESIGN_HTML = re.compile(r"<!--\s*@design\s+(.+?)\s*-->")
 RE_SATISFIES_HTML = re.compile(r"<!--\s*@satisfies\s+(.+?)\s*-->")
+RE_BOUNDARY = re.compile(r"^_Boundary:_\s+(.+)$", re.MULTILINE)
 
 
 @dataclass
@@ -100,6 +101,11 @@ def _extract_spec_tags(path: Path, rel: str) -> list[Tag]:
         for m in pattern.finditer(text):
             lineno = text[: m.start()].count("\n") + 1
             tags.append(Tag(kind=kind, value=m.group(1).strip(), file=rel, line=lineno))
+
+    # Also scan for _Boundary:_ markers
+    for m in RE_BOUNDARY.finditer(text):
+        lineno = text[: m.start()].count("\n") + 1
+        tags.append(Tag(kind="boundary", value=m.group(1).strip(), file=rel, line=lineno))
 
     return tags
 

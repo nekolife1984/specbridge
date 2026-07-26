@@ -188,16 +188,21 @@ class SpectraAdapter(ProjectAdapter):
                             ))
 
     def _scan_spec_tags(self, root: Path, graph: TraceGraph) -> None:
-        """Scan spec docs for <!-- @spec -->, <!-- @design -->, <!-- @satisfies -->."""
+        """Scan spec docs for <!-- @spec -->, <!-- @design -->, <!-- @satisfies -->, _Boundary:_."""
         for fpath in root.rglob("*.md"):
             if any(part.startswith((".", "__")) or part in {
                 "node_modules", ".venv", "dist", "build",
             } for part in fpath.parts):
                 continue
             tags = extract_tags_from_file(fpath, root)
+
+            # Group boundary markers by spec ID context
+            current_spec_id: str | None = None
+
             for tag in tags:
                 if tag.kind == "spec":
-                    nid = f"spec::{tag.value}"
+                    current_spec_id = f"spec::{tag.value}"
+                    nid = current_spec_id
                     node = TraceNode(
                         id=nid,
                         type=NodeType.SPEC,
@@ -234,3 +239,13 @@ class SpectraAdapter(ProjectAdapter):
                                 source=SourceRef(file=tag.file, line=tag.line),
                             )],
                         ))
+                elif tag.kind == "boundary" and current_spec_id:
+                    # Store boundary in the current spec's metadata
+                    spec_node = graph.nodes.get(current_spec_id)
+                    if spec_node:
+                        boundaries = spec_node.metadata.setdefault("boundaries", [])
+                        boundaries.append({
+                            "path": tag.value,
+                            "file": tag.file,
+                            "line": tag.line,
+                        })

@@ -279,5 +279,63 @@ def _drift_git(project_dir: str, git_base: str, gate: bool) -> None:
         raise SystemExit(1)
 
 
+@cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+def validate_boundary(dir):
+    """Validate that code refs stay within declared _Boundary:_ markers."""
+    from specbridge.adapters import detect_adapter
+    from specbridge.core import NodeType
+
+    root = Path(dir).resolve()
+    adapter = detect_adapter(str(root))
+    if adapter is None:
+        click.echo("❌ No recognized SSD framework found.", err=True)
+        raise click.Abort()
+
+    graph = adapter.analyze(str(root))
+
+    # Find spec nodes with boundaries
+    boundary_issues = []
+    for nid, node in graph.nodes.items():
+        if node.type != NodeType.SPEC:
+            continue
+        boundaries = node.metadata.get("boundaries", [])
+        if not boundaries:
+            continue
+
+        # Check each implementing code file against boundaries
+        # Try primary ID first, then fallback id (e.g. "spec::1.1" → "1.1")
+        impl_edges = [e for e in graph.edges_to(nid)
+                      if e.relation.value in ("implements", "verifies")]
+        if not impl_edges and nid.startswith("spec::"):
+            alt_id = nid.replace("spec::", "")
+            impl_edges = [e for e in graph.edges_to(alt_id)
+                          if e.relation.value in ("implements", "verifies")]
+        for edge in impl_edges:
+            src = graph.nodes.get(edge.src_id)
+            if not src or not src.source.file:
+                continue
+            code_path = src.source.file
+            inside = any(code_path.startswith(b["path"]) for b in boundaries)
+            if not inside:
+                boundary_issues.append({
+                    "spec_id": nid,
+                    "code_file": code_path,
+                    "boundaries": [b["path"] for b in boundaries],
+                    "spec_file": boundaries[0]["file"],
+                })
+
+    if not boundary_issues:
+        click.echo("✅ All code refs are within declared boundaries.")
+        return
+
+    click.echo(f"⚠️  {len(boundary_issues)} boundary violation(s):")
+    for bi in boundary_issues:
+        click.echo(f"  {bi['spec_id']} in {bi['spec_file']}")
+        click.echo(f"    declares boundaries: {', '.join(bi['boundaries'])}")
+        click.echo(f"    but {bi['code_file']} is outside")
+    click.echo("\nTip: Add _Boundary:_ src/path/ or move the @impl to a file inside the boundary.")
+
+
 if __name__ == "__main__":
     cli()
