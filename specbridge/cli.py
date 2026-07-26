@@ -382,5 +382,88 @@ def config(dir, yaml_output):
     click.echo(f"  max_output_nodes: {cfg.max_output_nodes}")
 
 
+@cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+@click.option("--interval", type=float, default=2.0,
+              help="Debounce interval in seconds", show_default=True)
+def watch(dir, interval):
+    """Watch project for changes and re-analyze automatically.
+
+    Requires the optional 'watch' extra: pip install specbridge[watch]
+    """
+    from specbridge.adapters import detect_all, merge_graphs
+    from specbridge.config import SpecbridgeConfig
+    from specbridge.outputs.text import render_text
+
+    root = Path(dir).resolve()
+
+    try:
+        from watchdog.events import FileSystemEventHandler
+        from watchdog.observers import Observer
+    except ImportError:
+        click.echo("❌ watchdog not installed. Run: pip install specbridge[watch]",
+                    err=True)
+        raise click.Abort() from None
+
+    class SpecbridgeHandler(FileSystemEventHandler):
+        def __init__(self):
+            self._last_run = 0.0
+            import time
+            self._time = time
+
+        def on_any_event(self, event):
+            # Ignore directory and .specbridge changes to avoid re-trigger loops
+            if event.is_directory:
+                return
+            if ".specbridge" in str(event.src_path):
+                return
+
+            # Debounce
+            now = self._time.time()
+            if now - self._last_run < interval:
+                return
+            self._last_run = now
+
+            # Run analysis
+            click.clear()
+            click.echo(f"🔄 Change detected: {event.src_path}", err=True)
+            click.echo(f"   Re-analyzing {root} ...\n", err=True)
+
+            try:
+                config = SpecbridgeConfig.load(str(root))
+                scored = detect_all(str(root))
+                if scored:
+                    graphs = []
+                    for _score, adapter in scored:
+                        try:
+                            g = adapter.analyze(str(root))
+                            graphs.append(g)
+                        except Exception as exc:
+                            click.echo(f"   ⚠️  {type(adapter).__name__} failed: {exc}",
+                                      err=True)
+                    if graphs:
+                        merged = merge_graphs(graphs)
+                        click.echo(render_text(merged, max_nodes=config.max_output_nodes))
+                        click.echo(f"\n⏳ Watching {root} ... (Ctrl+C to stop)", err=True)
+                else:
+                    click.echo("❌ No recognized SSD framework found.", err=True)
+            except Exception as exc:
+                click.echo(f"❌ Analysis error: {exc}", err=True)
+
+    click.echo(f"⏳ Watching {root} for changes ... (Ctrl+C to stop)", err=True)
+    click.echo(f"   Interval: {interval}s", err=True)
+
+    event_handler = SpecbridgeHandler()
+    observer = Observer()
+    observer.schedule(event_handler, str(root), recursive=True)
+    observer.start()
+    try:
+        while observer.is_alive():
+            observer.join(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
+
+
 if __name__ == "__main__":
     cli()

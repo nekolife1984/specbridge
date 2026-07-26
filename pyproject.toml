@@ -36,6 +36,9 @@ dev = [
 mcp = [
     "mcp>=1.0",
 ]
+watch = [
+    "watchdog>=4.0",
+]
 
 [project.scripts]
 specbridge = "specbridge.cli:cli"
