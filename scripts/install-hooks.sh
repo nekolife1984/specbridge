@@ -28,5 +28,19 @@ fi
 ln -sf "../../$HOOK_SRC" "$HOOK_DST"
 chmod +x "$HOOK_DST"
 echo "✅ Installed pre-commit hook: $HOOK_DST → $HOOK_SRC"
+
+# Install Hermes skill (if Hermes skills directory exists)
+SKILL_SRC=".agents/skills/specbridge"
+SKILL_DST="$HOME/.hermes/skills/software-development/specbridge"
+if [ -d "$HOME/.hermes/skills" ]; then
+  mkdir -p "$HOME/.hermes/skills/software-development"
+  if [ -L "$SKILL_DST" ] || [ ! -e "$SKILL_DST" ]; then
+    ln -sf "$(pwd)/$SKILL_SRC" "$SKILL_DST"
+    echo "✅ Installed Hermes skill: $SKILL_DST → $(pwd)/$SKILL_SRC"
+  else
+    echo "⚠️  $SKILL_DST already exists (not a symlink). Skipping."
+  fi
+fi
+
 echo ""
 echo "Test it with: git commit --allow-empty -m 'test specbridge hook'"

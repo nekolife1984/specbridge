@@ -1,6 +1,6 @@
 {
   "timestamp": "2026-07-26T17:32:51",
-  "reason": "Final snapshot after full session: 91.1% coverage, docs sync, specbridge skill",
+  "reason": "",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
