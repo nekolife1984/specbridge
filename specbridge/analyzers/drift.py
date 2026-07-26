@@ -1,26 +1,24 @@
-"""Drift detection: snapshot comparison engine.
-
-Takes a baseline snapshot of spec/code structure, then compares
-current state against it to detect what changed.
-"""
+"""Drift detection: snapshot comparison engine with section/function hashing."""
 
 from __future__ import annotations
 
+import hashlib
 import json
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from specbridge.discovery.spec import SpecCandidate, discover_specs
-from specbridge.discovery.code import CodeCandidate, discover_code
+from specbridge.discovery.spec import discover_specs
+from specbridge.discovery.code import discover_code
 from specbridge.analyzers import coverage_summary
 from specbridge.bridge import build_heuristic_graph
+from specbridge.core import NodeType
 
 
 SNAPSHOT_RELPATH = ".specbridge/snapshot.json"
 
 
-# ── Snapshot schema ──────────────────────────────────────────
+# ── Snapshot ─────────────────────────────────────────────────
 
 
 def build_snapshot(
@@ -30,12 +28,11 @@ def build_snapshot(
     spec_dirs: Optional[list[str]] = None,
     source_dirs: Optional[list[str]] = None,
 ) -> dict:
-    """Build a snapshot of the current project state."""
-    graph = build_heuristic_graph(directory, spec_dirs=spec_dirs, source_dirs=source_dirs)
-    cov = coverage_summary(graph)
-
+    """Build a snapshot of the current project state with hashes."""
     specs = discover_specs(directory, spec_dirs=spec_dirs)
     codes = discover_code(directory, source_dirs=source_dirs)
+    graph = build_heuristic_graph(directory, spec_dirs=spec_dirs, source_dirs=source_dirs)
+    cov = coverage_summary(graph)
 
     snapshot = {
         "timestamp": datetime.now().isoformat(timespec="seconds"),
@@ -48,6 +45,10 @@ def build_snapshot(
                 "heading_text": s.heading_text,
                 "depth": s.heading_depth,
                 "line": s.line,
+                # Section body hash (heading + body text)
+                "body_hash": s.body_hash,
+                "body_line_count": s.body_line_count,
+                "body_preview": s.body_preview,
             }
             for s in specs
         ],
@@ -59,16 +60,32 @@ def build_snapshot(
                 "is_test": c.is_test,
                 "language": c.language,
                 "imports": c.imports[:3],
+                # File-level hash
+                "file_hash": c.file_hash,
+                # Per-function hashes
+                "functions": [
+                    {
+                        "name": f.name,
+                        "kind": f.kind,
+                        "line": f.line,
+                        "body_hash": f.body_hash,
+                        "body_lines": f.body_lines,
+                    }
+                    for f in c.functions
+                ],
             }
             for c in codes
         ],
-        "coverage": cov,
+        "coverage": {
+            **cov,
+            "spec_count": len(specs),
+            "code_count": len(codes),
+        },
     }
     return snapshot
 
 
 def save_snapshot(snapshot: dict, project_dir: str) -> Path:
-    """Write snapshot to .specbridge/snapshot.json."""
     root = Path(project_dir).resolve()
     path = root / SNAPSHOT_RELPATH
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -77,7 +94,6 @@ def save_snapshot(snapshot: dict, project_dir: str) -> Path:
 
 
 def load_snapshot(project_dir: str) -> Optional[dict]:
-    """Read snapshot from .specbridge/snapshot.json."""
     path = Path(project_dir).resolve() / SNAPSHOT_RELPATH
     if not path.exists():
         return None
@@ -96,10 +112,12 @@ class DriftReport:
     def __init__(self):
         self.specs_added: list[dict] = []
         self.specs_removed: list[dict] = []
-        self.specs_changed: list[dict] = []
+        self.specs_changed: list[dict] = []        # title changed
+        self.specs_body_changed: list[dict] = []   # body changed, title same
         self.code_added: list[dict] = []
         self.code_removed: list[dict] = []
         self.code_symbols_changed: list[dict] = []
+        self.code_funcs_changed: list[dict] = []   # function body hash changed
         self.new_orphan_specs: list[str] = []
         self.resolved_orphan_specs: list[str] = []
         self.new_orphan_code: list[str] = []
@@ -111,7 +129,9 @@ class DriftReport:
     def has_drift(self) -> bool:
         return any([
             self.specs_added, self.specs_removed, self.specs_changed,
+            self.specs_body_changed,
             self.code_added, self.code_removed, self.code_symbols_changed,
+            self.code_funcs_changed,
             self.new_orphan_specs, self.resolved_orphan_specs,
             self.new_orphan_code, self.resolved_orphan_code,
         ])
@@ -121,6 +141,7 @@ class DriftReport:
         if not self.has_drift:
             return "✅ No drift detected — project state matches snapshot."
 
+        # ── Spec changes ──
         if self.specs_added:
             lines.append(f"📄  New specs ({len(self.specs_added)}):")
             for s in self.specs_added:
@@ -132,10 +153,19 @@ class DriftReport:
                 lines.append(f"     - {s['id']}: {s['title']}  ({s['file']})")
 
         if self.specs_changed:
-            lines.append(f"✏️  Changed specs ({len(self.specs_changed)}):")
+            lines.append(f"✏️  Changed spec titles ({len(self.specs_changed)}):")
             for s in self.specs_changed:
                 lines.append(f"     ~ {s['id']}: \"{s['old_title']}\" → \"{s['new_title']}\"")
+                if s.get("body_hash_changed"):
+                    lines.append(f"       (body also changed)")
 
+        if self.specs_body_changed:
+            lines.append(f"📝  Changed spec body ({len(self.specs_body_changed)}):")
+            for s in self.specs_body_changed:
+                lines.append(f"     ~ {s['id']}: \"{s['title']}\"  (lines: {s['old_lines']}→{s['new_lines']})")
+                lines.append(f"       hash: {s['old_hash']} → {s['new_hash']}")
+
+        # ── Code changes ──
         if self.code_added:
             lines.append(f"📁  New code files ({len(self.code_added)}):")
             for c in self.code_added:
@@ -154,7 +184,19 @@ class DriftReport:
                     lines.append(f"     + {c['file']}: {', '.join(c['added'][:5])}")
                 if c.get("removed"):
                     lines.append(f"     - {c['file']}: {', '.join(c['removed'][:5])}")
+                if c.get("file_hash_changed"):
+                    lines.append(f"       (file content changed)")
 
+        if self.code_funcs_changed:
+            lines.append(f"⚡  Changed function bodies ({len(self.code_funcs_changed)}):")
+            for c in self.code_funcs_changed:
+                lines.append(f"     ~ {c['file']}")
+                for f in c.get("funcs", [])[:5]:
+                    lines.append(f"         {f['name']}  ({f['kind']}:{f['line']})  hash: {f['old_hash']} → {f['new_hash']}")
+                if len(c.get("funcs", [])) > 5:
+                    lines.append(f"         ... and {len(c['funcs']) - 5} more")
+
+        # ── Orphan changes ──
         if self.new_orphan_specs:
             lines.append(f"\n🟡  New orphan specs ({len(self.new_orphan_specs)}):")
             for o in self.new_orphan_specs[:5]:
@@ -172,12 +214,15 @@ class DriftReport:
             for o in self.new_orphan_code[:5]:
                 lines.append(f"     • {o}")
 
+        # ── Coverage ──
         if self.coverage_before and self.coverage_after:
             b = self.coverage_before
             a = self.coverage_after
             delta = round(a["coverage_pct"] - b["coverage_pct"], 1)
             arrow = "📈" if delta > 0 else "📉"
             lines.append(f"\n{arrow}  Coverage: {b['coverage_pct']}% → {a['coverage_pct']}%  ({delta:+.1f}%)")
+            lines.append(f"     Specs: {b.get('spec_count', '?')} → {a.get('spec_count', '?')}")
+            lines.append(f"     Code:  {b.get('code_count', '?')} → {a.get('code_count', '?')}")
 
         return "\n".join(lines)
 
@@ -187,9 +232,11 @@ class DriftReport:
             "specs_added": self.specs_added,
             "specs_removed": self.specs_removed,
             "specs_changed": self.specs_changed,
+            "specs_body_changed": self.specs_body_changed,
             "code_added": self.code_added,
             "code_removed": self.code_removed,
             "code_symbols_changed": self.code_symbols_changed,
+            "code_funcs_changed": self.code_funcs_changed,
             "new_orphan_specs": self.new_orphan_specs,
             "resolved_orphan_specs": self.resolved_orphan_specs,
             "new_orphan_code": self.new_orphan_code,
@@ -209,29 +256,45 @@ def compute_drift(
     """Compare snapshot against current state."""
     report = DriftReport()
 
-    # Parse snapshot data into lookup tables
+    # Snapshot lookup
     snap_specs = {s["id"]: s for s in snapshot.get("specs", [])}
     snap_code = {c["file"]: c for c in snapshot.get("code", [])}
 
     # Current state
     curr_specs = discover_specs(directory, spec_dirs=spec_dirs)
     curr_codes = discover_code(directory, source_dirs=source_dirs)
-
     curr_spec_map = {s.auto_id: s for s in curr_specs}
     curr_code_map = {c.file: c for c in curr_codes}
 
-    # --- Specs ---
+    # ── Specs ──
     for sid, snap_s in snap_specs.items():
         curr = curr_spec_map.get(sid)
         if curr is None:
             report.specs_removed.append(snap_s)
-        elif curr.title != snap_s["title"]:
-            report.specs_changed.append({
-                "id": sid,
-                "old_title": snap_s["title"],
-                "new_title": curr.title,
-                "file": curr.file,
-            })
+        else:
+            title_changed = curr.title != snap_s["title"]
+            body_changed = curr.body_hash != snap_s["body_hash"]
+
+            if title_changed:
+                report.specs_changed.append({
+                    "id": sid,
+                    "old_title": snap_s["title"],
+                    "new_title": curr.title,
+                    "file": curr.file,
+                    "body_hash_changed": body_changed,
+                })
+            elif body_changed:
+                report.specs_body_changed.append({
+                    "id": sid,
+                    "title": curr.title,
+                    "file": curr.file,
+                    "old_hash": snap_s.get("body_hash", ""),
+                    "new_hash": curr.body_hash,
+                    "old_lines": snap_s.get("body_line_count", 0),
+                    "new_lines": curr.body_line_count,
+                    "old_preview": snap_s.get("body_preview", ""),
+                    "new_preview": curr.body_preview,
+                })
 
     for cs in curr_specs:
         if cs.auto_id not in snap_specs:
@@ -241,22 +304,50 @@ def compute_drift(
                 "file": cs.file,
             })
 
-    # --- Code ---
+    # ── Code ──
     for cf, snap_c in snap_code.items():
         curr = curr_code_map.get(cf)
         if curr is None:
             report.code_removed.append(snap_c)
         else:
-            # Check symbol changes
+            # File-level hash
+            file_hash_changed = curr.file_hash != snap_c.get("file_hash", "")
+
+            # Symbol changes
             old_syms = set(snap_c.get("symbols", []))
             new_syms = set(curr.symbols)
-            added = new_syms - old_syms
-            removed = old_syms - new_syms
-            if added or removed:
-                report.code_symbols_changed.append({
+            added_syms = new_syms - old_syms
+            removed_syms = old_syms - new_syms
+
+            # Function body hashes
+            snap_funcs = {f["name"]: f for f in snap_c.get("functions", [])}
+            changed_funcs: list[dict] = []
+
+            for cf_func in curr.functions:
+                snap_f = snap_funcs.get(cf_func.name)
+                if snap_f and cf_func.body_hash != snap_f["body_hash"]:
+                    changed_funcs.append({
+                        "name": cf_func.name,
+                        "kind": cf_func.kind,
+                        "line": cf_func.line,
+                        "old_hash": snap_f["body_hash"],
+                        "new_hash": cf_func.body_hash,
+                    })
+
+            if added_syms or removed_syms or (file_hash_changed and not (added_syms or removed_syms)):
+                entry: dict = {"file": cf}
+                if added_syms:
+                    entry["added"] = sorted(added_syms)
+                if removed_syms:
+                    entry["removed"] = sorted(removed_syms)
+                if file_hash_changed:
+                    entry["file_hash_changed"] = True
+                report.code_symbols_changed.append(entry)
+
+            if changed_funcs:
+                report.code_funcs_changed.append({
                     "file": cf,
-                    "added": sorted(added),
-                    "removed": sorted(removed),
+                    "funcs": changed_funcs,
                 })
 
     for cc in curr_codes:
@@ -268,37 +359,18 @@ def compute_drift(
                 "language": cc.language,
             })
 
-    # --- Coverage / orphans ---
+    # ── Coverage / orphans ──
     graph_now = build_heuristic_graph(directory, spec_dirs=spec_dirs, source_dirs=source_dirs)
     from specbridge.analyzers import coverage_summary, find_orphan_specs, find_orphan_code
 
-    report.coverage_before = snapshot.get("coverage")
-    report.coverage_after = coverage_summary(graph_now)
+    report.coverage_before = snapshot.get("coverage", {})
+    after_cov = coverage_summary(graph_now)
+    after_cov["spec_count"] = len(graph_now.nodes_by_type(NodeType.SPEC))
+    after_cov["code_count"] = len(graph_now.nodes_by_type(NodeType.CODE)) + len(graph_now.nodes_by_type(NodeType.TEST))
+    report.coverage_after = after_cov
 
-    now_orphan_specs = set(find_orphan_specs(graph_now))
-    before_orphan_specs = set(snapshot.get("coverage", {}).get("orphan_spec_ids", []))
-    # Recalculate before orphans from spec nodes that had no edges
-    # (Simpler: just compare current orphan set to a computed set from snapshot data)
-    snap_linked = set()
-    snap_orphan_ids = set()
-    for s in snapshot.get("specs", []):
-        sid = s["id"]
-        # We can't fully rebuild old edges, so approximate:
-        # If a spec had no edges in the old graph, it was orphan
-        pass
-
-    # Approximate orphan changes by comparing spec presence
-    all_snap_specs = set(snap_specs.keys())
-    all_curr_specs = {s.auto_id for s in curr_specs}
-
-    # Compute current orphans properly
     curr_orphan_specs = set(find_orphan_specs(graph_now))
-    curr_orphan_code = set(find_orphan_code(graph_now))
-
-    # Compare against snapshot (crude but effective)
-    # We'll track new orphans by looking at spec IDs present in both
-    # but only orphan in current
-    common_specs = all_snap_specs & all_curr_specs
+    common_specs = set(snap_specs.keys()) & {s.auto_id for s in curr_specs}
     for sid in common_specs:
         if sid in curr_orphan_specs:
             report.new_orphan_specs.append(sid)

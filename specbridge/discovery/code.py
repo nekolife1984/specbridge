@@ -1,25 +1,23 @@
 """Code discovery: scan source files for modules, functions, classes.
 
-No tags required — pure file structure + basic AST analysis.
+Extracts function/class-level body hashes for drift detection.
 """
 
 from __future__ import annotations
 
+import hashlib
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 
-# Supported source file types (ext → comment style, language name)
 _SOURCE_MAP: dict[str, tuple[str, str]] = {
-    # Hash-comment languages
     ".py":   ("#",    "Python"),
     ".rb":   ("#",    "Ruby"),
     ".sh":   ("#",    "Shell"),
     ".bash": ("#",    "Bash"),
     ".zsh":  ("#",    "Zsh"),
-    # Slash-comment languages
     ".ts":   ("//",   "TypeScript"),
     ".tsx":  ("//",   "TSX"),
     ".js":   ("//",   "JavaScript"),
@@ -40,14 +38,17 @@ _SOURCE_MAP: dict[str, tuple[str, str]] = {
     ".phtml": ("//",  "PHP (HTML)"),
 }
 
-# Basic function/class definition pattern (multi-language)
-_RE_SYMBOL = re.compile(
+# Function/class definition pattern (multi-language)
+_RE_FUNC_DEF = re.compile(
+    r"^"
     r"(?:"
-    r"(?:^|\s)(?:def|class|function|fn|trait|interface|struct|enum|impl|mixin|extension|typedef)\s+([A-Za-z_]\w*)|"
-    r"(?:public|private|protected|static|async|export)?\s*(?:function|class|enum)\s+([A-Za-z_]\w*)|"
-    r"(?:^|\s)(?:let|var|const)\s+([A-Za-z_]\w*)\s*[=:]|"
-    r"(?:^|\s)(?:func|pub fn)\s+([A-Za-z_]\w*)"
-    r")",
+    r"(?:\s*(?:public|private|protected|static|async|export|pub|override"
+    r"|abstract|virtual|sealed|internal|open)\s+)*"
+    r"(?:def|function|fn|class|trait|interface|struct|enum|impl"
+    r"|mixin|extension|typedef|record)"
+    r"\s+([A-Za-z_]\w*)"
+    r")"
+    r".*?(?::|=>|=|{)",
     re.MULTILINE,
 )
 
@@ -55,27 +56,35 @@ _EXCLUDE_DIRS = frozenset({
     ".git", "node_modules", ".venv", "__pycache__", "dist", "build",
     ".spectra", ".specbridge", ".artgraph", ".trace",
     "venv", "env", ".tox", ".mypy_cache", ".ruff_cache", ".pytest_cache",
-    ".egg-info", "site-packages", "coverage", "htmlcov", "node_modules",
+    ".egg-info", "site-packages", "coverage", "htmlcov",
 })
 _EXCLUDE_DIR_PREFIXES = ("__", ".")
-
-_TEST_FILE_PATTERNS = (
-    "test_", "_test", ".test.", ".spec.", "Test", "_spec.",
-)
-
+_TEST_FILE_PATTERNS = ("test_", "_test", ".test.", ".spec.", "Test", "_spec.")
 _DOC_DIRS = frozenset({"docs", "spec", "specs", "doc", "documentation"})
 
 
 @dataclass
+class FuncBlock:
+    """A function or class definition with its body."""
+    name: str
+    kind: str           # "function", "class", "method"
+    line: int
+    body_hash: str      # SHA256[:16] of the function body text
+    body_lines: int
+    body_preview: str   # first 80 chars
+
+
+@dataclass
 class CodeCandidate:
-    """A potential code node discovered from the source tree."""
-    file: str                     # relative path from project root
-    module: str                   # directory-based module name
-    symbols: list[str]            # extracted function/class names
-    is_test: bool                 # likely a test file
-    language: str                 # "Python", "TypeScript", etc.
-    imports: list[str]            # import statements (basic)
-    line_count: int               # total lines
+    file: str
+    module: str
+    symbols: list[str]
+    is_test: bool
+    language: str
+    imports: list[str]
+    line_count: int
+    functions: list[FuncBlock]             # per-function body hashes
+    file_hash: str = ""                    # SHA256[:16] of full file
 
 
 def _is_test_file(path: Path) -> bool:
@@ -84,22 +93,64 @@ def _is_test_file(path: Path) -> bool:
 
 
 def _extract_imports(text: str, ext: str) -> list[str]:
-    """Basic import extraction per language."""
     imports: list[str] = []
     if ext == ".py":
         for m in re.finditer(r"^(?:from\s+([\w.]+)\s+import|import\s+([\w.]+))", text, re.MULTILINE):
             imports.append(m.group(1) or m.group(2))
     elif ext in (".ts", ".tsx", ".js", ".jsx"):
-        for m in re.finditer(r"(?:import\s+.*?from\s+['\"](.+?)['\"]|require\(['\"](.+?)['\"]\))", text):
+        for m in re.finditer(r'(?:import\s+.*?from\s+[\'"](.+?)[\'"]|require\([\'"](.+?)[\'"]\))', text):
             imports.append(m.group(1) or m.group(2))
-    elif ext == ".go":
-        for m in re.finditer(r'^\s*["\](.+?)["\]', text, re.MULTILINE):
-            # Go imports are complex, skip for now
-            pass
     elif ext in (".rs",):
         for m in re.finditer(r"^use\s+([\w:]+)", text, re.MULTILINE):
             imports.append(m.group(1))
-    return imports[:10]  # cap at 10
+    return imports[:8]
+
+
+def _extract_func_blocks(text: str, lines: list[str]) -> list[FuncBlock]:
+    """Extract function/class definitions with their body text.
+
+    Uses line-based extraction: each definition body spans from its
+    own line to the line before the next definition (or EOF).
+    """
+    defs: list[tuple[int, str, str]] = []  # (line_no_0idx, name, kind)
+
+    for i, line in enumerate(lines):
+        m = _RE_FUNC_DEF.match(line)
+        if not m:
+            continue
+        name = m.group(1)
+        # Determine kind
+        if line.lstrip().startswith(("class ", "trait ", "interface ", "struct ", "enum ", "record ")):
+            kind = "class"
+        elif "def " in line or "fn " in line:
+            kind = "function"
+        elif "function " in line:
+            kind = "function"
+        else:
+            kind = "function"
+        defs.append((i, name, kind))
+
+    if not defs:
+        return []
+
+    blocks: list[FuncBlock] = []
+    for idx, (start, name, kind) in enumerate(defs):
+        end = defs[idx + 1][0] if idx + 1 < len(defs) else len(lines)
+        body = "\n".join(lines[start:end])
+        blines = end - start
+        bhash = hashlib.sha256(body.encode("utf-8")).hexdigest()[:16]
+
+        preview = body.strip()[:80].replace("\n", " ")
+        blocks.append(FuncBlock(
+            name=name,
+            kind=kind,
+            line=start + 1,
+            body_hash=bhash,
+            body_lines=blines,
+            body_preview=preview,
+        ))
+
+    return blocks
 
 
 def discover_code(
@@ -108,16 +159,6 @@ def discover_code(
     source_dirs: Optional[list[str]] = None,
     exclude_dirs: Optional[set[str]] = None,
 ) -> list[CodeCandidate]:
-    """Scan a project directory for source code and extract candidates.
-
-    Args:
-        directory: Project root.
-        source_dirs: Subdirectories to scan (default: ["src/", "lib/", "app/"]).
-        exclude_dirs: Directories to skip.
-
-    Returns:
-        List of CodeCandidates, each representing one source file.
-    """
     root = Path(directory).resolve()
     if source_dirs is None:
         source_dirs = ["src", "lib", "app"]
@@ -142,12 +183,14 @@ def discover_code(
                     continue
 
                 rel = str(fpath.relative_to(root))
-                # Module name = immediate parent directory name
                 module = fpath.parent.name if fpath.parent != root else fpath.stem
+                lines = text.split("\n")
 
-                symbols = _extract_symbols(text)
+                symbols = sorted(set(_extract_symbol_names(text)))
                 is_test = _is_test_file(fpath)
                 imports = _extract_imports(text, ext)
+                funcs = _extract_func_blocks(text, lines)
+                fhash = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
                 candidates.append(CodeCandidate(
                     file=rel,
@@ -156,19 +199,21 @@ def discover_code(
                     is_test=is_test,
                     language=lang,
                     imports=imports,
-                    line_count=text.count("\n") + 1,
+                    line_count=len(lines),
+                    functions=funcs,
+                    file_hash=fhash,
                 ))
 
     return candidates
 
 
-def _extract_symbols(text: str) -> list[str]:
-    """Extract function/class names from source text."""
+def _extract_symbol_names(text: str) -> list[str]:
+    """Extract function/class/struct/enum names from source text."""
     seen: set[str] = set()
-    symbols: list[str] = []
-    for m in _RE_SYMBOL.finditer(text):
-        name = next((g for g in m.groups() if g), None)
+    names: list[str] = []
+    for m in _RE_FUNC_DEF.finditer(text):
+        name = m.group(1)
         if name and name not in seen:
             seen.add(name)
-            symbols.append(name)
-    return symbols
+            names.append(name)
+    return names
