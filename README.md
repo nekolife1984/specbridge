@@ -70,6 +70,8 @@ specbridge impact --spec-id 1.1      # What implements this spec?
 specbridge snapshot                  # Save a baseline
 specbridge drift --git-base main     # Detect changes since a git ref
 specbridge validate-boundary         # Check _Boundary:_ markers
+specbridge impact --spec-id 1.1 --call-graph  # Transitive (indirect) impact
+specbridge call-graph --spec-id 1.1  # Call graph analysis standalone
 ```
 
 ---
@@ -79,7 +81,9 @@ specbridge validate-boundary         # Check _Boundary:_ markers
 | Use case | Command | Why it matters |
 |----------|---------|----------------|
 | **Audit coverage** | `specbridge coverage` | Which specs have no implementing code? |
-| **Impact analysis** | `specbridge impact --spec-id 1.1` | What files change if spec 1.1 changes? |
+|| **Impact analysis** | `specbridge impact --spec-id 1.1` | What files change if spec 1.1 changes? |
+|| **Transitive impact** | `specbridge impact --spec-id 1.1 --call-graph` | What files are indirectly impacted via function calls? |
+|| **Call graph** | `specbridge call-graph --spec-id 1.1` | Standalone call graph analysis |
 | **Drift detection** | `specbridge drift --git-base main` | Did code diverge from specs? |
 | **CI gate** | `specbridge drift --gate` | Block PRs with undrifted changes |
 | **Boundary validation** | `specbridge validate-boundary` | Code refs staying in declared scope? |
@@ -92,8 +96,9 @@ specbridge validate-boundary         # Check _Boundary:_ markers
 
 - **Read-only**: Never touches your specs or code. All output goes to `.specbridge/`.
 - **Dual mode**: Tag-based (spectra `@impl`, `@verifies`) **and** heuristic (filename/symbol matching, no tags needed).
-- **Multi-language**: Python, TypeScript, Go, Rust, Java, Ruby, C/C++, C#, Swift, Kotlin, Dart, PHP — 18 languages.
-- **3 output formats**: text (terminal), JSON (jq/CI), HTML (interactive D3.js graph).
+|- **Multi-language**: Python, TypeScript, Go, Rust, Java, Ruby, C/C++, C#, Swift, Kotlin, Dart, PHP — 18 languages (AST-based function extraction via **tree-sitter**, optional: `pip install specbridge[ast]`).
+|- **Call graph**: Function-level call graph for transitive (indirect) impact analysis via `--call-graph` flag.
+|- **3 output formats**: text (terminal), JSON (jq/CI), HTML (interactive D3.js graph).
 - **Plugin SDK**: Write custom adapters as pip-installable packages.
 
 ---
@@ -131,7 +136,7 @@ specbridge/
 │   ├── adapters/       # Plugin registry + built-in adapters
 │   ├── infer/          # Heuristic matching engine
 │   ├── discovery/      # Spec/code file scanning (18 languages)
-│   ├── analyzers/      # Coverage, drift, import graph
+│   ├── analyzers/      # Coverage, drift, import graph, call graph
 │   ├── outputs/        # Text, JSON, HTML rendering
 │   ├── guard.py        # Read-only write validation
 │   ├── config.py       # .specbridge.yaml loader
