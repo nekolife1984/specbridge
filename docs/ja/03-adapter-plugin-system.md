@@ -114,6 +114,44 @@ class SpectraAdapter(ProjectAdapter):
 | `<!-- @satisfies AUTH-1 -->` | Markdown設計書 | 設計→仕様エッジ |
 | `_Boundary:_ src/path/` | Markdown仕様書 | 許可される実装パスを宣言 |
 
+### 3.3 GraphifyAdapter
+
+**ファイル:** `adapters/graphify.py`
+
+**必要条件:** `graphify` CLI がインストールされていること（`pipx install graphifyy`）。本アダプタは `graphify extract . --code-only` を外部プロセスとして実行し、tree-sitter ベースの高精度ASTコードグラフを生成して specbridge の TraceGraph に変換します。
+
+```python
+@register
+class GraphifyAdapter(ProjectAdapter):
+    detect():
+        # 戻り値:
+        #   0.90: graphify-out/graph.json が既に存在する場合（高速パス）
+        #   0.70: graphify はインストール済みだが未実行の場合
+        #   0.00: それ以外
+
+    analyze():
+        # 1. `graphify extract . --code-only` を実行（またはキャッシュ利用）
+        # 2. graphify-out/graph.json を解析 → 790+ ノード、1,700+ エッジ
+        # 3. graphify ノード（関数、クラス、ファイル）を TraceNode[] に変換
+        # 4. 全リレーション（呼び出し、インポート、継承）を TraceEdge[] に変換
+        # 5. specbridge の discover_specs() で仕様を発見
+        # 6. 仕様トークンと graphify コードノードをクロスリファレンス
+        # 7. マージされた TraceGraph を返す
+```
+
+**HeuristicAdapter との違い:**
+
+| 観点 | HeuristicAdapter | GraphifyAdapter |
+|------|-----------------|-----------------|
+| **パーサ** | 正規表現ベースのシンボル抽出 | tree-sitter AST（決定論的、15+言語） |
+| **エッジ精度** | 4つのヒューリスティック信号（名前/キーワード） | ASTからの完全なコールグラフ + インポートグラフ |
+| **関数レベル** | ヒューリスティックな `_score_func_edge()` | ネイティブ tree-sitter 関数/クラスノード |
+| **コード参照数** | ~400（ファイルレベル） | ~1,200+（関数レベル、examples含む） |
+| **出力サイズ** | ~950 ノード、~38k エッジ | +790 ノード、+1,700 エッジ（ASTのみ） |
+| **依存関係** | なし（純Python） | `graphify` CLI が必要 |
+
+**設計根拠:** GraphifyAdapter は HeuristicAdapter を補完し、より高精度で構造を考慮したコード解析を提供します。ヒューリスティックマッチングを**置き換えるものではなく**、`--merge` モードで共存して動作します。アダプタ名の "graphify" は graphify ツールのグラフ構築機能を指しており、graphify の LLM セマンティック抽出を必要とするものではありません。
+
 ## 4. アダプタ登録
 <!-- @impl specbridge/adapters/_base.py::ProjectAdapter -->
 <!-- @impl specbridge/adapters/_base.py::all_adapters -->
@@ -192,7 +230,7 @@ def merge_graphs(graphs: list[TraceGraph]) -> TraceGraph:
 ```mermaid
 flowchart TB
     START["Python起動"]
-    IMPORT["adapters/ をインポート<br/>→ heuristic.py を先行インポート ← @register 発火<br/>→ spectra.py を先行インポート ← @register 発火"]
+    IMPORT["adapters/ をインポート<br/>→ heuristic.py を先行インポート ← @register 発火<br/>→ spectra.py を先行インポート ← @register 発火<br/>→ graphify.py を先行インポート ← @register 発火"]
     DISCOVER["(最初の all_adapters() または detect_adapter() 呼び出し時)<br/>_ensure_plugins_discovered()<br/>→ discover_plugins()<br/>  → importlib entry_points('specbridge.adapters')<br/>  → ep.load()<br/>  → register(cls)"]
     DONE["全アダプタが選択可能に"]
 
@@ -220,13 +258,14 @@ flowchart TB
 
 ## 8. アダプタ比較
 
-| 機能 | HeuristicAdapter | SpectraAdapter |
-|------|-----------------|----------------|
-| **検出方法** | docs/ + src/ ディレクトリの存在 | `.spectra/trace-mapping.yaml` または `@impl` タグ |
-| **タグ必須** | いいえ | 任意（マッピングファイルのみでも可） |
-| **信頼度** | 0.4–0.8 | 0.5–0.95 |
-| **言語対応** | 18言語 | 18言語（タグ抽出） |
-| **エッジソース** | ヒューリスティック（4信号） | 明示的タグ + マッピングファイル |
-| **境界検証** | なし | あり（`_Boundary:_` マーカー経由） |
-| **設計→仕様エッジ** | なし | あり（`@satisfies`） |
-| **ユースケース** | docs + code がある任意のプロジェクト | spectraフレームワークを使用するプロジェクト |
+|| 機能 | HeuristicAdapter | SpectraAdapter | GraphifyAdapter |
+||------|-----------------|----------------|-----------------|
+|| **検出方法** | docs/ + src/ ディレクトリの存在 | `.spectra/trace-mapping.yaml` または `@impl` タグ | `graphify` CLI が PATH にある |
+|| **タグ必須** | いいえ | 任意（マッピングファイルのみでも可） | いいえ |
+|| **信頼度** | 0.4–0.8 | 0.5–0.95 | 0.7–0.9 |
+|| **言語対応** | 18言語 | 18言語（タグ抽出） | 15+言語（tree-sitter AST） |
+|| **エッジソース** | ヒューリスティック（4信号） | 明示的タグ + マッピングファイル | AST完全コール/インポートグラフ |
+|| **境界検証** | なし | あり（`_Boundary:_` マーカー経由） | なし |
+|| **設計→仕様エッジ** | なし | あり（`@satisfies`） | なし |
+|| **関数レベルノード** | ヒューリスティックのみ | なし | あり（ネイティブ tree-sitter） |
+|| **ユースケース** | docs + code がある任意のプロジェクト | spectraフレームワークを使用するプロジェクト | graphify がインストールされているプロジェクト |

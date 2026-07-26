@@ -27,5 +27,8 @@ htmlcov/
 .env
 .env.*
 
+# Graphify output
+graphify-out/
+
 # OS
 Thumbs.db

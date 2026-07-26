@@ -80,6 +80,44 @@ skill_view(name='software-development/specbridge')
 
 ---
 
+## 🔖 @impl タグの埋め方
+
+コードと仕様書の対応を明示するには `@impl` タグをソースコードに埋め込む。
+specbridge の SpectraAdapter が自動的に読み取って TraceGraph に反映する。
+
+### 構文
+
+| 言語 | 構文 | 例 |
+|------|------|-----|
+| Python / Ruby / Shell | `# @impl <spec-id>` | `# @impl 1.1` |
+| TypeScript / Go / Rust / Java / C# / C++ | `// @impl <spec-id>` | `// @impl 1.1` |
+| Markdown（仕様書→コード参照） | `<!-- @impl <file>::<symbol> -->` | `<!-- @impl specbridge/cli.py::main -->` |
+
+### ルール
+
+- **`<spec-id>`** は `docs/en/XX-filename.md` の見出し番号（例: `1.2.3`）
+- **複数指定**: `# @impl 1.1, 1.2, 1.3`（カンマ区切り）
+- **コードを変更したら、対応する `@impl` タグも必ず更新すること**
+- **新しい機能を追加したら、対応する仕様書のセクションに `<!-- @impl path::symbol -->` を追加すること**
+
+### 具体例
+
+```python
+# specbridge/adapters/_base.py
+@register
+def all_adapters() -> list[type[ProjectAdapter]]:  # @impl 3.1
+    ...
+```
+
+```markdown
+<!-- docs/en/03-adapter-plugin-system.md -->
+## 3.1 HeuristicAdapter (Primary)
+<!-- @impl specbridge/adapters/heuristic.py::HeuristicAdapter -->
+<!-- @impl specbridge/adapters/heuristic.py::HeuristicAdapter.analyze -->
+```
+
+---
+
 ## 🏗 プロジェクト構造（知っておくべき重要パス）
 
 | パス | 内容 |

@@ -4,6 +4,7 @@
 from specbridge.adapters import (
     heuristic,  # noqa: F401
     spectra,  # noqa: F401
+    graphify,  # noqa: F401
 )
 from specbridge.adapters._base import (  # noqa: F401
     ProjectAdapter,
@@ -27,4 +28,5 @@ __all__ = [
     "register",
     "heuristic",
     "spectra",
+    "graphify",
 ]

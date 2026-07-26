@@ -106,6 +106,44 @@ class SpectraAdapter(ProjectAdapter):
 | `<!-- @satisfies AUTH-1 -->` | Markdown design | Design → spec edge |
 | `_Boundary:_ src/path/` | Markdown spec | Declares allowed implementation paths |
 
+### 3.3 GraphifyAdapter
+
+**File:** `adapters/graphify.py`
+
+**Requires:** `graphify` CLI installed (`pipx install graphifyy`). The adapter shells out to `graphify extract . --code-only` to build a deep AST-based code graph using tree-sitter (15+ languages).
+
+```python
+@register
+class GraphifyAdapter(ProjectAdapter):
+    detect():
+        # Returns:
+        #   0.90 if graphify-out/graph.json already exists (fast path)
+        #   0.70 if graphify is installed but needs to run
+        #   0.00 otherwise
+
+    analyze():
+        # 1. Run `graphify extract . --code-only` (or use existing cache)
+        # 2. Parse graphify-out/graph.json → 790+ nodes, 1,700+ edges
+        # 3. Convert all graphify nodes (functions, classes, files) → TraceNode[]
+        # 4. Convert all relations (calls, imports, extends) → TraceEdge[]
+        # 5. Discover specs via specbridge's `discover_specs()`
+        # 6. Cross-reference spec tokens with graphify code nodes
+        # 7. Return merged TraceGraph
+```
+
+**Key differences from HeuristicAdapter:**
+
+| Aspect | HeuristicAdapter | GraphifyAdapter |
+|--------|-----------------|-----------------|
+| **Parser** | Regex-based symbol extraction | tree-sitter AST (deterministic, 15+ languages) |
+| **Edge precision** | 4 heuristic signals (names/keywords) | Full call-graph + import-graph from AST |
+| **Function-level** | Via heuristic `_score_func_edge()` | Native tree-sitter function/class nodes |
+| **Code refs** | ~400 (file-level) | ~1,200+ (function-level including examples) |
+| **Output size** | ~950 nodes, ~38k edges | +790 nodes, +1,700 edges from AST alone |
+| **Dependency** | None (pure Python) | Requires `graphify` CLI on PATH |
+
+**Design rationale:** GraphifyAdapter complements HeuristicAdapter by providing more precise, structure-aware code parsing. It does **not** replace heuristic matching — it runs alongside it in `--merge` mode. The adapter name "graphify" refers to the graphify tool's graph-building capability, not a requirement for graphify's LLM semantic extraction.
+
 ## 4. Adapter Registration
 
 ### 4.1 `@register` Decorator
@@ -176,7 +214,7 @@ Called by: `analyze --merge`, `watch`, MCP server.
 ```mermaid
 flowchart TB
     START["Python starts"]
-    IMPORT["Import adapters/__init__.py<br/>→ eager-imports heuristic.py ← @register fires<br/>→ eager-imports spectra.py ← @register fires"]
+    IMPORT["Import adapters/__init__.py<br/>→ eager-imports heuristic.py ← @register fires<br/>→ eager-imports spectra.py ← @register fires<br/>→ eager-imports graphify.py ← @register fires"]
     DISCOVER["(first call to all_adapters() or detect_adapter())<br/>_ensure_plugins_discovered()<br/>→ discover_plugins()<br/>  → importlib entry_points('specbridge.adapters')<br/>  → ep.load()<br/>  → register(cls)"]
     DONE["All adapters available for selection"]
 
@@ -204,13 +242,14 @@ flowchart TB
 
 ## 8. Adapter Comparison
 
-| Feature | HeuristicAdapter | SpectraAdapter |
-|---------|-----------------|----------------|
-| **Detection** | Has docs/ + src/ dirs | Has `.spectra/trace-mapping.yaml` or `@impl` tags |
-| **Tag required** | No | Yes (optional — mapping file may be enough) |
-| **Confidence** | 0.4–0.8 | 0.5–0.95 |
-| **Language support** | 18 languages | 18 languages (tag extractor) |
-| **Edge sources** | Heuristic (4 signals) | Explicit tags + mapping file |
-| **Boundary validation** | No | Yes (via `_Boundary:_` markers) |
-| **Design → spec edges** | No | Yes (`@satisfies`) |
-| **Use case** | Any project with docs + code | Projects using spectra framework |
+| Feature | HeuristicAdapter | SpectraAdapter | GraphifyAdapter |
+|---------|-----------------|----------------|-----------------|
+| **Detection** | Has docs/ + src/ dirs | Has `.spectra/trace-mapping.yaml` or `@impl` tags | Has `graphify` CLI on PATH |
+| **Tag required** | No | Yes (optional — mapping file may be enough) | No |
+| **Confidence** | 0.4–0.8 | 0.5–0.95 | 0.7–0.9 |
+| **Language support** | 18 languages | 18 languages (tag extractor) | 15+ languages (tree-sitter AST) |
+| **Edge sources** | Heuristic (4 signals) | Explicit tags + mapping file | Full AST call/import graph |
+| **Boundary validation** | No | Yes (via `_Boundary:_` markers) | No |
+| **Design → spec edges** | No | Yes (`@satisfies`) | No |
+| **Function-level nodes** | Heuristic only | No | Yes (native tree-sitter) |
+| **Use case** | Any project with docs + code | Projects using spectra framework | Projects where `graphify` is installed |
