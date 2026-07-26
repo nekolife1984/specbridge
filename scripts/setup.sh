@@ -16,6 +16,7 @@
 #   7. Deploy Hermes skill (if ~/.hermes/ exists)
 #   8. Take initial snapshot
 #   9. Offer CI workflow setup
+#  10. Offer graphify (AST code graph) install
 #
 # Safe to re‑run — idempotent.
 
@@ -244,6 +245,34 @@ CIYAML
 else
     warn "No .github/workflows/ — skipping CI workflow"
 fi
+
+# ── 9. Graphify adapter (optional) ─────────────────────────────────────────────
+header "9. Graphify adapter (AST code graph)"
+printf "${YELLOW}?${NC} Install graphify for deeper AST-based code analysis? [y/N] "
+read -r GFX_CHOICE
+case "$GFX_CHOICE" in
+    y|Y|yes)
+        if command -v pipx >/dev/null 2>&1; then
+            if command -v graphify >/dev/null 2>&1 || [ -f "$HOME/.local/bin/graphify" ]; then
+                ok "graphify already installed ($(graphify --version 2>/dev/null))"
+            else
+                info "Installing graphify via pipx …"
+                pipx install graphifyy 2>&1 | tail -1
+                if command -v graphify >/dev/null 2>&1; then
+                    ok "graphify installed ($(graphify --version 2>/dev/null))"
+                else
+                    warn "pipx install finished but 'graphify' not in PATH."
+                    warn "Try: pipx install graphifyy"
+                fi
+            fi
+            info "You can now use graphify with: specbridge analyze --merge"
+        else
+            warn "pipx not found — install it first: brew install pipx && pipx ensurepath"
+            warn "Then run: pipx install graphifyy"
+        fi
+        ;;
+    *) info "Skipping graphify install" ;;
+esac
 
 # ── Done ───────────────────────────────────────────────────────────────────────
 header "🎉 specbridge setup complete!"

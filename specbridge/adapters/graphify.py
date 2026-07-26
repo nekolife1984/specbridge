@@ -9,6 +9,12 @@ graphify uses proper tree-sitter grammars for 15+ languages, producing a
 more complete and accurate code graph with call-graph edges.
 
 Requires: ``graphify`` CLI installed (``pipx install graphifyy``).
+
+.. note::
+
+   ``pip install specbridge[graphify]`` only ensures the adapter is
+   importable; you still need ``pipx install graphifyy`` at the system
+   level for the CLI that this adapter shells out to.
 """
 
 from __future__ import annotations
@@ -17,6 +23,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 from specbridge.adapters._base import ProjectAdapter, register
 from specbridge.core import (
@@ -173,9 +180,12 @@ class GraphifyAdapter(ProjectAdapter):
                 with open(analysis_file) as f:
                     analysis = json.load(f)
                 communities = analysis.get("community_labels", {})
-                # Store as graph-level metadata
-                graph.metadata = graph.metadata or {}
-                graph.metadata["graphify_communities"] = communities
+                # Store as graph-level metadata (nice-to-have; skip on error)
+                try:
+                    graph.metadata = {}  # type: ignore[attr-defined]
+                    graph.metadata["graphify_communities"] = communities  # type: ignore[attr-defined]
+                except AttributeError:
+                    pass
             except Exception:
                 pass
 
@@ -215,9 +225,9 @@ class GraphifyAdapter(ProjectAdapter):
             print(f"[graphify] graphify CLI not found ({graphify_path})", file=sys.stderr)
 
     @staticmethod
-    def _graphify_id(gnode: dict) -> str:
+    def _graphify_id(gnode: dict[str, Any]) -> str:
         """Return a stable ID from a graphify node."""
-        nid = gnode.get("id", "")
+        nid: str = gnode.get("id", "")
         if nid:
             return nid
         # Fallback: construct from file + label

@@ -46,6 +46,9 @@ ast = [
     "tree-sitter-go>=0.23",
     "tree-sitter-rust>=0.23",
 ]
+graphify = [
+    "graphifyy>=0.9",
+]
 
 [project.scripts]
 specbridge = "specbridge.cli:cli"

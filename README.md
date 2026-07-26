@@ -121,6 +121,7 @@ specbridge setup                     # One‑command project setup
 - **Dual mode**: Tag-based (spectra `@impl`, `@verifies`) **and** heuristic (filename/symbol matching, no tags needed).
 |- **Multi-language**: Python, TypeScript, Go, Rust, Java, Ruby, C/C++, C#, Swift, Kotlin, Dart, PHP — 18 languages (AST-based function extraction via **tree-sitter**, optional: `pip install specbridge[ast]`).
 |- **Call graph**: Function-level call graph for transitive (indirect) impact analysis via `--call-graph` flag.
+|- **Graphify adapter** (optional): Deep AST-based code graph via `graphify` CLI (`pipx install graphifyy`, then `specbridge analyze --merge`).
 |- **3 output formats**: text (terminal), JSON (jq/CI), HTML (interactive D3.js graph).
 - **Plugin SDK**: Write custom adapters as pip-installable packages.
 
