@@ -22,20 +22,33 @@ def cli():
 @click.option("--dir", "-d", default=".", help="Project directory to analyze", show_default=True)
 @click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
               help="Output format", show_default=True)
-def analyze(dir, output_fmt):
+@click.option("--merge", "-m", is_flag=True, default=False,
+              help="Merge results from ALL matching adapters (not just the best one)",
+              show_default=True)
+def analyze(dir, output_fmt, merge):
     """Analyze a project and build a trace graph."""
-    from specbridge.adapters import detect_adapter
-    from specbridge.analyzers import coverage_summary
+    from specbridge.adapters import detect_adapter, detect_all, merge_graphs
 
     root = Path(dir).resolve()
     click.echo(f"🔍 Scanning {root} ...", err=True)
 
-    adapter = detect_adapter(str(root))
-    if adapter is None:
-        click.echo("❌ No recognized SSD framework found.", err=True)
-        raise click.Abort()
-
-    graph = adapter.analyze(str(root))
+    if merge:
+        scored = detect_all(str(root))
+        if not scored:
+            click.echo("❌ No recognized SSD framework found.", err=True)
+            raise click.Abort()
+        graphs = []
+        for score, adapter in scored:
+            click.echo(f"   Using {type(adapter).__name__} (confidence {score})", err=True)
+            g = adapter.analyze(str(root))
+            graphs.append(g)
+        graph = merge_graphs(graphs)
+    else:
+        adapter = detect_adapter(str(root))
+        if adapter is None:
+            click.echo("❌ No recognized SSD framework found.", err=True)
+            raise click.Abort()
+        graph = adapter.analyze(str(root))
 
     spec_count = len(graph.nodes_by_type(NodeType.SPEC))
     code_count = len(graph.nodes_by_type(NodeType.CODE))
