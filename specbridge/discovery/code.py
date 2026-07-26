@@ -35,13 +35,16 @@ _SOURCE_MAP: dict[str, tuple[str, str]] = {
     ".kt":   ("//",   "Kotlin"),
     ".swift": ("//",  "Swift"),
     ".scala": ("//",  "Scala"),
+    ".dart": ("//",   "Dart"),
+    ".php":  ("//",   "PHP"),
+    ".phtml": ("//",  "PHP (HTML)"),
 }
 
 # Basic function/class definition pattern (multi-language)
 _RE_SYMBOL = re.compile(
     r"(?:"
-    r"(?:^|\s)(?:def|class|function|fn|trait|interface|struct|enum|impl)\s+([A-Za-z_]\w*)|"
-    r"(?:public|private|protected|static|async|export)?\s*(?:function|class)\s+([A-Za-z_]\w*)|"
+    r"(?:^|\s)(?:def|class|function|fn|trait|interface|struct|enum|impl|mixin|extension|typedef)\s+([A-Za-z_]\w*)|"
+    r"(?:public|private|protected|static|async|export)?\s*(?:function|class|enum)\s+([A-Za-z_]\w*)|"
     r"(?:^|\s)(?:let|var|const)\s+([A-Za-z_]\w*)\s*[=:]|"
     r"(?:^|\s)(?:func|pub fn)\s+([A-Za-z_]\w*)"
     r")",
