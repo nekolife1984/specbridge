@@ -114,10 +114,22 @@ class SpecbridgeConfig:
     @classmethod
     def _merge_dict(cls, base: SpecbridgeConfig, overrides: dict[str, Any]) -> SpecbridgeConfig:
         """Merge a dict of overrides into an existing config, keeping unspecified fields."""
+        def _safe_float(v: Any, default: float) -> float:
+            try:
+                return float(v)
+            except (ValueError, TypeError):
+                return default
+
+        def _safe_int(v: Any, default: int) -> int:
+            try:
+                return int(v)
+            except (ValueError, TypeError):
+                return default
+
         return cls(
             spec_dirs=overrides.get("spec_dirs", base.spec_dirs),
             source_dirs=overrides.get("source_dirs", base.source_dirs),
             exclude_dirs=set(overrides.get("exclude_dirs", list(base.exclude_dirs))),
-            min_confidence=float(overrides.get("min_confidence", base.min_confidence)),
-            max_output_nodes=int(overrides.get("max_output_nodes", base.max_output_nodes)),
+            min_confidence=_safe_float(overrides.get("min_confidence"), base.min_confidence),
+            max_output_nodes=_safe_int(overrides.get("max_output_nodes"), base.max_output_nodes),
         )

@@ -151,3 +151,82 @@ class TestConfigCLI:
         result = runner.invoke(cli, ["config", "--dir", str(project), "--yaml"])
         assert result.exit_code == 0
         assert "spec_dirs" in result.output
+
+
+class TestConfigEdgeCases:
+    """Config loading with invalid/edge-case inputs."""
+
+    def test_invalid_yaml_returns_defaults(self, tmp_path: Path) -> None:
+        """Invalid .specbridge.yaml gracefully falls through to defaults."""
+        project = tmp_path / "invalid-yaml"
+        project.mkdir()
+        cfg_path = project / ".specbridge.yaml"
+        cfg_path.write_text(": invalid yaml [[[", encoding="utf-8")
+        cfg = SpecbridgeConfig.load(str(project))
+        assert cfg.min_confidence == 0.15  # default
+        assert "docs" in cfg.spec_dirs
+
+    def test_empty_yaml_returns_defaults(self, tmp_path: Path) -> None:
+        """Empty .specbridge.yaml returns default config."""
+        project = tmp_path / "empty-yaml"
+        project.mkdir()
+        cfg_path = project / ".specbridge.yaml"
+        cfg_path.write_text("", encoding="utf-8")
+        cfg = SpecbridgeConfig.load(str(project))
+        assert cfg.min_confidence == 0.15
+
+    def test_unknown_keys_ignored(self, tmp_path: Path) -> None:
+        """Unknown keys in .specbridge.yaml are silently ignored."""
+        project = tmp_path / "unknown-keys"
+        project.mkdir()
+        cfg_path = project / ".specbridge.yaml"
+        cfg_path.write_text(
+            "unknown_key: value\nanother_unknown: 42\n", encoding="utf-8"
+        )
+        cfg = SpecbridgeConfig.load(str(project))
+        assert cfg.min_confidence == 0.15  # still default
+
+    def test_wrong_value_types(self, tmp_path: Path) -> None:
+        """Wrong value types fall back to defaults."""
+        project = tmp_path / "wrong-types"
+        project.mkdir()
+        cfg_path = project / ".specbridge.yaml"
+        cfg_path.write_text(
+            "min_confidence: not_a_number\n"
+            "max_output_nodes: also_not_a_number\n",
+            encoding="utf-8",
+        )
+        cfg = SpecbridgeConfig.load(str(project))
+        # Should use defaults when conversion fails
+        assert isinstance(cfg.min_confidence, float)
+        assert isinstance(cfg.max_output_nodes, int)
+
+    def test_validation_reports_missing_dirs(self, tmp_path: Path) -> None:
+        """Config validation reports missing spec/source directories."""
+        from specbridge.cli import _validate_config
+
+        project = tmp_path / "validate-missing"
+        project.mkdir()
+        cfg = SpecbridgeConfig(
+            spec_dirs=["nonexistent-docs"],
+            source_dirs=["nonexistent-src"],
+        )
+        issues = _validate_config(cfg, project)
+        assert any("nonexistent-docs" in i for i in issues)
+        assert any("nonexistent-src" in i for i in issues)
+
+    def test_validation_out_of_range(self, tmp_path: Path) -> None:
+        """Config validation catches out-of-range values."""
+        from specbridge.cli import _validate_config
+
+        project = tmp_path / "validate-range"
+        project.mkdir()
+        cfg = SpecbridgeConfig(
+            spec_dirs=["docs"],
+            source_dirs=["src"],
+            min_confidence=5.0,  # out of range
+            max_output_nodes=0,  # invalid
+        )
+        issues = _validate_config(cfg, project)
+        assert any("5.0" in i for i in issues)
+        assert any("0" in i for i in issues)
