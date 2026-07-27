@@ -103,7 +103,7 @@ class SpecbridgeConfig:
             import tomllib  # type: ignore[import-not-found]  # Python 3.11+
         except ImportError:
             try:
-                import tomli as tomllib  # type: ignore[import-not-found]  # backport
+                import tomli as tomllib  # backport
             except ImportError:
                 return None
         try:

@@ -89,6 +89,19 @@ strict = true
 module = "specbridge.outputs.html"
 ignore_errors = true
 
+[[tool.mypy.overrides]]
+module = [
+    "tree_sitter",
+    "tree_sitter_go",
+    "tree_sitter_python",
+    "tree_sitter_rust",
+    "tree_sitter_typescript",
+    "mcp.*",
+    "mcp.server.*",
+    "tomli",
+]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
