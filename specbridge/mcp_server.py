@@ -57,13 +57,23 @@ def create_mcp_server(project_dir: str = ".") -> object:
             ),
             Tool(
                 name="impact",
-                description="Find what implements a given spec",
+                description="Find what implements a given spec (supports transitive impact via call graph)",
                 inputSchema={
                     "type": "object",
                     "properties": {
                         "spec_id": {
                             "type": "string",
                             "description": "Spec ID (e.g. '1.1' or 'spec::1.1')",
+                        },
+                        "call_graph": {
+                            "type": "boolean",
+                            "description": "Include transitive (indirect) impact via call graph analysis",
+                            "default": False,
+                        },
+                        "max_depth": {
+                            "type": "integer",
+                            "description": "Max call-graph traversal depth for transitive impact",
+                            "default": 3,
                         },
                     },
                     "required": ["spec_id"],
@@ -115,16 +125,32 @@ def create_mcp_server(project_dir: str = ".") -> object:
 
         elif name == "impact":
             spec_id = arguments["spec_id"]
+            call_graph_flag = arguments.get("call_graph", False)
+            max_depth = arguments.get("max_depth", 3)
+
             graph = _analyze_graph()
             nodes = find_spec_nodes(graph, spec_id)
             if not nodes:
                 return [TextContent(type="text", text=f"Spec '{spec_id}' not found.")]
 
+            # Transitive impact via call graph
+            transitive_info = ""
+            if call_graph_flag:
+                from specbridge.analyzers.call_graph import build_call_graph, transitive_impact
+                cg = build_call_graph(graph, str(root))
+                if cg.nodes:
+                    ti = transitive_impact(graph, cg, spec_id, max_depth=max_depth)
+                    tf = ti["transitive_files"]
+                    if tf:
+                        transitive_info = f"\n🔗 Transitive impact ({ti['hops']} hop(s)):\n" + \
+                            "\n".join(f"  → {f}" for f in tf)
+
+            lines = []
             for node in nodes:
                 edges = graph.edges_to(node.id) or graph.edges_to(
                     spec_id.replace("spec::", "")
                 )
-                lines = [f"Spec {node.id}: {node.title} (confidence: {node.confidence})"]
+                lines.append(f"Spec {node.id}: {node.title} (confidence: {node.confidence})")
                 if not edges:
                     lines.append("  (no implementing artifacts found)")
                     continue
@@ -133,7 +159,11 @@ def create_mcp_server(project_dir: str = ".") -> object:
                     src = graph.nodes.get(e.src_id)
                     file_part = f" in {src.source.file}" if src else ""
                     lines.append(f"  [{e.strength.value.upper():8s}] {e.relation.value}{file_part}")
-                return [TextContent(type="text", text="\n".join(lines))]
+
+            result = "\n".join(lines)
+            if transitive_info:
+                result += transitive_info
+            return [TextContent(type="text", text=result)]
 
         elif name == "coverage":
             graph = _analyze_graph()
