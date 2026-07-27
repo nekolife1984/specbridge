@@ -18,6 +18,26 @@ We practice what we preach — specs and code must stay in sync.
 
 ---
 
+## 🚀 セッションライフサイクル（AIエージェント用）
+
+セッションの開始時と終了時は必ず以下を実行する：
+
+### セッション開始時
+
+```bash
+specbridge snapshot --reason "Session: <今回やること>"
+```
+
+### セッション終了時
+
+```bash
+specbridge drift
+```
+
+もし drift があれば → **先に設計書を直す**。コードだけ直してコミットしないこと。
+
+---
+
 ## ✅ ワークフロー（コード変更のたびに必ず実行）
 
 ### ① 変更前にスナップショット
@@ -72,8 +92,8 @@ git commit
 
 Hermes を使っている場合は以下でスキルをロード：
 
-```
-skill_view(name='software-development/specbridge')
+```bash
+skill_view(name='specbridge')
 ```
 
 スキルには全コマンドの詳細な説明とトラブルシューティングが含まれている。

@@ -143,6 +143,22 @@ This project uses **specbridge** for spec↔code traceability.
 コードを変更したら  → specbridge drift で解離がないか確認する
 ```
 
+## 🚀 セッションライフサイクル（AIエージェント用）
+
+### セッション開始時
+
+```bash
+specbridge snapshot --reason "Session: <今回やること>"
+```
+
+### セッション終了時
+
+```bash
+specbridge drift
+```
+
+drift があれば → 先に設計書を直すこと。コードだけ直してコミットしない。
+
 1. `specbridge snapshot --reason "変更内容"` で現状を保存
 2. コードを書く
 3. `specbridge drift` で解離チェック

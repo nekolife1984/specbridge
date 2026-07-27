@@ -20,6 +20,32 @@ tags: [specbridge, traceability, spec-driven, heuristic, mcp, call-graph]
 - **AI agent integration**: "Let the agent query traceability via MCP."
 - **Onboard a new project**: "Set up specbridge for this repo."
 
+## Agent Session Lifecycle
+
+AIエージェントが specbridge を使うプロジェクトで作業する際のルール：
+
+### セッション開始時
+
+```bash
+specbridge snapshot --reason "Session: <今回のタスク>"
+```
+
+### セッション終了時
+
+```bash
+specbridge drift
+```
+
+drift が検出されたら → **先に設計書を直すこと**。コードだけ変更してコミットしない。
+
+### コミット前
+
+```bash
+git commit  # pre-commit hook が自動で drift --gate を実行
+```
+
+---
+
 ## Installation
 
 ```bash
