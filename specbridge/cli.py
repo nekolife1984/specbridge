@@ -702,11 +702,14 @@ def setup(dir: str, ci: bool) -> None:
         click.echo("     curl -fsSL https://raw.githubusercontent.com/nekolife1984/specbridge/main/scripts/setup.sh | bash", err=True)
         raise click.Abort()
 
+    import os
     import subprocess
-    env = {**dict(**{"CI_SETUP": "1"} if ci else {})}
+    env = os.environ.copy()
+    if ci:
+        env["CI_SETUP"] = "1"
     result = subprocess.run(
         ["bash", str(setup_script), str(root)],
-        env={**{}, **env},
+        env=env,
     )
     if result.returncode != 0:
         click.echo("❌ Setup script failed.", err=True)
