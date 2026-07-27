@@ -54,13 +54,14 @@ Options:
   --top INTEGER       Show only top N items per category (default: all)
   --deps              Build code dependency graph from imports (adds DEPENDS edges)
   -c, --call-graph    Build call graph for transitive impact analysis
-  --fast              Skip function-level matching for faster analysis on large projects
+  --fast              Skip function-level matching [default: on, use --func-match to enable]
+  --func-match        Enable function-level matching (may be slow on large projects)
   --dry-run           Analyze without writing any output files (.specbridge/)
   --summary-only      Show only a one-line coverage summary (CI-friendly)
   --help              Show this message and exit.
 ```
 
-**New options (v1.0):**
+**New options (v1.1):**
 
 | Option | Purpose |
 |--------|---------|
@@ -304,7 +305,7 @@ snapshot      status        validate-boundary  watch
 
 $ specbridge analyze --[TAB]
 --call-graph  --config    --deps      --dir       --dry-run
---fast        --format    --help      --merge     --summary-only
+--fast        --format    --func-match  --help      --merge     --summary-only
 --top
 ```
 
@@ -380,7 +381,8 @@ Usage: specbridge watch [OPTIONS]
 Options:
   -d, --dir TEXT          Project directory  [default: .]
   --interval FLOAT        Debounce interval in seconds  [default: 2.0]
-  --fast                  Skip function-level matching for faster analysis
+  --fast                  Skip function-level matching [default: on]
+  --func-match            Enable function-level matching (may be slow on large projects)
   --help                  Show this message and exit.
 ```
 

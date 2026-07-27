@@ -106,10 +106,10 @@ class TestLargeProjectScale:
         # No drift expected since project hasn't changed
         assert not report.has_drift
 
-    def test_fast_mode(self, large_project: Path) -> None:
-        """Fast mode (no function-level matching) runs successfully."""
+    def test_func_match_mode(self, large_project: Path) -> None:
+        """Function-level matching mode (opt-in via func_match) works."""
         adapter = detect_adapter(str(large_project))
         assert adapter is not None
-        adapter.fast = True
+        adapter.fast = False
         graph = adapter.analyze(str(large_project))
         assert len(graph.nodes) > 0

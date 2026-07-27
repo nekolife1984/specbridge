@@ -26,7 +26,7 @@ class HeuristicAdapter(ProjectAdapter):
     """
 
     def __init__(self) -> None:
-        self.fast: bool = False
+        self.fast: bool = True
 
     def detect(self, directory: str) -> float:
         root = Path(directory).resolve()

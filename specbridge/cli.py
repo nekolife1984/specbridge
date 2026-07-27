@@ -44,7 +44,10 @@ def _no_adapter_hint() -> None:
               help="Build call graph for transitive impact analysis",
               show_default=True)
 @click.option("--fast", is_flag=True, default=False,
-              help="Skip function-level matching for faster analysis on large projects",
+              help="Skip function-level matching (default, redundant with new default)",
+              show_default=True, hidden=True)
+@click.option("--func-match", is_flag=True, default=False,
+              help="Enable function-level matching (may be slow on large projects)",
               show_default=True)
 @click.option("--dry-run", is_flag=True, default=False,
               help="Analyze without writing any output files (.specbridge/)",
@@ -53,7 +56,7 @@ def _no_adapter_hint() -> None:
               help="Show only a one-line coverage summary (CI-friendly)",
               show_default=True)
 def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
-            call_graph: bool, fast: bool, dry_run: bool, summary_only: bool) -> None:
+            call_graph: bool, fast: bool, func_match: bool, dry_run: bool, summary_only: bool) -> None:
     """Analyze a project and build a trace graph."""
     from specbridge.adapters import detect_adapter, detect_all, merge_graphs
     from specbridge.outputs.rich_utils import progress_spinner
@@ -70,8 +73,8 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
             graphs = []
             for score, adapter in scored:
                 click.echo(f"   Using {type(adapter).__name__} (confidence {score})", err=True)
-                if fast and hasattr(adapter, 'fast'):
-                    adapter.fast = True
+                if func_match and hasattr(adapter, 'fast'):
+                    adapter.fast = False
                 g = adapter.analyze(str(root))
                 graphs.append(g)
             graph = merge_graphs(graphs)
@@ -81,8 +84,8 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
                 click.echo("❌ No recognized SSD framework found.", err=True)
                 _no_adapter_hint()
                 raise click.Abort()
-            if fast and hasattr(detected, 'fast'):
-                detected.fast = True
+            if func_match and hasattr(detected, 'fast'):
+                detected.fast = False
             graph = detected.analyze(str(root))
 
     # Build code dependency graph if requested
@@ -655,10 +658,13 @@ def config(dir: str, cfg_path: str | None, yaml_output: bool, do_validate: bool)
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
 @click.option("--interval", type=float, default=2.0,
               help="Debounce interval in seconds", show_default=True)
-@click.option("--fast", is_flag=True, default=False,
-              help="Skip function-level matching for faster analysis",
+@click.option("--fast", is_flag=True, default=False, hidden=True,
+              help="Skip function-level matching (default)",
               show_default=True)
-def watch(dir: str, interval: float, fast: bool) -> None:
+@click.option("--func-match", is_flag=True, default=False,
+              help="Enable function-level matching (may be slow on large projects)",
+              show_default=True)
+def watch(dir: str, interval: float, fast: bool, func_match: bool) -> None:
     """Watch project for changes and re-analyze automatically.
 
     Requires the optional 'watch' extra: pip install specbridge[watch]
@@ -707,8 +713,8 @@ def watch(dir: str, interval: float, fast: bool) -> None:
                 if scored:
                     graphs = []
                     for _score, adapter in scored:
-                        if fast and hasattr(adapter, 'fast'):
-                            adapter.fast = True
+                        if func_match and hasattr(adapter, 'fast'):
+                            adapter.fast = False
                         try:
                             g = adapter.analyze(str(root))
                             graphs.append(g)
