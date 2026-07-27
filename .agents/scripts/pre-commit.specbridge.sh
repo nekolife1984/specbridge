@@ -14,6 +14,18 @@ SNAP=".specbridge/snapshot.json"
 
 echo "🔍 specbridge: Checking trace drift against HEAD..."
 
+# ── Doc sync check: if code changed, docs should too ──
+CHANGED=$(git diff --cached --name-only)
+CODE_CHANGED=$(echo "$CHANGED" | grep -c "^specbridge/\|^tests/" || true)
+DOCS_CHANGED=$(echo "$CHANGED" | grep -c "^docs/en/\|^docs/ja/" || true)
+if [ "$CODE_CHANGED" -gt 0 ] && [ "$DOCS_CHANGED" -eq 0 ]; then
+  echo "   ⚠️  Code/tests changed but no docs/ updated!"
+  echo "      Run 'git diff --cached --name-only' to see what changed."
+  echo "      ➡  Update docs/en/ and docs/ja/ to match the code changes."
+  echo "      (Use --no-verify to bypass this warning)"
+  echo ""
+fi
+
 # No baseline yet — ask user to create one
 if [ ! -f "$SNAP" ]; then
   echo "   📸 No baseline found."
