@@ -648,6 +648,51 @@ $ specbridge suggest
      💡 Check that source_dirs in .specbridge.yaml covers the implementation
 ```
 
+### 2.18 `session-check` ✨ New in v1.1
+
+Run session-end integrity checks before closing a session. Combines drift detection, coverage check, orphan detection, git status, and custom hooks in one command.
+
+```
+Usage: specbridge session-check [OPTIONS]
+
+  Run session-end integrity checks before closing a session.
+
+Options:
+  -d, --dir TEXT      Project directory  [default: .]
+  --config TEXT       Path to config file
+  --skip-git          Skip uncommitted changes check
+  --skip-hooks        Skip custom session_check hooks from config
+  --help              Show this message and exit.
+```
+
+**Example output:**
+
+```
+$ specbridge session-check
+📋 specbridge Session Check — /Users/me/project
+==================================================
+  ✅ Drift: no drift detected
+  ✅ Coverage: 83.3% (10/12)
+  ✅ Orphan specs: none
+  ✅ Orphan code: none
+  ✅ Git: working tree is clean
+  📭 Hooks: none configured
+==================================================
+✅ All checks passed — session state is clean.
+```
+
+**Exit codes:** 0 = all clean, 1 = warnings (review suggested), 2 = blockers (must fix).
+
+**Custom hooks** can be configured in `.specbridge.yaml`:
+
+```yaml
+session_check:
+  hooks:
+    - command: "bash scripts/check-doc-sync.sh"
+      description: "EN↔JA documentation sync check"
+      optional: true
+```
+
 ## 3. Improved Error Messages (v1.0)
 
 When specbridge cannot find a supported project structure, it now provides **actionable hints**:

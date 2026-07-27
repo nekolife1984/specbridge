@@ -645,6 +645,35 @@ $ specbridge suggest
      💡 Check that source_dirs in .specbridge.yaml covers the implementation
 ```
 
+### 2.18 `session-check` ✨ v1.1新機能
+
+セッション終了時の整合性チェックを実行します。ドリフト検出、カバレッジ確認、孤立検出、git状態、カスタムフックを1つのコマンドに統合。
+
+```
+Usage: specbridge session-check [OPTIONS]
+
+  セッション終了時の整合性チェックを実行
+
+Options:
+  -d, --dir TEXT      プロジェクトディレクトリ  [default: .]
+  --config TEXT       設定ファイルへのパス
+  --skip-git          未コミット変更チェックをスキップ
+  --skip-hooks        カスタムフックをスキップ
+  --help              ヘルプを表示
+```
+
+**終了コード:** 0 = 正常、1 = 警告あり、2 = ブロッカーあり。
+
+**カスタムフック** は `.specbridge.yaml` で設定可能：
+
+```yaml
+session_check:
+  hooks:
+    - command: "bash scripts/check-doc-sync.sh"
+      description: "EN↔JA ドキュメント同期チェック"
+      optional: true
+```
+
 ## 3. 改善されたエラーメッセージ（v1.0）
 
 specbridgeがサポート対象のプロジェクト構造を見つけられない場合、**実行可能なヒント**を提供するようになりました：
