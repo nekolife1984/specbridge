@@ -121,19 +121,18 @@ def impact(dir: str, spec_id: str, output_fmt: str, call_graph: bool, max_depth:
 
     graph = adapter.analyze(str(root))
 
-    # If no exact match, try merging heuristic adapter for broader search
+    # If no exact match, try merging ALL adapters for broader search
     if not find_spec_nodes(graph, spec_id):
-        from specbridge.adapters.heuristic import HeuristicAdapter
+        from specbridge.adapters import detect_all, merge_graphs
 
-        heuristic = HeuristicAdapter()
-        if heuristic is not adapter:
-            extra = heuristic.analyze(str(root))
-            # Merge nodes and edges into graph directly
-            for nid, node in extra.nodes.items():
-                if nid not in graph.nodes:
-                    graph.add_node(node)
-            for e in extra.edges:
-                graph.edges.append(e)
+        scored = detect_all(str(root))
+        extra_graphs = [graph]
+        for score, inst in scored:
+            if inst is not adapter:
+                click.echo(f"   Merging {type(inst).__name__} (confidence {score})", err=True)
+                extra_graphs.append(inst.analyze(str(root)))
+        if len(extra_graphs) > 1:
+            graph = merge_graphs(extra_graphs)
 
     spec_nodes = find_spec_nodes(graph, spec_id)
     if not spec_nodes:
