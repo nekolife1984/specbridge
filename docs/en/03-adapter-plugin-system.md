@@ -205,9 +205,20 @@ def merge_graphs(graphs: list[TraceGraph]) -> TraceGraph:
 Called by: `analyze --merge`, `watch`, MCP server.
 
 **Merge semantics:**
-- Nodes: union by ID (later overwrites earlier)
-- Edges: all edges from all graphs are appended
-- No deduplication — edges with the same source/destination/relation may appear multiple times
+
+| Rule | Behavior |
+|------|----------|
+| Nodes | Union by ID (later overwrites earlier) |
+| Edges | All edges from all graphs are appended |
+| Dedup | No edge deduplication — same source/destination/relation may appear multiple times |
+| **ID normalization** ✨ | `spec::1.1` (SpectraAdapter) ↔ `docs.auth.1.1` (HeuristicAdapter) are **automatically recognized as the same spec** and folded into a single canonical node. Edges are redirected, the `spec::` prefix node is removed, and the alias is recorded in the canonical node's `metadata.aliases`. |
+
+**ID normalization matching strategy:**
+
+1. **Exact suffix**: `spec::1.1` matches heuristic ID ending with `.1.1`
+2. **Partial suffix**: `spec::3.1.2` matches heuristic ID `docs.auth.3.1.2`
+3. **Title fallback**: if no numeric suffix match, titles are compared
+4. **No match**: the `spec::` node is preserved as-is
 
 ## 6. Plugin Discovery Lifecycle
 

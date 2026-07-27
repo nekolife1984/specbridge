@@ -1,160 +1,61 @@
-# specbridge — AI Agent Guide
+# specbridge — AI Agent Workflow Guide
 
-This project is **specbridge** itself: a spec↔code traceability tool.  
-We practice what we preach — specs and code must stay in sync.
+> **Documentation-first development.** Every code change MUST be accompanied by corresponding documentation updates in both EN and JA.
 
----
+## Mandatory Workflow
 
-## 🔴 絶対ルール（Spec-First Development）
+When making changes to specbridge code, follow this **unbreakable sequence**:
 
 ```
-コードを変更する前に → 仕様書を確認・更新する
-コードを変更したら  → specbridge drift で解離がないか確認する
+1. CODE  → 2. DOCS (EN+JA)  → 3. SKILL (if applicable)  → 4. TEST  → 5. COMMIT
+  ↑                                                                       │
+  └───────────────────── specbridge drift gate ────────────────────────────┘
 ```
 
-1. **仕様書が先、コードは後**
-2. **解離があれば設計書を直す。コードだけ直してコミットしない**
-3. **pre-commit hook が解離を検出したら、`--no-verify` で逃げない**
+### Step-by-step
 
----
+### 1. Before starting
+Run `specbridge snapshot --reason "Session: <task>"` to baseline the project state.
 
-## 🚀 セッションライフサイクル（AIエージェント用）
+### 2. Code changes
+Make the implementation changes.
 
-セッションの開始時と終了時は必ず以下を実行する：
+### 3. 📚 Documentation Sync (MANDATORY — DO NOT SKIP)
+**Before committing ANY code change**, you MUST update ALL affected documentation:
 
-### セッション開始時
+| Changed area | EN doc | JA doc |
+|-------------|--------|--------|
+| CLI commands / options | `docs/en/07-cli-commands.md` | `docs/ja/07-cli-commands.md` |
+| Output / rendering | `docs/en/08-output-rendering.md` | `docs/ja/08-output-rendering.md` |
+| Configuration | `docs/en/09-configuration.md` | `docs/ja/09-configuration.md` |
+| Adapter / plugin system | `docs/en/03-adapter-plugin-system.md` | `docs/ja/03-adapter-plugin-system.md` |
+| Data model / core | `docs/en/02-data-model.md` | `docs/ja/02-data-model.md` |
+| Architecture | `docs/en/01-architecture.md` | `docs/ja/01-architecture.md` |
+| CLI help text | `specbridge/cli.py` (docstrings) | — |
+| Hermes skill | `.agents/skills/specbridge/SKILL.md` | — |
 
+**Checklist before commit:**
+- [ ] EN docs updated for all new/modified features
+- [ ] JA docs updated (mirror EN changes)
+- [ ] CLI help strings updated (if options/commands changed)
+- [ ] Specbridge SKILL.md updated (if Hermes-relevant behavior changed)
+- [ ] `specbridge drift --gate` passes (ensures code↔doc traceability)
+
+### 4. Testing
+Run the full test suite and mypy:
 ```bash
-specbridge snapshot --reason "Session: <今回やること>"
+pytest tests/ -q
+mypy specbridge/ --strict
 ```
 
-### セッション終了時
-
-```bash
-specbridge drift
-```
-
-もし drift があれば → **先に設計書を直す**。コードだけ直してコミットしないこと。
+### 5. Commit & push
+Use conventional commits format. Reference issues in the commit message.
 
 ---
 
-## ✅ ワークフロー（コード変更のたびに必ず実行）
+## Convention
 
-### ① 変更前にスナップショット
-
-```bash
-specbridge snapshot --reason "変更内容の説明"
-```
-
-### ② コードを書く（仕様書も同時に更新）
-
-- 新しい機能を追加 → `docs/` に仕様を追加
-- 既存の動作を変更 → `docs/` の該当箇所を更新
-- Agentは `specbridge impact --spec-id <id>` で影響範囲を事前確認すること
-
-### ③ 変更後にドリフトチェック
-
-```bash
-specbridge drift
-# 解離があれば: 「📝 設計書更新あり」→ 設計書を直す
-# 解離がなければ: ✅ OK
-```
-
-### ④ コミット前（hook が自動実行）
-
-```bash
-git commit
-# → pre-commit hook が specbridge drift --git-base HEAD --gate を実行
-# → ❌ 解離あり → commit ブロック（設計書を直してから再実行）
-# → ✅ 解離なし → commit 成功
-```
-
----
-
-## 📋 よく使うコマンド
-
-| 目的 | コマンド |
-|------|---------|
-| プロジェクト全体の分析 | `specbridge analyze --merge` |
-| 依存グラフ含む | `specbridge analyze --merge --deps` |
-| コールグラフ含む | `specbridge analyze --merge --deps --call-graph` |
-| 影響分析 | `specbridge impact --spec-id <id>` |
-| 推移的影響 | `specbridge impact --spec-id <id> --call-graph` |
-| カバレッジ確認 | `specbridge coverage` |
-| スナップショット | `specbridge snapshot --reason "..."` |
-| ドリフト検出 | `specbridge drift` |
-| CIゲート | `specbridge drift --git-base HEAD --gate` |
-| HTML可視化 | `specbridge analyze --merge --format html` |
-
----
-
-## 🔗 Hermes Agent スキル
-
-Hermes を使っている場合は以下でスキルをロード：
-
-```bash
-skill_view(name='specbridge')
-```
-
-スキルには全コマンドの詳細な説明とトラブルシューティングが含まれている。
-
----
-
-## 🔖 @impl タグの埋め方
-
-コードと仕様書の対応を明示するには `@impl` タグをソースコードに埋め込む。
-specbridge の SpectraAdapter が自動的に読み取って TraceGraph に反映する。
-
-### 構文
-
-| 言語 | 構文 | 例 |
-|------|------|-----|
-| Python / Ruby / Shell | `# @impl <spec-id>` | `# @impl 1.1` |
-| TypeScript / Go / Rust / Java / C# / C++ | `// @impl <spec-id>` | `// @impl 1.1` |
-| Markdown（仕様書→コード参照） | `<!-- @impl <file>::<symbol> -->` | `<!-- @impl specbridge/cli.py::main -->` |
-
-### ルール
-
-- **`<spec-id>`** は `docs/en/XX-filename.md` の見出し番号（例: `1.2.3`）
-- **複数指定**: `# @impl 1.1, 1.2, 1.3`（カンマ区切り）
-- **コードを変更したら、対応する `@impl` タグも必ず更新すること**
-- **新しい機能を追加したら、対応する仕様書のセクションに `<!-- @impl path::symbol -->` を追加すること**
-
-### 具体例
-
-```python
-# specbridge/adapters/_base.py
-@register
-def all_adapters() -> list[type[ProjectAdapter]]:  # @impl 3.1
-    ...
-```
-
-```markdown
-<!-- docs/en/03-adapter-plugin-system.md -->
-## 3.1 HeuristicAdapter (Primary)
-<!-- @impl specbridge/adapters/heuristic.py::HeuristicAdapter -->
-<!-- @impl specbridge/adapters/heuristic.py::HeuristicAdapter.analyze -->
-```
-
----
-
-## 🏗 プロジェクト構造（知っておくべき重要パス）
-
-| パス | 内容 |
-|------|------|
-| `docs/en/` | 設計書（英語） |
-| `docs/ja/` | 設計書（日本語） |
-| `specbridge/` | コアライブラリ |
-| `tests/` | テスト |
-| `.specbridge/` | specbridge の出力（git管理） |
-| `.agents/scripts/pre-commit.specbridge.sh` | pre-commit hook |
-| `.agents/skills/specbridge/SKILL.md` | Hermes スキル |
-| `ROADMAP.md` | 開発ロードマップ |
-
----
-
-## ⚠️ 補足
-
-- **設計書を編集したら必ず `@impl` タグも更新すること**
-- `specbridge analyze --merge` でカバレッジが **60%未満**なら設計書かコードに問題がある可能性大
-- pre-commit hook に `--no-verify` は禁止（CIで弾かれる）
+- Commit messages: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:` prefix
+- Issue references in commit body: `#123`
+- One change per commit (atomic commits)
+- All commits must pass `specbridge drift --gate`
