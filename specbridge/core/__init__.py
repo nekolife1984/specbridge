@@ -136,3 +136,55 @@ def find_spec_nodes(graph: TraceGraph, query: str) -> list[TraceNode]:
         if query.lower() in n.metadata.get("heading_text", "").lower()
     ]
     return sorted(heading_matches, key=lambda x: x.id)
+
+
+def find_specs_by_file(graph: TraceGraph, file_path: str) -> list[dict[str, Any]]:
+    """Find all specs that are connected to a given file path.
+
+    This is the reverse of ``find_spec_nodes`` — given a code/test/design file,
+    find all spec nodes it implements, verifies, or satisfies.
+
+    Returns a list of dicts with:
+      - ``file``: the matched file path (as stored in the graph)
+      - ``specs``: list of ``{spec_id, title, relation, strength, evidence}``
+    """
+    results: list[dict[str, Any]] = []
+
+    # Find all code/test/design nodes whose source.file matches
+    matched_node_ids: list[str] = []
+    for nid, node in graph.nodes.items():
+        if node.type in (NodeType.SPEC, NodeType.TASK):
+            continue
+        if file_path in node.source.file or node.source.file.endswith(file_path):
+            matched_node_ids.append(nid)
+
+    if not matched_node_ids:
+        return results
+
+    for nid in matched_node_ids:
+        matched_node = graph.nodes.get(nid)
+        if not matched_node:
+            continue
+
+        # Find edges FROM this code node TO spec nodes
+        spec_edges: list[dict[str, Any]] = []
+        for e in graph.edges_from(nid):
+            if e.relation in (EdgeRelation.IMPLEMENTS, EdgeRelation.VERIFIES, EdgeRelation.SATISFIES):
+                dst = graph.nodes.get(e.dst_id)
+                spec_edges.append({
+                    "spec_id": e.dst_id,
+                    "title": dst.title if dst else "?",
+                    "relation": e.relation.value,
+                    "strength": e.strength.value,
+                    "confidence": dst.confidence if dst else 0.0,
+                    "evidence": [{"kind": ev.kind, "value": ev.value} for ev in e.evidence],
+                })
+
+        if spec_edges:
+            results.append({
+                "file": matched_node.source.file,
+                "node_type": matched_node.type.value,
+                "specs": spec_edges,
+            })
+
+    return results

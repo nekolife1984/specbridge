@@ -142,7 +142,10 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
 
 @cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
-@click.option("--spec-id", required=True, help="Spec ID to analyze (e.g. 1.1)")
+@click.option("--spec-id", default=None, help="Spec ID to analyze (e.g. 1.1)")
+@click.option("--file", "file_path", default=None,
+              help="File path for reverse impact: find specs affected by this file",
+              show_default=True)
 @click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
               help="Output format", show_default=True)
 @click.option("--call-graph", "-c", is_flag=True, default=False,
@@ -151,11 +154,40 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
 @click.option("--max-depth", type=int, default=3,
               help="Max call-graph traversal depth for transitive impact",
               show_default=True)
-def impact(dir: str, spec_id: str, output_fmt: str, call_graph: bool, max_depth: int) -> None:
-    """Find what implements a given spec."""
+def impact(dir: str, spec_id: str | None, file_path: str | None,
+           output_fmt: str, call_graph: bool, max_depth: int) -> None:
+    """Analyze impact between specs and code.
+
+    Two modes (mutually exclusive):
+
+    \b
+    \b\b\b1. Forward impact (default):\b\b\b
+       specbridge impact --spec-id <id>
+       Find what implements a given spec.
+
+    \b\b\b2. Reverse impact:\b\b\b
+       specbridge impact --file src/foo.py
+       Find which specs are affected by changes to a file.
+    """
+    if not spec_id and not file_path:
+        click.echo("❌ Either --spec-id or --file must be provided.", err=True)
+        raise click.Abort()
+    if spec_id and file_path:
+        click.echo("❌ --spec-id and --file are mutually exclusive.", err=True)
+        raise click.Abort()
+
+    if file_path:
+        _reverse_impact(dir, file_path, output_fmt, call_graph, max_depth)
+    else:
+        _forward_impact(dir, spec_id, output_fmt, call_graph, max_depth)  # type: ignore[arg-type]
+
+
+def _forward_impact(project_dir: str, spec_id: str,
+                    output_fmt: str, call_graph: bool, max_depth: int) -> None:
+    """Forward impact: spec → implementing code files."""
     from specbridge.adapters import detect_adapter
 
-    root = Path(dir).resolve()
+    root = Path(project_dir).resolve()
     adapter = detect_adapter(str(root))
     if adapter is None:
         click.echo("❌ No recognized SSD framework found.", err=True)
@@ -233,6 +265,162 @@ def impact(dir: str, spec_id: str, output_fmt: str, call_graph: bool, max_depth:
                 entry["transitive_edges"] = transitives
             results.append(entry)
         click.echo(_json.dumps(results if len(results) > 1 else results[0], indent=2, ensure_ascii=False))
+
+
+def _reverse_impact(project_dir: str, file_path: str,
+                    output_fmt: str, call_graph: bool, max_depth: int) -> None:
+    """Reverse impact: file → affected specs."""
+    from specbridge.adapters import detect_adapter
+    from specbridge.core import EdgeRelation, NodeType, find_specs_by_file
+
+    root = Path(project_dir).resolve()
+
+    # Resolve relative file path
+    file_arg = file_path
+    # If it's a relative path, try to resolve it
+    if not file_arg.startswith("/"):
+        file_arg = str(root / file_arg)
+
+    adapter = detect_adapter(str(root))
+    if adapter is None:
+        click.echo("❌ No recognized SSD framework found.", err=True)
+        _no_adapter_hint()
+        raise click.Abort()
+
+    graph = adapter.analyze(str(root))
+
+    # Try merging all adapters for broader search
+    from specbridge.adapters import detect_all, merge_graphs
+    scored = detect_all(str(root))
+    if len(scored) > 1:
+        extra_graphs = [graph]
+        for score, inst in scored:
+            if inst is not adapter:
+                extra_graphs.append(inst.analyze(str(root)))
+        if len(extra_graphs) > 1:
+            graph = merge_graphs(extra_graphs)
+
+    # Find matched code nodes
+    matched_code_ids: list[str] = []
+    for nid, node in graph.nodes.items():
+        if node.type in (NodeType.SPEC, NodeType.TASK):
+            continue
+        # Match by exact file, suffix, or the user-provided path being in the node's file
+        if (file_path == node.source.file
+                or node.source.file.endswith(f"/{file_path.lstrip('/')}")
+                or file_path in node.source.file):
+            matched_code_ids.append(nid)
+
+    if not matched_code_ids:
+        click.echo(f"❌ No code/test files matching '{file_path}' found in trace graph.", err=True)
+        click.echo("   Tip: try a shorter path or a filename (e.g. 'login.py' or 'src/auth/').", err=True)
+        raise click.Abort()
+
+    # For each matched code node, find edges TO specs
+    all_affected_specs: list[dict[str, Any]] = []
+    code_files: list[str] = []
+    for nid in matched_code_ids:
+        code_node = graph.nodes.get(nid)
+        if not code_node:
+            continue
+        code_files.append(code_node.source.file)
+        for e in graph.edges_from(nid):
+            if e.relation in (EdgeRelation.IMPLEMENTS, EdgeRelation.VERIFIES, EdgeRelation.SATISFIES):
+                dst = graph.nodes.get(e.dst_id)
+                all_affected_specs.append({
+                    "spec_id": e.dst_id,
+                    "title": dst.title if dst else "?",
+                    "relation": e.relation.value,
+                    "strength": e.strength.value,
+                    "source_file": node.source.file,
+                    "evidence": [{"kind": ev.kind, "value": ev.value} for ev in e.evidence],
+                })
+
+    if not all_affected_specs:
+        click.echo(f"📁 File: {file_path}")
+        click.echo("   (no spec connections found for this file)")
+        return
+
+    # Transitive impact via call graph
+    transitive_specs: list[dict[str, Any]] = []
+    if call_graph:
+        from specbridge.analyzers.call_graph import build_call_graph, transitive_impact
+        cg = build_call_graph(graph, str(root))
+        if cg.nodes:
+            # For transitive impact, check each affected spec
+            seen_specs: set[str] = set()
+            for s in all_affected_specs:
+                sid = s["spec_id"]
+                if sid in seen_specs:
+                    continue
+                seen_specs.add(sid)
+                ti = transitive_impact(graph, cg, sid, max_depth=max_depth)
+                for tf in ti["transitive_files"]:
+                    transitive_specs.append({
+                        "spec_id": sid,
+                        "via_file": tf,
+                        "hops": ti["hops"],
+                    })
+
+    # ── Display ──
+    click.echo(f"📁 Reverse impact: {file_path}")
+    click.echo(f"{'=' * 50}")
+    click.echo(f"   Code files matched: {len(code_files)}")
+    for cf in code_files:
+        click.echo(f"     📁 {cf}")
+    click.echo(f"   Affected specs:    {len(all_affected_specs)}")
+    click.echo("")
+
+    # Group by spec
+    spec_groups: dict[str, dict[str, Any]] = {}
+    for s in all_affected_specs:
+        sid = s["spec_id"]
+        if sid not in spec_groups:
+            spec_groups[sid] = {
+                "spec_id": sid,
+                "title": s["title"],
+                "edges": [],
+            }
+        spec_groups[sid]["edges"].append({
+            "file": s["source_file"],
+            "relation": s["relation"],
+            "strength": s["strength"],
+        })
+
+    for sid in sorted(spec_groups.keys()):
+        g = spec_groups[sid]
+        click.echo(f"📄 {g['spec_id']}: {g['title']}")
+        for edge in g["edges"]:
+            click.echo(f"  [{edge['strength'].upper():8s}] {edge['file']}  ({edge['relation']})")
+
+    if transitive_specs:
+        click.echo(f"\n   🔗 Transitive impact ({transitive_specs[0]['hops']} hop(s)):")
+        seen_trans: set[str] = set()
+        for t in transitive_specs:
+            key = f"{t['spec_id']} → {t['via_file']}"
+            if key not in seen_trans:
+                seen_trans.add(key)
+                click.echo(f"      → {t['via_file']} (affects {t['spec_id']})")
+
+    # ── JSON output ──
+    if output_fmt == "json":
+        import json as _json
+        result: dict[str, Any] = {
+            "query": file_path,
+            "mode": "reverse",
+            "matched_files": code_files,
+            "affected_specs": [
+                {
+                    "spec_id": g["spec_id"],
+                    "title": g["title"],
+                    "edges": g["edges"],
+                }
+                for g in sorted(spec_groups.values(), key=lambda x: x["spec_id"])
+            ],
+        }
+        if transitive_specs:
+            result["transitive_impact"] = transitive_specs
+        click.echo(_json.dumps(result, indent=2, ensure_ascii=False))
 
 
 @cli.command()

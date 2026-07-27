@@ -61,13 +61,17 @@ def create_mcp_server(project_dir: str = ".") -> object:
             ),
             Tool(
                 name="impact",
-                description="Find what implements a given spec (supports transitive impact via call graph)",
+                description="Find what implements a given spec (supports transitive impact via call graph, and reverse file→spec lookup)",
                 inputSchema={
                     "type": "object",
                     "properties": {
                         "spec_id": {
                             "type": "string",
-                            "description": "Spec ID (e.g. '1.1' or 'spec::1.1')",
+                            "description": "Spec ID (e.g. '1.1' or 'spec::1.1'). Mutually exclusive with file.",
+                        },
+                        "file": {
+                            "type": "string",
+                            "description": "File path for reverse impact: find all specs affected by this file. Mutually exclusive with spec_id.",
                         },
                         "call_graph": {
                             "type": "boolean",
@@ -80,7 +84,6 @@ def create_mcp_server(project_dir: str = ".") -> object:
                             "default": 3,
                         },
                     },
-                    "required": ["spec_id"],
                 },
             ),
             Tool(
@@ -141,11 +144,48 @@ def create_mcp_server(project_dir: str = ".") -> object:
             )]
 
         elif name == "impact":
-            spec_id = arguments["spec_id"]
+            spec_id = arguments.get("spec_id")
+            file_path = arguments.get("file")
             call_graph_flag = arguments.get("call_graph", False)
             max_depth = arguments.get("max_depth", 3)
 
+            if not spec_id and not file_path:
+                return [TextContent(type="text", text="Either spec_id or file must be provided.")]
+
+            if spec_id and file_path:
+                return [TextContent(type="text", text="spec_id and file are mutually exclusive.")]
+
             graph = _analyze_graph()
+
+            # Reverse impact: file → specs
+            if file_path:
+                from specbridge.core import EdgeRelation, NodeType
+                # Find matched code nodes
+                matched: list[str] = []
+                for nid, node in graph.nodes.items():
+                    if node.type in (NodeType.SPEC, NodeType.TASK):
+                        continue
+                    if (file_path == node.source.file
+                            or node.source.file.endswith(f"/{file_path.lstrip('/')}")
+                            or file_path in node.source.file):
+                        matched.append(nid)
+                if not matched:
+                    return [TextContent(type="text", text=f"No code/test files matching '{file_path}' found.")]
+
+                lines = [f"📁 Reverse impact: {file_path}"]
+                for nid in sorted(matched):
+                    code_node = graph.nodes.get(nid)
+                    if not code_node:
+                        continue
+                    for e in graph.edges_from(nid):
+                        if e.relation in (EdgeRelation.IMPLEMENTS, EdgeRelation.VERIFIES, EdgeRelation.SATISFIES):
+                            dst = graph.nodes.get(e.dst_id)
+                            title = dst.title if dst else "?"
+                            lines.append(f"  [{e.strength.value.upper():8s}] {code_node.source.file} → {e.dst_id}: {title}")
+                return [TextContent(type="text", text="\n".join(lines))]
+
+            # Forward impact: spec → code
+            assert spec_id is not None  # validated above: spec_id or file_path is required
             nodes = find_spec_nodes(graph, spec_id)
             if not nodes:
                 return [TextContent(type="text", text=f"Spec '{spec_id}' not found.")]

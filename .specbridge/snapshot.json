@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T08:27:38",
-  "reason": "Session: #44 coverage gate (min_coverage + --gate flag for coverage command)",
+  "timestamp": "2026-07-28T08:34:17",
+  "reason": "Session: #48 reverse impact analysis (impact --file)",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -1689,246 +1689,294 @@
       "heading_text": "2.2 `impact`",
       "depth": 3,
       "line": 97,
-      "body_hash": "f83fe8778cbeca0d",
-      "body_hash_content": "d91d873f01242ecf",
-      "body_line_count": 17,
-      "body_preview": "### 2.2 `impact`  Find which code/test files implement a specific specification."
+      "body_hash": "ea7da6331f3aeb08",
+      "body_hash_content": "e290b9f97cb5f370",
+      "body_line_count": 27,
+      "body_preview": "### 2.2 `impact`  Find which code/test files implement a specific specification,"
     },
     {
-      "id": "docs.en.07-cli-commands.7.2",
+      "id": "docs.en.07-cli-commands.8",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "Find what implements spec 1.1",
+      "heading_text": "Find what implements spec 1.1",
+      "depth": 1,
+      "line": 125,
+      "body_hash": "109335a1374e4687",
+      "body_hash_content": "e67ad28db26974cf",
+      "body_line_count": 2,
+      "body_preview": "# Find what implements spec 1.1 $ specbridge impact --spec-id 1.1"
+    },
+    {
+      "id": "docs.en.07-cli-commands.9",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "With transitive (indirect) impact via call graph",
+      "heading_text": "With transitive (indirect) impact via call graph",
+      "depth": 1,
+      "line": 128,
+      "body_hash": "c5fad97388a45bb3",
+      "body_hash_content": "6c117cd13eae5d72",
+      "body_line_count": 6,
+      "body_preview": "# With transitive (indirect) impact via call graph $ specbridge impact --spec-id"
+    },
+    {
+      "id": "docs.en.07-cli-commands.10",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "Find which specs are affected by changes to a file",
+      "heading_text": "Find which specs are affected by changes to a file",
+      "depth": 1,
+      "line": 135,
+      "body_hash": "20fb14360c00cf39",
+      "body_hash_content": "0be03471952b1fcd",
+      "body_line_count": 2,
+      "body_preview": "# Find which specs are affected by changes to a file $ specbridge impact --file "
+    },
+    {
+      "id": "docs.en.07-cli-commands.11",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "With transitive impact",
+      "heading_text": "With transitive impact",
+      "depth": 1,
+      "line": 138,
+      "body_hash": "345be95acc8af037",
+      "body_hash_content": "5b4dff678ec6297b",
+      "body_line_count": 3,
+      "body_preview": "# With transitive impact $ specbridge impact --file specbridge/cli.py --call-gra"
+    },
+    {
+      "id": "docs.en.07-cli-commands.11.1",
       "file": "docs/en/07-cli-commands.md",
       "title": "`coverage`",
       "heading_text": "2.3 `coverage`",
       "depth": 3,
-      "line": 115,
+      "line": 142,
       "body_hash": "d56400f4aaabc4b8",
       "body_hash_content": "769f8837fbb82be1",
       "body_line_count": 48,
       "body_preview": "### 2.3 `coverage`  Display spec coverage statistics with color-coded indicators"
     },
     {
-      "id": "docs.en.07-cli-commands.7.3",
+      "id": "docs.en.07-cli-commands.11.2",
       "file": "docs/en/07-cli-commands.md",
       "title": "`snapshot`",
       "heading_text": "2.4 `snapshot`",
       "depth": 3,
-      "line": 164,
+      "line": 191,
       "body_hash": "5112bf727002ca15",
       "body_hash_content": "1327694b074f8857",
       "body_line_count": 33,
       "body_preview": "### 2.4 `snapshot`  Take a structural snapshot of the current project state for "
     },
     {
-      "id": "docs.en.07-cli-commands.7.4",
+      "id": "docs.en.07-cli-commands.11.3",
       "file": "docs/en/07-cli-commands.md",
       "title": "`drift`",
       "heading_text": "2.5 `drift`",
       "depth": 3,
-      "line": 198,
+      "line": 225,
       "body_hash": "8b3500ea2027500d",
       "body_hash_content": "b5b5c54dbb14fdc7",
       "body_line_count": 18,
       "body_preview": "### 2.5 `drift`  Detect changes between a saved snapshot and the current project"
     },
     {
-      "id": "docs.en.07-cli-commands.7.5",
+      "id": "docs.en.07-cli-commands.11.4",
       "file": "docs/en/07-cli-commands.md",
       "title": "`status` ✨ New in v1.0",
       "heading_text": "2.6 `status` ✨ New in v1.0",
       "depth": 3,
-      "line": 217,
+      "line": 244,
       "body_hash": "db43c0507907d64e",
       "body_hash_content": "607f23475d06cfa5",
       "body_line_count": 50,
       "body_preview": "### 2.6 `status` ✨ New in v1.0  Show a unified project state dashboard: configur"
     },
     {
-      "id": "docs.en.07-cli-commands.7.6",
+      "id": "docs.en.07-cli-commands.11.5",
       "file": "docs/en/07-cli-commands.md",
       "title": "`shell-completion` ✨ New",
       "heading_text": "2.7 `shell-completion` ✨ New",
       "depth": 3,
-      "line": 268,
+      "line": 295,
       "body_hash": "72d7bcb7e3c2cae1",
       "body_hash_content": "22b51bd340ddd774",
       "body_line_count": 27,
       "body_preview": "### 2.7 `shell-completion` ✨ New  Generate or install shell completion scripts f"
     },
     {
-      "id": "docs.en.07-cli-commands.8",
+      "id": "docs.en.07-cli-commands.12",
       "file": "docs/en/07-cli-commands.md",
       "title": "Auto-detect shell and show instructions",
       "heading_text": "Auto-detect shell and show instructions",
       "depth": 1,
-      "line": 296,
+      "line": 323,
       "body_hash": "63ffec9555d52707",
       "body_hash_content": "cbe684c01f153544",
       "body_line_count": 2,
       "body_preview": "# Auto-detect shell and show instructions $ specbridge shell-completion"
     },
     {
-      "id": "docs.en.07-cli-commands.9",
+      "id": "docs.en.07-cli-commands.13",
       "file": "docs/en/07-cli-commands.md",
       "title": "Install permanently",
       "heading_text": "Install permanently",
       "depth": 1,
-      "line": 299,
+      "line": 326,
       "body_hash": "48fc341b101c8ae0",
       "body_hash_content": "68c73ab6aa92aa44",
       "body_line_count": 2,
       "body_preview": "# Install permanently $ specbridge shell-completion --install"
     },
     {
-      "id": "docs.en.07-cli-commands.10",
+      "id": "docs.en.07-cli-commands.14",
       "file": "docs/en/07-cli-commands.md",
       "title": "Manual setup for a specific shell",
       "heading_text": "Manual setup for a specific shell",
       "depth": 1,
-      "line": 302,
+      "line": 329,
       "body_hash": "81c81adddbc14f78",
       "body_hash_content": "9e12a1f324da2f15",
       "body_line_count": 29,
       "body_preview": "# Manual setup for a specific shell $ eval \"$(specbridge shell-completion --show"
     },
     {
-      "id": "docs.en.07-cli-commands.10.1",
+      "id": "docs.en.07-cli-commands.14.1",
       "file": "docs/en/07-cli-commands.md",
       "title": "`validate-boundary`",
       "heading_text": "2.8 `validate-boundary`",
       "depth": 3,
-      "line": 332,
+      "line": 359,
       "body_hash": "f55d46e610744545",
       "body_hash_content": "4321f9d181c95451",
       "body_line_count": 13,
       "body_preview": "### 2.8 `validate-boundary`  Check that all code references stay within declared"
     },
     {
-      "id": "docs.en.07-cli-commands.10.2",
+      "id": "docs.en.07-cli-commands.14.2",
       "file": "docs/en/07-cli-commands.md",
       "title": "`config`",
       "heading_text": "2.9 `config`",
       "depth": 3,
-      "line": 346,
+      "line": 373,
       "body_hash": "dc1900878f9becb6",
       "body_hash_content": "bcf3eeadea22c1c8",
       "body_line_count": 43,
       "body_preview": "### 2.9 `config`  Display or validate the current specbridge configuration and i"
     },
     {
-      "id": "docs.en.07-cli-commands.10.3",
+      "id": "docs.en.07-cli-commands.14.3",
       "file": "docs/en/07-cli-commands.md",
       "title": "`watch`",
       "heading_text": "2.10 `watch`",
       "depth": 3,
-      "line": 390,
+      "line": 417,
       "body_hash": "c7ea7f833246c34d",
       "body_hash_content": "ebc0f04e241eed49",
       "body_line_count": 18,
       "body_preview": "### 2.10 `watch`  Watch the project directory for file changes and re-run analys"
     },
     {
-      "id": "docs.en.07-cli-commands.10.4",
+      "id": "docs.en.07-cli-commands.14.4",
       "file": "docs/en/07-cli-commands.md",
       "title": "`plugins`",
       "heading_text": "2.11 `plugins`",
       "depth": 3,
-      "line": 409,
+      "line": 436,
       "body_hash": "11c4cc800cad7c1c",
       "body_hash_content": "afb7f2e2bfc44c1c",
       "body_line_count": 13,
       "body_preview": "### 2.11 `plugins`  List all installed adapter plugins (both built-in and third-"
     },
     {
-      "id": "docs.en.07-cli-commands.10.5",
+      "id": "docs.en.07-cli-commands.14.5",
       "file": "docs/en/07-cli-commands.md",
       "title": "`call-graph`",
       "heading_text": "2.12 `call-graph`",
       "depth": 3,
-      "line": 423,
+      "line": 450,
       "body_hash": "698fe1ee8226917a",
       "body_hash_content": "75c782d3cd150432",
       "body_line_count": 16,
       "body_preview": "### 2.12 `call-graph`  Analyze transitive (indirect) impact for a spec via funct"
     },
     {
-      "id": "docs.en.07-cli-commands.10.6",
+      "id": "docs.en.07-cli-commands.14.6",
       "file": "docs/en/07-cli-commands.md",
       "title": "`serve`",
       "heading_text": "2.13 `serve`",
       "depth": 3,
-      "line": 440,
+      "line": 467,
       "body_hash": "7997d68b4e2664d0",
       "body_hash_content": "c79b28052b6a161f",
       "body_line_count": 16,
       "body_preview": "### 2.13 `serve`  Start an MCP server for AI agent integration.  ``` Usage: spec"
     },
     {
-      "id": "docs.en.07-cli-commands.10.7",
+      "id": "docs.en.07-cli-commands.14.7",
       "file": "docs/en/07-cli-commands.md",
       "title": "`setup`",
       "heading_text": "2.14 `setup`",
       "depth": 3,
-      "line": 457,
+      "line": 484,
       "body_hash": "0156cc79061bcbf2",
       "body_hash_content": "e6a3794fec99a25d",
       "body_line_count": 14,
       "body_preview": "### 2.14 `setup`  One‑command project bootstrap that creates config, installs ho"
     },
     {
-      "id": "docs.en.07-cli-commands.10.8",
+      "id": "docs.en.07-cli-commands.14.8",
       "file": "docs/en/07-cli-commands.md",
       "title": "`init` ✨ New",
       "heading_text": "2.15 `init` ✨ New",
       "depth": 3,
-      "line": 472,
+      "line": 499,
       "body_hash": "2e5ff754da3fefe4",
       "body_hash_content": "057b939a3da8168d",
       "body_line_count": 52,
       "body_preview": "### 2.15 `init` ✨ New  Interactive config generator that creates `.specbridge.ya"
     },
     {
-      "id": "docs.en.07-cli-commands.10.9",
+      "id": "docs.en.07-cli-commands.14.9",
       "file": "docs/en/07-cli-commands.md",
       "title": "`diff` ✨ New",
       "heading_text": "2.16 `diff` ✨ New",
       "depth": 3,
-      "line": 525,
+      "line": 552,
       "body_hash": "01e465e0bb77e999",
       "body_hash_content": "2a8e12c9562afaa2",
       "body_line_count": 45,
       "body_preview": "### 2.16 `diff` ✨ New  Compare two snapshot files and show a summary diff — like"
     },
     {
-      "id": "docs.en.07-cli-commands.10.10",
+      "id": "docs.en.07-cli-commands.14.10",
       "file": "docs/en/07-cli-commands.md",
       "title": "`suggest` ✨ New",
       "heading_text": "2.17 `suggest` ✨ New",
       "depth": 3,
-      "line": 571,
+      "line": 598,
       "body_hash": "f70304a53c86c07a",
       "body_hash_content": "1785e8eaabbb0ced",
       "body_line_count": 38,
       "body_preview": "### 2.17 `suggest` ✨ New  Suggest code files that may implement uncovered (orpha"
     },
     {
-      "id": "docs.en.07-cli-commands.10.1",
+      "id": "docs.en.07-cli-commands.14.1",
       "file": "docs/en/07-cli-commands.md",
       "title": "Improved Error Messages (v1.0)",
       "heading_text": "3. Improved Error Messages (v1.0)",
       "depth": 2,
-      "line": 610,
+      "line": 637,
       "body_hash": "77014c2095b271ca",
       "body_hash_content": "0db714ca90a65b5b",
       "body_line_count": 13,
       "body_preview": "## 3. Improved Error Messages (v1.0)  When specbridge cannot find a supported pr"
     },
     {
-      "id": "docs.en.07-cli-commands.10.2",
+      "id": "docs.en.07-cli-commands.14.2",
       "file": "docs/en/07-cli-commands.md",
       "title": "Exit Codes",
       "heading_text": "4. Exit Codes",
       "depth": 2,
-      "line": 624,
+      "line": 651,
       "body_hash": "1d7c52d5ef022adc",
       "body_hash_content": "936fff59d5fbd280",
       "body_line_count": 6,
@@ -4989,246 +5037,294 @@
       "heading_text": "2.2 `impact`",
       "depth": 3,
       "line": 97,
-      "body_hash": "e1f9c3ad3fc05bc7",
-      "body_hash_content": "3e5e012846b9c681",
-      "body_line_count": 17,
-      "body_preview": "### 2.2 `impact`  特定の仕様を実装するコード/テストファイルを検索します。**あいまい検索**に対応しており、完全な階層IDを知らなくても検索"
+      "body_hash": "94ade2e6d8a5d79c",
+      "body_hash_content": "ec7451a0fc5b568a",
+      "body_line_count": 27,
+      "body_preview": "### 2.2 `impact`  特定の仕様を実装するコード/テストファイルを検索するか、ファイル変更の影響を受ける仕様を調査します。2つのモードがあります："
     },
     {
-      "id": "docs.ja.07-cli-commands.7.2",
+      "id": "docs.ja.07-cli-commands.8",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "spec 1.1 を実装するものを検索",
+      "heading_text": "spec 1.1 を実装するものを検索",
+      "depth": 1,
+      "line": 125,
+      "body_hash": "d5373c1b80c5a503",
+      "body_hash_content": "e67ad28db26974cf",
+      "body_line_count": 2,
+      "body_preview": "# spec 1.1 を実装するものを検索 $ specbridge impact --spec-id 1.1"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.9",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "コールグラフによる推移的影響付き",
+      "heading_text": "コールグラフによる推移的影響付き",
+      "depth": 1,
+      "line": 128,
+      "body_hash": "059410fdebc5c643",
+      "body_hash_content": "9ac5dbb274e707c4",
+      "body_line_count": 6,
+      "body_preview": "# コールグラフによる推移的影響付き $ specbridge impact --spec-id 1.1 --call-graph --max-depth 3 "
+    },
+    {
+      "id": "docs.ja.07-cli-commands.10",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "ファイル変更の影響を受ける仕様を検索",
+      "heading_text": "ファイル変更の影響を受ける仕様を検索",
+      "depth": 1,
+      "line": 135,
+      "body_hash": "0336109755685eff",
+      "body_hash_content": "0be03471952b1fcd",
+      "body_line_count": 2,
+      "body_preview": "# ファイル変更の影響を受ける仕様を検索 $ specbridge impact --file src/auth/login.py"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.11",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "推移的影響付き",
+      "heading_text": "推移的影響付き",
+      "depth": 1,
+      "line": 138,
+      "body_hash": "1b5659fa5049f44a",
+      "body_hash_content": "5b4dff678ec6297b",
+      "body_line_count": 3,
+      "body_preview": "# 推移的影響付き $ specbridge impact --file specbridge/cli.py --call-graph ```"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.11.1",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`coverage`",
       "heading_text": "2.3 `coverage`",
       "depth": 3,
-      "line": 115,
+      "line": 142,
       "body_hash": "d640487d104a7698",
       "body_hash_content": "8d05b1f710c6e92b",
       "body_line_count": 47,
       "body_preview": "### 2.3 `coverage`  色分けインジケータ付きで仕様カバレッジ統計を表示します。  ``` Usage: specbridge coverage"
     },
     {
-      "id": "docs.ja.07-cli-commands.7.3",
+      "id": "docs.ja.07-cli-commands.11.2",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`snapshot`",
       "heading_text": "2.4 `snapshot`",
       "depth": 3,
-      "line": 163,
+      "line": 190,
       "body_hash": "5af460dfe46935aa",
       "body_hash_content": "ac6083b6a6c619c3",
       "body_line_count": 33,
       "body_preview": "### 2.4 `snapshot`  後続のドリフト比較のため、現在のプロジェクト状態の構造的スナップショットを取得します。  ``` Usage: spec"
     },
     {
-      "id": "docs.ja.07-cli-commands.7.4",
+      "id": "docs.ja.07-cli-commands.11.3",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`drift`",
       "heading_text": "2.5 `drift`",
       "depth": 3,
-      "line": 197,
+      "line": 224,
       "body_hash": "cbad1b54512bad63",
       "body_hash_content": "4867433f5caee747",
       "body_line_count": 18,
       "body_preview": "### 2.5 `drift`  保存されたスナップショットと現在のプロジェクト状態の間の変更を検出します。  ``` Usage: specbridge dr"
     },
     {
-      "id": "docs.ja.07-cli-commands.7.5",
+      "id": "docs.ja.07-cli-commands.11.4",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`status` ✨ v1.0新機能",
       "heading_text": "2.6 `status` ✨ v1.0新機能",
       "depth": 3,
-      "line": 216,
+      "line": 243,
       "body_hash": "7d9de03fb09c7d29",
       "body_hash_content": "f81ad8d03cae5105",
       "body_line_count": 50,
       "body_preview": "### 2.6 `status` ✨ v1.0新機能  設定、スナップショットステータス、現在のカバレッジ、ドリットチェックを1つのコマンドで表示する統合プロジ"
     },
     {
-      "id": "docs.ja.07-cli-commands.7.6",
+      "id": "docs.ja.07-cli-commands.11.5",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`shell-completion` ✨ 新機能",
       "heading_text": "2.7 `shell-completion` ✨ 新機能",
       "depth": 3,
-      "line": 267,
+      "line": 294,
       "body_hash": "be3d5bbf213dda12",
       "body_hash_content": "f0be1cf61f2e7c85",
       "body_line_count": 25,
       "body_preview": "### 2.7 `shell-completion` ✨ 新機能  シェル補完スクリプト（Bash/Zsh/Fish）を生成またはインストールします。  ```"
     },
     {
-      "id": "docs.ja.07-cli-commands.8",
+      "id": "docs.ja.07-cli-commands.12",
       "file": "docs/ja/07-cli-commands.md",
       "title": "シェルを自動検出して手順を表示",
       "heading_text": "シェルを自動検出して手順を表示",
       "depth": 1,
-      "line": 293,
+      "line": 320,
       "body_hash": "87c14f8162915172",
       "body_hash_content": "cbe684c01f153544",
       "body_line_count": 2,
       "body_preview": "# シェルを自動検出して手順を表示 $ specbridge shell-completion"
     },
     {
-      "id": "docs.ja.07-cli-commands.9",
+      "id": "docs.ja.07-cli-commands.13",
       "file": "docs/ja/07-cli-commands.md",
       "title": "永続的にインストール",
       "heading_text": "永続的にインストール",
       "depth": 1,
-      "line": 296,
+      "line": 323,
       "body_hash": "76ee276c4e011976",
       "body_hash_content": "68c73ab6aa92aa44",
       "body_line_count": 2,
       "body_preview": "# 永続的にインストール $ specbridge shell-completion --install"
     },
     {
-      "id": "docs.ja.07-cli-commands.10",
+      "id": "docs.ja.07-cli-commands.14",
       "file": "docs/ja/07-cli-commands.md",
       "title": "特定のシェルを指定してセットアップ",
       "heading_text": "特定のシェルを指定してセットアップ",
       "depth": 1,
-      "line": 299,
+      "line": 326,
       "body_hash": "740c67ef6746da60",
       "body_hash_content": "14e7794eee9e75c1",
       "body_line_count": 29,
       "body_preview": "# 特定のシェルを指定してセットアップ $ eval \"$(specbridge shell-completion --show --shell zsh)\" `"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.1",
+      "id": "docs.ja.07-cli-commands.14.1",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`validate-boundary`",
       "heading_text": "2.8 `validate-boundary`",
       "depth": 3,
-      "line": 329,
+      "line": 356,
       "body_hash": "043c81d29c4084c2",
       "body_hash_content": "456c44baa098da7e",
       "body_line_count": 13,
       "body_preview": "### 2.8 `validate-boundary`  すべてのコード参照が仕様書で宣言された `_Boundary:_` マーカー内にあることをチェックしま"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.2",
+      "id": "docs.ja.07-cli-commands.14.2",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`config`",
       "heading_text": "2.9 `config`",
       "depth": 3,
-      "line": 343,
+      "line": 370,
       "body_hash": "ee38e0a81621a2e1",
       "body_hash_content": "f77c47b1aa4347fc",
       "body_line_count": 43,
       "body_preview": "### 2.9 `config`  現在のspecbridge設定とそのソースを表示または検証します。  ``` Usage: specbridge confi"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.3",
+      "id": "docs.ja.07-cli-commands.14.3",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`watch`",
       "heading_text": "2.10 `watch`",
       "depth": 3,
-      "line": 387,
+      "line": 414,
       "body_hash": "7ce48e83cd23ee61",
       "body_hash_content": "41bf3add64fd46d4",
       "body_line_count": 18,
       "body_preview": "### 2.10 `watch`  プロジェクトディレクトリのファイル変更を監視し、自動的に再分析します。`watchdog` パッケージが必要。  ``` U"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.4",
+      "id": "docs.ja.07-cli-commands.14.4",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`plugins`",
       "heading_text": "2.11 `plugins`",
       "depth": 3,
-      "line": 406,
+      "line": 433,
       "body_hash": "f49597b982c192a1",
       "body_hash_content": "d31bcd235787902f",
       "body_line_count": 13,
       "body_preview": "### 2.11 `plugins`  インストールされているすべてのアダプタプラグイン（内蔵およびサードパーティ）を一覧表示します。  ``` Usage: "
     },
     {
-      "id": "docs.ja.07-cli-commands.10.5",
+      "id": "docs.ja.07-cli-commands.14.5",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`call-graph`",
       "heading_text": "2.12 `call-graph`",
       "depth": 3,
-      "line": 420,
+      "line": 447,
       "body_hash": "d633859e103a5008",
       "body_hash_content": "79d3136649bed30e",
       "body_line_count": 16,
       "body_preview": "### 2.12 `call-graph`  関数レベルのコールグラフを構築し、specに対する推移的（間接）影響を分析します。  ``` Usage: spe"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.6",
+      "id": "docs.ja.07-cli-commands.14.6",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`serve`",
       "heading_text": "2.13 `serve`",
       "depth": 3,
-      "line": 437,
+      "line": 464,
       "body_hash": "124d784b339bd4c0",
       "body_hash_content": "496b4898ed4b8c79",
       "body_line_count": 16,
       "body_preview": "### 2.13 `serve`  AIエージェント統合用のMCPサーバーを起動します。  ``` Usage: specbridge serve [OPTIO"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.7",
+      "id": "docs.ja.07-cli-commands.14.7",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`setup`",
       "heading_text": "2.14 `setup`",
       "depth": 3,
-      "line": 454,
+      "line": 481,
       "body_hash": "12cbbc555d768ca8",
       "body_hash_content": "870800811042fb19",
       "body_line_count": 14,
       "body_preview": "### 2.14 `setup`  ワンコマンドでプロジェクトをブートストラップ。設定作成、フックインストール、AIエージェント用ファイル展開、初回スナップショ"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.8",
+      "id": "docs.ja.07-cli-commands.14.8",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`init` ✨ 新機能",
       "heading_text": "2.15 `init` ✨ 新機能",
       "depth": 3,
-      "line": 469,
+      "line": 496,
       "body_hash": "1d07cac32b77dac6",
       "body_hash_content": "7706b63388ac5dbc",
       "body_line_count": 52,
       "body_preview": "### 2.15 `init` ✨ 新機能  対話的に `.specbridge.yaml` を生成する設定ジェネレーターです。  ``` Usage: spe"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.9",
+      "id": "docs.ja.07-cli-commands.14.9",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`diff` ✨ 新機能",
       "heading_text": "2.16 `diff` ✨ 新機能",
       "depth": 3,
-      "line": 522,
+      "line": 549,
       "body_hash": "8a79592ba149ede6",
       "body_hash_content": "84724bc1a8795d7d",
       "body_line_count": 45,
       "body_preview": "### 2.16 `diff` ✨ 新機能  2つのスナップショットファイルを比較し、要約差分を表示します。spec版の `git diff --stat` の"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.10",
+      "id": "docs.ja.07-cli-commands.14.10",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`suggest` ✨ 新機能",
       "heading_text": "2.17 `suggest` ✨ 新機能",
       "depth": 3,
-      "line": 568,
+      "line": 595,
       "body_hash": "670a46438a01bd1d",
       "body_hash_content": "77496d364a8b5ead",
       "body_line_count": 38,
       "body_preview": "### 2.17 `suggest` ✨ 新機能  カバレッジのない孤立specに対して、実装候補となるコードファイルを提案します。  ``` Usage: s"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.1",
+      "id": "docs.ja.07-cli-commands.14.1",
       "file": "docs/ja/07-cli-commands.md",
       "title": "改善されたエラーメッセージ（v1.0）",
       "heading_text": "3. 改善されたエラーメッセージ（v1.0）",
       "depth": 2,
-      "line": 607,
+      "line": 634,
       "body_hash": "b77509ee4fed457f",
       "body_hash_content": "10afcdd5c42f728d",
       "body_line_count": 13,
       "body_preview": "## 3. 改善されたエラーメッセージ（v1.0）  specbridgeがサポート対象のプロジェクト構造を見つけられない場合、**実行可能なヒント**を提供す"
     },
     {
-      "id": "docs.ja.07-cli-commands.10.2",
+      "id": "docs.ja.07-cli-commands.14.2",
       "file": "docs/ja/07-cli-commands.md",
       "title": "終了コード",
       "heading_text": "4. 終了コード",
       "depth": 2,
-      "line": 621,
+      "line": 648,
       "body_hash": "754f97879c79df01",
       "body_hash_content": "ea5e671ae265ead5",
       "body_line_count": 6,
@@ -8266,8 +8362,10 @@
         "__init__",
         "_drift_git",
         "_emit_completion_script",
+        "_forward_impact",
         "_install_completion",
         "_no_adapter_hint",
+        "_reverse_impact",
         "_validate_config",
         "analyze",
         "call_graph",
@@ -8296,7 +8394,7 @@
         "pathlib",
         "typing"
       ],
-      "file_hash": "facd2b9d922d433c",
+      "file_hash": "dd30af938a5f8afe",
       "functions": [
         {
           "name": "cli",
@@ -8316,167 +8414,181 @@
           "name": "analyze",
           "kind": "function",
           "line": 58,
-          "body_hash": "f7659fe7eb0c3a72",
-          "body_lines": 96
+          "body_hash": "9d7699479d979627",
+          "body_lines": 99
         },
         {
           "name": "impact",
           "kind": "function",
-          "line": 154,
-          "body_hash": "acdd2e93579c3d44",
-          "body_lines": 94
+          "line": 157,
+          "body_hash": "e69176bafff2a69d",
+          "body_lines": 28
+        },
+        {
+          "name": "_forward_impact",
+          "kind": "function",
+          "line": 185,
+          "body_hash": "f3ef6cfa6bbe837d",
+          "body_lines": 85
+        },
+        {
+          "name": "_reverse_impact",
+          "kind": "function",
+          "line": 270,
+          "body_hash": "7469b8fa3378f572",
+          "body_lines": 166
         },
         {
           "name": "coverage",
           "kind": "function",
-          "line": 248,
+          "line": 436,
           "body_hash": "1170fe2adedb970d",
           "body_lines": 64
         },
         {
           "name": "snapshot",
           "kind": "function",
-          "line": 312,
+          "line": 500,
           "body_hash": "0cba8996eb6ac415",
           "body_lines": 41
         },
         {
           "name": "drift",
           "kind": "function",
-          "line": 353,
+          "line": 541,
           "body_hash": "d3c3ff19d6403e7d",
           "body_lines": 48
         },
         {
           "name": "_drift_git",
           "kind": "function",
-          "line": 401,
+          "line": 589,
           "body_hash": "f2e693d3de6e8168",
           "body_lines": 52
         },
         {
           "name": "validate_boundary",
           "kind": "function",
-          "line": 453,
+          "line": 641,
           "body_hash": "87aa4915d37ac348",
           "body_lines": 67
         },
         {
           "name": "status",
           "kind": "function",
-          "line": 520,
+          "line": 708,
           "body_hash": "69983f5576368029",
           "body_lines": 102
         },
         {
           "name": "config",
           "kind": "function",
-          "line": 622,
+          "line": 810,
           "body_hash": "4fde42903847f58e",
           "body_lines": 62
         },
         {
           "name": "watch",
           "kind": "function",
-          "line": 684,
+          "line": 872,
           "body_hash": "69cfba071467f247",
           "body_lines": 19
         },
         {
           "name": "SpecbridgeHandler",
           "kind": "class",
-          "line": 703,
+          "line": 891,
           "body_hash": "ae2a7008499982ae",
           "body_lines": 1
         },
         {
           "name": "__init__",
           "kind": "function",
-          "line": 704,
+          "line": 892,
           "body_hash": "67dc46120c3f5b72",
           "body_lines": 5
         },
         {
           "name": "on_any_event",
           "kind": "function",
-          "line": 709,
+          "line": 897,
           "body_hash": "e47dbcd34d55736f",
           "body_lines": 59
         },
         {
           "name": "plugins",
           "kind": "function",
-          "line": 768,
+          "line": 956,
           "body_hash": "48df660ccb0d77f4",
           "body_lines": 32
         },
         {
           "name": "serve",
           "kind": "function",
-          "line": 800,
+          "line": 988,
           "body_hash": "c1dce52f645d6988",
           "body_lines": 26
         },
         {
           "name": "call_graph",
           "kind": "function",
-          "line": 826,
+          "line": 1014,
           "body_hash": "c6bc02a60197debe",
           "body_lines": 54
         },
         {
           "name": "setup",
           "kind": "function",
-          "line": 880,
+          "line": 1068,
           "body_hash": "e85fc9fa67ba4bc0",
           "body_lines": 57
         },
         {
           "name": "init",
           "kind": "function",
-          "line": 937,
+          "line": 1125,
           "body_hash": "56768e834cab37d4",
           "body_lines": 127
         },
         {
           "name": "shell_completion",
           "kind": "function",
-          "line": 1064,
+          "line": 1252,
           "body_hash": "90abf912df22a1bf",
           "body_lines": 55
         },
         {
           "name": "_emit_completion_script",
           "kind": "function",
-          "line": 1119,
+          "line": 1307,
           "body_hash": "14e738fb634b4fe6",
           "body_lines": 9
         },
         {
           "name": "_install_completion",
           "kind": "function",
-          "line": 1128,
+          "line": 1316,
           "body_hash": "cd54f0c95e3acd41",
           "body_lines": 47
         },
         {
           "name": "diff",
           "kind": "function",
-          "line": 1175,
+          "line": 1363,
           "body_hash": "aeca0dd827ee9f56",
           "body_lines": 92
         },
         {
           "name": "suggest",
           "kind": "function",
-          "line": 1267,
+          "line": 1455,
           "body_hash": "a2555433d8edc6ce",
           "body_lines": 95
         },
         {
           "name": "_validate_config",
           "kind": "function",
-          "line": 1362,
+          "line": 1550,
           "body_hash": "24ca1b3568aec8ad",
           "body_lines": 34
         }
@@ -8595,7 +8707,7 @@
         "pathlib",
         "typing"
       ],
-      "file_hash": "0b78d56646795cf9",
+      "file_hash": "487db506e0d05842",
       "functions": [
         {
           "name": "create_mcp_server",
@@ -8622,20 +8734,20 @@
           "name": "handle_list_tools",
           "kind": "function",
           "line": 55,
-          "body_hash": "7990746e48006bf9",
-          "body_lines": 71
+          "body_hash": "5da943aef2ebeeaf",
+          "body_lines": 74
         },
         {
           "name": "handle_call_tool",
           "kind": "function",
-          "line": 126,
-          "body_hash": "ee67973d4edd1beb",
-          "body_lines": 149
+          "line": 129,
+          "body_hash": "a60bc22bef2edc50",
+          "body_lines": 186
         },
         {
           "name": "run_mcp_server",
           "kind": "function",
-          "line": 275,
+          "line": 315,
           "body_hash": "46095b0a17176521",
           "body_lines": 9
         }
@@ -9278,6 +9390,7 @@
         "edges_from",
         "edges_to",
         "find_spec_nodes",
+        "find_specs_by_file",
         "nodes_by_type"
       ],
       "is_test": false,
@@ -9287,7 +9400,7 @@
         "uuid",
         "dataclasses"
       ],
-      "file_hash": "6c0692661751850c",
+      "file_hash": "9926b4badd1b3f63",
       "functions": [
         {
           "name": "NodeType",
@@ -9384,8 +9497,15 @@
           "name": "find_spec_nodes",
           "kind": "function",
           "line": 105,
-          "body_hash": "fc945b9bb90b0061",
-          "body_lines": 35
+          "body_hash": "a3505628f6053684",
+          "body_lines": 36
+        },
+        {
+          "name": "find_specs_by_file",
+          "kind": "function",
+          "line": 141,
+          "body_hash": "fd4b35a7322cc067",
+          "body_lines": 51
         }
       ]
     },
@@ -10338,10 +10458,18 @@
         "TestCoverageGateCheck",
         "TestCoverageSummary",
         "TestFindOrphans",
+        "TestReverseImpact",
+        "impact_graph",
         "test_basic_coverage",
         "test_design_node_is_ignored_for_orphan_code",
         "test_edge_relation_filtering",
         "test_empty_graph",
+        "test_file_not_found",
+        "test_file_with_no_specs",
+        "test_find_specs_by_exact_file",
+        "test_find_specs_by_file_returns_all_specs",
+        "test_find_specs_by_filename",
+        "test_find_specs_structure",
         "test_full_coverage",
         "test_gate_default_threshold",
         "test_gate_empty_graph",
@@ -10363,7 +10491,7 @@
         "pytest",
         "specbridge.analyzers"
       ],
-      "file_hash": "8371ea9c23c947c0",
+      "file_hash": "09ae065ab2e94edd",
       "functions": [
         {
           "name": "three_spec_graph",
@@ -10502,8 +10630,64 @@
           "name": "test_gate_result_structure",
           "kind": "function",
           "line": 215,
-          "body_hash": "55b9d0a347b20e5b",
-          "body_lines": 10
+          "body_hash": "88e6b5867cab929e",
+          "body_lines": 11
+        },
+        {
+          "name": "TestReverseImpact",
+          "kind": "class",
+          "line": 226,
+          "body_hash": "b4ddcdc36acc7af2",
+          "body_lines": 4
+        },
+        {
+          "name": "impact_graph",
+          "kind": "function",
+          "line": 230,
+          "body_hash": "3ab1295b30c72fd8",
+          "body_lines": 28
+        },
+        {
+          "name": "test_find_specs_by_exact_file",
+          "kind": "function",
+          "line": 258,
+          "body_hash": "e92bc8c627164b5a",
+          "body_lines": 7
+        },
+        {
+          "name": "test_find_specs_by_filename",
+          "kind": "function",
+          "line": 265,
+          "body_hash": "197492436d2fa735",
+          "body_lines": 6
+        },
+        {
+          "name": "test_file_with_no_specs",
+          "kind": "function",
+          "line": 271,
+          "body_hash": "22e7b81a6aa1c836",
+          "body_lines": 5
+        },
+        {
+          "name": "test_file_not_found",
+          "kind": "function",
+          "line": 276,
+          "body_hash": "6024894c329be2b5",
+          "body_lines": 5
+        },
+        {
+          "name": "test_find_specs_by_file_returns_all_specs",
+          "kind": "function",
+          "line": 281,
+          "body_hash": "fc33690007fb3fe2",
+          "body_lines": 9
+        },
+        {
+          "name": "test_find_specs_structure",
+          "kind": "function",
+          "line": 290,
+          "body_hash": "19b18978a050e9e4",
+          "body_lines": 16
         }
       ]
     },
@@ -12919,6 +13103,7 @@
     "docs.en.04-discovery-engine.2.2",
     "docs.en.04-discovery-engine.2.3",
     "docs.en.06-drift-detection.2",
+    "docs.en.07-cli-commands.10",
     "docs.en.07-cli-commands.3",
     "docs.en.08-output-rendering.1",
     "docs.en.08-output-rendering.1.1",
@@ -13045,7 +13230,7 @@
     "docs.ja.06-drift-detection.1",
     "docs.ja.06-drift-detection.2",
     "docs.ja.06-drift-detection.3.2",
-    "docs.ja.07-cli-commands.7.5",
+    "docs.ja.07-cli-commands.11.4",
     "docs.ja.08-output-rendering.1",
     "docs.ja.08-output-rendering.1.4.1",
     "docs.ja.08-output-rendering.1.4.2",
@@ -13170,11 +13355,11 @@
     "root.README.ja.9.2"
   ],
   "coverage": {
-    "total": 669,
-    "covered": 329,
-    "orphan": 340,
-    "coverage_pct": 49.2,
-    "spec_count": 681,
+    "total": 677,
+    "covered": 336,
+    "orphan": 341,
+    "coverage_pct": 49.6,
+    "spec_count": 689,
     "code_count": 50
   }
 }

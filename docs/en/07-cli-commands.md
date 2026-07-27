@@ -96,20 +96,47 @@ $ specbridge analyze --format html --dry-run
 
 ### 2.2 `impact`
 
-Find which code/test files implement a specific specification. Supports **fuzzy spec ID resolution** — you don't need the full hierarchical ID.
+Find which code/test files implement a specific specification, **or** find which specs are affected by changes to a file. Supports two modes:
+
+- **Forward impact** (`--spec-id`): Spec → implementing code files
+- **Reverse impact** (`--file`): Code file → affected specs (new in v1.1)
 
 ```
 Usage: specbridge impact [OPTIONS]
 
-  Find what implements a given spec.
+  Analyze impact between specs and code.
 
 Options:
   -d, --dir TEXT      Project directory  [default: .]
-  --spec-id TEXT      Spec ID or title to analyze (e.g. "1.1", "TraceNode")  [required]
+  --spec-id TEXT      Spec ID to analyze (e.g. "1.1")
+  --file TEXT         File path for reverse impact: find specs affected by
+                      this file
   --format TEXT       Output format (text, json)  [default: text]
   -c, --call-graph    Include transitive (indirect) impact via call graph
   --max-depth INTEGER Max call-graph traversal depth  [default: 3]
   --help              Show this message and exit.
+```
+
+`--spec-id` and `--file` are mutually exclusive — exactly one must be provided.
+
+**Forward impact examples:**
+
+```bash
+# Find what implements spec 1.1
+$ specbridge impact --spec-id 1.1
+
+# With transitive (indirect) impact via call graph
+$ specbridge impact --spec-id 1.1 --call-graph --max-depth 3
+```
+
+**Reverse impact examples (v1.1+):**
+
+```bash
+# Find which specs are affected by changes to a file
+$ specbridge impact --file src/auth/login.py
+
+# With transitive impact
+$ specbridge impact --file specbridge/cli.py --call-graph
 ```
 
 ### 2.3 `coverage`

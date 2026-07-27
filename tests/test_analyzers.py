@@ -221,3 +221,84 @@ class TestCoverageGateCheck:
         assert "total" in result
         assert "min_coverage" in result
         assert "message" in result
+
+
+class TestReverseImpact:
+    """Reverse impact: file → spec lookup."""
+
+    @pytest.fixture
+    def impact_graph(self) -> TraceGraph:
+        g = TraceGraph()
+        # Specs
+        g.add_node(TraceNode(id="1", type=NodeType.SPEC, title="Auth",
+                             source=SourceRef(file="docs/auth.md"),
+                             framework_origin="heuristic"))
+        g.add_node(TraceNode(id="2", type=NodeType.SPEC, title="API",
+                             source=SourceRef(file="docs/api.md"),
+                             framework_origin="heuristic"))
+        # Code files
+        g.add_node(TraceNode(id="login.py", type=NodeType.CODE, title="login",
+                             source=SourceRef(file="src/auth/login.py"),
+                             framework_origin="heuristic"))
+        g.add_node(TraceNode(id="api.py", type=NodeType.CODE, title="api",
+                             source=SourceRef(file="src/api/handler.py"),
+                             framework_origin="heuristic"))
+        g.add_node(TraceNode(id="orphan.py", type=NodeType.CODE, title="orphan",
+                             source=SourceRef(file="src/utils/helper.py"),
+                             framework_origin="heuristic"))
+        # Edges
+        g.add_edge(TraceEdge(src_id="login.py", dst_id="1",
+                             relation=EdgeRelation.IMPLEMENTS,
+                             strength=EdgeStrength.EXPLICIT))
+        g.add_edge(TraceEdge(src_id="api.py", dst_id="2",
+                             relation=EdgeRelation.IMPLEMENTS,
+                             strength=EdgeStrength.EXPLICIT))
+        return g
+
+    def test_find_specs_by_exact_file(self, impact_graph: TraceGraph) -> None:
+        from specbridge.core import find_specs_by_file
+        results = find_specs_by_file(impact_graph, "src/auth/login.py")
+        assert len(results) == 1
+        assert results[0]["file"] == "src/auth/login.py"
+        assert results[0]["specs"][0]["spec_id"] == "1"
+
+    def test_find_specs_by_filename(self, impact_graph: TraceGraph) -> None:
+        from specbridge.core import find_specs_by_file
+        results = find_specs_by_file(impact_graph, "login.py")
+        assert len(results) == 1
+        assert results[0]["file"] == "src/auth/login.py"
+
+    def test_file_with_no_specs(self, impact_graph: TraceGraph) -> None:
+        from specbridge.core import find_specs_by_file
+        results = find_specs_by_file(impact_graph, "src/utils/helper.py")
+        assert len(results) == 0
+
+    def test_file_not_found(self, impact_graph: TraceGraph) -> None:
+        from specbridge.core import find_specs_by_file
+        results = find_specs_by_file(impact_graph, "nonexistent.py")
+        assert len(results) == 0
+
+    def test_find_specs_by_file_returns_all_specs(self, impact_graph: TraceGraph) -> None:
+        from specbridge.core import find_specs_by_file
+        results = find_specs_by_file(impact_graph, "src/auth/login.py")
+        assert len(results) == 1
+        assert results[0]["specs"][0]["spec_id"] == "1"
+        assert results[0]["specs"][0]["title"] == "Auth"
+        assert results[0]["specs"][0]["relation"] == "implements"
+        assert results[0]["specs"][0]["strength"] == "explicit"
+
+    def test_find_specs_structure(self, impact_graph: TraceGraph) -> None:
+        from specbridge.core import find_specs_by_file
+        results = find_specs_by_file(impact_graph, "src/auth/login.py")
+        assert len(results) == 1
+        r = results[0]
+        assert "file" in r
+        assert "node_type" in r
+        assert "specs" in r
+        assert len(r["specs"]) == 1
+        s = r["specs"][0]
+        assert "spec_id" in s
+        assert "title" in s
+        assert "relation" in s
+        assert "strength" in s
+        assert "evidence" in s

@@ -96,20 +96,47 @@ $ specbridge analyze --format html --dry-run
 
 ### 2.2 `impact`
 
-特定の仕様を実装するコード/テストファイルを検索します。**あいまい検索**に対応しており、完全な階層IDを知らなくても検索できます。
+特定の仕様を実装するコード/テストファイルを検索するか、ファイル変更の影響を受ける仕様を調査します。2つのモードがあります：
+
+- **フォワード影響**（`--spec-id`）: 仕様 → 実装コードファイル
+- **リバース影響**（`--file`）: コードファイル → 影響を受ける仕様（v1.1新機能）
 
 ```
 Usage: specbridge impact [OPTIONS]
 
-  指定された仕様を実装するものを検索
+  仕様とコードの間の影響を分析
 
 Options:
   -d, --dir TEXT      プロジェクトディレクトリ  [default: .]
-  --spec-id TEXT      分析する仕様IDまたはタイトル（例："1.1", "TraceNode"）[必須]
+  --spec-id TEXT      分析する仕様ID（例："1.1"）
+  --file TEXT         リバース影響用ファイルパス：このファイルの変更が
+                      影響する仕様を検索
   --format TEXT       出力形式 (text, json)  [default: text]
   -c, --call-graph    コールグラフによる推移的（間接）影響を含める
   --max-depth INTEGER コールグラフ探索の最大深さ  [default: 3]
   --help              ヘルプを表示
+```
+
+`--spec-id` と `--file` は排他 — どちらか一方のみを指定します。
+
+**フォワード影響の例：**
+
+```bash
+# spec 1.1 を実装するものを検索
+$ specbridge impact --spec-id 1.1
+
+# コールグラフによる推移的影響付き
+$ specbridge impact --spec-id 1.1 --call-graph --max-depth 3
+```
+
+**リバース影響の例（v1.1+）：**
+
+```bash
+# ファイル変更の影響を受ける仕様を検索
+$ specbridge impact --file src/auth/login.py
+
+# 推移的影響付き
+$ specbridge impact --file specbridge/cli.py --call-graph
 ```
 
 ### 2.3 `coverage`
