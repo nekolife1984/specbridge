@@ -286,17 +286,22 @@ Edge from "specbridge/core/__init__.py → docs.en.02-data-model.1.2.1"
 <!-- @impl specbridge/adapters/_base.py::detect_all -->
 <!-- @impl tests/conftest.py::tmp_project_heuristic -->
 
-- **時間計算量**: O(S × C)（S = 仕様候補数、C = コード候補数）
+- **時間計算量**: v1.0 以降は O(token_lookups)。転置インデックス（トークン→コードファイルインデックス）を1回構築し、元の O(S × C) スキャンを O(S × M)（M = マッチ候補数）に削減。
+- **高速モード** (`fast=True`): 関数レベルマッチング（セクション10）をスキップし、スナップショットやドリフト向けに計算量をさらに削減。
+- **ディレクトリインデックス**: 二次インデックスとしてディレクトリ名→コードファイルインデックスを保持し、ディレクトリ名ベースの候補プルーニングを効率化。
 - **マッチング中のI/Oなし**（すべてのデータは既に発見済み）
-- トークン化とJaccard計算は、典型的なプロジェクトサイズ（各500候補未満）ではCPU負荷が軽い
+- トークン化とJaccard計算は、典型的なプロジェクトサイズ（各500候補未満）ではCPU負荷が軽い。大規模プロジェクトではCLIの `--fast` オプションを使用。
 
 ## 9. 入力パラメータ
 
-この関数は、冗長な再発見を避けるために事前計算済みの候補を受け付けます：
+この関数は、冗長な再発見を避けるために事前計算済みの候補を受け付け、さらに `fast` フラグも指定できます：
 
 ```python
 # ドリフト検出で使用（スナップショット再発見から既にspecsとcodesを持っている）
 build_heuristic_graph(root, specs=curr_specs, codes=curr_codes, spec_dirs=config.spec_dirs, source_dirs=config.source_dirs)
+
+# 高速モード: 関数レベルマッチングをスキップ（カバレッジのみ必要なスナップショット/ドリフトで使用）
+build_heuristic_graph(root, fast=True)
 ```
 
 ## 10. 関数レベルトレーサビリティ
