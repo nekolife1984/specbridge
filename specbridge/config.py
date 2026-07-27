@@ -36,6 +36,7 @@ class SpecbridgeConfig:
     min_confidence: float = DEFAULT_MIN_CONFIDENCE
     max_output_nodes: int = DEFAULT_MAX_OUTPUT_NODES
     min_coverage: float = DEFAULT_MIN_COVERAGE
+    session_check: dict[str, Any] = field(default_factory=lambda: {"hooks": []})
 
     @classmethod
     def load(cls, project_dir: str | Path, config_path: str | Path | None = None) -> SpecbridgeConfig:
@@ -139,4 +140,5 @@ class SpecbridgeConfig:
             min_confidence=_safe_float(overrides.get("min_confidence"), base.min_confidence),
             max_output_nodes=_safe_int(overrides.get("max_output_nodes"), base.max_output_nodes),
             min_coverage=_safe_float(overrides.get("min_coverage"), base.min_coverage),
+            session_check=overrides.get("session_check", base.session_check),
         )

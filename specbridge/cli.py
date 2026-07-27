@@ -1597,5 +1597,158 @@ def _validate_config(cfg: Any, root: Path) -> list[str]:
     return issues
 
 
+@cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+@click.option("--config", "cfg_path", default=None,
+              help="Path to config file (default: auto-discover .specbridge.yaml / pyproject.toml)",
+              show_default=True)
+@click.option("--skip-git", is_flag=True, default=False,
+              help="Skip uncommitted changes check")
+@click.option("--skip-hooks", is_flag=True, default=False,
+              help="Skip custom session_check hooks from config")
+def session_check(dir: str, cfg_path: str | None, skip_git: bool, skip_hooks: bool) -> None:
+    """Run session-end integrity checks before closing a session.
+
+    Checks performed:
+    \b
+      1. Drift detection — compares current state against snapshot
+      2. Orphan spec/code files — specs or code with no trace links
+      3. Uncommitted changes — git status
+      4. Custom hooks — from .specbridge.yaml session_check.hooks
+
+    Exit codes: 0 = clean, 1 = warnings, 2 = blockers
+    """
+    from specbridge.adapters import detect_adapter
+    from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
+    from specbridge.analyzers.drift import compute_drift, load_snapshot
+    from specbridge.config import SpecbridgeConfig
+
+    root = Path(dir).resolve()
+    cfg = SpecbridgeConfig.load(str(root), config_path=cfg_path)
+
+    checks: list[dict[str, Any]] = []
+    blockers = 0
+    warnings = 0
+
+    click.echo(f"📋 specbridge Session Check — {root}")
+    click.echo(f"{'=' * 50}")
+
+    # ── Check 1: Drift ──
+    drift_ok = True
+    snapshot = load_snapshot(str(root))
+    if snapshot:
+        report = compute_drift(
+            snapshot, str(root),
+            spec_dirs=cfg.spec_dirs,
+            source_dirs=cfg.source_dirs,
+            spec_files=cfg.spec_files,
+            source_files=cfg.source_files,
+        )
+        drift_ok = not report.has_drift
+        if drift_ok:
+            click.echo("  ✅ Drift: no drift detected")
+        else:
+            click.echo("  ❌ Drift: changes detected since last snapshot")
+            blockers += 1
+    else:
+        click.echo("  ⚠️  Drift: no snapshot found (run 'specbridge snapshot' first)")
+        warnings += 1
+
+    # ── Check 2: Orphans ──
+    adapter = detect_adapter(str(root))
+    if adapter:
+        graph = adapter.analyze(str(root))
+        cov = coverage_summary(graph)
+        orphans_s = find_orphan_specs(graph)
+        orphans_c = find_orphan_code(graph)
+        pct = cov["coverage_pct"]
+
+        click.echo(f"  {'❌' if pct < cfg.min_coverage else '✅'} Coverage: {pct}% ({cov['covered']}/{cov['total']})")
+        if pct < cfg.min_coverage:
+            blockers += 1
+
+        if orphans_s:
+            click.echo(f"  ⚠️  Orphan specs: {len(orphans_s)} uncovered spec(s)")
+            for o in orphans_s[:5]:
+                click.echo(f"       - {o}")
+            if len(orphans_s) > 5:
+                click.echo(f"       ... and {len(orphans_s) - 5} more")
+            warnings += 1
+        else:
+            click.echo("  ✅ Orphan specs: none")
+
+        if orphans_c:
+            click.echo(f"  ⚠️  Orphan code: {len(orphans_c)} file(s) with no spec link")
+            for o in orphans_c[:5]:
+                click.echo(f"       - {o}")
+            if len(orphans_c) > 5:
+                click.echo(f"       ... and {len(orphans_c) - 5} more")
+            warnings += 1
+        else:
+            click.echo("  ✅ Orphan code: none")
+
+    # ── Check 3: Uncommitted changes ──
+    if not skip_git:
+        import subprocess
+        result = subprocess.run(
+            ["git", "status", "--porcelain"],
+            capture_output=True, text=True, cwd=str(root),
+        )
+        uncommitted = [l for l in result.stdout.strip().split("\n") if l]
+        if uncommitted:
+            click.echo(f"  ⚠️  Uncommitted changes: {len(uncommitted)} file(s)")
+            for u in uncommitted[:10]:
+                click.echo(f"       {u}")
+            if len(uncommitted) > 10:
+                click.echo(f"       ... and {len(uncommitted) - 10} more")
+            warnings += 1
+        else:
+            click.echo("  ✅ Git: working tree is clean")
+
+    # ── Check 4: Custom hooks ──
+    if not skip_hooks:
+        hooks = cfg.session_check.get("hooks", [])
+        if hooks:
+            import subprocess
+            for hook in hooks:
+                cmd = hook.get("command", "")
+                desc = hook.get("description", cmd)
+                optional = hook.get("optional", False)
+                click.echo(f"  🔧 Hook: {desc}")
+                try:
+                    hr = subprocess.run(
+                        cmd, shell=True, capture_output=True, text=True,
+                        cwd=str(root), timeout=60,
+                    )
+                    if hr.returncode != 0:
+                        msg = f"  ❌ Hook failed: {desc}"
+                        if optional:
+                            click.echo(f"     (optional) {hr.stderr.strip() or hr.stdout.strip()}")
+                            warnings += 1
+                        else:
+                            click.echo(msg)
+                            blockers += 1
+                    else:
+                        click.echo(f"     ✅ Passed: {hr.stdout.strip()}")
+                except subprocess.TimeoutExpired:
+                    click.echo(f"  ⚠️  Hook timed out: {desc}")
+                    warnings += 1
+        else:
+            click.echo("  📭 Hooks: none configured")
+
+    # ── Summary ──
+    click.echo("")
+    click.echo(f"{'=' * 50}")
+    if blockers == 0 and warnings == 0:
+        click.echo("✅ All checks passed — session state is clean.")
+        raise SystemExit(0)
+    elif blockers == 0:
+        click.echo(f"⚠️  {warnings} warning(s) — review suggested.")
+        raise SystemExit(1)
+    else:
+        click.echo(f"❌ {blockers} blocker(s), {warnings} warning(s) — fix before closing session.")
+        raise SystemExit(2)
+
+
 if __name__ == "__main__":
     cli()
