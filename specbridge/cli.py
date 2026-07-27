@@ -56,10 +56,9 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
             call_graph: bool, fast: bool, dry_run: bool, summary_only: bool) -> None:
     """Analyze a project and build a trace graph."""
     from specbridge.adapters import detect_adapter, detect_all, merge_graphs
-    from specbridge.outputs.rich_utils import get_console, progress_spinner
+    from specbridge.outputs.rich_utils import progress_spinner
 
     root = Path(dir).resolve()
-    console = get_console()
 
     with progress_spinner("🔍 Scanning project..."):
         if merge:
@@ -109,8 +108,8 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
 
     # CI-friendly one-line summary
     if summary_only:
-        from specbridge.outputs.text import render_one_line_coverage
         from specbridge.analyzers import coverage_summary
+        from specbridge.outputs.text import render_one_line_coverage
         cov = coverage_summary(graph)
         click.echo(render_one_line_coverage(
             float(cov["coverage_pct"]), int(cov["covered"]), int(cov["total"])
@@ -314,7 +313,7 @@ def snapshot(dir: str, cfg_path: str | None, reason: str, dry_run: bool) -> None
     click.echo(f"   Specs: {len(snap['specs'])} | Code files: {len(snap['code'])}")
     click.echo(f"   Coverage: {snap['coverage']['coverage_pct']}%")
     if dry_run:
-        click.echo(f"   (--dry-run, snapshot not saved)")
+        click.echo("   (--dry-run, snapshot not saved)")
     else:
         click.echo(f"   Saved: {path}")
 
@@ -500,10 +499,10 @@ def validate_boundary(dir: str) -> None:
               help="Output format", show_default=True)
 def status(dir: str, output_fmt: str) -> None:
     """Show project state dashboard: config, snapshot, coverage, drift in one view."""
+    from specbridge.adapters import detect_adapter
     from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
     from specbridge.analyzers.drift import load_snapshot
     from specbridge.config import SpecbridgeConfig
-    from specbridge.adapters import detect_adapter
 
     root = Path(dir).resolve()
 
@@ -512,7 +511,7 @@ def status(dir: str, output_fmt: str) -> None:
     click.echo("📋 specbridge Status")
     click.echo(f"{'=' * 50}")
 
-    click.echo(f"\n🔧 Configuration:")
+    click.echo("\n🔧 Configuration:")
     click.echo(f"   spec_dirs:        {cfg.spec_dirs}")
     click.echo(f"   source_dirs:      {cfg.source_dirs}")
     click.echo(f"   exclude_dirs:     {len(cfg.exclude_dirs)} patterns")
@@ -521,7 +520,7 @@ def status(dir: str, output_fmt: str) -> None:
     # 2. Snapshot info
     snap = load_snapshot(str(root))
     if snap:
-        click.echo(f"\n📸 Snapshot:")
+        click.echo("\n📸 Snapshot:")
         click.echo(f"   Taken:           {snap.get('timestamp', '?')}")
         click.echo(f"   Reason:          {snap.get('reason', '(none)') or '(none)'}")
         cov_snap = snap.get("coverage", {})
@@ -529,7 +528,7 @@ def status(dir: str, output_fmt: str) -> None:
         click.echo(f"   Specs (snap):    {cov_snap.get('spec_count', '?')}")
         click.echo(f"   Code files:      {cov_snap.get('code_count', '?')}")
     else:
-        click.echo(f"\n📸 Snapshot:        (none)")
+        click.echo("\n📸 Snapshot:        (none)")
         click.echo("   Run 'specbridge snapshot' to create one.")
 
     # 3. Current coverage
@@ -549,14 +548,14 @@ def status(dir: str, output_fmt: str) -> None:
                 sign = "+" if diff >= 0 else ""
                 delta_pct = f" ({sign}{diff}% from snapshot)"
 
-        click.echo(f"\n📊 Current Coverage:")
+        click.echo("\n📊 Current Coverage:")
         click.echo(f"   Coverage:        {cov['coverage_pct']}%{delta_pct}")
         click.echo(f"   Total specs:     {cov['total']}")
         click.echo(f"   Covered:         {cov['covered']}")
         click.echo(f"   Orphan specs:    {len(orphans_spec)}")
         click.echo(f"   Orphan code:     {len(orphans_code)}")
     else:
-        click.echo(f"\n📊 Current Coverage: (no adapter found)")
+        click.echo("\n📊 Current Coverage: (no adapter found)")
 
     # 4. Drift check
     if snap:
@@ -569,9 +568,9 @@ def status(dir: str, output_fmt: str) -> None:
             source_files=cfg.source_files,
         )
         if report.has_drift:
-            click.echo(f"\n⚠️  Drift detected! Run 'specbridge drift' for details.")
+            click.echo("\n⚠️  Drift detected! Run 'specbridge drift' for details.")
         else:
-            click.echo(f"\n✅ No drift detected — project state matches snapshot.")
+            click.echo("\n✅ No drift detected — project state matches snapshot.")
 
     if output_fmt == "json":
         import json as _json
@@ -919,7 +918,6 @@ def init(dir: str, force: bool) -> None:
     source directories (src/, lib/, app/, tests/, ...), then guides you
     through selecting which to include and writing the config file.
     """
-    from specbridge.config import SpecbridgeConfig, DEFAULT_SPEC_DIRS, DEFAULT_SOURCE_DIRS
 
     root = Path(dir).resolve()
 
@@ -943,7 +941,7 @@ def init(dir: str, force: bool) -> None:
             found_spec_dirs.append(f"{d}/  ({md_count} .md files)")
 
     if found_spec_dirs:
-        click.echo(f"\n📁 Spec directories found:")
+        click.echo("\n📁 Spec directories found:")
         for d in found_spec_dirs:
             click.echo(f"    {d}")
         use_all_spec = click.confirm("   Include all of them?", default=True)
@@ -973,7 +971,7 @@ def init(dir: str, force: bool) -> None:
             found_source_dirs.append(f"{d}/  ({src_count} source files)")
 
     if found_source_dirs:
-        click.echo(f"\n🔧 Source directories found:")
+        click.echo("\n🔧 Source directories found:")
         for d in found_source_dirs:
             click.echo(f"    {d}")
         use_all_src = click.confirm("   Include all of them?", default=True)
@@ -1004,7 +1002,7 @@ def init(dir: str, force: bool) -> None:
         max_output_nodes = 20
 
     # ── Preview & confirm ──
-    click.echo(f"\n📝 Config preview:")
+    click.echo("\n📝 Config preview:")
     click.echo(f"    spec_dirs:        {spec_dirs}")
     click.echo(f"    source_dirs:      {source_dirs}")
     click.echo(f"    min_confidence:   {min_confidence}")
@@ -1184,10 +1182,10 @@ def diff(before: str, after: str, output_fmt: str) -> None:
     delta = round(float(apct) - float(bpct), 1)
     sign = "+" if delta >= 0 else ""
 
-    click.echo(f"📊 specbridge snapshot diff")
+    click.echo("📊 specbridge snapshot diff")
     click.echo(f"{'=' * 50}")
 
-    click.echo(f"\n📊 Coverage trend:")
+    click.echo("\n📊 Coverage trend:")
     click.echo(f"   Before:  {bpct}% ({cov_b.get('covered', '?')}/{cov_b.get('total', '?')})")
     click.echo(f"   After:   {apct}% ({cov_a.get('covered', '?')}/{cov_a.get('total', '?')})")
     click.echo(f"   Change:  {sign}{delta}%")
@@ -1197,7 +1195,7 @@ def diff(before: str, after: str, output_fmt: str) -> None:
     s_changed = result["specs_changed"]
     s_renamed = result["specs_renamed"]
     if s_added or s_removed or s_changed:
-        click.echo(f"\n📄 Spec changes:")
+        click.echo("\n📄 Spec changes:")
         if s_added:
             click.echo(f"   + {s_added} added")
             for d in result.get("added_specs_detail", []):
@@ -1213,7 +1211,7 @@ def diff(before: str, after: str, output_fmt: str) -> None:
     c_removed = result["code_removed"]
     funcs = result["funcs_changed"]
     if c_added or c_removed or funcs:
-        click.echo(f"\n📁 Code changes:")
+        click.echo("\n📁 Code changes:")
         if c_added:
             click.echo(f"   + {c_added} files added")
         if c_removed:
@@ -1224,7 +1222,7 @@ def diff(before: str, after: str, output_fmt: str) -> None:
     new_orph = result["new_orphans"]
     res_orph = result["resolved_orphans"]
     if new_orph or res_orph:
-        click.echo(f"\n🟡 Orphan changes:")
+        click.echo("\n🟡 Orphan changes:")
         click.echo(f"   Before:  {result['orphans_before']} orphan specs")
         click.echo(f"   After:   {result['orphans_after']} orphan specs")
         if new_orph:
@@ -1254,8 +1252,7 @@ def suggest(dir: str, top: int, output_fmt: str, threshold: float) -> None:
     similarity score. Use ``--threshold`` to filter out weak matches.
     """
     from specbridge.adapters import detect_adapter
-    from specbridge.analyzers import find_orphan_code, find_orphan_specs
-    from specbridge.core import NodeType
+    from specbridge.analyzers import find_orphan_specs
     from specbridge.discovery.code import discover_code
     from specbridge.discovery.spec import discover_specs
     from specbridge.infer import _score_edge, _tokenize
@@ -1280,7 +1277,6 @@ def suggest(dir: str, top: int, output_fmt: str, threshold: float) -> None:
     codes = discover_code(str(root), source_dirs=cfg.source_dirs, source_files=cfg.source_files)
 
     # Build spec lookup
-    spec_map = {s.auto_id: s for s in specs}
     orphan_spec_candidates = [s for s in specs if s.auto_id in orphan_specs]
 
     suggestions: list[dict[str, Any]] = []

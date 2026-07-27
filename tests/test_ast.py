@@ -6,10 +6,10 @@ from pathlib import Path
 
 from specbridge.discovery.ast import (
     extract_functions,
-    extract_functions_python,
-    extract_functions_typescript,
     extract_functions_go,
+    extract_functions_python,
     extract_functions_rust,
+    extract_functions_typescript,
 )
 
 

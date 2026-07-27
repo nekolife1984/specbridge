@@ -3,10 +3,8 @@
 from typing import Any
 
 from rich.console import Console
-from rich.table import Table
-from rich.text import Text
 
-from specbridge.core import EdgeStrength, NodeType, TraceGraph
+from specbridge.core import NodeType, TraceGraph
 
 _console = Console()
 
@@ -129,11 +127,11 @@ def render_coverage(cov: dict[str, int | float], orphans_spec: list[str],
     lines.append(f"  Coverage:     {pct}%")
 
     if orphans_spec:
-        lines.append(f"\n🟡 Orphan specs (no code ref):")
+        lines.append("\n🟡 Orphan specs (no code ref):")
         for nid in orphans_spec:
             lines.append(f"   - {nid}")
     if orphans_code:
-        lines.append(f"\n🟡 Orphan code files (no spec ref):")
+        lines.append("\n🟡 Orphan code files (no spec ref):")
         for nid in orphans_code[:10]:
             lines.append(f"   - {nid}")
         if len(orphans_code) > 10:

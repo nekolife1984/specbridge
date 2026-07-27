@@ -2,9 +2,9 @@
 # -- Eager-import adapters so their @register decorators fire --
 # Order matters: heuristic is primary, spectra is optional extra
 from specbridge.adapters import (
+    graphify,  # noqa: F401
     heuristic,  # noqa: F401
     spectra,  # noqa: F401
-    graphify,  # noqa: F401
 )
 from specbridge.adapters._base import (  # noqa: F401
     ProjectAdapter,

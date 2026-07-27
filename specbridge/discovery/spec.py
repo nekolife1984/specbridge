@@ -149,7 +149,7 @@ def discover_specs(
             continue
         if not fpath.exists() or not fpath.is_file():
             import warnings
-            warnings.warn(f"spec_file not found: {fname}")
+            warnings.warn(f"spec_file not found: {fname}", stacklevel=2)
             continue
         try:
             text = fpath.read_text(encoding="utf-8")

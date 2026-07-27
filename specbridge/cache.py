@@ -7,9 +7,8 @@ files whose mtime and hash match the cache are skipped.
 
 from __future__ import annotations
 
-import json
 import hashlib
-import os
+import json
 from pathlib import Path
 from typing import Any
 

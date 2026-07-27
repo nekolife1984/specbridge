@@ -36,10 +36,10 @@ _TS_GO = None
 _TS_RUST = None
 
 try:
-    import tree_sitter_python as _ts_python_mod
-    import tree_sitter_typescript as _ts_ts_mod
     import tree_sitter_go as _ts_go_mod
+    import tree_sitter_python as _ts_python_mod
     import tree_sitter_rust as _ts_rust_mod
+    import tree_sitter_typescript as _ts_ts_mod
     from tree_sitter import Language, Parser
 
     _TS_PYTHON = Language(_ts_python_mod.language())
