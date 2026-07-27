@@ -167,7 +167,7 @@ def _find_calls(text: str) -> set[str]:
         # Skip method calls (obj.method), decorators (@decorator), import-like
         if len(name) > 1 and name[0].isupper():
             continue  # Likely a class constructor
-        if name in ("if", "for", "while", "with", "switch", "catch", "elif", "else"):
+        if name in ("if", "for", "while", "with", "switch", "catch", "elif", "else", "return", "raise", "yield", "assert", "del", "throw"):
             continue
         names.add(name)
     return names
