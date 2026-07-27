@@ -25,11 +25,13 @@ def build_snapshot(
     reason: str = "",
     spec_dirs: list[str] | None = None,
     source_dirs: list[str] | None = None,
+    spec_files: list[str] | None = None,
+    source_files: list[str] | None = None,
 ) -> dict[str, Any]:
     """Build a snapshot of the current project state with hashes."""
-    specs = discover_specs(directory, spec_dirs=spec_dirs)
-    codes = discover_code(directory, source_dirs=source_dirs)
-    graph = build_heuristic_graph(directory, specs=specs, codes=codes, spec_dirs=spec_dirs, source_dirs=source_dirs, fast=True)
+    specs = discover_specs(directory, spec_dirs=spec_dirs, spec_files=spec_files)
+    codes = discover_code(directory, source_dirs=source_dirs, source_files=source_files)
+    graph = build_heuristic_graph(directory, specs=specs, codes=codes, spec_dirs=spec_dirs, source_dirs=source_dirs, spec_files=spec_files, source_files=source_files, fast=True)
     cov = coverage_summary(graph)
 
     snapshot = {
@@ -262,6 +264,8 @@ def compute_drift(
     *,
     spec_dirs: list[str] | None = None,
     source_dirs: list[str] | None = None,
+    spec_files: list[str] | None = None,
+    source_files: list[str] | None = None,
 ) -> DriftReport:
     """Compare snapshot against current state."""
     report = DriftReport()
@@ -271,8 +275,8 @@ def compute_drift(
     snap_code = {c["file"]: c for c in snapshot.get("code", [])}
 
     # Current state
-    curr_specs = discover_specs(directory, spec_dirs=spec_dirs)
-    curr_codes = discover_code(directory, source_dirs=source_dirs)
+    curr_specs = discover_specs(directory, spec_dirs=spec_dirs, spec_files=spec_files)
+    curr_codes = discover_code(directory, source_dirs=source_dirs, source_files=source_files)
     curr_spec_map = {s.auto_id: s for s in curr_specs}
     curr_code_map = {c.file: c for c in curr_codes}
 

@@ -50,5 +50,7 @@ class HeuristicAdapter(ProjectAdapter):
             directory,
             spec_dirs=cfg.spec_dirs,
             source_dirs=cfg.source_dirs,
+            spec_files=cfg.spec_files,
+            source_files=cfg.source_files,
             fast=self.fast,
         )

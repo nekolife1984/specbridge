@@ -30,6 +30,8 @@ class SpecbridgeConfig:
     spec_dirs: list[str] = field(default_factory=lambda: list(DEFAULT_SPEC_DIRS))
     source_dirs: list[str] = field(default_factory=lambda: list(DEFAULT_SOURCE_DIRS))
     exclude_dirs: set[str] = field(default_factory=lambda: set(DEFAULT_EXCLUDE_DIRS))
+    spec_files: list[str] = field(default_factory=list)
+    source_files: list[str] = field(default_factory=list)
     min_confidence: float = DEFAULT_MIN_CONFIDENCE
     max_output_nodes: int = DEFAULT_MAX_OUTPUT_NODES
 
@@ -130,6 +132,8 @@ class SpecbridgeConfig:
             spec_dirs=overrides.get("spec_dirs", base.spec_dirs),
             source_dirs=overrides.get("source_dirs", base.source_dirs),
             exclude_dirs=set(overrides.get("exclude_dirs", list(base.exclude_dirs))),
+            spec_files=overrides.get("spec_files", base.spec_files),
+            source_files=overrides.get("source_files", base.source_files),
             min_confidence=_safe_float(overrides.get("min_confidence"), base.min_confidence),
             max_output_nodes=_safe_int(overrides.get("max_output_nodes"), base.max_output_nodes),
         )

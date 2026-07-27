@@ -49,40 +49,52 @@ When `--config` is provided, auto-discovery of `.specbridge.yaml` and `pyproject
 
 ### 2.3 YAML Config Format (`.specbridge.yaml`)
 
+### spec_files — Explicit file list for root-level documents
+
+`spec_files` lets you specify individual Markdown files (relative to the project root) **independently** of `spec_dirs`. These bypass the `_EXCLUDE_FILES` set, so documents like `README.md` that are normally excluded are still tracked as specs.
+
 ```yaml
-# .specbridge.yaml
 spec_dirs:
   - docs
-  - spec
+spec_files:
+  - README.md             # Each heading becomes a SpecCandidate
+  - AGENTS.md
+  - CHANGELOG.md
+  - .github/pull_request_template.md
+```
+
+Similarly, `source_files` lets you specify individual source files:
+
+```yaml
+source_files:
+  - scripts/install-hooks.sh
+```
+
+### Config key reference
+
+````yaml
+spec_dirs:
+  - docs
   - specs
+spec_files:               # Explicit spec files (bypasses _EXCLUDE_FILES)
+  - README.md
+  - AGENTS.md
 source_dirs:
   - src
   - lib
   - app
+source_files:             # Explicit source files
+  - scripts/setup.sh
 exclude_dirs:
   - .git
   - node_modules
   - .venv
-  - __pycache__
-  - dist
-  - build
-  - .spectra
   - .specbridge
-  - .artgraph
-  - .trace
-  - venv
-  - env
-  - .tox
-  - .mypy_cache
-  - .ruff_cache
-  - .pytest_cache
-  - .egg-info
-  - site-packages
-  - coverage
-  - htmlcov
 min_confidence: 0.15
-max_output_nodes: 20
+max_output_nodes: 40
+````
 ```
+
 
 ### 2.4 `pyproject.toml` Format
 

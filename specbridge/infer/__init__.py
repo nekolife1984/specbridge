@@ -70,6 +70,8 @@ def build_heuristic_graph(
     codes: list[CodeCandidate] | None = None,
     spec_dirs: list[str] | None = None,
     source_dirs: list[str] | None = None,
+    spec_files: list[str] | None = None,
+    source_files: list[str] | None = None,
     fast: bool = False,
 ) -> TraceGraph:
     """Build a TraceGraph using only structural heuristics.
@@ -79,6 +81,9 @@ def build_heuristic_graph(
     Pass pre-discovered *specs* and *codes* to avoid redundant re-discovery
     (used by drift detection which already has them).
 
+    *spec_files* and *source_files* are forwarded to ``discover_specs`` and
+    ``discover_code`` for explicit file list support (root-level files).
+
     When *fast* is True, function-level traceability matching is skipped,
     reducing O(N×M×F) complexity to O(N×M) for large projects.
     """
@@ -86,10 +91,10 @@ def build_heuristic_graph(
 
     # 1. Discover spec candidates (unless pre-provided)
     if specs is None:
-        specs = discover_specs(project_dir, spec_dirs=spec_dirs)
+        specs = discover_specs(project_dir, spec_dirs=spec_dirs, spec_files=spec_files)
     # 2. Discover code candidates (unless pre-provided)
     if codes is None:
-        codes = discover_code(project_dir, source_dirs=source_dirs)
+        codes = discover_code(project_dir, source_dirs=source_dirs, source_files=source_files)
 
     # 3. Convert spec candidates → TraceNodes
     for sc in specs:

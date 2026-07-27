@@ -54,40 +54,52 @@ $ specbridge config --config ./ci-specbridge.yaml --validate
 
 ### 2.3 YAML設定形式（`.specbridge.yaml`）
 
+### spec_files — 個別ファイルの明示指定（ルート直下の文書など）
+
+`spec_files` は `spec_dirs` とは独立して、プロジェクトルートからの相対パスで Markdown ファイルを個別に指定します。`_EXCLUDE_FILES`（README.md 等）をバイパスするため、通常除外されるルート直下の文書も spec として認識されます。
+
 ```yaml
-# .specbridge.yaml
 spec_dirs:
   - docs
-  - spec
+spec_files:
+  - README.md             # 各見出しが SpecCandidate にパースされる
+  - AGENTS.md
+  - CHANGELOG.md
+  - .github/pull_request_template.md
+```
+
+`source_files` も同様に、ソースファイルを個別に指定できます：
+
+```yaml
+source_files:
+  - scripts/install-hooks.sh
+```
+
+### 設定キー一覧
+
+````yaml
+spec_dirs:
+  - docs
   - specs
+spec_files:               # 個別の spec ファイル（_EXCLUDE_FILES をバイパス）
+  - README.md
+  - AGENTS.md
 source_dirs:
   - src
   - lib
   - app
+source_files:             # 個別のソースファイル
+  - scripts/setup.sh
 exclude_dirs:
   - .git
   - node_modules
   - .venv
-  - __pycache__
-  - dist
-  - build
-  - .spectra
   - .specbridge
-  - .artgraph
-  - .trace
-  - venv
-  - env
-  - .tox
-  - .mypy_cache
-  - .ruff_cache
-  - .pytest_cache
-  - .egg-info
-  - site-packages
-  - coverage
-  - htmlcov
 min_confidence: 0.15
-max_output_nodes: 20
+max_output_nodes: 40
+````
 ```
+
 
 ### 2.4 `pyproject.toml` 形式
 

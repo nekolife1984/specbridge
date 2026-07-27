@@ -305,6 +305,8 @@ def snapshot(dir: str, cfg_path: str | None, reason: str, dry_run: bool) -> None
             reason=reason,
             spec_dirs=cfg.spec_dirs,
             source_dirs=cfg.source_dirs,
+            spec_files=cfg.spec_files,
+            source_files=cfg.source_files,
         )
         if not dry_run:
             path = save_snapshot(snap, str(root))
@@ -362,6 +364,8 @@ def drift(dir: str, cfg_path: str | None, snapshot_path: str | None, gate: bool,
         snapshot, str(root),
         spec_dirs=cfg.spec_dirs,
         source_dirs=cfg.source_dirs,
+        spec_files=cfg.spec_files,
+        source_files=cfg.source_files,
     )
 
     if output_fmt == "json":
@@ -561,6 +565,8 @@ def status(dir: str, output_fmt: str) -> None:
             snap, str(root),
             spec_dirs=cfg.spec_dirs,
             source_dirs=cfg.source_dirs,
+            spec_files=cfg.spec_files,
+            source_files=cfg.source_files,
         )
         if report.has_drift:
             click.echo(f"\n⚠️  Drift detected! Run 'specbridge drift' for details.")
@@ -1270,8 +1276,8 @@ def suggest(dir: str, top: int, output_fmt: str, threshold: float) -> None:
     # Get raw candidates for scoring
     from specbridge.config import SpecbridgeConfig
     cfg = SpecbridgeConfig.load(str(root))
-    specs = discover_specs(str(root), spec_dirs=cfg.spec_dirs)
-    codes = discover_code(str(root), source_dirs=cfg.source_dirs)
+    specs = discover_specs(str(root), spec_dirs=cfg.spec_dirs, spec_files=cfg.spec_files)
+    codes = discover_code(str(root), source_dirs=cfg.source_dirs, source_files=cfg.source_files)
 
     # Build spec lookup
     spec_map = {s.auto_id: s for s in specs}

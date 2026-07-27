@@ -154,6 +154,7 @@ def discover_code(
     *,
     source_dirs: list[str] | None = None,
     exclude_dirs: set[str] | None = None,
+    source_files: list[str] | None = None,
 ) -> list[CodeCandidate]:
     root = Path(directory).resolve()
     if source_dirs is None:
@@ -199,6 +200,42 @@ def discover_code(
                     functions=funcs,
                     file_hash=fhash,
                 ))
+
+    # ✨ Explicit source files
+    for fname in (source_files or []):
+        fpath = root / fname
+        if not fpath.exists() or not fpath.is_file():
+            continue
+        ext = fpath.suffix
+        if ext not in _SOURCE_MAP:
+            continue
+        try:
+            text = fpath.read_text(encoding="utf-8")
+        except Exception:
+            continue
+
+        rel = str(fpath.relative_to(root))
+        module = fpath.parent.name if fpath.parent != root else fpath.stem
+        lines = text.split("\n")
+        _, lang = _SOURCE_MAP[ext]
+
+        symbols = sorted(set(_extract_symbol_names(text)))
+        is_test = _is_test_file(fpath)
+        imports = _extract_imports(text, ext)
+        funcs = _extract_func_blocks(text, lines)
+        fhash = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+
+        candidates.append(CodeCandidate(
+            file=rel,
+            module=module,
+            symbols=symbols,
+            is_test=is_test,
+            language=lang,
+            imports=imports,
+            line_count=len(lines),
+            functions=funcs,
+            file_hash=fhash,
+        ))
 
     return candidates
 

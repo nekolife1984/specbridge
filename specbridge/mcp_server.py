@@ -19,6 +19,7 @@ from typing import TYPE_CHECKING, Any
 from specbridge.adapters import detect_all, merge_graphs
 from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
 from specbridge.analyzers.drift import build_snapshot, compute_drift, load_snapshot, save_snapshot
+from specbridge.config import SpecbridgeConfig
 from specbridge.core import NodeType, find_spec_nodes
 
 if TYPE_CHECKING:
@@ -46,6 +47,9 @@ def create_mcp_server(project_dir: str = ".") -> object:
             raise ValueError("No recognized SSD framework found")
         graphs = [adapter.analyze(str(root)) for _, adapter in scored]
         return merge_graphs(graphs)
+
+    def _load_config() -> SpecbridgeConfig:
+        return SpecbridgeConfig.load(str(root))
 
     @server.list_tools()  # type: ignore[no-untyped-call, untyped-decorator]
     async def handle_list_tools() -> list[Tool]:
@@ -183,7 +187,8 @@ def create_mcp_server(project_dir: str = ".") -> object:
             take_snapshot_flag = arguments.get("take_snapshot", False)
 
             if take_snapshot_flag:
-                snap = build_snapshot(str(root))
+                cfg = _load_config()
+                snap = build_snapshot(str(root), spec_files=cfg.spec_files, source_files=cfg.source_files)
                 save_snapshot(snap, str(root))
                 return [TextContent(
                     type="text",
@@ -197,7 +202,8 @@ def create_mcp_server(project_dir: str = ".") -> object:
                     text="No snapshot found. Run drift with take_snapshot=true first.",
                 )]
 
-            report = compute_drift(snapshot, str(root))
+            cfg = _load_config()
+            report = compute_drift(snapshot, str(root), spec_files=cfg.spec_files, source_files=cfg.source_files)
             return [TextContent(type="text", text=report.render_text())]
 
         elif name == "validate_boundary":

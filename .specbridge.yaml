@@ -1,6 +1,12 @@
 spec_dirs:
   - docs
   - .agents/skills
+spec_files:
+  - README.md
+  - README.ja.md
+  - AGENTS.md
+  - CONTRIBUTING.md
+  - .github/pull_request_template.md
 source_dirs:
   - specbridge
   - tests

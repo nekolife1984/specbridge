@@ -107,8 +107,14 @@ def discover_specs(
     *,
     spec_dirs: list[str] | None = None,
     exclude_dirs: set[str] | None = None,
+    spec_files: list[str] | None = None,
 ) -> list[SpecCandidate]:
-    """Scan a project for spec documents. Returns one SpecCandidate per heading."""
+    """Scan a project for spec documents. Returns one SpecCandidate per heading.
+
+    *spec_files* lists individual Markdown files (relative to project root)
+    to include as specs, bypassing ``_EXCLUDE_FILES``. Use this for root-level
+    documents such as ``README.md``, ``AGENTS.md``, etc.
+    """
     root = Path(directory).resolve()
     if spec_dirs is None:
         spec_dirs = ["docs", "spec", "specs"]
@@ -131,6 +137,17 @@ def discover_specs(
             except Exception:
                 continue
             candidates.extend(_parse_sections(fpath, text, root))
+
+    # ✨ Explicit spec files (bypass _EXCLUDE_FILES)
+    for fname in (spec_files or []):
+        fpath = root / fname
+        if not fpath.exists() or not fpath.is_file():
+            continue
+        try:
+            text = fpath.read_text(encoding="utf-8")
+        except Exception:
+            continue
+        candidates.extend(_parse_sections(fpath, text, root))
 
     return candidates
 
