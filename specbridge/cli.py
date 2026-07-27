@@ -490,7 +490,10 @@ def config(dir: str, yaml_output: bool) -> None:
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
 @click.option("--interval", type=float, default=2.0,
               help="Debounce interval in seconds", show_default=True)
-def watch(dir: str, interval: float) -> None:
+@click.option("--fast", is_flag=True, default=False,
+              help="Skip function-level matching for faster analysis",
+              show_default=True)
+def watch(dir: str, interval: float, fast: bool) -> None:
     """Watch project for changes and re-analyze automatically.
 
     Requires the optional 'watch' extra: pip install specbridge[watch]
@@ -539,6 +542,8 @@ def watch(dir: str, interval: float) -> None:
                 if scored:
                     graphs = []
                     for _score, adapter in scored:
+                        if fast and hasattr(adapter, 'fast'):
+                            adapter.fast = True
                         try:
                             g = adapter.analyze(str(root))
                             graphs.append(g)
