@@ -1137,6 +1137,200 @@ def _install_completion(cmd: click.BaseCommand, shell: str) -> None:  # type: ig
         click.echo(f"     source {rc_path}")
 
 
+# ── snapshot diff ──────────────────────────────────────────
+
+
+@cli.command()
+@click.argument("before", type=click.Path(exists=True, dir_okay=False))
+@click.argument("after", type=click.Path(exists=True, dir_okay=False))
+@click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
+              help="Output format", show_default=True)
+def diff(before: str, after: str, output_fmt: str) -> None:
+    """Compare two snapshot files and show a summary diff.
+
+    BEFORE and AFTER are paths to .specbridge/snapshot.json files.
+
+    Shows coverage trend, spec/code changes, and orphan differences
+    between two points in time — like ``git diff --stat`` for specs.
+    """
+    import json
+
+    from specbridge.analyzers.drift import snapshot_diff
+
+    try:
+        snap_before = json.loads(Path(before).read_text(encoding="utf-8"))
+        snap_after = json.loads(Path(after).read_text(encoding="utf-8"))
+    except Exception as e:
+        click.echo(f"❌ Failed to load snapshot: {e}", err=True)
+        raise click.Abort() from e
+
+    result = snapshot_diff(snap_before, snap_after)
+
+    if output_fmt == "json":
+        click.echo(json.dumps(result, indent=2, ensure_ascii=False))
+        return
+
+    # ── Text output ──
+    cov_b = result["coverage_before"]
+    cov_a = result["coverage_after"]
+    bpct = cov_b.get("coverage_pct", 0)
+    apct = cov_a.get("coverage_pct", 0)
+    delta = round(float(apct) - float(bpct), 1)
+    sign = "+" if delta >= 0 else ""
+
+    click.echo(f"📊 specbridge snapshot diff")
+    click.echo(f"{'=' * 50}")
+
+    click.echo(f"\n📊 Coverage trend:")
+    click.echo(f"   Before:  {bpct}% ({cov_b.get('covered', '?')}/{cov_b.get('total', '?')})")
+    click.echo(f"   After:   {apct}% ({cov_a.get('covered', '?')}/{cov_a.get('total', '?')})")
+    click.echo(f"   Change:  {sign}{delta}%")
+
+    s_added = result["specs_added"]
+    s_removed = result["specs_removed"]
+    s_changed = result["specs_changed"]
+    s_renamed = result["specs_renamed"]
+    if s_added or s_removed or s_changed:
+        click.echo(f"\n📄 Spec changes:")
+        if s_added:
+            click.echo(f"   + {s_added} added")
+            for d in result.get("added_specs_detail", []):
+                click.echo(f"       + {d.get('title', d['id'])}")
+        if s_removed:
+            click.echo(f"   - {s_removed} removed")
+        if s_renamed:
+            click.echo(f"   ~ {s_renamed} renamed")
+        if s_changed:
+            click.echo(f"   ~ {s_changed} titles changed")
+
+    c_added = result["code_added"]
+    c_removed = result["code_removed"]
+    funcs = result["funcs_changed"]
+    if c_added or c_removed or funcs:
+        click.echo(f"\n📁 Code changes:")
+        if c_added:
+            click.echo(f"   + {c_added} files added")
+        if c_removed:
+            click.echo(f"   - {c_removed} files removed")
+        if funcs:
+            click.echo(f"   ⚡ {funcs} functions changed")
+
+    new_orph = result["new_orphans"]
+    res_orph = result["resolved_orphans"]
+    if new_orph or res_orph:
+        click.echo(f"\n🟡 Orphan changes:")
+        click.echo(f"   Before:  {result['orphans_before']} orphan specs")
+        click.echo(f"   After:   {result['orphans_after']} orphan specs")
+        if new_orph:
+            click.echo(f"   New:     {new_orph} orphan specs appeared")
+        if res_orph:
+            click.echo(f"   Resolved: {res_orph} orphan specs covered")
+
+
+# ── suggest ────────────────────────────────────────────────
+
+
+@cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+@click.option("--top", type=int, default=5, help="Number of suggestions to show", show_default=True)
+@click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
+              help="Output format", show_default=True)
+@click.option("--threshold", type=float, default=0.1,
+              help="Minimum similarity score (0.0-1.0) to include a suggestion", show_default=True)
+def suggest(dir: str, top: int, output_fmt: str, threshold: float) -> None:
+    """Suggest code files that may implement uncovered specs.
+
+    Analyzes orphan specs (specs with zero implementing code files) and
+    scores each code file in the project for relevance using the same
+    heuristic matching engine that powers ``specbridge analyze``.
+
+    The top N suggestions per orphan spec are shown, ordered by
+    similarity score. Use ``--threshold`` to filter out weak matches.
+    """
+    from specbridge.adapters import detect_adapter
+    from specbridge.analyzers import find_orphan_code, find_orphan_specs
+    from specbridge.core import NodeType
+    from specbridge.discovery.code import discover_code
+    from specbridge.discovery.spec import discover_specs
+    from specbridge.infer import _score_edge, _tokenize
+
+    root = Path(dir).resolve()
+    adapter = detect_adapter(str(root))
+    if adapter is None:
+        click.echo("❌ No recognized SSD framework found.", err=True)
+        _no_adapter_hint()
+        raise click.Abort()
+
+    graph = adapter.analyze(str(root))
+    orphan_specs = find_orphan_specs(graph)
+    if not orphan_specs:
+        click.echo("✅ All specs have implementing code — no suggestions needed.")
+        return
+
+    # Get raw candidates for scoring
+    from specbridge.config import SpecbridgeConfig
+    cfg = SpecbridgeConfig.load(str(root))
+    specs = discover_specs(str(root), spec_dirs=cfg.spec_dirs)
+    codes = discover_code(str(root), source_dirs=cfg.source_dirs)
+
+    # Build spec lookup
+    spec_map = {s.auto_id: s for s in specs}
+    orphan_spec_candidates = [s for s in specs if s.auto_id in orphan_specs]
+
+    suggestions: list[dict[str, Any]] = []
+    for sc in orphan_spec_candidates:
+        spec_text = f"{sc.title} {sc.heading_text}"
+        if sc.parent_chain:
+            spec_text += " " + " ".join(sc.parent_chain)
+        if sc.body_text:
+            spec_text += " " + sc.body_text[:300]
+        spec_tokens = _tokenize(spec_text)
+
+        scored: list[tuple[float, str, str]] = []
+        for cc in codes:
+            conf, evidence = _score_edge(sc, cc, spec_tokens, str(root))
+            if conf >= threshold:
+                kind = evidence[0].kind if evidence else ""
+                scored.append((conf, cc.file, kind))
+
+        scored.sort(key=lambda x: -x[0])
+        top_scored = scored[:top]
+
+        suggestions.append({
+            "spec_id": sc.auto_id,
+            "title": sc.title or sc.heading_text,
+            "file": sc.file,
+            "suggestions": [
+                {"file": f, "score": round(s, 3), "evidence": k}
+                for s, f, k in top_scored
+            ],
+            "total_candidates": len(scored),
+        })
+
+    if output_fmt == "json":
+        import json as _json
+        click.echo(_json.dumps(suggestions, indent=2, ensure_ascii=False))
+        return
+
+    # Text output
+    click.echo(f"📋 specbridge suggest — {len(suggestions)} orphan spec(s)")
+    click.echo(f"{'=' * 50}")
+    click.echo("")
+
+    for i, sg in enumerate(suggestions[:top], 1):
+        click.echo(f"{i}. {sg['spec_id']} \"{sg['title']}\" ({sg['file']})")
+        if sg["suggestions"]:
+            click.echo(f"   → {sg['total_candidates']} candidate(s), top {len(sg['suggestions'])}:")
+            for s in sg["suggestions"]:
+                icon = {"heuristic:funcname": "🔧", "heuristic:filename": "📁",
+                        "heuristic:symbol": "🔤"}.get(s["evidence"], "  ")
+                click.echo(f"     {icon} {s['file']}  (score: {s['score']})")
+        else:
+            click.echo(f"   → No matching code files found (threshold: {threshold})")
+            click.echo("     💡 Check that source_dirs in .specbridge.yaml covers the implementation")
+        click.echo("")
+
+
 # ── Config validation ──────────────────────────────────────
 
 

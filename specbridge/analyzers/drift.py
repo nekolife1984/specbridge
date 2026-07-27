@@ -420,3 +420,98 @@ def compute_drift(
             report.resolved_orphan_specs.append(sid)
 
     return report
+
+
+def snapshot_diff(
+    before: dict[str, Any],
+    after: dict[str, Any],
+) -> dict[str, Any]:
+    """Compare two arbitrary snapshots and return a diff report.
+
+    Unlike ``compute_drift()``, this does **not** need a project directory
+    — it compares two saved snapshots directly, making it suitable for
+    historical comparisons and CI/CD pipelines.
+    """
+    # ── Coverage ──
+    cov_b = before.get("coverage", {})
+    cov_a = after.get("coverage", {})
+
+    # ── Specs ──
+    b_specs = {s["id"]: s for s in before.get("specs", [])}
+    a_specs = {s["id"]: s for s in after.get("specs", [])}
+
+    added_specs = [s for sid, s in a_specs.items() if sid not in b_specs]
+    removed_specs = [s for sid, s in b_specs.items() if sid not in a_specs]
+    changed_specs = [
+        {"id": sid, "old_title": b_specs[sid]["title"], "new_title": s["title"]}
+        for sid, s in a_specs.items()
+        if sid in b_specs and s["title"] != b_specs[sid]["title"]
+    ]
+
+    # ── Code files ──
+    b_code = {c["file"]: c for c in before.get("code", [])}
+    a_code = {c["file"]: c for c in after.get("code", [])}
+
+    added_code = [c for cf, c in a_code.items() if cf not in b_code]
+    removed_code = [c for cf, c in b_code.items() if cf not in a_code]
+
+    # ── Rename detection ──
+    renamed_specs: list[dict[str, str]] = []
+    if removed_specs and added_specs:
+        removed_by_hash = {
+            s.get("body_hash_content", ""): s for s in removed_specs
+            if s.get("body_hash_content")
+        }
+        truly_added: list[dict[str, Any]] = []
+        for added in added_specs:
+            key = added.get("body_hash_content", "")
+            match = removed_by_hash.get(key)
+            if match:
+                renamed_specs.append({
+                    "old_id": match["id"],
+                    "new_id": added["id"],
+                    "old_title": match["title"],
+                    "new_title": added["title"],
+                })
+            else:
+                truly_added.append(added)
+        added_specs = truly_added
+
+    # ── Orphans ──
+    orphan_before = before.get("orphan_spec_ids", [])
+    orphan_after = after.get("orphan_spec_ids", [])
+    new_orphans = [s for s in orphan_after if s not in orphan_before]
+    resolved_orphans = [s for s in orphan_before if s not in orphan_after]
+
+    # ── Function changes ──
+    changed_func_count = 0
+    for cf, snap_c in a_code.items():
+        if cf in b_code:
+            b_funcs = {f["name"]: f for f in b_code[cf].get("functions", [])}
+            for af in snap_c.get("functions", []):
+                bf = b_funcs.get(af["name"])
+                if bf and af.get("body_hash") != bf.get("body_hash"):
+                    changed_func_count += 1
+
+    return {
+        "coverage_before": cov_b,
+        "coverage_after": cov_a,
+        "specs_added": len(added_specs),
+        "specs_removed": len(removed_specs),
+        "specs_changed": len(changed_specs),
+        "specs_renamed": len(renamed_specs),
+        "code_added": len(added_code),
+        "code_removed": len(removed_code),
+        "funcs_changed": changed_func_count,
+        "orphans_before": len(orphan_before),
+        "orphans_after": len(orphan_after),
+        "new_orphans": len(new_orphans),
+        "resolved_orphans": len(resolved_orphans),
+        "added_specs_detail": added_specs[:5],
+        "removed_specs_detail": removed_specs[:5],
+        "changed_specs_detail": changed_specs[:10],
+        "renamed_specs_detail": renamed_specs[:5],
+        "added_code_detail": [{"file": c["file"], "language": c.get("language", "?")}
+                              for c in added_code[:5]],
+        "removed_code_detail": [{"file": c["file"]} for c in removed_code[:5]],
+    }

@@ -5,7 +5,7 @@
 
 ## 1. Overview
 
-specbridge provides a Click-based CLI with **15 commands** for traceability analysis, drift detection, and project management.
+specbridge provides a Click-based CLI with **17 commands** for traceability analysis, drift detection, and project management.
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
@@ -21,6 +21,7 @@ Commands:
   call-graph         Build call graph and show transitive (indirect) impact for a spec.
   config             Show / validate current specbridge configuration.
   coverage           Show spec coverage statistics.
+  diff               Compare two snapshot files and show a summary diff.
   drift              Detect changes between snapshot and current state.
   impact             Find what implements a given spec.
   init               Interactive config generator (.specbridge.yaml).
@@ -30,6 +31,7 @@ Commands:
   shell-completion   Generate or install shell completion scripts.
   snapshot           Take a structural snapshot of specs and code.
   status             Show project state dashboard (config, snapshot, coverage, drift).
+  suggest            Suggest code files for uncovered specs.
   validate-boundary  Validate that code refs stay within declared _Boundary:_ markers.
   watch              Watch project for changes and re-analyze automatically.
 ```
@@ -496,6 +498,91 @@ $ specbridge init
    1. Run 'specbridge setup' to install pre-commit hook and AGENTS.md
    2. Run 'specbridge snapshot' to create the initial baseline
    3. Run 'specbridge analyze' to see your trace graph
+```
+
+### 2.16 `diff` ✨ New
+
+Compare two snapshot files and show a summary diff — like `git diff --stat` for specs.
+
+```
+Usage: specbridge diff [OPTIONS] BEFORE AFTER
+
+  Compare two snapshot files and show a summary diff.
+
+  BEFORE and AFTER are paths to .specbridge/snapshot.json files.
+
+Options:
+  --format [text|json]  Output format  [default: text]
+  --help                Show this message and exit.
+```
+
+**Example:**
+
+```
+$ specbridge diff snapshots/baseline.json snapshots/current.json
+📊 specbridge snapshot diff
+==================================================
+
+📊 Coverage trend:
+   Before:  65.2% (28/43)
+   After:   78.7% (37/47)
+   Change:  +13.5%
+
+📄 Spec changes:
+   + 3 added
+       + "Rate Limiting"
+       + "OAuth Flow"
+   - 1 removed
+   ~ 2 titles changed
+
+📁 Code changes:
+   + 12 files added
+   - 1 file removed
+   ⚡ 3 functions changed
+
+🟡 Orphan changes:
+   Before:  12 orphan specs
+   After:   5 orphan specs
+   Resolved: 7 orphan specs covered
+```
+
+### 2.17 `suggest` ✨ New
+
+Suggest code files that may implement uncovered (orphan) specs.
+
+```
+Usage: specbridge suggest [OPTIONS]
+
+  Suggest code files that may implement uncovered specs.
+
+Options:
+  -d, --dir TEXT        Project directory  [default: .]
+  --top INTEGER         Number of suggestions to show  [default: 5]
+  --format [text|json]  Output format  [default: text]
+  --threshold FLOAT     Minimum similarity score (0.0-1.0)  [default: 0.1]
+  --help                Show this message and exit.
+```
+
+**Example:**
+
+```
+$ specbridge suggest
+📋 specbridge suggest — 3 orphan spec(s)
+==================================================
+
+1. docs.api.2.3 "Rate Limiting" (docs/api/api.md)
+   → 3 candidate(s), top 2:
+     📁 src/api/middleware/rate_limiter.py  (score: 0.45)
+     🔤 src/api/handler.py                  (score: 0.28)
+
+2. docs.auth.1.2 "OAuth Flow" (docs/auth/auth.md)
+   → 2 candidate(s), top 2:
+     📁 src/auth/oauth.py  (score: 0.52)
+     🔧 src/auth/oauth.py::handle_oauth     (score: 0.38)
+
+3. docs.db.3.1 "Migration Strategy" (docs/db/db.md)
+   → No matching code files found (threshold: 0.1)
+     💡 Check that source_dirs in .specbridge.yaml covers the implementation
 ```
 
 ## 3. Improved Error Messages (v1.0)

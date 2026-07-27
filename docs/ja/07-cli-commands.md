@@ -5,7 +5,7 @@
 
 ## 1. 概要
 
-specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**15のコマンド**を持ちます。
+specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**17のコマンド**を持ちます。
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
@@ -32,6 +32,8 @@ Commands:
   call-graph         コールグラフを構築し推移的（間接）影響を表示
   setup              ワンコマンドセットアップ（設定、フック、AGENTS.md、スナップショット）
   shell-completion   シェル補完スクリプトを生成またはインストール
+  diff               2つのスナップショット間の差分を表示
+  suggest            孤立specに対するコードファイルを提案
 ```
 
 ## 2. コマンド
@@ -494,6 +496,91 @@ $ specbridge init
    1. Run 'specbridge setup' to install pre-commit hook and AGENTS.md
    2. Run 'specbridge snapshot' to create the initial baseline
    3. Run 'specbridge analyze' to see your trace graph
+```
+
+### 2.16 `diff` ✨ 新機能
+
+2つのスナップショットファイルを比較し、要約差分を表示します。spec版の `git diff --stat` のようなものです。
+
+```
+Usage: specbridge diff [OPTIONS] BEFORE AFTER
+
+  Compare two snapshot files and show a summary diff.
+
+  BEFORE and AFTER are paths to .specbridge/snapshot.json files.
+
+Options:
+  --format [text|json]  出力フォーマット  [default: text]
+  --help                ヘルプを表示
+```
+
+**出力例:**
+
+```
+$ specbridge diff snapshots/baseline.json snapshots/current.json
+📊 specbridge snapshot diff
+==================================================
+
+📊 Coverage trend:
+   Before:  65.2% (28/43)
+   After:   78.7% (37/47)
+   Change:  +13.5%
+
+📄 Spec changes:
+   + 3 added
+       + "Rate Limiting"
+       + "OAuth Flow"
+   - 1 removed
+   ~ 2 titles changed
+
+📁 Code changes:
+   + 12 files added
+   - 1 file removed
+   ⚡ 3 functions changed
+
+🟡 Orphan changes:
+   Before:  12 orphan specs
+   After:   5 orphan specs
+   Resolved: 7 orphan specs covered
+```
+
+### 2.17 `suggest` ✨ 新機能
+
+カバレッジのない孤立specに対して、実装候補となるコードファイルを提案します。
+
+```
+Usage: specbridge suggest [OPTIONS]
+
+  Suggest code files that may implement uncovered specs.
+
+Options:
+  -d, --dir TEXT        プロジェクトディレクトリ  [default: .]
+  --top INTEGER         表示する提案数  [default: 5]
+  --format [text|json]  出力フォーマット  [default: text]
+  --threshold FLOAT     類似度スコアの閾値 (0.0-1.0)  [default: 0.1]
+  --help                ヘルプを表示
+```
+
+**出力例:**
+
+```
+$ specbridge suggest
+📋 specbridge suggest — 3 orphan spec(s)
+==================================================
+
+1. docs.api.2.3 "Rate Limiting" (docs/api/api.md)
+   → 3 candidate(s), top 2:
+     📁 src/api/middleware/rate_limiter.py  (score: 0.45)
+     🔤 src/api/handler.py                  (score: 0.28)
+
+2. docs.auth.1.2 "OAuth Flow" (docs/auth/auth.md)
+   → 2 candidate(s), top 2:
+     📁 src/auth/oauth.py  (score: 0.52)
+     🔧 src/auth/oauth.py::handle_oauth     (score: 0.38)
+
+3. docs.db.3.1 "Migration Strategy" (docs/db/db.md)
+   → No matching code files found (threshold: 0.1)
+     💡 Check that source_dirs in .specbridge.yaml covers the implementation
 ```
 
 ## 3. 改善されたエラーメッセージ（v1.0）
