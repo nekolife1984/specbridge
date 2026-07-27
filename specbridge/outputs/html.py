@@ -275,7 +275,7 @@ nodeGroup.on('click', (event, d) => {{
   }});
   edgeLabel.attr('opacity', e => {{
     const s = typeof e.source === 'object' ? e.source.id : e.source;
-    const t = typeof e.target === 'object' ? e.target.id ? e.target.id : e.target : e.target;
+    const t = typeof e.target === 'object' ? e.target.id : e.target;
     return (s === d.id || t === d.id) ? 1 : 0.05;
   }});
 }});
