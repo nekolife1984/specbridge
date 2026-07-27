@@ -123,6 +123,29 @@ def create_mcp_server(project_dir: str = ".") -> object:
                     },
                 },
             ),
+            Tool(
+                name="snapshot",
+                description="Take a structural snapshot of specs and code for later drift comparison",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "reason": {
+                            "type": "string",
+                            "description": "Description of why snapshot was taken",
+                        },
+                    },
+                },
+            ),
+            Tool(
+                name="config",
+                description="Show current specbridge configuration",
+                inputSchema={"type": "object", "properties": {}},
+            ),
+            Tool(
+                name="status",
+                description="Show project state dashboard: config, snapshot, coverage, drift in one view",
+                inputSchema={"type": "object", "properties": {}},
+            ),
         ]
 
     @server.call_tool()  # type: ignore[untyped-decorator]
@@ -305,6 +328,65 @@ def create_mcp_server(project_dir: str = ".") -> object:
             graph = _analyze_graph()
             gate_result = coverage_gate_check(graph, threshold)
             return [TextContent(type="text", text=gate_result["message"])]
+
+        elif name == "snapshot":
+            reason = arguments.get("reason", "MCP snapshot")
+            cfg = _load_config()
+            snap = build_snapshot(
+                str(root), reason=reason,
+                spec_dirs=cfg.spec_dirs, source_dirs=cfg.source_dirs,
+                spec_files=cfg.spec_files, source_files=cfg.source_files,
+            )
+            save_snapshot(snap, str(root))
+            cov = snap.get("coverage", {})
+            return [TextContent(
+                type="text",
+                text=(
+                    f"Snapshot saved.\n"
+                    f"  Specs: {len(snap['specs'])} | Code files: {len(snap['code'])}\n"
+                    f"  Coverage: {cov.get('coverage_pct', '?')}%\n"
+                    f"  Reason: {reason}"
+                ),
+            )]
+
+        elif name == "config":
+            cfg = _load_config()
+            lines = [
+                f"spec_dirs:        {cfg.spec_dirs}",
+                f"source_dirs:      {cfg.source_dirs}",
+                f"exclude_dirs:     {len(cfg.exclude_dirs)} patterns",
+                f"min_confidence:   {cfg.min_confidence}",
+                f"max_output_nodes: {cfg.max_output_nodes}",
+                f"min_coverage:     {cfg.min_coverage}%",
+            ]
+            return [TextContent(type="text", text="📋 specbridge Config\n" + "\n".join(lines))]
+
+        elif name == "status":
+            from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
+            from specbridge.analyzers.drift import compute_drift
+
+            cfg = _load_config()
+            lines = ["📋 specbridge Status"]
+            lines.append(f"  spec_dirs:    {cfg.spec_dirs}")
+            lines.append(f"  source_dirs:  {cfg.source_dirs}")
+
+            snapshot = load_snapshot(str(root))
+            if snapshot:
+                ts = snapshot.get("timestamp", "?")
+                cov_snap = snapshot.get("coverage", {})
+                lines.append(f"  Snapshot:     {ts} ({cov_snap.get('coverage_pct', '?')}%)")
+            else:
+                lines.append("  Snapshot:     (none)")
+
+            try:
+                graph = _analyze_graph()
+                cov = coverage_summary(graph)
+                lines.append(f"  Coverage:     {cov['coverage_pct']}% ({cov['covered']}/{cov['total']})")
+                lines.append(f"  Orphans:      {cov['orphan']} specs / {len(find_orphan_code(graph))} code files")
+            except ValueError as e:
+                lines.append(f"  Coverage:     {e}")
+
+            return [TextContent(type="text", text="\n".join(lines))]
 
         else:
             raise ValueError(f"Unknown tool: {name}")

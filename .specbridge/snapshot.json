@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T08:43:16",
-  "reason": "Session: #45 session-check command — commit point",
+  "timestamp": "2026-07-28T08:45:01",
+  "reason": "Session: #49 MCP tools expansion — final commit",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -1959,12 +1959,24 @@
       "body_preview": "### 2.17 `suggest` ✨ New  Suggest code files that may implement uncovered (orpha"
     },
     {
+      "id": "docs.en.07-cli-commands.14.11",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "`session-check` ✨ New in v1.1",
+      "heading_text": "2.18 `session-check` ✨ New in v1.1",
+      "depth": 3,
+      "line": 651,
+      "body_hash": "6b82d5d1d6e4de10",
+      "body_hash_content": "d28e7043c04d9a81",
+      "body_line_count": 44,
+      "body_preview": "### 2.18 `session-check` ✨ New in v1.1  Run session-end integrity checks before "
+    },
+    {
       "id": "docs.en.07-cli-commands.14.1",
       "file": "docs/en/07-cli-commands.md",
       "title": "Improved Error Messages (v1.0)",
       "heading_text": "3. Improved Error Messages (v1.0)",
       "depth": 2,
-      "line": 651,
+      "line": 696,
       "body_hash": "77014c2095b271ca",
       "body_hash_content": "0db714ca90a65b5b",
       "body_line_count": 13,
@@ -1976,7 +1988,7 @@
       "title": "Exit Codes",
       "heading_text": "4. Exit Codes",
       "depth": 2,
-      "line": 665,
+      "line": 710,
       "body_hash": "1d7c52d5ef022adc",
       "body_hash_content": "936fff59d5fbd280",
       "body_line_count": 6,
@@ -5331,12 +5343,24 @@
       "body_preview": "### 2.17 `suggest` ✨ 新機能  カバレッジのない孤立specに対して、実装候補となるコードファイルを提案します。  ``` Usage: s"
     },
     {
+      "id": "docs.ja.07-cli-commands.14.11",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "`session-check` ✨ v1.1新機能",
+      "heading_text": "2.18 `session-check` ✨ v1.1新機能",
+      "depth": 3,
+      "line": 648,
+      "body_hash": "521bb78e2fe0f0a5",
+      "body_hash_content": "d06d57a869e69fd8",
+      "body_line_count": 28,
+      "body_preview": "### 2.18 `session-check` ✨ v1.1新機能  セッション終了時の整合性チェックを実行します。ドリフト検出、カバレッジ確認、孤立検出、g"
+    },
+    {
       "id": "docs.ja.07-cli-commands.14.1",
       "file": "docs/ja/07-cli-commands.md",
       "title": "改善されたエラーメッセージ（v1.0）",
       "heading_text": "3. 改善されたエラーメッセージ（v1.0）",
       "depth": 2,
-      "line": 648,
+      "line": 677,
       "body_hash": "b77509ee4fed457f",
       "body_hash_content": "10afcdd5c42f728d",
       "body_line_count": 13,
@@ -5348,7 +5372,7 @@
       "title": "終了コード",
       "heading_text": "4. 終了コード",
       "depth": 2,
-      "line": 662,
+      "line": 691,
       "body_hash": "754f97879c79df01",
       "body_hash_content": "ea5e671ae265ead5",
       "body_line_count": 6,
@@ -8763,7 +8787,7 @@
         "pathlib",
         "typing"
       ],
-      "file_hash": "487db506e0d05842",
+      "file_hash": "bffbf2d9f63a0166",
       "functions": [
         {
           "name": "create_mcp_server",
@@ -8790,20 +8814,20 @@
           "name": "handle_list_tools",
           "kind": "function",
           "line": 55,
-          "body_hash": "5da943aef2ebeeaf",
-          "body_lines": 74
+          "body_hash": "69fa4a712e1cd3d1",
+          "body_lines": 97
         },
         {
           "name": "handle_call_tool",
           "kind": "function",
-          "line": 129,
-          "body_hash": "a60bc22bef2edc50",
-          "body_lines": 186
+          "line": 152,
+          "body_hash": "15bb456106fbfd2f",
+          "body_lines": 245
         },
         {
           "name": "run_mcp_server",
           "kind": "function",
-          "line": 315,
+          "line": 397,
           "body_hash": "46095b0a17176521",
           "body_lines": 9
         }
@@ -13594,11 +13618,11 @@
     "root.README.ja.9.2"
   ],
   "coverage": {
-    "total": 683,
-    "covered": 335,
+    "total": 685,
+    "covered": 337,
     "orphan": 348,
-    "coverage_pct": 49.0,
-    "spec_count": 693,
+    "coverage_pct": 49.2,
+    "spec_count": 695,
     "code_count": 51
   }
 }
