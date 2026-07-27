@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T06:23:22",
-  "reason": "Session: rebase後のスナップショット更新",
+  "timestamp": "2026-07-28T06:31:06",
+  "reason": "Session: README.ja.md を EN に同期",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
