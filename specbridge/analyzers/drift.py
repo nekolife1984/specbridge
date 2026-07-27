@@ -29,7 +29,7 @@ def build_snapshot(
     """Build a snapshot of the current project state with hashes."""
     specs = discover_specs(directory, spec_dirs=spec_dirs)
     codes = discover_code(directory, source_dirs=source_dirs)
-    graph = build_heuristic_graph(directory, specs=specs, codes=codes, spec_dirs=spec_dirs, source_dirs=source_dirs)
+    graph = build_heuristic_graph(directory, specs=specs, codes=codes, spec_dirs=spec_dirs, source_dirs=source_dirs, fast=True)
     cov = coverage_summary(graph)
 
     snapshot = {
@@ -400,6 +400,7 @@ def compute_drift(
         specs=curr_specs if curr_specs else None,
         codes=curr_codes if curr_codes else None,
         spec_dirs=spec_dirs, source_dirs=source_dirs,
+        fast=True,
     )
     from specbridge.analyzers import coverage_summary, find_orphan_specs
 
