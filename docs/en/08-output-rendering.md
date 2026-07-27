@@ -1,7 +1,7 @@
 # Output Rendering
 
-> **Date:** 2026-07-26
-> **Version:** 0.0.1.dev0
+> **Date:** 2026-07-27
+> **Version:** 1.0.0
 
 ## 1. Overview
 
@@ -14,6 +14,12 @@ TraceGraph
     ├──▶ render_json()  → Structured data for tooling (jq, CI, APIs)
     └──▶ render_html()  → Interactive D3.js force-directed graph
 ```
+
+Additionally, new in v1.0:
+
+- **Color-coded coverage** — coverage percentage displayed with 🟢🟡🔴 indicators
+- **One-line CI summary** — `render_one_line_coverage()` for `--summary-only` mode
+- **Rich progress display** — `rich_utils.py` provides spinner and progress bar helpers
 
 ## 2. Text Output (`outputs/text.py`)
 
@@ -62,6 +68,35 @@ If `max_nodes` is set, only the top N items per category are shown with a trunca
   ... and 5 more code files
 ```
 
+### 2.1 Color-Coded Coverage
+
+Coverage stats now include a visual indicator:
+
+| Coverage | Indicator | Meaning |
+|----------|-----------|---------|
+| ≥ 80% | 🟢 Green | Good coverage |
+| ≥ 50% | 🟡 Yellow | Moderate coverage |
+| < 50% | 🔴 Red | Low coverage |
+
+```
+📊 Spec Coverage  🟢
+========================================
+  Total specs:  12
+  Covered:      10
+  Orphan specs: 2
+  Coverage:     83.3%
+```
+
+### 2.2 One-Line CI Summary
+
+The `render_one_line_coverage()` function produces a compact, CI-friendly line:
+
+```
+🟢 Coverage: 83.3% (10/12) | Specs: 12 | Code refs: 45 | 🟡 3 total orphans
+```
+
+Used by `specbridge analyze --summary-only`.
+
 ## 3. JSON Output (`outputs/json_out.py`)
 
 Structured JSON intended for machine consumption.
@@ -70,7 +105,7 @@ Structured JSON intended for machine consumption.
 
 ```json
 {
-  "specbridge_version": "0.0.1.dev0",
+  "specbridge_version": "1.0.0",
   "nodes": [
     {
       "id": "auth.auth.1.1",
@@ -113,7 +148,7 @@ Structured JSON intended for machine consumption.
 ```python
 def render_json(graph: TraceGraph, indent: int = 2) -> str:
     payload = {
-        "specbridge_version": "0.0.1.dev0",
+        "specbridge_version": "1.0.0",
         "nodes": [_node_dict(n) for n in graph.nodes.values()],
         "edges": [_edge_dict(e) for e in graph.edges],
     }
@@ -137,6 +172,7 @@ Generates a self-contained HTML page with an interactive D3.js force-directed gr
 - **Hover tooltip** — shows ID, type, file, framework
 - **Legend** — bottom-left color/shape reference
 - **Header** — shows spec/code/test/edge counts
+- **`--dry-run` support** — preview without saving to disk
 
 ### D3.js Implementation
 
@@ -152,34 +188,53 @@ The HTML uses D3.js v7 loaded from CDN (`https://d3js.org/d3.v7.min.js`). The gr
 
 ### Output Location
 
-The HTML file is saved to `.specbridge/trace.html` and automatically opened in the default browser:
+The HTML file is saved to `.specbridge/trace.html` (unless `--dry-run` is set):
 
 ```python
-out_path = root / ".specbridge" / "trace.html"
-out_path.parent.mkdir(parents=True, exist_ok=True)
-out_path.write_text(html, encoding="utf-8")
-webbrowser.open(f"file://{out_path.resolve()}")
+if dry_run:
+    click.echo("   📄 HTML output generated (--dry-run, not saved)", err=True)
+else:
+    out_path = root / ".specbridge" / "trace.html"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(html, encoding="utf-8")
+    webbrowser.open(f"file://{out_path.resolve()}")
 ```
 
-### Node Color and Shape Map
+## 5. Rich Progress Utilities (`outputs/rich_utils.py`) ✨ New in v1.0
+
+A new module providing Rich-based progress displays for long-running operations.
+
+### Spinner
+
+For indeterminate progress:
 
 ```python
-NODE_COLORS = {
-    NodeType.SPEC:   "#4A90D9",  # Blue
-    NodeType.CODE:   "#50B86C",  # Green
-    NodeType.TEST:   "#F5A623",  # Yellow/Orange
-    NodeType.DESIGN: "#9B59B6",  # Purple
-    NodeType.TASK:   "#7F8C8D",  # Gray
-}
+with progress_spinner("🔍 Scanning project..."):
+    # long operation
+    result = do_work()
 ```
 
-**When to use HTML output:**
-- Exploring trace relationships visually
-- Presentations and code reviews
-- Debugging heuristic matching results
-- Understanding project structure at a glance
+### Progress Bar
 
-## 5. Evidence Display
+For determinate progress with known step count:
+
+```python
+with progress_bar("Analyzing files...", total=len(files)) as (progress, task):
+    for f in files:
+        # process file
+        progress.advance(task)
+```
+
+### Console
+
+Shared Rich Console instance (stderr by default) for styled output:
+
+```python
+from specbridge.outputs.rich_utils import get_console
+console = get_console()
+```
+
+## 6. Evidence Display
 
 All three output formats include evidence information:
 
@@ -189,7 +244,7 @@ All three output formats include evidence information:
 | **JSON** | `evidence` array on each edge object |
 | **HTML** | Tooltip on hover + edge labels |
 
-## 6. Text vs JSON vs HTML
+## 7. Text vs JSON vs HTML
 
 | Feature | Text | JSON | HTML |
 |---------|------|------|------|
@@ -200,3 +255,4 @@ All three output formats include evidence information:
 | **Output location** | stdout | stdout | `.specbridge/trace.html` |
 | **Chaining (pipe)** | ✓ | ✓ (with jq) | ✗ |
 | **CI friendly** | ✓ (text parsing) | ✓ (JSON parser) | ✗ |
+| **Summary-only mode** | ✓ | N/A | N/A |

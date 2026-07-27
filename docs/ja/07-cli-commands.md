@@ -1,16 +1,16 @@
 # CLIコマンドリファレンス
 
-> **日付:** 2026-07-26
-> **バージョン:** 0.0.1.dev0
+> **日付:** 2026-07-27
+> **バージョン:** 1.0.0
 
 ## 1. 概要
 
-specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**12のコマンド**を持ちます。
+specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**13のコマンド**を持ちます。
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
 
-  Spec ↔ Code bridge: 読み取り専用トレーサビリティ分析ツール
+  Spec ↔ Code bridge: 読み取り専用トレーサビリティ分析ツール（SSD向け）
 
 Options:
   --version  バージョンを表示
@@ -22,8 +22,9 @@ Commands:
   coverage           仕様カバレッジ統計を表示
   snapshot           仕様とコードの構造的スナップショットを取得
   drift              スナップショットと現在の状態の変化を検出
+  status             プロジェクト状態ダッシュボード（設定、スナップショット、カバレッジ、ドリフト）を表示
   validate-boundary  コード参照が宣言された_Boundary:_内にあるか検証
-  config             現在のspecbridge設定を表示
+  config             現在のspecbridge設定を表示/検証
   watch              プロジェクトの変更を監視し自動再分析
   plugins            インストール済みのアダプタプラグインを一覧表示
   serve              AIエージェント統合用のMCPサーバーを起動
@@ -45,12 +46,24 @@ Usage: specbridge analyze [OPTIONS]
 Options:
   -d, --dir TEXT      分析するプロジェクトディレクトリ  [default: .]
   --format TEXT       出力形式 (text, json, html)  [default: text]
-  -m, --merge         一致する全アダプタの結果をマージ
+  -m, --merge         一致する全アダプタの結果をマージ（最適なものだけでなく）
   --top INTEGER       カテゴリごとに上位N件のみ表示（デフォルト：すべて）
-  --deps              インポートからコード依存関係グラフを構築
+  --deps              インポートからコード依存関係グラフを構築（DEPENDSエッジを追加）
   -c, --call-graph    推移的影響分析のためのコールグラフを構築
+  --fast              大規模プロジェクトでは関数レベルマッチングをスキップして高速化
+  --dry-run           `.specbridge/`への出力ファイル書き込みなしで分析
+  --summary-only      CI対応の1行カバレッジサマリーのみ表示
   --help              ヘルプを表示
 ```
+
+**v1.0の新オプション:**
+
+| オプション | 目的 |
+|-----------|------|
+| `--dry-run` | `.specbridge/trace.html`へのHTML出力書き込みをスキップ |
+| `--summary-only` | `🟢 Coverage: 60.7% (259/427)` のようなCI対応の1行を表示 |
+
+**進捗表示:** 長時間実行される分析操作では、Richプログレスバーによるスピナーが表示されます。
 
 **例:**
 
@@ -67,22 +80,14 @@ $ specbridge analyze --format html
 # 全アダプタをマージ
 $ specbridge analyze --merge
 
-# カテゴリごとに上位5件のみ表示
-$ specbridge analyze --top 5
+# CI対応の1行サマリー
+$ specbridge analyze --summary-only
+🟢 Coverage: 83.3% (10/12)
 
-# コード依存関係グラフを含める
-$ specbridge analyze --deps
-
-# 依存関係＋コールグラフの両方を含める
-$ specbridge analyze --deps --call-graph
+# ドライラン（HTML保存なしでプレビュー）
+$ specbridge analyze --format html --dry-run
+   📄 HTML output generated (--dry-run, not saved)
 ```
-
-**動作:**
-
-1. プロジェクトに最適なアダプタを検出（`--merge` の場合は全アダプタ）
-2. アダプタの `analyze()` を実行して TraceGraph を構築
-3. オプションでコード依存関係グラフを構築（`--deps`）
-4. 選択された形式で出力
 
 ### 2.2 `impact`
 
@@ -102,49 +107,9 @@ Options:
   --help              ヘルプを表示
 ```
 
-**検索解決順序:**
-
-| 優先度 | 方法 | 入力例 → マッチ結果 |
-|--------|------|---------------------|
-| 1 | ID完全一致 | `docs.en.02-data-model.1.2.1` |
-| 2 | `spec::` 接頭辞 | `1.1` → `spec::1.1` |
-| 3 | ID後方一致 | `1.2.1` → `docs.en.02-data-model.1.2.1` など |
-| 4 | タイトル部分一致 | `TraceNode` → タイトルに "TraceNode" を含むspec |
-| 5 | 見出しテキスト | `build_heuristic_graph` → 見出しに含むspec |
-
-複数のspecがマッチした場合、すべての結果と実装アーティファクトが表示されます。
-
-**例:**
-
-```
-# ID後方一致（1.2.1 で終わる全specを検索）
-$ specbridge impact --spec-id 1.2.1
-📄 docs.en.02-data-model.1.2.1: TraceNode
-📄 docs.en.03-adapter-plugin-system.1.2.1: Contract
-...
-
-# タイトル検索
-$ specbridge impact --spec-id TraceNode
-📄 docs.en.02-data-model.1.2.1: TraceNode
-  [INFERRED] specbridge/core/__init__.py  (implements)
-            ∵ heuristic:funcname: function 'TraceNode' matches spec 'TraceNode'
-
-# 完全IDで検索
-$ specbridge impact --spec-id docs.en.02-data-model.1.2.1
-
-# 関数レベル結果も表示
-$ specbridge impact --spec-id build_heuristic_graph
-📄 docs.en.05-heuristic-matching.1.2: Algorithm: `build_heuristic_graph()`
-  [INFERRED] specbridge/infer/__init__.py  (implements)
-            ∵ heuristic:funcname: function 'build_heuristic_graph' matches spec
-
-# JSON出力（複数マッチも処理）
-$ specbridge impact --spec-id 1.2.1 --format json
-```
-
 ### 2.3 `coverage`
 
-仕様カバレッジ統計を表示します。
+色分けインジケータ付きで仕様カバレッジ統計を表示します。
 
 ```
 Usage: specbridge coverage [OPTIONS]
@@ -157,21 +122,19 @@ Options:
   --help              ヘルプを表示
 ```
 
-**例:**
+**出力例:**
 
 ```
 $ specbridge coverage
-📊 Spec Coverage
+📊 Spec Coverage  🟢
 ========================================
   Total specs:  12
   Covered:      10
   Orphan specs: 2
   Coverage:     83.3%
-
-🟡 Orphan specs (no code ref):
-   - docs.auth.auth.3.1
-   - docs.auth.auth.4.0
 ```
+
+カバレッジは色分けされます：🟢 ≥80%、🟡 ≥50%、🔴 <50%。
 
 ### 2.4 `snapshot`
 
@@ -184,9 +147,18 @@ Usage: specbridge snapshot [OPTIONS]
 
 Options:
   -d, --dir TEXT      プロジェクトディレクトリ  [default: .]
+  --config TEXT       設定ファイルへのパス（デフォルト: .specbridge.yaml / pyproject.toml を自動検出）
   --reason TEXT       スナップショットを取った理由の説明
+  --dry-run           スナップショットをディスクに書き込まずに構築
   --help              ヘルプを表示
 ```
+
+**v1.0の新オプション:**
+
+| オプション | 目的 |
+|-----------|------|
+| `--config` | 自動検出の代わりにカスタム設定ファイルパスを使用 |
+| `--dry-run` | `.specbridge/snapshot.json`に保存せずにスナップショットをメモリ上で構築 |
 
 **例:**
 
@@ -209,6 +181,7 @@ Usage: specbridge drift [OPTIONS]
 
 Options:
   -d, --dir TEXT          プロジェクトディレクトリ  [default: .]
+  --config TEXT           設定ファイルへのパス（デフォルト: .specbridge.yaml / pyproject.toml を自動検出）
   --snapshot TEXT         スナップショットファイルへのパス（デフォルト：.specbridge/snapshot.json）
   --gate                  ドリフト検出時に終了コード1で終了
   --format TEXT           出力形式 (text, json)  [default: text]
@@ -216,26 +189,58 @@ Options:
   --help                  ヘルプを表示
 ```
 
-**例:**
+### 2.6 `status` ✨ v1.0新機能
+
+設定、スナップショットステータス、現在のカバレッジ、ドリットチェックを1つのコマンドで表示する統合プロジェクト状態ダッシュボード。
 
 ```
-# 保存されたスナップショットと比較
-$ specbridge drift
+Usage: specbridge status [OPTIONS]
 
-# JSONレポート
-$ specbridge drift --format json
+  設定、スナップショット、カバレッジ、ドリフトを1つのビューで表示
 
-# CIゲート（ドリフト時にexit 1）
-$ specbridge drift --gate
-
-# gitベース比較（スナップショット不要）
-$ specbridge drift --git-base main
-
-# 特定のスナップショットファイルを使用
-$ specbridge drift --snapshot ./backups/snapshot-2026-01.json
+Options:
+  -d, --dir TEXT      プロジェクトディレクトリ  [default: .]
+  --format TEXT       出力形式 (text, json)  [default: text]
+  --help              ヘルプを表示
 ```
 
-### 2.6 `validate-boundary`
+**出力例:**
+
+```
+$ specbridge status
+📋 specbridge Status
+==================================================
+
+🔧 Configuration:
+   spec_dirs:        ['docs', 'spec']
+   source_dirs:      ['src', 'lib']
+   exclude_dirs:     15 patterns
+   min_confidence:   0.15
+
+📸 Snapshot:
+   Taken:           2026-07-27T10:30:00
+   Reason:          Before auth refactor
+   Coverage:        83.3%
+   Specs (snap):    12
+   Code files:      45
+
+📊 Current Coverage:
+   Coverage:        83.3%
+   Total specs:     12
+   Covered:         10
+   Orphan specs:    2
+   Orphan code:     1
+
+✅ No drift detected — project state matches snapshot.
+```
+
+**ユースケース:**
+
+- **クイックヘルスチェック** — 1つのコマンドでプロジェクトの状態を確認
+- **CI診断** — `status --format json` で機械処理
+- **変更前/後比較** — 変更の前後に実行して影響を確認
+
+### 2.7 `validate-boundary`
 
 すべてのコード参照が仕様書で宣言された `_Boundary:_` マーカー内にあることをチェックします。
 
@@ -249,21 +254,9 @@ Options:
   --help              ヘルプを表示
 ```
 
-**例:**
+### 2.8 `config`
 
-```
-$ specbridge validate-boundary
-⚠️  2 boundary violation(s):
-  auth.auth.1.1 in docs/auth/auth.md
-    declares boundaries: src/auth/
-    but tests/test_external_api.py is outside
-
-Tip: Add _Boundary:_ src/path/ or move the @impl to a file inside the boundary.
-```
-
-### 2.7 `config`
-
-現在のspecbridge設定とそのソースを表示します。
+現在のspecbridge設定とそのソースを表示または検証します。
 
 ```
 Usage: specbridge config [OPTIONS]
@@ -272,24 +265,40 @@ Usage: specbridge config [OPTIONS]
 
 Options:
   -d, --dir TEXT      プロジェクトディレクトリ  [default: .]
+  --config TEXT       設定ファイルへのパス（デフォルト: .specbridge.yaml / pyproject.toml を自動検出）
   --yaml              設定をYAMLとして出力
+  --validate          設定の正しさを検証
   --help              ヘルプを表示
 ```
+
+**v1.0の新オプション:**
+
+| オプション | 目的 |
+|-----------|------|
+| `--config` | 特定の設定ファイルを読み込んで表示/検証 |
+| `--validate` | 仕様ディレクトリとソースディレクトリが存在し、数値が有効範囲内かをチェック |
+
+**検証チェック:**
+
+* `spec_dirs` と `source_dirs` が空でない
+* `spec_dirs` と `source_dirs` の全ディレクトリが実際にディスク上に存在する
+* `min_confidence` が0.0〜1.0の範囲内
+* `max_output_nodes` が1以上
 
 **例:**
 
 ```
-$ specbridge config
+$ specbridge config --validate
 📋 specbridge config (.specbridge.yaml)
 ========================================
+  ✅ Configuration is valid.
+
   spec_dirs:        ['docs', 'spec', 'specs']
   source_dirs:      ['src', 'lib', 'app']
-  exclude_dirs:     15 patterns
-  min_confidence:   0.15
-  max_output_nodes: 20
+  ...
 ```
 
-### 2.8 `watch`
+### 2.9 `watch`
 
 プロジェクトディレクトリのファイル変更を監視し、自動的に再分析します。`watchdog` パッケージが必要。
 
@@ -303,18 +312,11 @@ Usage: specbridge watch [OPTIONS]
 Options:
   -d, --dir TEXT          プロジェクトディレクトリ  [default: .]
   --interval FLOAT        デバウンス間隔（秒）  [default: 2.0]
+  --fast                  高速分析のため関数レベルマッチングをスキップ
   --help                  ヘルプを表示
 ```
 
-**動作:**
-
-- `watchdog.observers.Observer` を使用したファイルシステム監視
-- 急激な変更をデバウンス（デフォルト：2秒間隔）
-- `.specbridge/` ディレクトリの変更は無視（再トリガーループを回避）
-- 検出された各変更に対してフル分析を実行
-- トリガーごとにターミナルをクリアして出力を再レンダリング
-
-### 2.9 `plugins`
+### 2.10 `plugins`
 
 インストールされているすべてのアダプタプラグイン（内蔵およびサードパーティ）を一覧表示します。
 
@@ -328,19 +330,7 @@ Options:
   --help          ヘルプを表示
 ```
 
-**例:**
-
-```
-$ specbridge plugins
-🔌 Built-in adapters:
-   HeuristicAdapter
-   SpectraAdapter
-
-🔌 Plugin adapters (0):
-   (none)
-```
-
-### 2.10 `call-graph`
+### 2.11 `call-graph`
 
 関数レベルのコールグラフを構築し、specに対する推移的（間接）影響を分析します。
 
@@ -357,59 +347,31 @@ Options:
   --help               ヘルプを表示
 ```
 
-**例:**
+### 2.12 `serve`
+
+AIエージェント統合用のMCPサーバーを起動します。
 
 ```
-# 基本分析
-$ specbridge call-graph --spec-id 1.2.1
+Usage: specbridge serve [OPTIONS]
 
-# より深い探索
-$ specbridge call-graph --spec-id 1.2.1 --max-depth 5
+  AIエージェント統合用のMCPサーバーを起動
 
-# JSON出力
-$ specbridge call-graph --spec-id 1.2.1 --format json
+  specbridgeツール（analyze, impact, coverage, drift, validate_boundary）を
+  Model Context Protocol 経由で公開。必要：pip install specbridge[mcp]
+
+Options:
+  -d, --dir TEXT   プロジェクトディレクトリ  [default: .]
+  --help           ヘルプを表示
 ```
 
-**出力例:**
+### 2.13 `setup`
 
-```
-🔗 Call graph: 13 functions, 28 calls
-
-📄 Spec: docs.tasks.1
-   Direct files:     2
-     📁 src/tasks/service.py
-     📁 tests/test_tasks.py
-   🔗 Transitive files (1 hop(s)): 1
-     → src/tasks/db.py
-```
-
-### 推移的影響（`impact --call-graph`）
-
-`impact` コマンドに `--call-graph` フラグを付けると、直接の実装ファイルに加えて間接的な影響を受けるファイルも表示されます：
-
-```bash
-$ specbridge impact --spec-id 1.2.1 --call-graph
-🔗 Transitive impact (1 hop(s)):
-      → src/tasks/db.py
-📄 docs.tasks.1.2.1: Title Validation
-  [INFERRED] src/tasks/service.py  (implements)
-  ...
-
-## 3. 終了コード
-
-| コード | 意味 |
-|--------|------|
-| 0 | 成功（または `--gate` でドリフトなし） |
-| 1 | ドリフト検出（`drift --gate`）、アダプタが見つからない、または実行時エラー |
-
-## 5. プロジェクトセットアップ（`specbridge setup`）
-
-ワンコマンドでプロジェクトを初期化。設定ファイル作成、フックインストール、AIエージェント用ファイル展開、初回スナップショットを自動実行します。
+ワンコマンドでプロジェクトをブートストラップ。設定作成、フックインストール、AIエージェント用ファイル展開、初回スナップショットを自動実行します。
 
 ```
 Usage: specbridge setup [OPTIONS]
 
-  One‑command setup: install hook, create config, deploy AGENTS.md.
+  ワンコマンドセットアップ：フックインストール、設定作成、AGENTS.md展開
 
 Options:
   -d, --dir TEXT   セットアップするプロジェクトディレクトリ  [default: .]
@@ -417,60 +379,23 @@ Options:
   --help           ヘルプを表示
 ```
 
-**実行内容:**
+## 3. 改善されたエラーメッセージ（v1.0）
 
-| ステップ | 処理 |
-|---------|------|
-| 1 | specbridge をインストール（未インストール時） |
-| 2 | ソースディレクトリ（`src/`, `lib/`, `app/`）と仕様ディレクトリ（`docs/`, `spec/`）を自動検出 |
-| 3 | `.specbridge.yaml` を作成 |
-| 4 | pre-commit drift hook をインストール |
-| 5 | `AGENTS.md` を展開（AIエージェント向けワークフローガイド） |
-| 6 | Hermes スキルを展開（`~/.hermes/` がある場合） |
-| 7 | 初回スナップショットを取得（`.specbridge/snapshot.json`） |
-| 8 | GitHub Actions CIワークフローをオプションで作成（`--ci`） |
-
-**例:**
+specbridgeがサポート対象のプロジェクト構造を見つけられない場合、**実行可能なヒント**を提供するようになりました：
 
 ```
-# 基本セットアップ（対話式）
-$ specbridge setup
-
-# 特定のプロジェクトをセットアップ
-$ specbridge setup --dir /path/to/project
-
-# CIワークフローも作成
-$ specbridge setup --ci
+❌ No recognized SSD framework found.
+   Hints:
+     • Ensure you are in a project with Markdown spec docs and source code.
+     • Default spec dirs: docs/, spec/, specs/
+     • Default source dirs: src/, lib/, app/
+     • Create .specbridge.yaml to configure custom directories.
+     • Run 'specbridge config' to see current discovered settings.
 ```
 
-pip不要のスタンドアロンスクリプトも利用可能：
+## 4. 終了コード
 
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/nekolife1984/specbridge/main/scripts/setup.sh)
-```
-
-## 6. プラグインSDK（`specbridge plugins`）
-
-`plugins` コマンドはPythonエントリポイントを介して登録されたアダプタを検出します：
-
-```
-$ pip install my-specbridge-plugin
-$ specbridge plugins --refresh
-🔌 Plugin adapters (1):
-   MyAdapter (from my-specbridge-plugin)
-```
-
-## 7. ヘルプ
-
-すべてのコマンドが `--help` をサポート：
-
-```
-$ specbridge analyze --help
-$ specbridge drift --help
-```
-
-トップレベルのヘルプで全コマンドを表示：
-
-```
-$ specbridge --help
-```
+| コード | 意味 |
+|-------|------|
+| 0 | 成功（または `--gate` でドリフトなし） |
+| 1 | ドリフト検出（`drift --gate`）、アダプタが見つからない、設定検証失敗、または実行時エラー |

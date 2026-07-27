@@ -1,6 +1,6 @@
 # Configuration & Read-Only Guard
 
-> **Date:** 2026-07-26
+> **Date:** 2026-07-27
 > **Version:** 1.0.0
 
 ## 1. Overview
@@ -29,7 +29,25 @@ class SpecbridgeConfig:
     max_output_nodes: int       # Default: 20
 ```
 
-### 2.2 YAML Config Format (`.specbridge.yaml`)
+### 2.2 Explicit Config Path (`--config` CLI Option) ✨ New in v1.0
+
+All commands that use configuration (`snapshot`, `drift`, `config`) now support a `--config` option that specifies a custom config file path:
+
+```bash
+# Use a custom config file
+$ specbridge snapshot --config /path/to/custom-config.yaml
+
+# Show/validate a specific config
+$ specbridge config --config ./ci-specbridge.yaml --validate
+```
+
+When `--config` is provided, auto-discovery of `.specbridge.yaml` and `pyproject.toml` is **skipped entirely** — only the specified file is loaded. This is useful for:
+
+- **CI/CD pipelines** — separate config for CI vs local development
+- **Multi-project analysis** — point specbridge at different project configs
+- **Validation workflows** — validate a config before deploying it
+
+### 2.3 YAML Config Format (`.specbridge.yaml`)
 
 ```yaml
 # .specbridge.yaml
@@ -66,7 +84,7 @@ min_confidence: 0.15
 max_output_nodes: 20
 ```
 
-### 2.3 `pyproject.toml` Format
+### 2.4 `pyproject.toml` Format
 
 ```toml
 [tool.specbridge]
@@ -76,28 +94,81 @@ min_confidence = 0.15
 max_output_nodes = 20
 ```
 
-### 2.4 Config Loading Logic
+### 2.5 Config Loading Logic
 
 ```python
 @classmethod
-def load(cls, project_dir: str | Path) -> SpecbridgeConfig:
+def load(cls, project_dir: str | Path, config_path: str | Path | None = None) -> SpecbridgeConfig:
     root = Path(project_dir).resolve()
 
-    # 1. Try .specbridge.yaml
-    yaml_path = root / ".specbridge.yaml"
-    if yaml_path.exists():
-        return cls._from_yaml(yaml_path)
+    # Explicit path mode (v1.0)
+    if config_path is not None:
+        explicit = Path(config_path)
+        if not explicit.exists():
+            raise FileNotFoundError(...)
+        data = cls._try_read_yaml(explicit)
+        if data is None:
+            raise ValueError(...)
+        return cls._merge_dict(cls(), data)
 
-    # 2. Try pyproject.toml [tool.specbridge]
+    # Auto-discovery mode
+    config = cls()
+
+    # 1. Try pyproject.toml as base
     pyproject = root / "pyproject.toml"
     if pyproject.exists():
-        return cls._from_pyproject(pyproject)
+        data = cls._try_read_pyproject(pyproject)
+        if data:
+            config = cls._merge_dict(config, data)
 
-    # 3. Defaults
-    return cls()
+    # 2. Try .specbridge.yaml as override
+    yaml_path = root / ".specbridge.yaml"
+    if yaml_path.exists():
+        data = cls._try_read_yaml(yaml_path)
+        if data:
+            config = cls._merge_dict(config, data)
+
+    return config
 ```
 
-### 2.5 Configuration Display
+### 2.6 Configuration Validation (`config --validate`) ✨ New in v1.0
+
+The `specbridge config --validate` command checks:
+
+| Check | Description |
+|-------|-------------|
+| `spec_dirs` not empty | At least one spec directory must be configured |
+| `source_dirs` not empty | At least one source directory must be configured |
+| Directory exists | Every configured directory must exist on disk |
+| `min_confidence` range | Must be between 0.0 and 1.0 |
+| `max_output_nodes` | Must be ≥ 1 |
+
+**Example:**
+
+```
+$ specbridge config --validate
+📋 specbridge config (.specbridge.yaml)
+========================================
+  ✅ Configuration is valid.
+
+  spec_dirs:        ['docs', 'spec', 'specs']
+  source_dirs:      ['src', 'lib', 'app']
+  exclude_dirs:     15 patterns
+  min_confidence:   0.15
+  max_output_nodes: 20
+```
+
+**Failure example:**
+
+```
+$ specbridge config --config bad-config.yaml --validate
+📋 specbridge config (bad-config.yaml)
+========================================
+❌ Validation failed:
+  • spec_dir 'nonexistent-docs' does not exist at /path/nonexistent-docs
+```
+
+### 2.7 Configuration Display
 
 The `specbridge config` command shows the resolved configuration and its source:
 
@@ -208,13 +279,64 @@ validate_write_path(path, root)
 path.parent.mkdir(parents=True, exist_ok=True)
 path.write_text(...)
 
-# In cli.py HTML output:
-out_path = root / ".specbridge" / "trace.html"
-out_path.parent.mkdir(parents=True, exist_ok=True)
-out_path.write_text(html, encoding="utf-8")
+# In cache.py save_cache():
+from specbridge.guard import validate_write_path
+validate_write_path(path, root)
+path.parent.mkdir(parents=True, exist_ok=True)
+path.write_text(...)
 ```
 
-## 4. Summary
+## 4. Cache Module (`cache.py`) ✨ New in v1.0
+
+A new file-hash cache module speeds up repeated analyses by tracking file content hashes.
+
+### Key Functions
+
+| Function | Purpose |
+|----------|---------|
+| `load_cache()` | Load the cache from `.specbridge/cache.json` |
+| `save_cache()` | Persist cache to disk (guard-protected) |
+| `filter_cached()` | Compare file hashes against cache, return changed files only |
+| `resolve_file_list()` | Recursively list files matching given extensions within source directories |
+| `clear_cache()` | Remove the cache file (e.g. after config changes) |
+
+### Cache Format
+
+```json
+{
+  "docs/auth/auth.md": {
+    "hash": "a1b2c3d4e5f6...",
+    "mtime": 1722000000
+  },
+  "src/auth/login.py": {
+    "hash": "f6e5d4c3b2a1...",
+    "mtime": 1722000100
+  }
+}
+```
+
+The cache uses a two-tier check: **mtime first** (fast, no I/O), then **SHA256 hash** (reliable, file-content based). A file is considered unchanged only if both its mtime and hash match the cache.
+
+### Integration Status
+
+The cache module is available for programmatic use. Full integration into the discovery pipeline is planned for a future release. Currently, `filter_cached()` can be called directly:
+
+```python
+from specbridge.cache import filter_cached, load_cache, save_cache
+
+# Get list of source files
+files = resolved_file_list("myproject", extensions={".py"}, source_dirs=["src"])
+
+# Check which files changed
+changed, updated = filter_cached("myproject", files)
+
+# Update cache
+cache = load_cache("myproject")
+cache.update(updated)
+save_cache("myproject", cache)
+```
+
+## 5. Summary
 
 The combination of layered configuration and strict write guard ensures:
 
@@ -222,3 +344,5 @@ The combination of layered configuration and strict write guard ensures:
 - **Clear error messages** when a write would violate the read-only policy
 - **Flexible configuration** via YAML or pyproject.toml with sensible defaults
 - **Easy debugging** via `specbridge config` to inspect resolved settings
+- **Explicit config paths** via `--config` for CI and multi-project workflows
+- **Validation** via `config --validate` to catch configuration errors early

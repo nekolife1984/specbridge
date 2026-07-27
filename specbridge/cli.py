@@ -19,6 +19,15 @@ def cli() -> None:
     """Spec ↔ Code bridge: read-only traceability analyzer for SSD."""
 
 
+def _no_adapter_hint() -> None:
+    click.echo("   Hints:", err=True)
+    click.echo("     • Ensure you are in a project with Markdown spec docs and source code.", err=True)
+    click.echo("     • Default spec dirs: docs/, spec/, specs/", err=True)
+    click.echo("     • Default source dirs: src/, lib/, app/", err=True)
+    click.echo("     • Create .specbridge.yaml to configure custom directories.", err=True)
+    click.echo("     • Run 'specbridge config' to see current discovered settings.", err=True)
+
+
 @cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory to analyze", show_default=True)
 @click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json", "html"]),
@@ -37,35 +46,45 @@ def cli() -> None:
 @click.option("--fast", is_flag=True, default=False,
               help="Skip function-level matching for faster analysis on large projects",
               show_default=True)
+@click.option("--dry-run", is_flag=True, default=False,
+              help="Analyze without writing any output files (.specbridge/)",
+              show_default=True)
+@click.option("--summary-only", is_flag=True, default=False,
+              help="Show only a one-line coverage summary (CI-friendly)",
+              show_default=True)
 def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
-            call_graph: bool, fast: bool) -> None:
+            call_graph: bool, fast: bool, dry_run: bool, summary_only: bool) -> None:
     """Analyze a project and build a trace graph."""
     from specbridge.adapters import detect_adapter, detect_all, merge_graphs
+    from specbridge.outputs.rich_utils import get_console, progress_spinner
 
     root = Path(dir).resolve()
-    click.echo(f"🔍 Scanning {root} ...", err=True)
+    console = get_console()
 
-    if merge:
-        scored = detect_all(str(root))
-        if not scored:
-            click.echo("❌ No recognized SSD framework found.", err=True)
-            raise click.Abort()
-        graphs = []
-        for score, adapter in scored:
-            click.echo(f"   Using {type(adapter).__name__} (confidence {score})", err=True)
-            if fast and hasattr(adapter, 'fast'):
-                adapter.fast = True
-            g = adapter.analyze(str(root))
-            graphs.append(g)
-        graph = merge_graphs(graphs)
-    else:
-        detected = detect_adapter(str(root))
-        if detected is None:
-            click.echo("❌ No recognized SSD framework found.", err=True)
-            raise click.Abort()
-        if fast and hasattr(detected, 'fast'):
-            detected.fast = True
-        graph = detected.analyze(str(root))
+    with progress_spinner("🔍 Scanning project..."):
+        if merge:
+            scored = detect_all(str(root))
+            if not scored:
+                click.echo("❌ No recognized SSD framework found.", err=True)
+                _no_adapter_hint()
+                raise click.Abort()
+            graphs = []
+            for score, adapter in scored:
+                click.echo(f"   Using {type(adapter).__name__} (confidence {score})", err=True)
+                if fast and hasattr(adapter, 'fast'):
+                    adapter.fast = True
+                g = adapter.analyze(str(root))
+                graphs.append(g)
+            graph = merge_graphs(graphs)
+        else:
+            detected = detect_adapter(str(root))
+            if detected is None:
+                click.echo("❌ No recognized SSD framework found.", err=True)
+                _no_adapter_hint()
+                raise click.Abort()
+            if fast and hasattr(detected, 'fast'):
+                detected.fast = True
+            graph = detected.analyze(str(root))
 
     # Build code dependency graph if requested
     if deps:
@@ -87,6 +106,17 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
     spec_count = len(graph.nodes_by_type(NodeType.SPEC))
     code_count = len(graph.nodes_by_type(NodeType.CODE))
     test_count = len(graph.nodes_by_type(NodeType.TEST))
+
+    # CI-friendly one-line summary
+    if summary_only:
+        from specbridge.outputs.text import render_one_line_coverage
+        from specbridge.analyzers import coverage_summary
+        cov = coverage_summary(graph)
+        click.echo(render_one_line_coverage(
+            float(cov["coverage_pct"]), int(cov["covered"]), int(cov["total"])
+        ))
+        return
+
     click.echo(f"\n   Nodes: {len(graph.nodes)} | Edges: {len(graph.edges)}", err=True)
     click.echo(f"   Specs: {spec_count} | Code refs: {code_count} | Tests: {test_count}", err=True)
 
@@ -95,12 +125,15 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
     elif output_fmt == "html":
         from specbridge.outputs.html import render_html
         html = render_html(graph)
-        out_path = root / ".specbridge" / "trace.html"
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        out_path.write_text(html, encoding="utf-8")
-        click.echo(f"   📊 HTML graph saved to: {out_path}", err=True)
-        import webbrowser
-        webbrowser.open(f"file://{out_path.resolve()}")
+        if dry_run:
+            click.echo("   📄 HTML output generated (--dry-run, not saved)", err=True)
+        else:
+            out_path = root / ".specbridge" / "trace.html"
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(html, encoding="utf-8")
+            click.echo(f"   📊 HTML graph saved to: {out_path}", err=True)
+            import webbrowser
+            webbrowser.open(f"file://{out_path.resolve()}")
     else:
         click.echo(render_text(graph, max_nodes=top))
 
@@ -124,6 +157,7 @@ def impact(dir: str, spec_id: str, output_fmt: str, call_graph: bool, max_depth:
     adapter = detect_adapter(str(root))
     if adapter is None:
         click.echo("❌ No recognized SSD framework found.", err=True)
+        _no_adapter_hint()
         raise click.Abort()
 
     graph = adapter.analyze(str(root))
@@ -212,6 +246,7 @@ def coverage(dir: str, output_fmt: str) -> None:
     adapter = detect_adapter(str(root))
     if adapter is None:
         click.echo("❌ No recognized SSD framework found.", err=True)
+        _no_adapter_hint()
         raise click.Abort()
 
     graph = adapter.analyze(str(root))
@@ -248,31 +283,45 @@ def coverage(dir: str, output_fmt: str) -> None:
 
 @cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+@click.option("--config", "cfg_path", default=None,
+              help="Path to config file (default: auto-discover .specbridge.yaml / pyproject.toml)",
+              show_default=True)
 @click.option("--reason", default="", help="Description of why snapshot was taken")
-def snapshot(dir: str, reason: str) -> None:
+@click.option("--dry-run", is_flag=True, default=False,
+              help="Build snapshot without writing to disk",
+              show_default=True)
+def snapshot(dir: str, cfg_path: str | None, reason: str, dry_run: bool) -> None:
     """Take a structural snapshot of specs and code."""
     from specbridge.analyzers.drift import build_snapshot, save_snapshot
     from specbridge.config import SpecbridgeConfig
+    from specbridge.outputs.rich_utils import progress_spinner
 
     root = Path(dir).resolve()
-    click.echo(f"📸 Snapshotting {root} ...", err=True)
 
-    cfg = SpecbridgeConfig.load(str(root))
-    snap = build_snapshot(
-        str(root),
-        reason=reason,
-        spec_dirs=cfg.spec_dirs,
-        source_dirs=cfg.source_dirs,
-    )
-    path = save_snapshot(snap, str(root))
+    with progress_spinner("📸 Snapshotting..."):
+        cfg = SpecbridgeConfig.load(str(root), config_path=cfg_path)
+        snap = build_snapshot(
+            str(root),
+            reason=reason,
+            spec_dirs=cfg.spec_dirs,
+            source_dirs=cfg.source_dirs,
+        )
+        if not dry_run:
+            path = save_snapshot(snap, str(root))
 
     click.echo(f"   Specs: {len(snap['specs'])} | Code files: {len(snap['code'])}")
     click.echo(f"   Coverage: {snap['coverage']['coverage_pct']}%")
-    click.echo(f"   Saved: {path}")
+    if dry_run:
+        click.echo(f"   (--dry-run, snapshot not saved)")
+    else:
+        click.echo(f"   Saved: {path}")
 
 
 @cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+@click.option("--config", "cfg_path", default=None,
+              help="Path to config file (default: auto-discover .specbridge.yaml / pyproject.toml)",
+              show_default=True)
 @click.option("--snapshot", "snapshot_path", default=None,
               help="Path to snapshot file (default: .specbridge/snapshot.json)")
 @click.option("--gate", is_flag=True, help="Exit with code 1 if drift detected")
@@ -280,7 +329,7 @@ def snapshot(dir: str, reason: str) -> None:
               help="Output format", show_default=True)
 @click.option("--git-base", default=None,
               help="Git base ref to diff against (alternative to snapshot comparison)")
-def drift(dir: str, snapshot_path: str | None, gate: bool, output_fmt: str, git_base: str | None) -> None:
+def drift(dir: str, cfg_path: str | None, snapshot_path: str | None, gate: bool, output_fmt: str, git_base: str | None) -> None:
     """Detect changes between snapshot and current state."""
     root = Path(dir).resolve()
 
@@ -308,7 +357,7 @@ def drift(dir: str, snapshot_path: str | None, gate: bool, output_fmt: str, git_
 
     click.echo(f"🔍 Comparing {root} against snapshot from {snapshot.get('timestamp', '?')} ...", err=True)
 
-    cfg = SpecbridgeConfig.load(str(root))
+    cfg = SpecbridgeConfig.load(str(root), config_path=cfg_path)
     report = compute_drift(
         snapshot, str(root),
         spec_dirs=cfg.spec_dirs,
@@ -387,6 +436,7 @@ def validate_boundary(dir: str) -> None:
     adapter = detect_adapter(str(root))
     if adapter is None:
         click.echo("❌ No recognized SSD framework found.", err=True)
+        _no_adapter_hint()
         raise click.Abort()
 
     graph = adapter.analyze(str(root))
@@ -442,14 +492,114 @@ def validate_boundary(dir: str) -> None:
 
 @cli.command()
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+@click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
+              help="Output format", show_default=True)
+def status(dir: str, output_fmt: str) -> None:
+    """Show project state dashboard: config, snapshot, coverage, drift in one view."""
+    from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
+    from specbridge.analyzers.drift import load_snapshot
+    from specbridge.config import SpecbridgeConfig
+    from specbridge.adapters import detect_adapter
+
+    root = Path(dir).resolve()
+
+    # 1. Config
+    cfg = SpecbridgeConfig.load(str(root))
+    click.echo("📋 specbridge Status")
+    click.echo(f"{'=' * 50}")
+
+    click.echo(f"\n🔧 Configuration:")
+    click.echo(f"   spec_dirs:        {cfg.spec_dirs}")
+    click.echo(f"   source_dirs:      {cfg.source_dirs}")
+    click.echo(f"   exclude_dirs:     {len(cfg.exclude_dirs)} patterns")
+    click.echo(f"   min_confidence:   {cfg.min_confidence}")
+
+    # 2. Snapshot info
+    snap = load_snapshot(str(root))
+    if snap:
+        click.echo(f"\n📸 Snapshot:")
+        click.echo(f"   Taken:           {snap.get('timestamp', '?')}")
+        click.echo(f"   Reason:          {snap.get('reason', '(none)') or '(none)'}")
+        cov_snap = snap.get("coverage", {})
+        click.echo(f"   Coverage:        {cov_snap.get('coverage_pct', '?')}%")
+        click.echo(f"   Specs (snap):    {cov_snap.get('spec_count', '?')}")
+        click.echo(f"   Code files:      {cov_snap.get('code_count', '?')}")
+    else:
+        click.echo(f"\n📸 Snapshot:        (none)")
+        click.echo("   Run 'specbridge snapshot' to create one.")
+
+    # 3. Current coverage
+    adapter = detect_adapter(str(root))
+    if adapter:
+        graph = adapter.analyze(str(root))
+        cov = coverage_summary(graph)
+        orphans_spec = find_orphan_specs(graph)
+        orphans_code = find_orphan_code(graph)
+
+        delta_pct = ""
+        if snap:
+            snap_pct = snap.get("coverage", {}).get("coverage_pct", 0)
+            curr_pct = cov["coverage_pct"]
+            if isinstance(snap_pct, (int, float)) and isinstance(curr_pct, (int, float)):
+                diff = round(curr_pct - snap_pct, 1)
+                sign = "+" if diff >= 0 else ""
+                delta_pct = f" ({sign}{diff}% from snapshot)"
+
+        click.echo(f"\n📊 Current Coverage:")
+        click.echo(f"   Coverage:        {cov['coverage_pct']}%{delta_pct}")
+        click.echo(f"   Total specs:     {cov['total']}")
+        click.echo(f"   Covered:         {cov['covered']}")
+        click.echo(f"   Orphan specs:    {len(orphans_spec)}")
+        click.echo(f"   Orphan code:     {len(orphans_code)}")
+    else:
+        click.echo(f"\n📊 Current Coverage: (no adapter found)")
+
+    # 4. Drift check
+    if snap:
+        from specbridge.analyzers.drift import compute_drift
+        report = compute_drift(
+            snap, str(root),
+            spec_dirs=cfg.spec_dirs,
+            source_dirs=cfg.source_dirs,
+        )
+        if report.has_drift:
+            click.echo(f"\n⚠️  Drift detected! Run 'specbridge drift' for details.")
+        else:
+            click.echo(f"\n✅ No drift detected — project state matches snapshot.")
+
+    if output_fmt == "json":
+        import json as _json
+        result = {
+            "config": {
+                "spec_dirs": cfg.spec_dirs,
+                "source_dirs": cfg.source_dirs,
+                "min_confidence": cfg.min_confidence,
+            },
+            "snapshot": {
+                "exists": snap is not None,
+                "timestamp": snap.get("timestamp") if snap else None,
+                "coverage": snap.get("coverage") if snap else None,
+            } if snap else {"exists": False},
+            "coverage": cov if adapter else None,
+        }
+        click.echo(_json.dumps(result, indent=2, ensure_ascii=False))
+
+
+@cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
+@click.option("--config", "cfg_path", default=None,
+              help="Path to config file (default: auto-discover .specbridge.yaml / pyproject.toml)",
+              show_default=True)
 @click.option("--yaml", "yaml_output", is_flag=True, default=False,
               help="Output config as YAML")
-def config(dir: str, yaml_output: bool) -> None:
+@click.option("--validate", "do_validate", is_flag=True, default=False,
+              help="Validate configuration for correctness")
+def config(dir: str, cfg_path: str | None, yaml_output: bool, do_validate: bool) -> None:
     """Show current specbridge configuration."""
     from specbridge.config import SpecbridgeConfig
 
     root = Path(dir).resolve()
-    cfg = SpecbridgeConfig.load(str(root))
+    cfg = SpecbridgeConfig.load(str(root), config_path=cfg_path)
 
     if yaml_output:
         import yaml
@@ -479,6 +629,16 @@ def config(dir: str, yaml_output: bool) -> None:
 
     click.echo(f"📋 specbridge config ({source})")
     click.echo(f"{'=' * 40}")
+
+    if do_validate:
+        issues = _validate_config(cfg, root)
+        if issues:
+            click.echo("\n❌ Validation failed:")
+            for issue in issues:
+                click.echo(f"  • {issue}")
+            raise click.Abort()
+        click.echo("  ✅ Configuration is valid.\n")
+
     click.echo(f"  spec_dirs:        {cfg.spec_dirs}")
     click.echo(f"  source_dirs:      {cfg.source_dirs}")
     click.echo(f"  exclude_dirs:     {len(cfg.exclude_dirs)} patterns")
@@ -556,6 +716,7 @@ def watch(dir: str, interval: float, fast: bool) -> None:
                         click.echo(f"\n⏳ Watching {root} ... (Ctrl+C to stop)", err=True)
                 else:
                     click.echo("❌ No recognized SSD framework found.", err=True)
+                    _no_adapter_hint()
             except Exception as exc:
                 click.echo(f"❌ Analysis error: {exc}", err=True)
 
@@ -648,6 +809,7 @@ def call_graph(dir: str, spec_id: str, max_depth: int, output_fmt: str) -> None:
     adapter = detect_adapter(str(root))
     if adapter is None:
         click.echo("❌ No recognized SSD framework found.", err=True)
+        _no_adapter_hint()
         raise click.Abort()
 
     graph = adapter.analyze(str(root))
@@ -738,6 +900,40 @@ def setup(dir: str, ci: bool) -> None:
     if result.returncode != 0:
         click.echo("❌ Setup script failed.", err=True)
         raise click.Abort()
+
+
+# ── Config validation ──────────────────────────────────────
+
+
+def _validate_config(cfg: Any, root: Path) -> list[str]:
+    """Validate a SpecbridgeConfig instance and return a list of issues."""
+    issues: list[str] = []
+
+    # spec_dirs
+    if not cfg.spec_dirs:
+        issues.append("spec_dirs is empty — at least one spec directory is needed")
+    for d in cfg.spec_dirs:
+        resolved = root / d
+        if not resolved.exists():
+            issues.append(f"spec_dir '{d}' does not exist at {resolved}")
+
+    # source_dirs
+    if not cfg.source_dirs:
+        issues.append("source_dirs is empty — at least one source directory is needed")
+    for d in cfg.source_dirs:
+        resolved = root / d
+        if not resolved.exists():
+            issues.append(f"source_dir '{d}' does not exist at {resolved}")
+
+    # min_confidence
+    if not 0.0 <= cfg.min_confidence <= 1.0:
+        issues.append(f"min_confidence ({cfg.min_confidence}) must be between 0.0 and 1.0")
+
+    # max_output_nodes
+    if cfg.max_output_nodes < 1:
+        issues.append(f"max_output_nodes ({cfg.max_output_nodes}) must be >= 1")
+
+    return issues
 
 
 if __name__ == "__main__":

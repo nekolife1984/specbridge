@@ -106,7 +106,7 @@ def create_mcp_server(project_dir: str = ".") -> object:
         ]
 
     @server.call_tool()  # type: ignore[untyped-decorator]
-    async def handle_call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:  # type: ignore[return]
+    async def handle_call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         if name == "analyze":
             graph = _analyze_graph()
             specs = len(graph.nodes_by_type(NodeType.SPEC))

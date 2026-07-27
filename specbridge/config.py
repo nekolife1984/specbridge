@@ -34,17 +34,38 @@ class SpecbridgeConfig:
     max_output_nodes: int = DEFAULT_MAX_OUTPUT_NODES
 
     @classmethod
-    def load(cls, project_dir: str | Path) -> SpecbridgeConfig:
+    def load(cls, project_dir: str | Path, config_path: str | Path | None = None) -> SpecbridgeConfig:
         """Load config from project directory, merging from multiple sources.
 
-        Resolution order (later sources override earlier ones):
+        When *config_path* is provided, reads ONLY that file and skips automatic
+        discovery of .specbridge.yaml / pyproject.toml.
+
+        Resolution order when *config_path* is None (later sources override earlier ones):
           1. Defaults (hardcoded)
           2. pyproject.toml  [tool.specbridge]
           3. .specbridge.yaml (overrides pyproject)
         """
         root = Path(project_dir).resolve()
 
-        # Start with defaults
+        # If an explicit config path was given, load only that file
+        if config_path is not None:
+            explicit = Path(config_path)
+            if not explicit.exists():
+                raise FileNotFoundError(
+                    f"Config file not found: {explicit}\n"
+                    f"  Provide a valid path with --config or remove the option to use "
+                    f"auto-discovered .specbridge.yaml / pyproject.toml."
+                )
+            data = cls._try_read_yaml(explicit)
+            if data is None:
+                raise ValueError(
+                    f"Could not parse config file: {explicit}\n"
+                    f"  Ensure the file is valid YAML with specbridge keys "
+                    f"(e.g. spec_dirs, source_dirs)."
+                )
+            return cls._merge_dict(cls(), data)
+
+        # Auto-discovery mode
         config = cls()
 
         # 1. Try pyproject.toml as base

@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-27T05:53:05",
-  "reason": "feat: merge GraphifyAdapter — tree-sitter AST code graph (#2)",
+  "timestamp": "2026-07-27T22:00:42",
+  "reason": "Session: post-12-issue-fixes",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -1545,10 +1545,10 @@
       "heading_text": "1. Overview",
       "depth": 2,
       "line": 6,
-      "body_hash": "82039fadb09f9836",
-      "body_hash_content": "1de78bd11242d854",
-      "body_line_count": 26,
-      "body_preview": "## 1. Overview  specbridge provides a Click-based CLI with **11 commands** for t"
+      "body_hash": "78ca4b0078e46c5d",
+      "body_hash_content": "308c3cabe229d88b",
+      "body_line_count": 27,
+      "body_preview": "## 1. Overview  specbridge provides a Click-based CLI with **12 commands** for t"
     },
     {
       "id": "docs.en.07-cli-commands.1.2",
@@ -1556,7 +1556,7 @@
       "title": "Commands",
       "heading_text": "2. Commands",
       "depth": 2,
-      "line": 33,
+      "line": 34,
       "body_hash": "0e43b94835456fed",
       "body_hash_content": "e3b0c44298fc1c14",
       "body_line_count": 1,
@@ -1568,7 +1568,7 @@
       "title": "`analyze`",
       "heading_text": "2.1 `analyze`",
       "depth": 3,
-      "line": 35,
+      "line": 36,
       "body_hash": "d1b62f64fe199127",
       "body_hash_content": "d01fa87cb26c6e95",
       "body_line_count": 21,
@@ -1580,7 +1580,7 @@
       "title": "Basic analysis",
       "heading_text": "Basic analysis",
       "depth": 1,
-      "line": 57,
+      "line": 58,
       "body_hash": "12de65a8d097ce5d",
       "body_hash_content": "f074eeb113d6c6e2",
       "body_line_count": 2,
@@ -1592,7 +1592,7 @@
       "title": "JSON output for piping",
       "heading_text": "JSON output for piping",
       "depth": 1,
-      "line": 60,
+      "line": 61,
       "body_hash": "778a84bd6f49d066",
       "body_hash_content": "a43379a71f3849ca",
       "body_line_count": 2,
@@ -1604,7 +1604,7 @@
       "title": "Interactive HTML graph",
       "heading_text": "Interactive HTML graph",
       "depth": 1,
-      "line": 63,
+      "line": 64,
       "body_hash": "5a547c5aa34ba772",
       "body_hash_content": "30e3bc99428a2c55",
       "body_line_count": 2,
@@ -1616,7 +1616,7 @@
       "title": "Merge all matching adapters",
       "heading_text": "Merge all matching adapters",
       "depth": 1,
-      "line": 66,
+      "line": 67,
       "body_hash": "9e82700d41dfa092",
       "body_hash_content": "801ad8487aaecaca",
       "body_line_count": 2,
@@ -1628,7 +1628,7 @@
       "title": "Show only top 5 per category",
       "heading_text": "Show only top 5 per category",
       "depth": 1,
-      "line": 69,
+      "line": 70,
       "body_hash": "39e90190bf4a0200",
       "body_hash_content": "9becf5af4e63bfac",
       "body_line_count": 2,
@@ -1640,7 +1640,7 @@
       "title": "Include code dependency graph",
       "heading_text": "Include code dependency graph",
       "depth": 1,
-      "line": 72,
+      "line": 73,
       "body_hash": "05be678bb1b57a19",
       "body_hash_content": "d3a3925466646941",
       "body_line_count": 2,
@@ -1652,7 +1652,7 @@
       "title": "Include both dependency and call graph",
       "heading_text": "Include both dependency and call graph",
       "depth": 1,
-      "line": 75,
+      "line": 76,
       "body_hash": "132c8873a7a1dc1e",
       "body_hash_content": "488b4667949ebeb3",
       "body_line_count": 10,
@@ -1664,7 +1664,7 @@
       "title": "`impact`",
       "heading_text": "2.2 `impact`",
       "depth": 3,
-      "line": 86,
+      "line": 87,
       "body_hash": "29237f965e3f8d45",
       "body_hash_content": "e348476b46864dcb",
       "body_line_count": 32,
@@ -1676,7 +1676,7 @@
       "title": "By ID suffix (finds all specs ending with 1.2.1)",
       "heading_text": "By ID suffix (finds all specs ending with 1.2.1)",
       "depth": 1,
-      "line": 119,
+      "line": 120,
       "body_hash": "307ceedad33cd976",
       "body_hash_content": "28381b016c00798c",
       "body_line_count": 6,
@@ -1688,7 +1688,7 @@
       "title": "By title",
       "heading_text": "By title",
       "depth": 1,
-      "line": 126,
+      "line": 127,
       "body_hash": "47637dff7d449ce9",
       "body_hash_content": "c353a4e7d08161b5",
       "body_line_count": 5,
@@ -1700,7 +1700,7 @@
       "title": "By full ID (exact match)",
       "heading_text": "By full ID (exact match)",
       "depth": 1,
-      "line": 132,
+      "line": 133,
       "body_hash": "c06e36cc323f55d6",
       "body_hash_content": "0f038eec28117767",
       "body_line_count": 2,
@@ -1712,7 +1712,7 @@
       "title": "Function-level results shown",
       "heading_text": "Function-level results shown",
       "depth": 1,
-      "line": 135,
+      "line": 136,
       "body_hash": "68f9525496dd283e",
       "body_hash_content": "fed0721dbe6198fe",
       "body_line_count": 5,
@@ -1724,7 +1724,7 @@
       "title": "JSON output (handles multiple matches)",
       "heading_text": "JSON output (handles multiple matches)",
       "depth": 1,
-      "line": 141,
+      "line": 142,
       "body_hash": "294d63a90f81ee98",
       "body_hash_content": "8ea919fedcd5a6b0",
       "body_line_count": 3,
@@ -1736,7 +1736,7 @@
       "title": "`coverage`",
       "heading_text": "2.3 `coverage`",
       "depth": 3,
-      "line": 145,
+      "line": 146,
       "body_hash": "26c2c2657e621416",
       "body_hash_content": "e6ccffd3b4a90069",
       "body_line_count": 30,
@@ -1748,7 +1748,7 @@
       "title": "`snapshot`",
       "heading_text": "2.4 `snapshot`",
       "depth": 3,
-      "line": 176,
+      "line": 177,
       "body_hash": "cf0ed1ee16e05358",
       "body_hash_content": "c7a1671c8b066b21",
       "body_line_count": 24,
@@ -1760,7 +1760,7 @@
       "title": "`drift`",
       "heading_text": "2.5 `drift`",
       "depth": 3,
-      "line": 201,
+      "line": 202,
       "body_hash": "8f381633ec0f4a71",
       "body_hash_content": "aca2be00284dbbe0",
       "body_line_count": 20,
@@ -1772,7 +1772,7 @@
       "title": "Compare against saved snapshot",
       "heading_text": "Compare against saved snapshot",
       "depth": 1,
-      "line": 222,
+      "line": 223,
       "body_hash": "39b34802e5314cd7",
       "body_hash_content": "05c0f6390c5d4edc",
       "body_line_count": 2,
@@ -1784,7 +1784,7 @@
       "title": "JSON report",
       "heading_text": "JSON report",
       "depth": 1,
-      "line": 225,
+      "line": 226,
       "body_hash": "19e41ba650d90359",
       "body_hash_content": "ff4fb25cfc03c9df",
       "body_line_count": 2,
@@ -1796,7 +1796,7 @@
       "title": "CI gate (exit 1 if drift)",
       "heading_text": "CI gate (exit 1 if drift)",
       "depth": 1,
-      "line": 228,
+      "line": 229,
       "body_hash": "08b9b9b7dfc4b2d2",
       "body_hash_content": "9823b7f5b8b3d1e1",
       "body_line_count": 2,
@@ -1808,7 +1808,7 @@
       "title": "Git-based comparison (no snapshot needed)",
       "heading_text": "Git-based comparison (no snapshot needed)",
       "depth": 1,
-      "line": 231,
+      "line": 232,
       "body_hash": "ca05f13de520c19e",
       "body_hash_content": "d5aa7e05532d2a7c",
       "body_line_count": 2,
@@ -1820,7 +1820,7 @@
       "title": "Use a specific snapshot file",
       "heading_text": "Use a specific snapshot file",
       "depth": 1,
-      "line": 234,
+      "line": 235,
       "body_hash": "3c1cd4252eec6f63",
       "body_hash_content": "da3725c18f5b7d3d",
       "body_line_count": 3,
@@ -1832,7 +1832,7 @@
       "title": "`validate-boundary`",
       "heading_text": "2.6 `validate-boundary`",
       "depth": 3,
-      "line": 238,
+      "line": 239,
       "body_hash": "61ce90e6904f2543",
       "body_hash_content": "669c893e86aa6764",
       "body_line_count": 25,
@@ -1844,7 +1844,7 @@
       "title": "`config`",
       "heading_text": "2.7 `config`",
       "depth": 3,
-      "line": 264,
+      "line": 265,
       "body_hash": "d020c6381e9dd65f",
       "body_hash_content": "ed3f6637cf82fb5e",
       "body_line_count": 27,
@@ -1856,7 +1856,7 @@
       "title": "`watch`",
       "heading_text": "2.8 `watch`",
       "depth": 3,
-      "line": 292,
+      "line": 293,
       "body_hash": "ce8c8d33d893d8e7",
       "body_hash_content": "cd8256abcccb9490",
       "body_line_count": 24,
@@ -1868,7 +1868,7 @@
       "title": "`plugins`",
       "heading_text": "2.9 `plugins`",
       "depth": 3,
-      "line": 317,
+      "line": 318,
       "body_hash": "0464e61561ffb30e",
       "body_hash_content": "d029184b6aa3771c",
       "body_line_count": 25,
@@ -1880,7 +1880,7 @@
       "title": "Exit Codes",
       "heading_text": "3. Exit Codes",
       "depth": 2,
-      "line": 343,
+      "line": 344,
       "body_hash": "ebc13faa776ab023",
       "body_hash_content": "0654e4a73cf77bed",
       "body_line_count": 6,
@@ -1892,7 +1892,7 @@
       "title": "Call Graph (`specbridge call-graph`)",
       "heading_text": "4. Call Graph (`specbridge call-graph`)",
       "depth": 2,
-      "line": 350,
+      "line": 351,
       "body_hash": "a45e9c3353c8fa5d",
       "body_hash_content": "237fc3e1637e62fd",
       "body_line_count": 19,
@@ -1904,7 +1904,7 @@
       "title": "Basic call graph analysis",
       "heading_text": "Basic call graph analysis",
       "depth": 1,
-      "line": 370,
+      "line": 371,
       "body_hash": "01a7d3af9edc5bef",
       "body_hash_content": "a574f859989aac62",
       "body_line_count": 2,
@@ -1916,7 +1916,7 @@
       "title": "Deeper traversal",
       "heading_text": "Deeper traversal",
       "depth": 1,
-      "line": 373,
+      "line": 374,
       "body_hash": "cad777c509972878",
       "body_hash_content": "a4785c69b8943e9f",
       "body_line_count": 2,
@@ -1928,7 +1928,7 @@
       "title": "JSON output for CI/tooling",
       "heading_text": "JSON output for CI/tooling",
       "depth": 1,
-      "line": 376,
+      "line": 377,
       "body_hash": "7d4b4a8d856e4ec8",
       "body_hash_content": "8cb42322ee4b290d",
       "body_line_count": 15,
@@ -1937,26 +1937,74 @@
     {
       "id": "docs.en.07-cli-commands.21.1",
       "file": "docs/en/07-cli-commands.md",
-      "title": "Plugin SDK (`specbridge plugins`)",
-      "heading_text": "5. Plugin SDK (`specbridge plugins`)",
+      "title": "Project Setup (`specbridge setup`)",
+      "heading_text": "5. Project Setup (`specbridge setup`)",
       "depth": 2,
-      "line": 392,
-      "body_hash": "2dde966f963a51bd",
-      "body_hash_content": "6a846268c83b1037",
-      "body_line_count": 10,
-      "body_preview": "## 5. Plugin SDK (`specbridge plugins`)  The `plugins` command discovers adapter"
+      "line": 393,
+      "body_hash": "83b887572ad0d1ab",
+      "body_hash_content": "6a2596d9c010cb2b",
+      "body_line_count": 30,
+      "body_preview": "## 5. Project Setup (`specbridge setup`)  One‑command project bootstrap that cre"
     },
     {
-      "id": "docs.en.07-cli-commands.21.2",
+      "id": "docs.en.07-cli-commands.22",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "Basic setup (interactive)",
+      "heading_text": "Basic setup (interactive)",
+      "depth": 1,
+      "line": 424,
+      "body_hash": "72c5aac15670c0a5",
+      "body_hash_content": "166001cb08946fe9",
+      "body_line_count": 2,
+      "body_preview": "# Basic setup (interactive) $ specbridge setup"
+    },
+    {
+      "id": "docs.en.07-cli-commands.23",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "Setup a specific project",
+      "heading_text": "Setup a specific project",
+      "depth": 1,
+      "line": 427,
+      "body_hash": "cb1a95addc177f41",
+      "body_hash_content": "2d6fe63d76412e29",
+      "body_line_count": 2,
+      "body_preview": "# Setup a specific project $ specbridge setup --dir /path/to/project"
+    },
+    {
+      "id": "docs.en.07-cli-commands.24",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "Setup with CI workflow",
+      "heading_text": "Setup with CI workflow",
+      "depth": 1,
+      "line": 430,
+      "body_hash": "ed7add8dc9472d6a",
+      "body_hash_content": "7dd090de39a4828c",
+      "body_line_count": 9,
+      "body_preview": "# Setup with CI workflow $ specbridge setup --ci ```  Also available as a standa"
+    },
+    {
+      "id": "docs.en.07-cli-commands.24.1",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "Plugin SDK (`specbridge plugins`)",
+      "heading_text": "6. Plugin SDK (`specbridge plugins`)",
+      "depth": 2,
+      "line": 440,
+      "body_hash": "cb6ce521440cb895",
+      "body_hash_content": "6a846268c83b1037",
+      "body_line_count": 10,
+      "body_preview": "## 6. Plugin SDK (`specbridge plugins`)  The `plugins` command discovers adapter"
+    },
+    {
+      "id": "docs.en.07-cli-commands.24.2",
       "file": "docs/en/07-cli-commands.md",
       "title": "Help",
-      "heading_text": "5. Help",
+      "heading_text": "7. Help",
       "depth": 2,
-      "line": 403,
-      "body_hash": "a822b7c3997e11ff",
+      "line": 451,
+      "body_hash": "ec2320505f175cc5",
       "body_hash_content": "5f7068391a0039a0",
       "body_line_count": 14,
-      "body_preview": "## 5. Help  Every command supports `--help`:  ``` $ specbridge analyze --help $ "
+      "body_preview": "## 7. Help  Every command supports `--help`:  ``` $ specbridge analyze --help $ "
     },
     {
       "id": "docs.en.08-output-rendering.1",
@@ -4353,10 +4401,10 @@
       "heading_text": "1. 概要",
       "depth": 2,
       "line": 6,
-      "body_hash": "4255f098bc00ea5c",
-      "body_hash_content": "5f0d048eeb7ff6f1",
-      "body_line_count": 26,
-      "body_preview": "## 1. 概要  specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**11のコマンド**を"
+      "body_hash": "838631918816956a",
+      "body_hash_content": "6938b8247510fe3d",
+      "body_line_count": 27,
+      "body_preview": "## 1. 概要  specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**12のコマンド**を"
     },
     {
       "id": "docs.ja.07-cli-commands.1.2",
@@ -4364,7 +4412,7 @@
       "title": "コマンド",
       "heading_text": "2. コマンド",
       "depth": 2,
-      "line": 33,
+      "line": 34,
       "body_hash": "c40896037bb9cde4",
       "body_hash_content": "e3b0c44298fc1c14",
       "body_line_count": 1,
@@ -4376,7 +4424,7 @@
       "title": "`analyze`",
       "heading_text": "2.1 `analyze`",
       "depth": 3,
-      "line": 35,
+      "line": 36,
       "body_hash": "1988dcee8d740ed0",
       "body_hash_content": "201ae9988e99c7c5",
       "body_line_count": 21,
@@ -4388,7 +4436,7 @@
       "title": "基本分析",
       "heading_text": "基本分析",
       "depth": 1,
-      "line": 57,
+      "line": 58,
       "body_hash": "d3bb32041c34518a",
       "body_hash_content": "f074eeb113d6c6e2",
       "body_line_count": 2,
@@ -4400,7 +4448,7 @@
       "title": "JSON出力（パイプ処理用）",
       "heading_text": "JSON出力（パイプ処理用）",
       "depth": 1,
-      "line": 60,
+      "line": 61,
       "body_hash": "c36dff8c4ea4e4ee",
       "body_hash_content": "a43379a71f3849ca",
       "body_line_count": 2,
@@ -4412,7 +4460,7 @@
       "title": "インタラクティブHTMLグラフ",
       "heading_text": "インタラクティブHTMLグラフ",
       "depth": 1,
-      "line": 63,
+      "line": 64,
       "body_hash": "c5c26388cabc59f3",
       "body_hash_content": "30e3bc99428a2c55",
       "body_line_count": 2,
@@ -4424,7 +4472,7 @@
       "title": "全アダプタをマージ",
       "heading_text": "全アダプタをマージ",
       "depth": 1,
-      "line": 66,
+      "line": 67,
       "body_hash": "b5b27a96afb1faf2",
       "body_hash_content": "801ad8487aaecaca",
       "body_line_count": 2,
@@ -4436,7 +4484,7 @@
       "title": "カテゴリごとに上位5件のみ表示",
       "heading_text": "カテゴリごとに上位5件のみ表示",
       "depth": 1,
-      "line": 69,
+      "line": 70,
       "body_hash": "540311ea7f6787ad",
       "body_hash_content": "9becf5af4e63bfac",
       "body_line_count": 2,
@@ -4448,7 +4496,7 @@
       "title": "コード依存関係グラフを含める",
       "heading_text": "コード依存関係グラフを含める",
       "depth": 1,
-      "line": 72,
+      "line": 73,
       "body_hash": "6978ad2add093bb2",
       "body_hash_content": "d3a3925466646941",
       "body_line_count": 2,
@@ -4460,7 +4508,7 @@
       "title": "依存関係＋コールグラフの両方を含める",
       "heading_text": "依存関係＋コールグラフの両方を含める",
       "depth": 1,
-      "line": 75,
+      "line": 76,
       "body_hash": "f35020e84335f324",
       "body_hash_content": "2cfcbe6e05ec0996",
       "body_line_count": 10,
@@ -4472,7 +4520,7 @@
       "title": "`impact`",
       "heading_text": "2.2 `impact`",
       "depth": 3,
-      "line": 86,
+      "line": 87,
       "body_hash": "3cb3aa53b18487c6",
       "body_hash_content": "6dc410d4459ffe41",
       "body_line_count": 32,
@@ -4484,7 +4532,7 @@
       "title": "ID後方一致（1.2.1 で終わる全specを検索）",
       "heading_text": "ID後方一致（1.2.1 で終わる全specを検索）",
       "depth": 1,
-      "line": 119,
+      "line": 120,
       "body_hash": "efbb45cad4dc9b6b",
       "body_hash_content": "15842bbefc6f2d1a",
       "body_line_count": 5,
@@ -4496,7 +4544,7 @@
       "title": "タイトル検索",
       "heading_text": "タイトル検索",
       "depth": 1,
-      "line": 125,
+      "line": 126,
       "body_hash": "48e6411bd096d40d",
       "body_hash_content": "c353a4e7d08161b5",
       "body_line_count": 5,
@@ -4508,7 +4556,7 @@
       "title": "完全IDで検索",
       "heading_text": "完全IDで検索",
       "depth": 1,
-      "line": 131,
+      "line": 132,
       "body_hash": "90695683d9d34ff6",
       "body_hash_content": "0f038eec28117767",
       "body_line_count": 2,
@@ -4520,7 +4568,7 @@
       "title": "関数レベル結果も表示",
       "heading_text": "関数レベル結果も表示",
       "depth": 1,
-      "line": 134,
+      "line": 135,
       "body_hash": "7d5bf4fa23ebfe02",
       "body_hash_content": "fed0721dbe6198fe",
       "body_line_count": 5,
@@ -4532,7 +4580,7 @@
       "title": "JSON出力（複数マッチも処理）",
       "heading_text": "JSON出力（複数マッチも処理）",
       "depth": 1,
-      "line": 140,
+      "line": 141,
       "body_hash": "ca12fdd127b86e0a",
       "body_hash_content": "8ea919fedcd5a6b0",
       "body_line_count": 3,
@@ -4544,7 +4592,7 @@
       "title": "`coverage`",
       "heading_text": "2.3 `coverage`",
       "depth": 3,
-      "line": 144,
+      "line": 145,
       "body_hash": "889a34781c26d5b4",
       "body_hash_content": "2bd17b750d686304",
       "body_line_count": 30,
@@ -4556,7 +4604,7 @@
       "title": "`snapshot`",
       "heading_text": "2.4 `snapshot`",
       "depth": 3,
-      "line": 175,
+      "line": 176,
       "body_hash": "e645c700737807ca",
       "body_hash_content": "2c57165f4eb92df1",
       "body_line_count": 24,
@@ -4568,7 +4616,7 @@
       "title": "`drift`",
       "heading_text": "2.5 `drift`",
       "depth": 3,
-      "line": 200,
+      "line": 201,
       "body_hash": "ad79186a0c96407e",
       "body_hash_content": "884e95456459e8c7",
       "body_line_count": 20,
@@ -4580,7 +4628,7 @@
       "title": "保存されたスナップショットと比較",
       "heading_text": "保存されたスナップショットと比較",
       "depth": 1,
-      "line": 221,
+      "line": 222,
       "body_hash": "010c78d62d019b97",
       "body_hash_content": "05c0f6390c5d4edc",
       "body_line_count": 2,
@@ -4592,7 +4640,7 @@
       "title": "JSONレポート",
       "heading_text": "JSONレポート",
       "depth": 1,
-      "line": 224,
+      "line": 225,
       "body_hash": "657dda0a831eeb03",
       "body_hash_content": "ff4fb25cfc03c9df",
       "body_line_count": 2,
@@ -4604,7 +4652,7 @@
       "title": "CIゲート（ドリフト時にexit 1）",
       "heading_text": "CIゲート（ドリフト時にexit 1）",
       "depth": 1,
-      "line": 227,
+      "line": 228,
       "body_hash": "13ede6ecc512fcf6",
       "body_hash_content": "9823b7f5b8b3d1e1",
       "body_line_count": 2,
@@ -4616,7 +4664,7 @@
       "title": "gitベース比較（スナップショット不要）",
       "heading_text": "gitベース比較（スナップショット不要）",
       "depth": 1,
-      "line": 230,
+      "line": 231,
       "body_hash": "9813bda82a80f698",
       "body_hash_content": "d5aa7e05532d2a7c",
       "body_line_count": 2,
@@ -4628,7 +4676,7 @@
       "title": "特定のスナップショットファイルを使用",
       "heading_text": "特定のスナップショットファイルを使用",
       "depth": 1,
-      "line": 233,
+      "line": 234,
       "body_hash": "2c6a6e5b64ff13c7",
       "body_hash_content": "da3725c18f5b7d3d",
       "body_line_count": 3,
@@ -4640,7 +4688,7 @@
       "title": "`validate-boundary`",
       "heading_text": "2.6 `validate-boundary`",
       "depth": 3,
-      "line": 237,
+      "line": 238,
       "body_hash": "385b9c24f5766c6e",
       "body_hash_content": "991c40198f39ddd8",
       "body_line_count": 25,
@@ -4652,7 +4700,7 @@
       "title": "`config`",
       "heading_text": "2.7 `config`",
       "depth": 3,
-      "line": 263,
+      "line": 264,
       "body_hash": "2dd97cf56d474d03",
       "body_hash_content": "85345cec861210a4",
       "body_line_count": 27,
@@ -4664,7 +4712,7 @@
       "title": "`watch`",
       "heading_text": "2.8 `watch`",
       "depth": 3,
-      "line": 291,
+      "line": 292,
       "body_hash": "7a782b5e5a039b46",
       "body_hash_content": "521b50a92daf5b45",
       "body_line_count": 24,
@@ -4676,7 +4724,7 @@
       "title": "`plugins`",
       "heading_text": "2.9 `plugins`",
       "depth": 3,
-      "line": 316,
+      "line": 317,
       "body_hash": "2e296d9b7c3654d1",
       "body_hash_content": "b88d5ccc989b342c",
       "body_line_count": 25,
@@ -4688,7 +4736,7 @@
       "title": "`call-graph`",
       "heading_text": "2.10 `call-graph`",
       "depth": 3,
-      "line": 342,
+      "line": 343,
       "body_hash": "78e462d76827e64e",
       "body_hash_content": "625ad29c0d8eca91",
       "body_line_count": 19,
@@ -4700,7 +4748,7 @@
       "title": "基本分析",
       "heading_text": "基本分析",
       "depth": 1,
-      "line": 362,
+      "line": 363,
       "body_hash": "67e3c42bc12e2e95",
       "body_hash_content": "a574f859989aac62",
       "body_line_count": 2,
@@ -4712,7 +4760,7 @@
       "title": "より深い探索",
       "heading_text": "より深い探索",
       "depth": 1,
-      "line": 365,
+      "line": 366,
       "body_hash": "20547d2b2574832b",
       "body_hash_content": "a4785c69b8943e9f",
       "body_line_count": 2,
@@ -4724,7 +4772,7 @@
       "title": "JSON出力",
       "heading_text": "JSON出力",
       "depth": 1,
-      "line": 368,
+      "line": 369,
       "body_hash": "1507aef148165c80",
       "body_hash_content": "3399e00831f1c33a",
       "body_line_count": 16,
@@ -4736,7 +4784,7 @@
       "title": "推移的影響（`impact --call-graph`）",
       "heading_text": "推移的影響（`impact --call-graph`）",
       "depth": 3,
-      "line": 385,
+      "line": 386,
       "body_hash": "c0eae751993d63b1",
       "body_hash_content": "49a9f164fc9c8387",
       "body_line_count": 11,
@@ -4748,7 +4796,7 @@
       "title": "終了コード",
       "heading_text": "3. 終了コード",
       "depth": 2,
-      "line": 397,
+      "line": 398,
       "body_hash": "f2c382d3e3450c77",
       "body_hash_content": "3fd25dc85d8593ed",
       "body_line_count": 6,
@@ -4757,26 +4805,74 @@
     {
       "id": "docs.ja.07-cli-commands.21.2",
       "file": "docs/ja/07-cli-commands.md",
-      "title": "プラグインSDK（`specbridge plugins`）",
-      "heading_text": "4. プラグインSDK（`specbridge plugins`）",
+      "title": "プロジェクトセットアップ（`specbridge setup`）",
+      "heading_text": "5. プロジェクトセットアップ（`specbridge setup`）",
       "depth": 2,
-      "line": 404,
-      "body_hash": "68a4675dd68bed52",
-      "body_hash_content": "2ea76c67aa8add6d",
-      "body_line_count": 10,
-      "body_preview": "## 4. プラグインSDK（`specbridge plugins`）  `plugins` コマンドはPythonエントリポイントを介して登録されたアダプタ"
+      "line": 405,
+      "body_hash": "d76ebbf2ebeb9d08",
+      "body_hash_content": "7d3ec2602ea47698",
+      "body_line_count": 30,
+      "body_preview": "## 5. プロジェクトセットアップ（`specbridge setup`）  ワンコマンドでプロジェクトを初期化。設定ファイル作成、フックインストール、AIエ"
     },
     {
-      "id": "docs.ja.07-cli-commands.21.3",
+      "id": "docs.ja.07-cli-commands.22",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "基本セットアップ（対話式）",
+      "heading_text": "基本セットアップ（対話式）",
+      "depth": 1,
+      "line": 436,
+      "body_hash": "f867c5edc9c8672a",
+      "body_hash_content": "166001cb08946fe9",
+      "body_line_count": 2,
+      "body_preview": "# 基本セットアップ（対話式） $ specbridge setup"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.23",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "特定のプロジェクトをセットアップ",
+      "heading_text": "特定のプロジェクトをセットアップ",
+      "depth": 1,
+      "line": 439,
+      "body_hash": "5a7731355a62b1ce",
+      "body_hash_content": "2d6fe63d76412e29",
+      "body_line_count": 2,
+      "body_preview": "# 特定のプロジェクトをセットアップ $ specbridge setup --dir /path/to/project"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.24",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "CIワークフローも作成",
+      "heading_text": "CIワークフローも作成",
+      "depth": 1,
+      "line": 442,
+      "body_hash": "e373681e595dcf62",
+      "body_hash_content": "1986354906295211",
+      "body_line_count": 9,
+      "body_preview": "# CIワークフローも作成 $ specbridge setup --ci ```  pip不要のスタンドアロンスクリプトも利用可能：  ```bash bas"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.24.1",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "プラグインSDK（`specbridge plugins`）",
+      "heading_text": "6. プラグインSDK（`specbridge plugins`）",
+      "depth": 2,
+      "line": 452,
+      "body_hash": "f5bf787b1044e612",
+      "body_hash_content": "2ea76c67aa8add6d",
+      "body_line_count": 10,
+      "body_preview": "## 6. プラグインSDK（`specbridge plugins`）  `plugins` コマンドはPythonエントリポイントを介して登録されたアダプタ"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.24.2",
       "file": "docs/ja/07-cli-commands.md",
       "title": "ヘルプ",
-      "heading_text": "5. ヘルプ",
+      "heading_text": "7. ヘルプ",
       "depth": 2,
-      "line": 415,
-      "body_hash": "af800b2d920b8efa",
+      "line": 463,
+      "body_hash": "aa7e316cf8141d12",
       "body_hash_content": "0a54d5c77c29b6c2",
       "body_line_count": 14,
-      "body_preview": "## 5. ヘルプ  すべてのコマンドが `--help` をサポート：  ``` $ specbridge analyze --help $ specbrid"
+      "body_preview": "## 7. ヘルプ  すべてのコマンドが `--help` をサポート：  ``` $ specbridge analyze --help $ specbrid"
     },
     {
       "id": "docs.ja.08-output-rendering.1",
@@ -5629,10 +5725,4505 @@
       "body_hash_content": "c5e61e610ad4a943",
       "body_line_count": 8,
       "body_preview": "## 9. テスト原則  1. **パブリックAPIをテスト** — プライベートメソッドではなく、公開関数シグネチャを通じてテストを優先 2. **現実的なフ"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "specbridge — Spec↔Code Traceability Tool",
+      "heading_text": "specbridge — Spec↔Code Traceability Tool",
+      "depth": 1,
+      "line": 9,
+      "body_hash": "ada98f1427703cca",
+      "body_hash_content": "4e08c460ad86f43c",
+      "body_line_count": 3,
+      "body_preview": "# specbridge — Spec↔Code Traceability Tool  **specbridge** maps relationships be"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.1.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "When to Use This Skill",
+      "heading_text": "When to Use This Skill",
+      "depth": 2,
+      "line": 13,
+      "body_hash": "a6d2c103bfb916be",
+      "body_hash_content": "daf04a9caa12ce26",
+      "body_line_count": 9,
+      "body_preview": "## When to Use This Skill  - **Analyze traceability**: \"What specs does this cod"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.1.2",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Agent Session Lifecycle",
+      "heading_text": "Agent Session Lifecycle",
+      "depth": 2,
+      "line": 23,
+      "body_hash": "702ff43c8b405b66",
+      "body_hash_content": "b5fdd225d4089863",
+      "body_line_count": 3,
+      "body_preview": "## Agent Session Lifecycle  AIエージェントが specbridge を使うプロジェクトで作業する際のルール："
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.1.2.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "セッション開始時",
+      "heading_text": "セッション開始時",
+      "depth": 3,
+      "line": 27,
+      "body_hash": "bae4c2e3142be20b",
+      "body_hash_content": "f2a8583677613a4d",
+      "body_line_count": 5,
+      "body_preview": "### セッション開始時  ```bash specbridge snapshot --reason \"Session: <今回のタスク>\" ```"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.1.2.2",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "セッション終了時",
+      "heading_text": "セッション終了時",
+      "depth": 3,
+      "line": 33,
+      "body_hash": "8b30dcde4036ddbc",
+      "body_hash_content": "e6adf89b38c276f0",
+      "body_line_count": 7,
+      "body_preview": "### セッション終了時  ```bash specbridge drift ```  drift が検出されたら → **先に設計書を直すこと**。コードだけ"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.1.2.3",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "コミット前",
+      "heading_text": "コミット前",
+      "depth": 3,
+      "line": 41,
+      "body_hash": "7bfa2621eb9db28c",
+      "body_hash_content": "f539e0072aaa95b9",
+      "body_line_count": 7,
+      "body_preview": "### コミット前  ```bash git commit  # pre-commit hook が自動で drift --gate を実行 ```  ---"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.1.3",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Installation",
+      "heading_text": "Installation",
+      "depth": 2,
+      "line": 49,
+      "body_hash": "3140d4038e088186",
+      "body_hash_content": "5f046190424d4104",
+      "body_line_count": 2,
+      "body_preview": "## Installation  ```bash"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.2",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "From GitHub (limited release)",
+      "heading_text": "From GitHub (limited release)",
+      "depth": 1,
+      "line": 52,
+      "body_hash": "1e4871812129041f",
+      "body_hash_content": "3c9036cc0f000fbd",
+      "body_line_count": 2,
+      "body_preview": "# From GitHub (limited release) pip install git+https://github.com/nekolife1984/"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.3",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Or local clone",
+      "heading_text": "Or local clone",
+      "depth": 1,
+      "line": 55,
+      "body_hash": "8383df145821e035",
+      "body_hash_content": "2c3056f40cbaf665",
+      "body_line_count": 3,
+      "body_preview": "# Or local clone git clone https://github.com/nekolife1984/specbridge.git cd spe"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.4",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Optional: AST-based function extraction (Python/TS/Go/Rust)",
+      "heading_text": "Optional: AST-based function extraction (Python/TS/Go/Rust)",
+      "depth": 1,
+      "line": 59,
+      "body_hash": "758ae0967c15d9f9",
+      "body_hash_content": "d726007027876397",
+      "body_line_count": 3,
+      "body_preview": "# Optional: AST-based function extraction (Python/TS/Go/Rust) pip install \"specb"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.4.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Quick Start (for any project)",
+      "heading_text": "Quick Start (for any project)",
+      "depth": 2,
+      "line": 63,
+      "body_hash": "3bac0d52d7dabf9e",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 1,
+      "body_preview": "## Quick Start (for any project)"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.4.1.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Create `.specbridge.yaml`",
+      "heading_text": "1. Create `.specbridge.yaml`",
+      "depth": 3,
+      "line": 65,
+      "body_hash": "735779abc6cbbd72",
+      "body_hash_content": "984197cc4befc280",
+      "body_line_count": 16,
+      "body_preview": "### 1. Create `.specbridge.yaml`  ```yaml spec_dirs:   - docs           # Where "
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.4.1.2",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Run analysis",
+      "heading_text": "2. Run analysis",
+      "depth": 3,
+      "line": 82,
+      "body_hash": "ec0db8a1109aff38",
+      "body_hash_content": "e300bf53e446ad5a",
+      "body_line_count": 9,
+      "body_preview": "### 2. Run analysis  ```bash specbridge analyze --merge ```  This discovers all "
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.4.2",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Commands Reference",
+      "heading_text": "Commands Reference",
+      "depth": 2,
+      "line": 92,
+      "body_hash": "0c4f3584f8bbbfc4",
+      "body_hash_content": "86c9f48b834af452",
+      "body_line_count": 18,
+      "body_preview": "## Commands Reference  | Command | What It Does | When to Use | |---------|-----"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.4.2.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Common Workflows",
+      "heading_text": "Common Workflows",
+      "depth": 3,
+      "line": 111,
+      "body_hash": "914e5b275e9bb42d",
+      "body_hash_content": "4ba9461286be2a34",
+      "body_line_count": 21,
+      "body_preview": "### Common Workflows  **Daily coverage check:** ```bash specbridge analyze --mer"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.5",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "During impact analysis",
+      "heading_text": "During impact analysis",
+      "depth": 1,
+      "line": 133,
+      "body_hash": "0ca28672aac1095d",
+      "body_hash_content": "cdb1e13a83390aeb",
+      "body_line_count": 2,
+      "body_preview": "# During impact analysis specbridge impact --spec-id 1.2.1 --call-graph --max-de"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.6",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Standalone call graph analysis",
+      "heading_text": "Standalone call graph analysis",
+      "depth": 1,
+      "line": 136,
+      "body_hash": "e089d5fbd79d3ae5",
+      "body_hash_content": "440d64a010db7b11",
+      "body_line_count": 20,
+      "body_preview": "# Standalone call graph analysis specbridge call-graph --spec-id 1.2.1 specbridg"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Output: Deps: 42 import edges, Calls: 156 edges, 47 functions",
+      "heading_text": "Output: Deps: 42 import edges, Calls: 156 edges, 47 functions",
+      "depth": 1,
+      "line": 157,
+      "body_hash": "8e6c0cce65ddc00a",
+      "body_hash_content": "47c06c561d5c3273",
+      "body_line_count": 2,
+      "body_preview": "# Output: Deps: 42 import edges, Calls: 156 edges, 47 functions ```"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Output Interpretation",
+      "heading_text": "Output Interpretation",
+      "depth": 2,
+      "line": 160,
+      "body_hash": "fc8fd700be58b842",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 1,
+      "body_preview": "## Output Interpretation"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7.1.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "File-level view",
+      "heading_text": "File-level view",
+      "depth": 3,
+      "line": 162,
+      "body_hash": "ac33cb8aeda70b7a",
+      "body_hash_content": "8cf1e1599cf07e0b",
+      "body_line_count": 11,
+      "body_preview": "### File-level view ``` Nodes: 476 | Edges: 478 Coverage: 60.7% (259/427)  📄 Spe"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7.1.2",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Function-level view (heuristic mode)",
+      "heading_text": "Function-level view (heuristic mode)",
+      "depth": 3,
+      "line": 174,
+      "body_hash": "c4d1cd8f6b5499ab",
+      "body_hash_content": "62684508a257307e",
+      "body_line_count": 7,
+      "body_preview": "### Function-level view (heuristic mode) ``` 🔧 Function refs:   specbridge/core/"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7.1.3",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Transitive impact view",
+      "heading_text": "Transitive impact view",
+      "depth": 3,
+      "line": 182,
+      "body_hash": "4bb0756e078c9aa6",
+      "body_hash_content": "8b8b0ffff76ae645",
+      "body_line_count": 9,
+      "body_preview": "### Transitive impact view ``` 📄 Spec: docs.tasks.1    Direct files:     2      "
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7.2",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Call Graph Analysis",
+      "heading_text": "Call Graph Analysis",
+      "depth": 2,
+      "line": 192,
+      "body_hash": "06f2df1217547720",
+      "body_hash_content": "e3c3c8b95a7f17ea",
+      "body_line_count": 3,
+      "body_preview": "## Call Graph Analysis  The call graph maps **function-level caller→callee relat"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7.2.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "How it works",
+      "heading_text": "How it works",
+      "depth": 3,
+      "line": 196,
+      "body_hash": "2c0d3566373028d8",
+      "body_hash_content": "fd182ab73cc7be8e",
+      "body_line_count": 5,
+      "body_preview": "### How it works  1. **Lightweight builder** (built-in, no deps): scans source f"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7.2.2",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Use cases",
+      "heading_text": "Use cases",
+      "depth": 3,
+      "line": 202,
+      "body_hash": "c016c6cefbf63aa2",
+      "body_hash_content": "666d73681130502d",
+      "body_line_count": 5,
+      "body_preview": "### Use cases  - \"If I change `db.py::save_task()`, what specs could be affected"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7.3",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "MCP Server (AI Agent Integration)",
+      "heading_text": "MCP Server (AI Agent Integration)",
+      "depth": 2,
+      "line": 208,
+      "body_hash": "b8cfc5de294503e1",
+      "body_hash_content": "113fc712bc29117f",
+      "body_line_count": 22,
+      "body_preview": "## MCP Server (AI Agent Integration)  Start the MCP server so AI agents can quer"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7.4",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Configuration File (.specbridge.yaml)",
+      "heading_text": "Configuration File (.specbridge.yaml)",
+      "depth": 2,
+      "line": 231,
+      "body_hash": "7b9213f7ce9b0832",
+      "body_hash_content": "48dd8eff85218192",
+      "body_line_count": 11,
+      "body_preview": "## Configuration File (.specbridge.yaml)  ```yaml spec_dirs: [docs, specs, desig"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.7.5",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Pre-commit Hook Setup",
+      "heading_text": "Pre-commit Hook Setup",
+      "depth": 2,
+      "line": 243,
+      "body_hash": "7caa533ba1f15150",
+      "body_hash_content": "5f046190424d4104",
+      "body_line_count": 2,
+      "body_preview": "## Pre-commit Hook Setup  ```bash"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.8",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "One-command install",
+      "heading_text": "One-command install",
+      "depth": 1,
+      "line": 246,
+      "body_hash": "6e0b05f8a4aa075c",
+      "body_hash_content": "c3a9fcfba2cb07da",
+      "body_line_count": 2,
+      "body_preview": "# One-command install bash scripts/install-hooks.sh"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.9",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Or manually",
+      "heading_text": "Or manually",
+      "depth": 1,
+      "line": 249,
+      "body_hash": "01d769b3a9b7783e",
+      "body_hash_content": "d2a6ea2241221d97",
+      "body_line_count": 5,
+      "body_preview": "# Or manually ln -sf ../../.agents/scripts/pre-commit.specbridge.sh .git/hooks/p"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.9.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Drift Detection",
+      "heading_text": "Drift Detection",
+      "depth": 2,
+      "line": 255,
+      "body_hash": "754e0035544ede80",
+      "body_hash_content": "5f046190424d4104",
+      "body_line_count": 2,
+      "body_preview": "## Drift Detection  ```bash"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.10",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Take a baseline",
+      "heading_text": "Take a baseline",
+      "depth": 1,
+      "line": 258,
+      "body_hash": "86a0f28081afde9c",
+      "body_hash_content": "f66dfee5f630447e",
+      "body_line_count": 2,
+      "body_preview": "# Take a baseline specbridge snapshot --reason \"Before auth refactor\""
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.11",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Make changes...",
+      "heading_text": "Make changes...",
+      "depth": 1,
+      "line": 261,
+      "body_hash": "e872bc2ecd28d228",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 1,
+      "body_preview": "# Make changes..."
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.12",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Check drift",
+      "heading_text": "Check drift",
+      "depth": 1,
+      "line": 263,
+      "body_hash": "40628424f8b35847",
+      "body_hash_content": "e0ec67b005b5ee26",
+      "body_line_count": 2,
+      "body_preview": "# Check drift specbridge drift"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.13",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "CI-friendly",
+      "heading_text": "CI-friendly",
+      "depth": 1,
+      "line": 266,
+      "body_hash": "67fe3ffd3d338140",
+      "body_hash_content": "72b17f524fe52b57",
+      "body_line_count": 12,
+      "body_preview": "# CI-friendly specbridge drift --gate ```  Drift detects: - New/removed specs - "
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.13.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Spec ID Resolution (for impact command)",
+      "heading_text": "Spec ID Resolution (for impact command)",
+      "depth": 2,
+      "line": 279,
+      "body_hash": "61b3de5ca607ba2f",
+      "body_hash_content": "a3718c5ac4388083",
+      "body_line_count": 11,
+      "body_preview": "## Spec ID Resolution (for impact command)  The `impact --spec-id` command uses "
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.13.2",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Troubleshooting",
+      "heading_text": "Troubleshooting",
+      "depth": 2,
+      "line": 291,
+      "body_hash": "b3da6c941a0046c0",
+      "body_hash_content": "fe58c5b51617be25",
+      "body_line_count": 11,
+      "body_preview": "## Troubleshooting  | Symptom | Likely Cause | Fix | |---------|-------------|--"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.13.3",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Installing This Skill into Hermes",
+      "heading_text": "Installing This Skill into Hermes",
+      "depth": 2,
+      "line": 303,
+      "body_hash": "77c71f5b690aadd6",
+      "body_hash_content": "5f046190424d4104",
+      "body_line_count": 2,
+      "body_preview": "## Installing This Skill into Hermes  ```bash"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.14",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Symlink from repo to Hermes skills directory",
+      "heading_text": "Symlink from repo to Hermes skills directory",
+      "depth": 1,
+      "line": 306,
+      "body_hash": "4ad2a241dc414972",
+      "body_hash_content": "cc13af79eb4bcf08",
+      "body_line_count": 4,
+      "body_preview": "# Symlink from repo to Hermes skills directory mkdir -p ~/.hermes/skills/softwar"
+    },
+    {
+      "id": ".agents.skills.specbridge.SKILL.14.1",
+      "file": ".agents/skills/specbridge/SKILL.md",
+      "title": "Related Skills",
+      "heading_text": "Related Skills",
+      "depth": 2,
+      "line": 311,
+      "body_hash": "154778a7f3efc0b3",
+      "body_hash_content": "5d82eb5642e3ed8c",
+      "body_line_count": 5,
+      "body_preview": "## Related Skills  - `heuristic-traceability` — deep-dive into coverage improvem"
     }
   ],
-  "code": [],
+  "code": [
+    {
+      "file": "specbridge/__init__.py",
+      "module": "specbridge",
+      "symbols": [],
+      "is_test": false,
+      "language": "Python",
+      "imports": [],
+      "file_hash": "cc810902e3f8c9e8",
+      "functions": []
+    },
+    {
+      "file": "specbridge/adapters/__init__.py",
+      "module": "adapters",
+      "symbols": [],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "specbridge.adapters",
+        "specbridge.adapters._base"
+      ],
+      "file_hash": "e87f60e8895e68d0",
+      "functions": []
+    },
+    {
+      "file": "specbridge/adapters/_base.py",
+      "module": "adapters",
+      "symbols": [
+        "ProjectAdapter",
+        "_ensure_plugins_discovered",
+        "all_adapters",
+        "analyze",
+        "detect",
+        "detect_adapter",
+        "detect_all",
+        "discover_plugins",
+        "merge_graphs",
+        "plugin_adapters",
+        "register"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "abc",
+        "importlib.metadata"
+      ],
+      "file_hash": "1b88d6b861a4cf27",
+      "functions": [
+        {
+          "name": "ProjectAdapter",
+          "kind": "class",
+          "line": 41,
+          "body_hash": "0109a796d84b2d64",
+          "body_lines": 4
+        },
+        {
+          "name": "detect",
+          "kind": "function",
+          "line": 45,
+          "body_hash": "fef202ce254f90e1",
+          "body_lines": 6
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 51,
+          "body_hash": "35d067b29e31c024",
+          "body_lines": 9
+        },
+        {
+          "name": "register",
+          "kind": "function",
+          "line": 60,
+          "body_hash": "5ba398a8426151c9",
+          "body_lines": 17
+        },
+        {
+          "name": "all_adapters",
+          "kind": "function",
+          "line": 77,
+          "body_hash": "10cb9270173879da",
+          "body_lines": 5
+        },
+        {
+          "name": "plugin_adapters",
+          "kind": "function",
+          "line": 82,
+          "body_hash": "fcf0dbc5ae62ac95",
+          "body_lines": 10
+        },
+        {
+          "name": "_ensure_plugins_discovered",
+          "kind": "function",
+          "line": 92,
+          "body_hash": "19f1581075052796",
+          "body_lines": 13
+        },
+        {
+          "name": "discover_plugins",
+          "kind": "function",
+          "line": 105,
+          "body_hash": "1f91c480f4ba6778",
+          "body_lines": 28
+        },
+        {
+          "name": "detect_adapter",
+          "kind": "function",
+          "line": 133,
+          "body_hash": "149f901bd3411093",
+          "body_lines": 15
+        },
+        {
+          "name": "detect_all",
+          "kind": "function",
+          "line": 148,
+          "body_hash": "7c79398672457b2b",
+          "body_lines": 16
+        },
+        {
+          "name": "merge_graphs",
+          "kind": "function",
+          "line": 164,
+          "body_hash": "ba73ed44be789edd",
+          "body_lines": 14
+        }
+      ]
+    },
+    {
+      "file": "specbridge/adapters/graphify.py",
+      "module": "adapters",
+      "symbols": [
+        "GraphifyAdapter",
+        "_graphify_available",
+        "_graphify_id",
+        "_has_files",
+        "_rel_path",
+        "_run_graphify",
+        "analyze",
+        "detect"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "json",
+        "subprocess"
+      ],
+      "file_hash": "62ea1494de30abe1",
+      "functions": [
+        {
+          "name": "GraphifyAdapter",
+          "kind": "class",
+          "line": 42,
+          "body_hash": "730f12a9cd13c279",
+          "body_lines": 27
+        },
+        {
+          "name": "detect",
+          "kind": "function",
+          "line": 69,
+          "body_hash": "12e8c58311b29b01",
+          "body_lines": 10
+        },
+        {
+          "name": "_has_files",
+          "kind": "function",
+          "line": 79,
+          "body_hash": "ddc3d62aeb70944d",
+          "body_lines": 16
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 95,
+          "body_hash": "4bb0f95410a16b92",
+          "body_lines": 104
+        },
+        {
+          "name": "_graphify_available",
+          "kind": "function",
+          "line": 199,
+          "body_hash": "82dde14f5d425dc6",
+          "body_lines": 10
+        },
+        {
+          "name": "_run_graphify",
+          "kind": "function",
+          "line": 209,
+          "body_hash": "18479be4f28d6ead",
+          "body_lines": 19
+        },
+        {
+          "name": "_graphify_id",
+          "kind": "function",
+          "line": 228,
+          "body_hash": "dbcf08fb6c1a6ae2",
+          "body_lines": 11
+        },
+        {
+          "name": "_rel_path",
+          "kind": "function",
+          "line": 239,
+          "body_hash": "d408255bf4fdd29c",
+          "body_lines": 6
+        }
+      ]
+    },
+    {
+      "file": "specbridge/adapters/heuristic.py",
+      "module": "adapters",
+      "symbols": [
+        "HeuristicAdapter",
+        "__init__",
+        "analyze",
+        "detect"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.adapters._base"
+      ],
+      "file_hash": "7f05fb1aafc401f4",
+      "functions": [
+        {
+          "name": "HeuristicAdapter",
+          "kind": "class",
+          "line": 21,
+          "body_hash": "e118bc6a2a6c1a1b",
+          "body_lines": 7
+        },
+        {
+          "name": "__init__",
+          "kind": "function",
+          "line": 28,
+          "body_hash": "d98f6a22ef7e8ba9",
+          "body_lines": 3
+        },
+        {
+          "name": "detect",
+          "kind": "function",
+          "line": 31,
+          "body_hash": "fdec59f7370950b7",
+          "body_lines": 14
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 45,
+          "body_hash": "8f8c02809a62e418",
+          "body_lines": 11
+        }
+      ]
+    },
+    {
+      "file": "specbridge/adapters/spectra.py",
+      "module": "adapters",
+      "symbols": [
+        "SpectraAdapter",
+        "_load_trace_mapping",
+        "_scan_code_tags",
+        "_scan_spec_tags",
+        "analyze",
+        "detect"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "re",
+        "pathlib"
+      ],
+      "file_hash": "87b10468d626bd5e",
+      "functions": [
+        {
+          "name": "SpectraAdapter",
+          "kind": "class",
+          "line": 40,
+          "body_hash": "617fc2c598186d50",
+          "body_lines": 2
+        },
+        {
+          "name": "detect",
+          "kind": "function",
+          "line": 42,
+          "body_hash": "b01943402ec4d5e2",
+          "body_lines": 16
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 58,
+          "body_hash": "a5ce7d4b2b148992",
+          "body_lines": 12
+        },
+        {
+          "name": "_load_trace_mapping",
+          "kind": "function",
+          "line": 70,
+          "body_hash": "af3cbc52c7c94941",
+          "body_lines": 56
+        },
+        {
+          "name": "_scan_code_tags",
+          "kind": "function",
+          "line": 126,
+          "body_hash": "f46352f7716c4b75",
+          "body_lines": 63
+        },
+        {
+          "name": "_scan_spec_tags",
+          "kind": "function",
+          "line": 189,
+          "body_hash": "95df198c92bf3ff1",
+          "body_lines": 63
+        }
+      ]
+    },
+    {
+      "file": "specbridge/analyzers/__init__.py",
+      "module": "analyzers",
+      "symbols": [
+        "coverage_summary",
+        "find_orphan_code",
+        "find_orphan_specs"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "specbridge.analyzers.call_graph",
+        "typing",
+        "specbridge.core"
+      ],
+      "file_hash": "b989436828f9fde4",
+      "functions": [
+        {
+          "name": "find_orphan_specs",
+          "kind": "function",
+          "line": 13,
+          "body_hash": "d231249c7868e31e",
+          "body_lines": 14
+        },
+        {
+          "name": "find_orphan_code",
+          "kind": "function",
+          "line": 27,
+          "body_hash": "b041a77e072fdaf9",
+          "body_lines": 12
+        },
+        {
+          "name": "coverage_summary",
+          "kind": "function",
+          "line": 39,
+          "body_hash": "2203b5f5bd77cd32",
+          "body_lines": 19
+        }
+      ]
+    },
+    {
+      "file": "specbridge/analyzers/call_graph.py",
+      "module": "analyzers",
+      "symbols": [
+        "CallGraph",
+        "CallGraphNode",
+        "_find_calls",
+        "_resolve_callee",
+        "_resolve_crg_ref",
+        "add_call",
+        "build_call_graph",
+        "callees_of",
+        "callers_of",
+        "files_of",
+        "import_crg_json",
+        "run_crg_tool",
+        "transitive_impact"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "json",
+        "re"
+      ],
+      "file_hash": "934650f6faa97378",
+      "functions": [
+        {
+          "name": "CallGraphNode",
+          "kind": "class",
+          "line": 32,
+          "body_hash": "247e81fbb0cc9ad7",
+          "body_lines": 8
+        },
+        {
+          "name": "CallGraph",
+          "kind": "class",
+          "line": 40,
+          "body_hash": "64a3da08b7f63d58",
+          "body_lines": 9
+        },
+        {
+          "name": "add_call",
+          "kind": "function",
+          "line": 49,
+          "body_hash": "771312bb4f6e80a7",
+          "body_lines": 4
+        },
+        {
+          "name": "callees_of",
+          "kind": "function",
+          "line": 53,
+          "body_hash": "61412f2e71dc698b",
+          "body_lines": 4
+        },
+        {
+          "name": "callers_of",
+          "kind": "function",
+          "line": 57,
+          "body_hash": "9094ff44dd38a08c",
+          "body_lines": 4
+        },
+        {
+          "name": "files_of",
+          "kind": "function",
+          "line": 61,
+          "body_hash": "e007d320843fea2d",
+          "body_lines": 36
+        },
+        {
+          "name": "build_call_graph",
+          "kind": "function",
+          "line": 97,
+          "body_hash": "4036f2c638798056",
+          "body_lines": 65
+        },
+        {
+          "name": "_find_calls",
+          "kind": "function",
+          "line": 162,
+          "body_hash": "1b31aba6637cfd05",
+          "body_lines": 14
+        },
+        {
+          "name": "_resolve_callee",
+          "kind": "function",
+          "line": 176,
+          "body_hash": "a52748b5f76529d0",
+          "body_lines": 42
+        },
+        {
+          "name": "import_crg_json",
+          "kind": "function",
+          "line": 218,
+          "body_hash": "c00f9352e06b3aae",
+          "body_lines": 46
+        },
+        {
+          "name": "_resolve_crg_ref",
+          "kind": "function",
+          "line": 264,
+          "body_hash": "e2d1fbb80834c539",
+          "body_lines": 18
+        },
+        {
+          "name": "run_crg_tool",
+          "kind": "function",
+          "line": 282,
+          "body_hash": "70c9c316330091f5",
+          "body_lines": 30
+        },
+        {
+          "name": "transitive_impact",
+          "kind": "function",
+          "line": 312,
+          "body_hash": "fec47c65d65fe410",
+          "body_lines": 77
+        }
+      ]
+    },
+    {
+      "file": "specbridge/analyzers/drift.py",
+      "module": "analyzers",
+      "symbols": [
+        "DriftReport",
+        "__init__",
+        "build_snapshot",
+        "compute_drift",
+        "has_drift",
+        "load_snapshot",
+        "render_text",
+        "save_snapshot",
+        "to_dict"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "json",
+        "datetime"
+      ],
+      "file_hash": "2d0c0ce49a948ded",
+      "functions": [
+        {
+          "name": "build_snapshot",
+          "kind": "function",
+          "line": 22,
+          "body_hash": "35706fca8f94fa66",
+          "body_lines": 66
+        },
+        {
+          "name": "save_snapshot",
+          "kind": "function",
+          "line": 88,
+          "body_hash": "c4a11761adb3784f",
+          "body_lines": 10
+        },
+        {
+          "name": "load_snapshot",
+          "kind": "function",
+          "line": 98,
+          "body_hash": "4593456eabec09b8",
+          "body_lines": 13
+        },
+        {
+          "name": "DriftReport",
+          "kind": "class",
+          "line": 111,
+          "body_hash": "0912b4442341eec4",
+          "body_lines": 3
+        },
+        {
+          "name": "__init__",
+          "kind": "function",
+          "line": 114,
+          "body_hash": "e4f8856070a3ff10",
+          "body_lines": 18
+        },
+        {
+          "name": "has_drift",
+          "kind": "function",
+          "line": 132,
+          "body_hash": "4051001a68017249",
+          "body_lines": 10
+        },
+        {
+          "name": "render_text",
+          "kind": "function",
+          "line": 142,
+          "body_hash": "bf7fd49b9b2e6a8e",
+          "body_lines": 96
+        },
+        {
+          "name": "to_dict",
+          "kind": "function",
+          "line": 238,
+          "body_hash": "cdf2ecb91d7a85f2",
+          "body_lines": 21
+        },
+        {
+          "name": "compute_drift",
+          "kind": "function",
+          "line": 259,
+          "body_hash": "a7295b5f3cfa3863",
+          "body_lines": 165
+        }
+      ]
+    },
+    {
+      "file": "specbridge/analyzers/graph.py",
+      "module": "analyzers",
+      "symbols": [
+        "_add_depends_edge",
+        "_resolve_import",
+        "build_code_dependency_graph"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "collections.abc",
+        "pathlib"
+      ],
+      "file_hash": "6648cc5f5e8bd55d",
+      "functions": [
+        {
+          "name": "build_code_dependency_graph",
+          "kind": "function",
+          "line": 11,
+          "body_hash": "b1e468933fd3d28d",
+          "body_lines": 32
+        },
+        {
+          "name": "_resolve_import",
+          "kind": "function",
+          "line": 43,
+          "body_hash": "cc36638db5f5289b",
+          "body_lines": 59
+        },
+        {
+          "name": "_add_depends_edge",
+          "kind": "function",
+          "line": 102,
+          "body_hash": "6e314d9fb04a7ea7",
+          "body_lines": 20
+        }
+      ]
+    },
+    {
+      "file": "specbridge/cli.py",
+      "module": "specbridge",
+      "symbols": [
+        "SpecbridgeHandler",
+        "__init__",
+        "_drift_git",
+        "analyze",
+        "call_graph",
+        "cli",
+        "config",
+        "coverage",
+        "drift",
+        "impact",
+        "on_any_event",
+        "plugins",
+        "serve",
+        "setup",
+        "snapshot",
+        "validate_boundary",
+        "watch"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "typing"
+      ],
+      "file_hash": "bd63b790f0708cb5",
+      "functions": [
+        {
+          "name": "cli",
+          "kind": "function",
+          "line": 18,
+          "body_hash": "298beb638159e622",
+          "body_lines": 22
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 40,
+          "body_hash": "e9031a6e66455f87",
+          "body_lines": 79
+        },
+        {
+          "name": "impact",
+          "kind": "function",
+          "line": 119,
+          "body_hash": "6e0c9eccb6dbc91e",
+          "body_lines": 87
+        },
+        {
+          "name": "coverage",
+          "kind": "function",
+          "line": 206,
+          "body_hash": "e28943e21a85bde2",
+          "body_lines": 46
+        },
+        {
+          "name": "snapshot",
+          "kind": "function",
+          "line": 252,
+          "body_hash": "5ff8dbbe81c523c0",
+          "body_lines": 31
+        },
+        {
+          "name": "drift",
+          "kind": "function",
+          "line": 283,
+          "body_hash": "fa1be589f5bcd2fb",
+          "body_lines": 46
+        },
+        {
+          "name": "_drift_git",
+          "kind": "function",
+          "line": 329,
+          "body_hash": "f2e693d3de6e8168",
+          "body_lines": 52
+        },
+        {
+          "name": "validate_boundary",
+          "kind": "function",
+          "line": 381,
+          "body_hash": "252cb1ccaab5d78a",
+          "body_lines": 66
+        },
+        {
+          "name": "config",
+          "kind": "function",
+          "line": 447,
+          "body_hash": "84df36d72f1c84ad",
+          "body_lines": 49
+        },
+        {
+          "name": "watch",
+          "kind": "function",
+          "line": 496,
+          "body_hash": "b55a7d8252992074",
+          "body_lines": 19
+        },
+        {
+          "name": "SpecbridgeHandler",
+          "kind": "class",
+          "line": 515,
+          "body_hash": "ae2a7008499982ae",
+          "body_lines": 1
+        },
+        {
+          "name": "__init__",
+          "kind": "function",
+          "line": 516,
+          "body_hash": "67dc46120c3f5b72",
+          "body_lines": 5
+        },
+        {
+          "name": "on_any_event",
+          "kind": "function",
+          "line": 521,
+          "body_hash": "92d4e384e7d19f47",
+          "body_lines": 58
+        },
+        {
+          "name": "plugins",
+          "kind": "function",
+          "line": 579,
+          "body_hash": "48df660ccb0d77f4",
+          "body_lines": 32
+        },
+        {
+          "name": "serve",
+          "kind": "function",
+          "line": 611,
+          "body_hash": "c1dce52f645d6988",
+          "body_lines": 26
+        },
+        {
+          "name": "call_graph",
+          "kind": "function",
+          "line": 637,
+          "body_hash": "61d8e825a96ec51f",
+          "body_lines": 53
+        },
+        {
+          "name": "setup",
+          "kind": "function",
+          "line": 690,
+          "body_hash": "78a09c978ee84fc1",
+          "body_lines": 56
+        }
+      ]
+    },
+    {
+      "file": "specbridge/config.py",
+      "module": "specbridge",
+      "symbols": [
+        "SpecbridgeConfig",
+        "_merge_dict",
+        "_try_read_pyproject",
+        "_try_read_yaml",
+        "load"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "pathlib"
+      ],
+      "file_hash": "d67304e073721265",
+      "functions": [
+        {
+          "name": "SpecbridgeConfig",
+          "kind": "class",
+          "line": 28,
+          "body_hash": "b1f5de83af64d407",
+          "body_lines": 9
+        },
+        {
+          "name": "load",
+          "kind": "function",
+          "line": 37,
+          "body_hash": "006d43f31203aa05",
+          "body_lines": 30
+        },
+        {
+          "name": "_try_read_yaml",
+          "kind": "function",
+          "line": 67,
+          "body_hash": "8ed38c9c3fb32f08",
+          "body_lines": 10
+        },
+        {
+          "name": "_try_read_pyproject",
+          "kind": "function",
+          "line": 77,
+          "body_hash": "00e85b481dba5b52",
+          "body_lines": 17
+        },
+        {
+          "name": "_merge_dict",
+          "kind": "function",
+          "line": 94,
+          "body_hash": "50203d42e3c125e8",
+          "body_lines": 10
+        }
+      ]
+    },
+    {
+      "file": "specbridge/core/__init__.py",
+      "module": "core",
+      "symbols": [
+        "EdgeRelation",
+        "EdgeStrength",
+        "Evidence",
+        "NodeType",
+        "SourceRef",
+        "TraceEdge",
+        "TraceGraph",
+        "TraceNode",
+        "add_edge",
+        "add_node",
+        "edges_from",
+        "edges_to",
+        "find_spec_nodes",
+        "nodes_by_type"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "uuid",
+        "dataclasses"
+      ],
+      "file_hash": "c86830f44d07337d",
+      "functions": [
+        {
+          "name": "NodeType",
+          "kind": "class",
+          "line": 16,
+          "body_hash": "c1ad0171d5ae72c9",
+          "body_lines": 8
+        },
+        {
+          "name": "EdgeRelation",
+          "kind": "class",
+          "line": 24,
+          "body_hash": "3ccdf234b81002e4",
+          "body_lines": 8
+        },
+        {
+          "name": "EdgeStrength",
+          "kind": "class",
+          "line": 32,
+          "body_hash": "4ec7b4f26c2d8cc5",
+          "body_lines": 7
+        },
+        {
+          "name": "SourceRef",
+          "kind": "class",
+          "line": 39,
+          "body_hash": "62c9d1004c59b6df",
+          "body_lines": 9
+        },
+        {
+          "name": "Evidence",
+          "kind": "class",
+          "line": 48,
+          "body_hash": "5825171e4a9a9e2b",
+          "body_lines": 8
+        },
+        {
+          "name": "TraceNode",
+          "kind": "class",
+          "line": 56,
+          "body_hash": "6541825673bdad18",
+          "body_lines": 11
+        },
+        {
+          "name": "TraceEdge",
+          "kind": "class",
+          "line": 67,
+          "body_hash": "abbb75230f920812",
+          "body_lines": 9
+        },
+        {
+          "name": "TraceGraph",
+          "kind": "class",
+          "line": 76,
+          "body_hash": "e123b5306562bfbc",
+          "body_lines": 5
+        },
+        {
+          "name": "add_node",
+          "kind": "function",
+          "line": 81,
+          "body_hash": "186eb224502ce28a",
+          "body_lines": 6
+        },
+        {
+          "name": "add_edge",
+          "kind": "function",
+          "line": 87,
+          "body_hash": "3061c8781364ea89",
+          "body_lines": 3
+        },
+        {
+          "name": "nodes_by_type",
+          "kind": "function",
+          "line": 90,
+          "body_hash": "52427c4cbe1e7906",
+          "body_lines": 3
+        },
+        {
+          "name": "edges_to",
+          "kind": "function",
+          "line": 93,
+          "body_hash": "901aed4c2b57ab8b",
+          "body_lines": 3
+        },
+        {
+          "name": "edges_from",
+          "kind": "function",
+          "line": 96,
+          "body_hash": "1b3fec40efabf059",
+          "body_lines": 4
+        },
+        {
+          "name": "find_spec_nodes",
+          "kind": "function",
+          "line": 100,
+          "body_hash": "a6c7ab4051ba84e7",
+          "body_lines": 34
+        }
+      ]
+    },
+    {
+      "file": "specbridge/core/extract.py",
+      "module": "core",
+      "symbols": [
+        "Tag",
+        "_extract_python_comments",
+        "_extract_python_source_tags",
+        "_extract_regex_source_tags",
+        "_extract_source_tags",
+        "_extract_spec_tags",
+        "_is_source_file",
+        "_is_spec_file",
+        "extract_tags_from_dir",
+        "extract_tags_from_file"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "io",
+        "re"
+      ],
+      "file_hash": "fb0cb9d2e89d7857",
+      "functions": [
+        {
+          "name": "Tag",
+          "kind": "class",
+          "line": 77,
+          "body_hash": "036155bf8c45e273",
+          "body_lines": 8
+        },
+        {
+          "name": "_is_source_file",
+          "kind": "function",
+          "line": 85,
+          "body_hash": "10b02045a36904eb",
+          "body_lines": 4
+        },
+        {
+          "name": "_is_spec_file",
+          "kind": "function",
+          "line": 89,
+          "body_hash": "df1fcd6e02915b1f",
+          "body_lines": 4
+        },
+        {
+          "name": "extract_tags_from_file",
+          "kind": "function",
+          "line": 93,
+          "body_hash": "477c4d35a4941265",
+          "body_lines": 11
+        },
+        {
+          "name": "_extract_spec_tags",
+          "kind": "function",
+          "line": 104,
+          "body_hash": "b8c06699c087ec5f",
+          "body_lines": 28
+        },
+        {
+          "name": "_extract_python_comments",
+          "kind": "function",
+          "line": 132,
+          "body_hash": "7efd2c64509d327c",
+          "body_lines": 18
+        },
+        {
+          "name": "_extract_python_source_tags",
+          "kind": "function",
+          "line": 150,
+          "body_hash": "ebadb4db68fed50b",
+          "body_lines": 23
+        },
+        {
+          "name": "_extract_regex_source_tags",
+          "kind": "function",
+          "line": 173,
+          "body_hash": "bee7ace5b191b60b",
+          "body_lines": 16
+        },
+        {
+          "name": "_extract_source_tags",
+          "kind": "function",
+          "line": 189,
+          "body_hash": "87a78dde93afd052",
+          "body_lines": 10
+        },
+        {
+          "name": "extract_tags_from_dir",
+          "kind": "function",
+          "line": 199,
+          "body_hash": "09af4112b9f76c8d",
+          "body_lines": 22
+        }
+      ]
+    },
+    {
+      "file": "specbridge/discovery/__init__.py",
+      "module": "discovery",
+      "symbols": [],
+      "is_test": false,
+      "language": "Python",
+      "imports": [],
+      "file_hash": "300d95d71ddc1ff1",
+      "functions": []
+    },
+    {
+      "file": "specbridge/discovery/ast.py",
+      "module": "discovery",
+      "symbols": [
+        "_append_block",
+        "_extract_functions_regex_fallback",
+        "_extract_ts_arrow",
+        "_extract_ts_def",
+        "_find_child",
+        "_find_child_by_types",
+        "_get_node_text",
+        "_walk_python_tree",
+        "_walk_ts_go_tree",
+        "_walk_ts_rust_tree",
+        "_walk_ts_typescript_tree",
+        "extract_functions",
+        "extract_functions_go",
+        "extract_functions_python",
+        "extract_functions_rust",
+        "extract_functions_typescript",
+        "is_available"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "hashlib",
+        "pathlib"
+      ],
+      "file_hash": "c0e9241fdc3b1be3",
+      "functions": [
+        {
+          "name": "is_available",
+          "kind": "function",
+          "line": 83,
+          "body_hash": "346e19319ff27904",
+          "body_lines": 10
+        },
+        {
+          "name": "extract_functions",
+          "kind": "function",
+          "line": 93,
+          "body_hash": "d358febafa6426b2",
+          "body_lines": 28
+        },
+        {
+          "name": "extract_functions_python",
+          "kind": "function",
+          "line": 121,
+          "body_hash": "99a8800c51686e21",
+          "body_lines": 22
+        },
+        {
+          "name": "extract_functions_typescript",
+          "kind": "function",
+          "line": 143,
+          "body_hash": "c960aa7d77105ca1",
+          "body_lines": 31
+        },
+        {
+          "name": "extract_functions_go",
+          "kind": "function",
+          "line": 174,
+          "body_hash": "aca8b8a189ddb3d4",
+          "body_lines": 22
+        },
+        {
+          "name": "extract_functions_rust",
+          "kind": "function",
+          "line": 196,
+          "body_hash": "ca45308b26651b96",
+          "body_lines": 27
+        },
+        {
+          "name": "_walk_python_tree",
+          "kind": "function",
+          "line": 223,
+          "body_hash": "70797f3a9fc96eea",
+          "body_lines": 55
+        },
+        {
+          "name": "_walk_ts_typescript_tree",
+          "kind": "function",
+          "line": 278,
+          "body_hash": "c993c0e7a2d7e7e5",
+          "body_lines": 30
+        },
+        {
+          "name": "_extract_ts_def",
+          "kind": "function",
+          "line": 308,
+          "body_hash": "a6331565aaf34c93",
+          "body_lines": 23
+        },
+        {
+          "name": "_extract_ts_arrow",
+          "kind": "function",
+          "line": 331,
+          "body_hash": "36e9362c75a94f43",
+          "body_lines": 22
+        },
+        {
+          "name": "_walk_ts_go_tree",
+          "kind": "function",
+          "line": 353,
+          "body_hash": "67008653a5b8c906",
+          "body_lines": 31
+        },
+        {
+          "name": "_walk_ts_rust_tree",
+          "kind": "function",
+          "line": 384,
+          "body_hash": "b0eda2236738d904",
+          "body_lines": 42
+        },
+        {
+          "name": "_append_block",
+          "kind": "function",
+          "line": 426,
+          "body_hash": "f7e46dbc99592b18",
+          "body_lines": 28
+        },
+        {
+          "name": "_get_node_text",
+          "kind": "function",
+          "line": 454,
+          "body_hash": "b86b2c6c160bb16f",
+          "body_lines": 8
+        },
+        {
+          "name": "_find_child",
+          "kind": "function",
+          "line": 462,
+          "body_hash": "e92c668aae8a85e9",
+          "body_lines": 11
+        },
+        {
+          "name": "_find_child_by_types",
+          "kind": "function",
+          "line": 473,
+          "body_hash": "f472262b7aa277e7",
+          "body_lines": 14
+        },
+        {
+          "name": "_extract_functions_regex_fallback",
+          "kind": "function",
+          "line": 487,
+          "body_hash": "de666bf31b81dc1d",
+          "body_lines": 7
+        }
+      ]
+    },
+    {
+      "file": "specbridge/discovery/code.py",
+      "module": "discovery",
+      "symbols": [
+        "CodeCandidate",
+        "FuncBlock",
+        "_extract_func_blocks",
+        "_extract_imports",
+        "_extract_symbol_names",
+        "_is_test_file",
+        "discover_code"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "hashlib",
+        "re"
+      ],
+      "file_hash": "904ffff0b8a9a15c",
+      "functions": [
+        {
+          "name": "FuncBlock",
+          "kind": "class",
+          "line": 65,
+          "body_hash": "4026555fdf68586c",
+          "body_lines": 11
+        },
+        {
+          "name": "CodeCandidate",
+          "kind": "class",
+          "line": 76,
+          "body_hash": "c70d213067f8134d",
+          "body_lines": 12
+        },
+        {
+          "name": "_is_test_file",
+          "kind": "function",
+          "line": 88,
+          "body_hash": "507ab741dc70b140",
+          "body_lines": 5
+        },
+        {
+          "name": "_extract_imports",
+          "kind": "function",
+          "line": 93,
+          "body_hash": "2ba0014c1c0ea055",
+          "body_lines": 14
+        },
+        {
+          "name": "_extract_func_blocks",
+          "kind": "function",
+          "line": 107,
+          "body_hash": "3e02c3f4e4ac0526",
+          "body_lines": 45
+        },
+        {
+          "name": "discover_code",
+          "kind": "function",
+          "line": 152,
+          "body_hash": "74e124b8825a9a47",
+          "body_lines": 54
+        },
+        {
+          "name": "_extract_symbol_names",
+          "kind": "function",
+          "line": 206,
+          "body_hash": "947067ac1e77b638",
+          "body_lines": 11
+        }
+      ]
+    },
+    {
+      "file": "specbridge/discovery/spec.py",
+      "module": "discovery",
+      "symbols": [
+        "SpecCandidate",
+        "_auto_id",
+        "_clean_title",
+        "_parse_sections",
+        "_split_sections",
+        "discover_specs"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "hashlib",
+        "re"
+      ],
+      "file_hash": "457acff2dcecc069",
+      "functions": [
+        {
+          "name": "SpecCandidate",
+          "kind": "class",
+          "line": 30,
+          "body_hash": "34673365876905f0",
+          "body_lines": 19
+        },
+        {
+          "name": "_clean_title",
+          "kind": "function",
+          "line": 49,
+          "body_hash": "7665bfa39061803d",
+          "body_lines": 5
+        },
+        {
+          "name": "_auto_id",
+          "kind": "function",
+          "line": 54,
+          "body_hash": "10cc333f6c14739a",
+          "body_lines": 8
+        },
+        {
+          "name": "_split_sections",
+          "kind": "function",
+          "line": 62,
+          "body_hash": "a8085a41a1f03d48",
+          "body_lines": 43
+        },
+        {
+          "name": "discover_specs",
+          "kind": "function",
+          "line": 105,
+          "body_hash": "34ee1b7edd29c326",
+          "body_lines": 33
+        },
+        {
+          "name": "_parse_sections",
+          "kind": "function",
+          "line": 138,
+          "body_hash": "604065f426bb0a80",
+          "body_lines": 65
+        }
+      ]
+    },
+    {
+      "file": "specbridge/guard.py",
+      "module": "specbridge",
+      "symbols": [
+        "validate_write_path"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib"
+      ],
+      "file_hash": "96a8517a796aa47b",
+      "functions": [
+        {
+          "name": "validate_write_path",
+          "kind": "function",
+          "line": 11,
+          "body_hash": "0318afb32a154f2f",
+          "body_lines": 50
+        }
+      ]
+    },
+    {
+      "file": "specbridge/infer/__init__.py",
+      "module": "infer",
+      "symbols": [
+        "_dirname",
+        "_score_edge",
+        "_score_func_edge",
+        "_tokenize",
+        "build_heuristic_graph"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "os",
+        "re"
+      ],
+      "file_hash": "b8899b4e8ceec858",
+      "functions": [
+        {
+          "name": "_tokenize",
+          "kind": "function",
+          "line": 46,
+          "body_hash": "d4074328ef634929",
+          "body_lines": 15
+        },
+        {
+          "name": "_dirname",
+          "kind": "function",
+          "line": 61,
+          "body_hash": "23a37a4dd5db7f5e",
+          "body_lines": 5
+        },
+        {
+          "name": "build_heuristic_graph",
+          "kind": "function",
+          "line": 66,
+          "body_hash": "d802b7c334996556",
+          "body_lines": 181
+        },
+        {
+          "name": "_score_edge",
+          "kind": "function",
+          "line": 247,
+          "body_hash": "c47b059f3a75b60a",
+          "body_lines": 103
+        },
+        {
+          "name": "_score_func_edge",
+          "kind": "function",
+          "line": 350,
+          "body_hash": "e254681fae85cc83",
+          "body_lines": 27
+        }
+      ]
+    },
+    {
+      "file": "specbridge/mcp_server.py",
+      "module": "specbridge",
+      "symbols": [
+        "_analyze_graph",
+        "create_mcp_server",
+        "handle_call_tool",
+        "handle_list_tools",
+        "run_mcp_server"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "typing"
+      ],
+      "file_hash": "7c880b5387b939e7",
+      "functions": [
+        {
+          "name": "create_mcp_server",
+          "kind": "function",
+          "line": 28,
+          "body_hash": "20efda68a3b61c6f",
+          "body_lines": 14
+        },
+        {
+          "name": "_analyze_graph",
+          "kind": "function",
+          "line": 42,
+          "body_hash": "5fac000d4b5c182d",
+          "body_lines": 9
+        },
+        {
+          "name": "handle_list_tools",
+          "kind": "function",
+          "line": 51,
+          "body_hash": "cdcc5854b171a3d2",
+          "body_lines": 58
+        },
+        {
+          "name": "handle_call_tool",
+          "kind": "function",
+          "line": 109,
+          "body_hash": "1ee4ffb80278dd48",
+          "body_lines": 138
+        },
+        {
+          "name": "run_mcp_server",
+          "kind": "function",
+          "line": 247,
+          "body_hash": "46095b0a17176521",
+          "body_lines": 9
+        }
+      ]
+    },
+    {
+      "file": "specbridge/outputs/__init__.py",
+      "module": "outputs",
+      "symbols": [],
+      "is_test": false,
+      "language": "Python",
+      "imports": [],
+      "file_hash": "e3b0c44298fc1c14",
+      "functions": []
+    },
+    {
+      "file": "specbridge/outputs/html.py",
+      "module": "outputs",
+      "symbols": [
+        "_graph_data",
+        "render_html"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "json",
+        "typing"
+      ],
+      "file_hash": "b9cfd450073d6966",
+      "functions": [
+        {
+          "name": "_graph_data",
+          "kind": "function",
+          "line": 35,
+          "body_hash": "aa40e9791ca04102",
+          "body_lines": 27
+        },
+        {
+          "name": "render_html",
+          "kind": "function",
+          "line": 62,
+          "body_hash": "06ca197dd35ecfa5",
+          "body_lines": 242
+        }
+      ]
+    },
+    {
+      "file": "specbridge/outputs/json_out.py",
+      "module": "outputs",
+      "symbols": [
+        "_edge_dict",
+        "_node_dict",
+        "render_json"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "json",
+        "dataclasses"
+      ],
+      "file_hash": "647bd3ea3b6531e6",
+      "functions": [
+        {
+          "name": "_node_dict",
+          "kind": "function",
+          "line": 13,
+          "body_hash": "4b426b1f1768cd1e",
+          "body_lines": 6
+        },
+        {
+          "name": "_edge_dict",
+          "kind": "function",
+          "line": 19,
+          "body_hash": "991f790adae63e7a",
+          "body_lines": 7
+        },
+        {
+          "name": "render_json",
+          "kind": "function",
+          "line": 26,
+          "body_hash": "804082de7fb77d66",
+          "body_lines": 8
+        }
+      ]
+    },
+    {
+      "file": "specbridge/outputs/text.py",
+      "module": "outputs",
+      "symbols": [
+        "_is_func_node",
+        "_maybe_truncate",
+        "render_text"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "typing",
+        "specbridge.core"
+      ],
+      "file_hash": "187ae98e927973ae",
+      "functions": [
+        {
+          "name": "render_text",
+          "kind": "function",
+          "line": 8,
+          "body_hash": "26f52d1fb5c1deaf",
+          "body_lines": 19
+        },
+        {
+          "name": "_maybe_truncate",
+          "kind": "function",
+          "line": 27,
+          "body_hash": "c6ea80f99ce276be",
+          "body_lines": 5
+        },
+        {
+          "name": "_is_func_node",
+          "kind": "function",
+          "line": 32,
+          "body_hash": "2593cee6865ef4da",
+          "body_lines": 65
+        }
+      ]
+    },
+    {
+      "file": "tests/__init__.py",
+      "module": "tests",
+      "symbols": [],
+      "is_test": false,
+      "language": "Python",
+      "imports": [],
+      "file_hash": "170c1c32db470171",
+      "functions": []
+    },
+    {
+      "file": "tests/conftest.py",
+      "module": "tests",
+      "symbols": [
+        "Session",
+        "__init__",
+        "authenticate",
+        "generate_chart",
+        "login",
+        "logout",
+        "test_authenticate",
+        "tmp_project",
+        "tmp_project_heuristic",
+        "tmp_project_spectra",
+        "verify_token"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "os",
+        "collections.abc"
+      ],
+      "file_hash": "15e2a8d164c3d55f",
+      "functions": [
+        {
+          "name": "tmp_project",
+          "kind": "function",
+          "line": 13,
+          "body_hash": "a56976f3672cbd30",
+          "body_lines": 30
+        },
+        {
+          "name": "tmp_project_spectra",
+          "kind": "function",
+          "line": 43,
+          "body_hash": "6271ce63c17c878d",
+          "body_lines": 68
+        },
+        {
+          "name": "authenticate",
+          "kind": "function",
+          "line": 111,
+          "body_hash": "ffa41d0f05dce42c",
+          "body_lines": 6
+        },
+        {
+          "name": "logout",
+          "kind": "function",
+          "line": 117,
+          "body_hash": "7c94f88ea8d8077e",
+          "body_lines": 6
+        },
+        {
+          "name": "verify_token",
+          "kind": "function",
+          "line": 123,
+          "body_hash": "3843a201f3e6b8fd",
+          "body_lines": 11
+        },
+        {
+          "name": "test_authenticate",
+          "kind": "function",
+          "line": 134,
+          "body_hash": "ec271d60468443da",
+          "body_lines": 11
+        },
+        {
+          "name": "tmp_project_heuristic",
+          "kind": "function",
+          "line": 145,
+          "body_hash": "11a01d0f4a3ef9be",
+          "body_lines": 41
+        },
+        {
+          "name": "login",
+          "kind": "function",
+          "line": 186,
+          "body_hash": "51140d189892d36e",
+          "body_lines": 3
+        },
+        {
+          "name": "Session",
+          "kind": "class",
+          "line": 189,
+          "body_hash": "1b85c6719be4f5a0",
+          "body_lines": 1
+        },
+        {
+          "name": "__init__",
+          "kind": "function",
+          "line": 190,
+          "body_hash": "d23526b461bad3e5",
+          "body_lines": 7
+        },
+        {
+          "name": "generate_chart",
+          "kind": "function",
+          "line": 197,
+          "body_hash": "9fb8a5073eb13a77",
+          "body_lines": 9
+        }
+      ]
+    },
+    {
+      "file": "tests/test_adapter_merge.py",
+      "module": "tests",
+      "symbols": [
+        "TestDetectAll",
+        "TestMergeCLI",
+        "TestMergeGraphs",
+        "make_graph_a",
+        "make_graph_b",
+        "test_detect_all_order",
+        "test_empty_dir",
+        "test_merge_concatenates_edges",
+        "test_merge_empty",
+        "test_merge_node_types",
+        "test_merge_produces_graph",
+        "test_merge_second_overwrites",
+        "test_merge_single",
+        "test_merge_union_nodes",
+        "test_returns_multiple_adapters"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.adapters._base"
+      ],
+      "file_hash": "ee94da8c3b3e3b3e",
+      "functions": [
+        {
+          "name": "TestDetectAll",
+          "kind": "class",
+          "line": 22,
+          "body_hash": "94da2d5232315fea",
+          "body_lines": 3
+        },
+        {
+          "name": "test_returns_multiple_adapters",
+          "kind": "function",
+          "line": 25,
+          "body_hash": "0e281cad50b40933",
+          "body_lines": 8
+        },
+        {
+          "name": "test_empty_dir",
+          "kind": "function",
+          "line": 33,
+          "body_hash": "784f79b995215bf9",
+          "body_lines": 7
+        },
+        {
+          "name": "test_detect_all_order",
+          "kind": "function",
+          "line": 40,
+          "body_hash": "3543c62647d38f2d",
+          "body_lines": 8
+        },
+        {
+          "name": "TestMergeGraphs",
+          "kind": "class",
+          "line": 48,
+          "body_hash": "480ea6e0034e215f",
+          "body_lines": 3
+        },
+        {
+          "name": "make_graph_a",
+          "kind": "function",
+          "line": 51,
+          "body_hash": "b30f3947293f4a4c",
+          "body_lines": 13
+        },
+        {
+          "name": "make_graph_b",
+          "kind": "function",
+          "line": 64,
+          "body_hash": "c52e034b82ac2494",
+          "body_lines": 13
+        },
+        {
+          "name": "test_merge_union_nodes",
+          "kind": "function",
+          "line": 77,
+          "body_hash": "e23edc308292e334",
+          "body_lines": 10
+        },
+        {
+          "name": "test_merge_concatenates_edges",
+          "kind": "function",
+          "line": 87,
+          "body_hash": "4c5bdb5d834242b3",
+          "body_lines": 7
+        },
+        {
+          "name": "test_merge_second_overwrites",
+          "kind": "function",
+          "line": 94,
+          "body_hash": "564e1559b4edf268",
+          "body_lines": 9
+        },
+        {
+          "name": "test_merge_empty",
+          "kind": "function",
+          "line": 103,
+          "body_hash": "e534eb9d256f6b38",
+          "body_lines": 6
+        },
+        {
+          "name": "test_merge_single",
+          "kind": "function",
+          "line": 109,
+          "body_hash": "057450c6574baef8",
+          "body_lines": 7
+        },
+        {
+          "name": "test_merge_node_types",
+          "kind": "function",
+          "line": 116,
+          "body_hash": "e5077a83110f3158",
+          "body_lines": 10
+        },
+        {
+          "name": "TestMergeCLI",
+          "kind": "class",
+          "line": 126,
+          "body_hash": "8142dccd89257b8f",
+          "body_lines": 3
+        },
+        {
+          "name": "test_merge_produces_graph",
+          "kind": "function",
+          "line": 129,
+          "body_hash": "3378f6fec60628a2",
+          "body_lines": 11
+        }
+      ]
+    },
+    {
+      "file": "tests/test_analyzers.py",
+      "module": "tests",
+      "symbols": [
+        "TestCoverageSummary",
+        "TestFindOrphans",
+        "test_basic_coverage",
+        "test_design_node_is_ignored_for_orphan_code",
+        "test_edge_relation_filtering",
+        "test_empty_graph",
+        "test_full_coverage",
+        "test_no_orphans",
+        "test_orphan_code",
+        "test_orphan_code_only",
+        "test_orphan_specs",
+        "test_satisfies_counts_as_covered",
+        "three_spec_graph"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pytest",
+        "specbridge.analyzers"
+      ],
+      "file_hash": "c5335459d3623747",
+      "functions": [
+        {
+          "name": "three_spec_graph",
+          "kind": "function",
+          "line": 24,
+          "body_hash": "628d6c1d6e68a2ce",
+          "body_lines": 30
+        },
+        {
+          "name": "TestCoverageSummary",
+          "kind": "class",
+          "line": 54,
+          "body_hash": "3240b73d760e5e99",
+          "body_lines": 3
+        },
+        {
+          "name": "test_basic_coverage",
+          "kind": "function",
+          "line": 57,
+          "body_hash": "a6de947edf70e8d7",
+          "body_lines": 7
+        },
+        {
+          "name": "test_empty_graph",
+          "kind": "function",
+          "line": 64,
+          "body_hash": "fe89e63f7d9d9a1c",
+          "body_lines": 6
+        },
+        {
+          "name": "test_full_coverage",
+          "kind": "function",
+          "line": 70,
+          "body_hash": "bac94c561125da77",
+          "body_lines": 16
+        },
+        {
+          "name": "test_satisfies_counts_as_covered",
+          "kind": "function",
+          "line": 86,
+          "body_hash": "5b053e1ad1c6ce6a",
+          "body_lines": 15
+        },
+        {
+          "name": "TestFindOrphans",
+          "kind": "class",
+          "line": 101,
+          "body_hash": "52d9b5259dc39127",
+          "body_lines": 3
+        },
+        {
+          "name": "test_orphan_specs",
+          "kind": "function",
+          "line": 104,
+          "body_hash": "263b658a0f7d1db1",
+          "body_lines": 6
+        },
+        {
+          "name": "test_orphan_code",
+          "kind": "function",
+          "line": 110,
+          "body_hash": "ae46ece21163c291",
+          "body_lines": 6
+        },
+        {
+          "name": "test_no_orphans",
+          "kind": "function",
+          "line": 116,
+          "body_hash": "67bed89e4f57ee12",
+          "body_lines": 14
+        },
+        {
+          "name": "test_orphan_code_only",
+          "kind": "function",
+          "line": 130,
+          "body_hash": "3deeaf3c80c477a9",
+          "body_lines": 11
+        },
+        {
+          "name": "test_edge_relation_filtering",
+          "kind": "function",
+          "line": 141,
+          "body_hash": "93e086d3ba5b77b5",
+          "body_lines": 16
+        },
+        {
+          "name": "test_design_node_is_ignored_for_orphan_code",
+          "kind": "function",
+          "line": 157,
+          "body_hash": "768d50ceb627b104",
+          "body_lines": 9
+        }
+      ]
+    },
+    {
+      "file": "tests/test_ast.py",
+      "module": "tests",
+      "symbols": [
+        "TestExtractFunctionsAutoDispatch",
+        "TestExtractFunctionsGo",
+        "TestExtractFunctionsPython",
+        "TestExtractFunctionsRust",
+        "TestExtractFunctionsTypeScript",
+        "test_body_hash",
+        "test_dispatch_go",
+        "test_dispatch_py",
+        "test_dispatch_rust",
+        "test_dispatch_ts",
+        "test_dispatch_unknown_ext",
+        "test_empty_file",
+        "test_extract_arrow_function",
+        "test_extract_async",
+        "test_extract_class",
+        "test_extract_empty",
+        "test_extract_empty_file",
+        "test_extract_enum",
+        "test_extract_function",
+        "test_extract_method",
+        "test_extract_simple_function",
+        "test_extract_struct",
+        "test_extract_with_decorator",
+        "test_multiple_functions",
+        "test_nested_functions",
+        "test_no_functions"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.discovery.ast"
+      ],
+      "file_hash": "d81c6577446b62be",
+      "functions": [
+        {
+          "name": "TestExtractFunctionsPython",
+          "kind": "class",
+          "line": 16,
+          "body_hash": "a886a5fec45368c6",
+          "body_lines": 3
+        },
+        {
+          "name": "test_extract_simple_function",
+          "kind": "function",
+          "line": 19,
+          "body_hash": "a02fa8baa18e4154",
+          "body_lines": 8
+        },
+        {
+          "name": "test_extract_class",
+          "kind": "function",
+          "line": 27,
+          "body_hash": "eee66033dee0e22f",
+          "body_lines": 8
+        },
+        {
+          "name": "test_extract_with_decorator",
+          "kind": "function",
+          "line": 35,
+          "body_hash": "e83333ff162afde1",
+          "body_lines": 12
+        },
+        {
+          "name": "test_extract_async",
+          "kind": "function",
+          "line": 47,
+          "body_hash": "efdcda9441348da6",
+          "body_lines": 7
+        },
+        {
+          "name": "test_body_hash",
+          "kind": "function",
+          "line": 54,
+          "body_hash": "cb7c094ff5d8b7ec",
+          "body_lines": 9
+        },
+        {
+          "name": "test_empty_file",
+          "kind": "function",
+          "line": 63,
+          "body_hash": "af4c7c33dc4e0d43",
+          "body_lines": 6
+        },
+        {
+          "name": "test_no_functions",
+          "kind": "function",
+          "line": 69,
+          "body_hash": "206fe69ba0d78030",
+          "body_lines": 6
+        },
+        {
+          "name": "test_nested_functions",
+          "kind": "function",
+          "line": 75,
+          "body_hash": "1d7c17eaf2591842",
+          "body_lines": 14
+        },
+        {
+          "name": "test_multiple_functions",
+          "kind": "function",
+          "line": 89,
+          "body_hash": "4f844b623f03cbf3",
+          "body_lines": 11
+        },
+        {
+          "name": "TestExtractFunctionsTypeScript",
+          "kind": "class",
+          "line": 100,
+          "body_hash": "a928bb77eb71de26",
+          "body_lines": 3
+        },
+        {
+          "name": "test_extract_function",
+          "kind": "function",
+          "line": 103,
+          "body_hash": "b09cd9ebedc292b1",
+          "body_lines": 8
+        },
+        {
+          "name": "test_extract_class",
+          "kind": "function",
+          "line": 111,
+          "body_hash": "203a2a1591d53c69",
+          "body_lines": 8
+        },
+        {
+          "name": "test_extract_arrow_function",
+          "kind": "function",
+          "line": 119,
+          "body_hash": "6ec2b6d2a251d698",
+          "body_lines": 7
+        },
+        {
+          "name": "test_extract_empty_file",
+          "kind": "function",
+          "line": 126,
+          "body_hash": "c3605c539002dfc2",
+          "body_lines": 7
+        },
+        {
+          "name": "TestExtractFunctionsGo",
+          "kind": "class",
+          "line": 133,
+          "body_hash": "30f931c445ebf04d",
+          "body_lines": 3
+        },
+        {
+          "name": "test_extract_function",
+          "kind": "function",
+          "line": 136,
+          "body_hash": "0044be1370895672",
+          "body_lines": 8
+        },
+        {
+          "name": "test_extract_method",
+          "kind": "function",
+          "line": 144,
+          "body_hash": "e20997b6314b779a",
+          "body_lines": 7
+        },
+        {
+          "name": "test_extract_empty",
+          "kind": "function",
+          "line": 151,
+          "body_hash": "3ed218189cf5c6ab",
+          "body_lines": 7
+        },
+        {
+          "name": "TestExtractFunctionsRust",
+          "kind": "class",
+          "line": 158,
+          "body_hash": "262a3e296c81ddf6",
+          "body_lines": 3
+        },
+        {
+          "name": "test_extract_function",
+          "kind": "function",
+          "line": 161,
+          "body_hash": "89a472e1ce75418d",
+          "body_lines": 8
+        },
+        {
+          "name": "test_extract_struct",
+          "kind": "function",
+          "line": 169,
+          "body_hash": "2c93a75201eda73f",
+          "body_lines": 8
+        },
+        {
+          "name": "test_extract_enum",
+          "kind": "function",
+          "line": 177,
+          "body_hash": "92da2b82dc88bc8e",
+          "body_lines": 8
+        },
+        {
+          "name": "TestExtractFunctionsAutoDispatch",
+          "kind": "class",
+          "line": 185,
+          "body_hash": "c2d6039a8229d7cf",
+          "body_lines": 3
+        },
+        {
+          "name": "test_dispatch_ts",
+          "kind": "function",
+          "line": 188,
+          "body_hash": "59bcb8a9d344df75",
+          "body_lines": 7
+        },
+        {
+          "name": "test_dispatch_go",
+          "kind": "function",
+          "line": 195,
+          "body_hash": "02ee1c2e1149bc73",
+          "body_lines": 7
+        },
+        {
+          "name": "test_dispatch_rust",
+          "kind": "function",
+          "line": 202,
+          "body_hash": "f6d25e1261d3001f",
+          "body_lines": 7
+        },
+        {
+          "name": "test_dispatch_py",
+          "kind": "function",
+          "line": 209,
+          "body_hash": "f5a71d27c44c399f",
+          "body_lines": 7
+        },
+        {
+          "name": "test_dispatch_unknown_ext",
+          "kind": "function",
+          "line": 216,
+          "body_hash": "94c9d280ce9c0cff",
+          "body_lines": 6
+        }
+      ]
+    },
+    {
+      "file": "tests/test_boundary.py",
+      "module": "tests",
+      "symbols": [
+        "TestBoundaryExtract",
+        "TestBoundarySpectraAdapter",
+        "test_boundary_in_metadata",
+        "test_boundary_line_number",
+        "test_boundary_not_required",
+        "test_boundary_parsed_from_markdown",
+        "test_boundary_valid",
+        "test_boundary_validation",
+        "test_multiple_boundaries",
+        "test_no_boundary",
+        "test_regex_direct",
+        "test_regex_indented_boundary",
+        "test_regex_no_match_without_underscore"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.adapters.spectra"
+      ],
+      "file_hash": "bdabeff4bdc667a5",
+      "functions": [
+        {
+          "name": "TestBoundaryExtract",
+          "kind": "class",
+          "line": 12,
+          "body_hash": "acac681a5e1fbbfe",
+          "body_lines": 3
+        },
+        {
+          "name": "test_boundary_parsed_from_markdown",
+          "kind": "function",
+          "line": 15,
+          "body_hash": "7ee07302bfd91199",
+          "body_lines": 13
+        },
+        {
+          "name": "test_boundary_line_number",
+          "kind": "function",
+          "line": 28,
+          "body_hash": "036eb6efd513a0cc",
+          "body_lines": 12
+        },
+        {
+          "name": "test_multiple_boundaries",
+          "kind": "function",
+          "line": 40,
+          "body_hash": "b3e3c55f4682b6ee",
+          "body_lines": 12
+        },
+        {
+          "name": "test_no_boundary",
+          "kind": "function",
+          "line": 52,
+          "body_hash": "6831de8e7d76b308",
+          "body_lines": 12
+        },
+        {
+          "name": "test_regex_direct",
+          "kind": "function",
+          "line": 64,
+          "body_hash": "87b647803084f93d",
+          "body_lines": 7
+        },
+        {
+          "name": "test_regex_no_match_without_underscore",
+          "kind": "function",
+          "line": 71,
+          "body_hash": "cc14ce14febae785",
+          "body_lines": 5
+        },
+        {
+          "name": "test_regex_indented_boundary",
+          "kind": "function",
+          "line": 76,
+          "body_hash": "9e89f6e1fe65a5d9",
+          "body_lines": 9
+        },
+        {
+          "name": "TestBoundarySpectraAdapter",
+          "kind": "class",
+          "line": 85,
+          "body_hash": "41091fb4a54c06fb",
+          "body_lines": 3
+        },
+        {
+          "name": "test_boundary_in_metadata",
+          "kind": "function",
+          "line": 88,
+          "body_hash": "af58d57e53d6f3cd",
+          "body_lines": 19
+        },
+        {
+          "name": "test_boundary_not_required",
+          "kind": "function",
+          "line": 107,
+          "body_hash": "0abffc1a263efa99",
+          "body_lines": 10
+        },
+        {
+          "name": "test_boundary_validation",
+          "kind": "function",
+          "line": 117,
+          "body_hash": "1e37c28685033773",
+          "body_lines": 21
+        },
+        {
+          "name": "test_boundary_valid",
+          "kind": "function",
+          "line": 138,
+          "body_hash": "96eda2ec32f9c292",
+          "body_lines": 21
+        }
+      ]
+    },
+    {
+      "file": "tests/test_call_graph.py",
+      "module": "tests",
+      "symbols": [
+        "TestBuildCallGraph",
+        "TestCallGraphData",
+        "TestImportCRG",
+        "TestTransitiveImpact",
+        "_make_graph",
+        "test_add_call_dedup",
+        "test_basic_transitive",
+        "test_build_from_trace_graph",
+        "test_callees_of",
+        "test_callers_of",
+        "test_empty_graph",
+        "test_files_of",
+        "test_import_basic",
+        "test_import_empty",
+        "test_import_invalid_json",
+        "test_import_not_found",
+        "test_max_depth",
+        "test_no_call_graph",
+        "test_no_matching_spec"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.analyzers.call_graph"
+      ],
+      "file_hash": "7d3f2bc652fee928",
+      "functions": [
+        {
+          "name": "_make_graph",
+          "kind": "function",
+          "line": 26,
+          "body_hash": "03b6f0484263d783",
+          "body_lines": 50
+        },
+        {
+          "name": "TestBuildCallGraph",
+          "kind": "class",
+          "line": 76,
+          "body_hash": "eadddaf1b4736559",
+          "body_lines": 3
+        },
+        {
+          "name": "test_build_from_trace_graph",
+          "kind": "function",
+          "line": 79,
+          "body_hash": "167c8c738ff540cc",
+          "body_lines": 22
+        },
+        {
+          "name": "test_empty_graph",
+          "kind": "function",
+          "line": 101,
+          "body_hash": "5255cc291be98dc0",
+          "body_lines": 7
+        },
+        {
+          "name": "TestCallGraphData",
+          "kind": "class",
+          "line": 108,
+          "body_hash": "a4729239d594bfdc",
+          "body_lines": 3
+        },
+        {
+          "name": "test_add_call_dedup",
+          "kind": "function",
+          "line": 111,
+          "body_hash": "8ac37ccdc7deab72",
+          "body_lines": 6
+        },
+        {
+          "name": "test_callees_of",
+          "kind": "function",
+          "line": 117,
+          "body_hash": "26ceefcc33e44148",
+          "body_lines": 6
+        },
+        {
+          "name": "test_callers_of",
+          "kind": "function",
+          "line": 123,
+          "body_hash": "60db7dc003f84bd5",
+          "body_lines": 6
+        },
+        {
+          "name": "test_files_of",
+          "kind": "function",
+          "line": 129,
+          "body_hash": "1016c2fa0cec1698",
+          "body_lines": 9
+        },
+        {
+          "name": "TestImportCRG",
+          "kind": "class",
+          "line": 138,
+          "body_hash": "1224efb07f53937f",
+          "body_lines": 3
+        },
+        {
+          "name": "test_import_basic",
+          "kind": "function",
+          "line": 141,
+          "body_hash": "b623f37910c819a0",
+          "body_lines": 12
+        },
+        {
+          "name": "test_import_not_found",
+          "kind": "function",
+          "line": 153,
+          "body_hash": "102bcd3840d6b04e",
+          "body_lines": 4
+        },
+        {
+          "name": "test_import_invalid_json",
+          "kind": "function",
+          "line": 157,
+          "body_hash": "e5e6e508498f5041",
+          "body_lines": 6
+        },
+        {
+          "name": "test_import_empty",
+          "kind": "function",
+          "line": 163,
+          "body_hash": "3c991896d3b0972a",
+          "body_lines": 7
+        },
+        {
+          "name": "TestTransitiveImpact",
+          "kind": "class",
+          "line": 170,
+          "body_hash": "3f54643ecc74259e",
+          "body_lines": 3
+        },
+        {
+          "name": "test_basic_transitive",
+          "kind": "function",
+          "line": 173,
+          "body_hash": "2a6e4d38906b7ce2",
+          "body_lines": 13
+        },
+        {
+          "name": "test_max_depth",
+          "kind": "function",
+          "line": 186,
+          "body_hash": "643dccad509b3165",
+          "body_lines": 22
+        },
+        {
+          "name": "test_no_call_graph",
+          "kind": "function",
+          "line": 208,
+          "body_hash": "d92eb189b0b6b7a5",
+          "body_lines": 7
+        },
+        {
+          "name": "test_no_matching_spec",
+          "kind": "function",
+          "line": 215,
+          "body_hash": "90c2a05af3d0488f",
+          "body_lines": 6
+        }
+      ]
+    },
+    {
+      "file": "tests/test_code_discovery.py",
+      "module": "tests",
+      "symbols": [
+        "TestDiscoverCode",
+        "test_discover_empty_source_dir",
+        "test_discover_excluded_dirs",
+        "test_discover_file_hash",
+        "test_discover_functions",
+        "test_discover_imports",
+        "test_discover_language",
+        "test_discover_python",
+        "test_discover_source_dirs_custom",
+        "test_discover_symbols",
+        "test_discover_test_detection"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.discovery.code"
+      ],
+      "file_hash": "74302ab85ff3a3e5",
+      "functions": [
+        {
+          "name": "TestDiscoverCode",
+          "kind": "class",
+          "line": 10,
+          "body_hash": "a8010bb3bf885c71",
+          "body_lines": 3
+        },
+        {
+          "name": "test_discover_python",
+          "kind": "function",
+          "line": 13,
+          "body_hash": "327ce2b2a88918d2",
+          "body_lines": 7
+        },
+        {
+          "name": "test_discover_symbols",
+          "kind": "function",
+          "line": 20,
+          "body_hash": "efec4ca727acedae",
+          "body_lines": 9
+        },
+        {
+          "name": "test_discover_functions",
+          "kind": "function",
+          "line": 29,
+          "body_hash": "006340958ba15b9b",
+          "body_lines": 13
+        },
+        {
+          "name": "test_discover_file_hash",
+          "kind": "function",
+          "line": 42,
+          "body_hash": "45c31f1fd5e97168",
+          "body_lines": 7
+        },
+        {
+          "name": "test_discover_imports",
+          "kind": "function",
+          "line": 49,
+          "body_hash": "0636f975e6924d5e",
+          "body_lines": 6
+        },
+        {
+          "name": "test_discover_test_detection",
+          "kind": "function",
+          "line": 55,
+          "body_hash": "67ebd52901687079",
+          "body_lines": 14
+        },
+        {
+          "name": "test_discover_language",
+          "kind": "function",
+          "line": 69,
+          "body_hash": "927671b375218c86",
+          "body_lines": 16
+        },
+        {
+          "name": "test_discover_empty_source_dir",
+          "kind": "function",
+          "line": 85,
+          "body_hash": "95d38becdab7c11e",
+          "body_lines": 7
+        },
+        {
+          "name": "test_discover_excluded_dirs",
+          "kind": "function",
+          "line": 92,
+          "body_hash": "91d79493f30c0963",
+          "body_lines": 11
+        },
+        {
+          "name": "test_discover_source_dirs_custom",
+          "kind": "function",
+          "line": 103,
+          "body_hash": "75dbdf3da014fa34",
+          "body_lines": 10
+        }
+      ]
+    },
+    {
+      "file": "tests/test_config.py",
+      "module": "tests",
+      "symbols": [
+        "TestConfigCLI",
+        "TestConfigDefaults",
+        "TestConfigYaml",
+        "test_broken_yaml",
+        "test_config_command_defaults",
+        "test_config_command_shows_source",
+        "test_config_command_yaml",
+        "test_defaults",
+        "test_load_no_project_file",
+        "test_load_without_file_at_root",
+        "test_yaml_custom_source_dirs",
+        "test_yaml_custom_spec_dirs",
+        "test_yaml_exclude_dirs",
+        "test_yaml_max_output_nodes",
+        "test_yaml_min_confidence",
+        "test_yaml_partial_config"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.config"
+      ],
+      "file_hash": "17c441010818f576",
+      "functions": [
+        {
+          "name": "TestConfigDefaults",
+          "kind": "class",
+          "line": 15,
+          "body_hash": "f9a9f472e7899718",
+          "body_lines": 3
+        },
+        {
+          "name": "test_defaults",
+          "kind": "function",
+          "line": 18,
+          "body_hash": "27043829bdc347dc",
+          "body_lines": 8
+        },
+        {
+          "name": "test_load_no_project_file",
+          "kind": "function",
+          "line": 26,
+          "body_hash": "4e28014129c96a9e",
+          "body_lines": 6
+        },
+        {
+          "name": "test_load_without_file_at_root",
+          "kind": "function",
+          "line": 32,
+          "body_hash": "e589da0222465beb",
+          "body_lines": 6
+        },
+        {
+          "name": "TestConfigYaml",
+          "kind": "class",
+          "line": 38,
+          "body_hash": "bdd016b9b2ffb712",
+          "body_lines": 3
+        },
+        {
+          "name": "test_yaml_custom_spec_dirs",
+          "kind": "function",
+          "line": 41,
+          "body_hash": "2ee9ce89e13315ce",
+          "body_lines": 13
+        },
+        {
+          "name": "test_yaml_custom_source_dirs",
+          "kind": "function",
+          "line": 54,
+          "body_hash": "d9600415e4c88195",
+          "body_lines": 12
+        },
+        {
+          "name": "test_yaml_min_confidence",
+          "kind": "function",
+          "line": 66,
+          "body_hash": "2f6adc5738b42d64",
+          "body_lines": 8
+        },
+        {
+          "name": "test_yaml_max_output_nodes",
+          "kind": "function",
+          "line": 74,
+          "body_hash": "b1748ea7626e3250",
+          "body_lines": 8
+        },
+        {
+          "name": "test_yaml_exclude_dirs",
+          "kind": "function",
+          "line": 82,
+          "body_hash": "70d35a919d2f1b01",
+          "body_lines": 13
+        },
+        {
+          "name": "test_yaml_partial_config",
+          "kind": "function",
+          "line": 95,
+          "body_hash": "e81b394e468db0ba",
+          "body_lines": 10
+        },
+        {
+          "name": "test_broken_yaml",
+          "kind": "function",
+          "line": 105,
+          "body_hash": "2b918c3e6b5bf806",
+          "body_lines": 9
+        },
+        {
+          "name": "TestConfigCLI",
+          "kind": "class",
+          "line": 114,
+          "body_hash": "95ba8215009d8bd3",
+          "body_lines": 3
+        },
+        {
+          "name": "test_config_command_defaults",
+          "kind": "function",
+          "line": 117,
+          "body_hash": "14e1039f4a9bff35",
+          "body_lines": 11
+        },
+        {
+          "name": "test_config_command_shows_source",
+          "kind": "function",
+          "line": 128,
+          "body_hash": "ce87eeff0faa35c0",
+          "body_lines": 14
+        },
+        {
+          "name": "test_config_command_yaml",
+          "kind": "function",
+          "line": 142,
+          "body_hash": "4a8e1e9d3622b239",
+          "body_lines": 13
+        }
+      ]
+    },
+    {
+      "file": "tests/test_drift.py",
+      "module": "tests",
+      "symbols": [
+        "TestDriftCompute",
+        "TestDriftReport",
+        "TestSnapshot",
+        "test_build_snapshot",
+        "test_drift_add_code",
+        "test_drift_add_spec",
+        "test_drift_body_change",
+        "test_drift_coverage_change",
+        "test_drift_empty_project",
+        "test_drift_func_body_change",
+        "test_drift_remove_code",
+        "test_drift_remove_spec",
+        "test_drift_rename_doesnt_swallow_unrelated",
+        "test_drift_rename_spec",
+        "test_drift_symbol_change",
+        "test_has_drift_true_when_changes",
+        "test_load_nonexistent",
+        "test_no_drift",
+        "test_render_has_drift",
+        "test_render_no_drift",
+        "test_save_load_snapshot",
+        "test_snapshot_code_hashes",
+        "test_snapshot_coverage",
+        "test_snapshot_spec_hashes",
+        "test_to_dict"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.analyzers.drift"
+      ],
+      "file_hash": "0997ffec08e664d7",
+      "functions": [
+        {
+          "name": "TestSnapshot",
+          "kind": "class",
+          "line": 16,
+          "body_hash": "88402d5beedb7b9d",
+          "body_lines": 3
+        },
+        {
+          "name": "test_build_snapshot",
+          "kind": "function",
+          "line": 19,
+          "body_hash": "3361c6fab3d7b2a1",
+          "body_lines": 10
+        },
+        {
+          "name": "test_snapshot_spec_hashes",
+          "kind": "function",
+          "line": 29,
+          "body_hash": "e5b58b01903098a9",
+          "body_lines": 9
+        },
+        {
+          "name": "test_snapshot_code_hashes",
+          "kind": "function",
+          "line": 38,
+          "body_hash": "ee3c28cbded305bf",
+          "body_lines": 10
+        },
+        {
+          "name": "test_save_load_snapshot",
+          "kind": "function",
+          "line": 48,
+          "body_hash": "48bb4e286ba27b11",
+          "body_lines": 14
+        },
+        {
+          "name": "test_load_nonexistent",
+          "kind": "function",
+          "line": 62,
+          "body_hash": "e5907dcbcc36f3be",
+          "body_lines": 5
+        },
+        {
+          "name": "test_snapshot_coverage",
+          "kind": "function",
+          "line": 67,
+          "body_hash": "7c3cbe5207c8d3d9",
+          "body_lines": 10
+        },
+        {
+          "name": "TestDriftCompute",
+          "kind": "class",
+          "line": 77,
+          "body_hash": "59be197c171fd0bf",
+          "body_lines": 3
+        },
+        {
+          "name": "test_no_drift",
+          "kind": "function",
+          "line": 80,
+          "body_hash": "82f3fe5683cb728d",
+          "body_lines": 6
+        },
+        {
+          "name": "test_drift_add_spec",
+          "kind": "function",
+          "line": 86,
+          "body_hash": "b40e8817193391fd",
+          "body_lines": 12
+        },
+        {
+          "name": "test_drift_remove_spec",
+          "kind": "function",
+          "line": 98,
+          "body_hash": "531abc905aefeb73",
+          "body_lines": 11
+        },
+        {
+          "name": "test_drift_body_change",
+          "kind": "function",
+          "line": 109,
+          "body_hash": "e556c2cde0ad46be",
+          "body_lines": 13
+        },
+        {
+          "name": "test_drift_add_code",
+          "kind": "function",
+          "line": 122,
+          "body_hash": "1b2b1e79376db8e0",
+          "body_lines": 12
+        },
+        {
+          "name": "test_drift_remove_code",
+          "kind": "function",
+          "line": 134,
+          "body_hash": "05dbc7bf741a70a1",
+          "body_lines": 10
+        },
+        {
+          "name": "test_drift_func_body_change",
+          "kind": "function",
+          "line": 144,
+          "body_hash": "85ee66d37a73854a",
+          "body_lines": 13
+        },
+        {
+          "name": "test_drift_symbol_change",
+          "kind": "function",
+          "line": 157,
+          "body_hash": "eff1098d110ef890",
+          "body_lines": 14
+        },
+        {
+          "name": "test_drift_coverage_change",
+          "kind": "function",
+          "line": 171,
+          "body_hash": "75894e5b8d5ebb2c",
+          "body_lines": 8
+        },
+        {
+          "name": "test_drift_empty_project",
+          "kind": "function",
+          "line": 179,
+          "body_hash": "f6aaf76757ea3872",
+          "body_lines": 8
+        },
+        {
+          "name": "test_drift_rename_spec",
+          "kind": "function",
+          "line": 187,
+          "body_hash": "9af6cec6af98ead0",
+          "body_lines": 22
+        },
+        {
+          "name": "test_drift_rename_doesnt_swallow_unrelated",
+          "kind": "function",
+          "line": 209,
+          "body_hash": "55f9eded4ba7e482",
+          "body_lines": 15
+        },
+        {
+          "name": "TestDriftReport",
+          "kind": "class",
+          "line": 224,
+          "body_hash": "1edae92f503897df",
+          "body_lines": 3
+        },
+        {
+          "name": "test_render_no_drift",
+          "kind": "function",
+          "line": 227,
+          "body_hash": "7c3d906da90deeea",
+          "body_lines": 6
+        },
+        {
+          "name": "test_render_has_drift",
+          "kind": "function",
+          "line": 233,
+          "body_hash": "1450ddb7e1ab0d51",
+          "body_lines": 8
+        },
+        {
+          "name": "test_to_dict",
+          "kind": "function",
+          "line": 241,
+          "body_hash": "49e8fcf5309795fd",
+          "body_lines": 11
+        },
+        {
+          "name": "test_has_drift_true_when_changes",
+          "kind": "function",
+          "line": 252,
+          "body_hash": "9ba6bce566ac6535",
+          "body_lines": 6
+        }
+      ]
+    },
+    {
+      "file": "tests/test_extract.py",
+      "module": "tests",
+      "symbols": [
+        "TestExtractFromDir",
+        "TestExtractFromFile",
+        "TestExtractStringLiteralSafety",
+        "test_comment_example_not_matched",
+        "test_csharp_line_comment",
+        "test_dart_impl",
+        "test_docstring_not_matched",
+        "test_empty_dir",
+        "test_feature_tag",
+        "test_go_impl_tag",
+        "test_impl_line_numbers",
+        "test_java_impl",
+        "test_markdown_design_tag",
+        "test_markdown_satisfies",
+        "test_markdown_spec_tag",
+        "test_module_tag",
+        "test_multiple_tags_same_file",
+        "test_no_tags",
+        "test_php_impl",
+        "test_python_fstring_not_matched",
+        "test_python_impl_tag",
+        "test_python_multiple_impl",
+        "test_relative_path",
+        "test_ruby_hash_comment",
+        "test_scan_dir_excludes_dirs",
+        "test_scan_dir_finds_tags",
+        "test_spec_line_numbers",
+        "test_swift_impl",
+        "test_typescript_impl_tag",
+        "test_unsupported_file_type",
+        "test_verifies_tag",
+        "test_yaml_file"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.core.extract"
+      ],
+      "file_hash": "43b34d2fcab59eb0",
+      "functions": [
+        {
+          "name": "TestExtractFromFile",
+          "kind": "class",
+          "line": 13,
+          "body_hash": "411343fb7bfb1441",
+          "body_lines": 3
+        },
+        {
+          "name": "test_python_impl_tag",
+          "kind": "function",
+          "line": 16,
+          "body_hash": "0edd1fa804784b18",
+          "body_lines": 11
+        },
+        {
+          "name": "test_python_multiple_impl",
+          "kind": "function",
+          "line": 27,
+          "body_hash": "fe53e9c210687023",
+          "body_lines": 11
+        },
+        {
+          "name": "test_typescript_impl_tag",
+          "kind": "function",
+          "line": 38,
+          "body_hash": "585a3e62e946e461",
+          "body_lines": 11
+        },
+        {
+          "name": "test_go_impl_tag",
+          "kind": "function",
+          "line": 49,
+          "body_hash": "6f4ad2c3820aba6d",
+          "body_lines": 10
+        },
+        {
+          "name": "test_markdown_spec_tag",
+          "kind": "function",
+          "line": 59,
+          "body_hash": "5a18694dccc66269",
+          "body_lines": 11
+        },
+        {
+          "name": "test_markdown_design_tag",
+          "kind": "function",
+          "line": 70,
+          "body_hash": "32645ca927484ef3",
+          "body_lines": 11
+        },
+        {
+          "name": "test_markdown_satisfies",
+          "kind": "function",
+          "line": 81,
+          "body_hash": "02e6607bd4bbb841",
+          "body_lines": 11
+        },
+        {
+          "name": "test_verifies_tag",
+          "kind": "function",
+          "line": 92,
+          "body_hash": "4529d765c6a64b75",
+          "body_lines": 11
+        },
+        {
+          "name": "test_module_tag",
+          "kind": "function",
+          "line": 103,
+          "body_hash": "deda4733ec9e8a28",
+          "body_lines": 11
+        },
+        {
+          "name": "test_feature_tag",
+          "kind": "function",
+          "line": 114,
+          "body_hash": "81953afb15ef81d8",
+          "body_lines": 11
+        },
+        {
+          "name": "test_multiple_tags_same_file",
+          "kind": "function",
+          "line": 125,
+          "body_hash": "c2e9460e8cf97613",
+          "body_lines": 16
+        },
+        {
+          "name": "test_no_tags",
+          "kind": "function",
+          "line": 141,
+          "body_hash": "c377fd682db8029c",
+          "body_lines": 8
+        },
+        {
+          "name": "test_unsupported_file_type",
+          "kind": "function",
+          "line": 149,
+          "body_hash": "94fb58761ec41150",
+          "body_lines": 8
+        },
+        {
+          "name": "test_csharp_line_comment",
+          "kind": "function",
+          "line": 157,
+          "body_hash": "e900bf705aa7254a",
+          "body_lines": 11
+        },
+        {
+          "name": "test_ruby_hash_comment",
+          "kind": "function",
+          "line": 168,
+          "body_hash": "012a6bcd3725cb21",
+          "body_lines": 10
+        },
+        {
+          "name": "test_yaml_file",
+          "kind": "function",
+          "line": 178,
+          "body_hash": "774b0b3fcea992db",
+          "body_lines": 11
+        },
+        {
+          "name": "test_impl_line_numbers",
+          "kind": "function",
+          "line": 189,
+          "body_hash": "4a67bac8ecccec9d",
+          "body_lines": 10
+        },
+        {
+          "name": "test_spec_line_numbers",
+          "kind": "function",
+          "line": 199,
+          "body_hash": "260d2eba0a695fc8",
+          "body_lines": 10
+        },
+        {
+          "name": "test_relative_path",
+          "kind": "function",
+          "line": 209,
+          "body_hash": "c28f528eae084251",
+          "body_lines": 10
+        },
+        {
+          "name": "test_java_impl",
+          "kind": "function",
+          "line": 219,
+          "body_hash": "4b94a0f68d3fb9cb",
+          "body_lines": 11
+        },
+        {
+          "name": "test_swift_impl",
+          "kind": "function",
+          "line": 230,
+          "body_hash": "0ec1af9e9b854aff",
+          "body_lines": 11
+        },
+        {
+          "name": "test_dart_impl",
+          "kind": "function",
+          "line": 241,
+          "body_hash": "46827bf78d1a785f",
+          "body_lines": 10
+        },
+        {
+          "name": "test_php_impl",
+          "kind": "function",
+          "line": 251,
+          "body_hash": "ef27cc820f74d7b4",
+          "body_lines": 11
+        },
+        {
+          "name": "TestExtractFromDir",
+          "kind": "class",
+          "line": 262,
+          "body_hash": "f6e3d3bc4fd625a5",
+          "body_lines": 3
+        },
+        {
+          "name": "test_scan_dir_finds_tags",
+          "kind": "function",
+          "line": 265,
+          "body_hash": "edaabccd08de43c5",
+          "body_lines": 14
+        },
+        {
+          "name": "test_scan_dir_excludes_dirs",
+          "kind": "function",
+          "line": 279,
+          "body_hash": "e36285e389161120",
+          "body_lines": 16
+        },
+        {
+          "name": "test_empty_dir",
+          "kind": "function",
+          "line": 295,
+          "body_hash": "6185ee2adebce204",
+          "body_lines": 6
+        },
+        {
+          "name": "TestExtractStringLiteralSafety",
+          "kind": "class",
+          "line": 301,
+          "body_hash": "c8caa8f49546e4b3",
+          "body_lines": 3
+        },
+        {
+          "name": "test_python_fstring_not_matched",
+          "kind": "function",
+          "line": 304,
+          "body_hash": "8397f3f26a8c9fc9",
+          "body_lines": 13
+        },
+        {
+          "name": "test_docstring_not_matched",
+          "kind": "function",
+          "line": 317,
+          "body_hash": "1293bae2f22db2d7",
+          "body_lines": 12
+        },
+        {
+          "name": "test_comment_example_not_matched",
+          "kind": "function",
+          "line": 329,
+          "body_hash": "5bead75aa8651945",
+          "body_lines": 14
+        }
+      ]
+    },
+    {
+      "file": "tests/test_guard.py",
+      "module": "tests",
+      "symbols": [
+        "TestValidateWritePath",
+        "test_allowed_specbridge_dir",
+        "test_allowed_specbridge_subdir",
+        "test_block_docs_dir",
+        "test_block_lib_dir",
+        "test_block_outside_project",
+        "test_block_project_root_itself",
+        "test_block_relative_path_traversal",
+        "test_block_spec_dir",
+        "test_block_src_dir",
+        "test_block_tests_dir",
+        "test_snapshot_write_validated"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "pytest"
+      ],
+      "file_hash": "7d94084e822e6b6c",
+      "functions": [
+        {
+          "name": "TestValidateWritePath",
+          "kind": "class",
+          "line": 12,
+          "body_hash": "6e049da362ab2aa0",
+          "body_lines": 3
+        },
+        {
+          "name": "test_allowed_specbridge_dir",
+          "kind": "function",
+          "line": 15,
+          "body_hash": "8fa3b271b2a9216d",
+          "body_lines": 8
+        },
+        {
+          "name": "test_allowed_specbridge_subdir",
+          "kind": "function",
+          "line": 23,
+          "body_hash": "0fd3e3eadb855927",
+          "body_lines": 8
+        },
+        {
+          "name": "test_block_docs_dir",
+          "kind": "function",
+          "line": 31,
+          "body_hash": "0817ffdaf43c1448",
+          "body_lines": 8
+        },
+        {
+          "name": "test_block_src_dir",
+          "kind": "function",
+          "line": 39,
+          "body_hash": "1be7fc6612f46455",
+          "body_lines": 8
+        },
+        {
+          "name": "test_block_lib_dir",
+          "kind": "function",
+          "line": 47,
+          "body_hash": "4728a23987ce5e47",
+          "body_lines": 8
+        },
+        {
+          "name": "test_block_tests_dir",
+          "kind": "function",
+          "line": 55,
+          "body_hash": "20a71a3ba1264211",
+          "body_lines": 8
+        },
+        {
+          "name": "test_block_spec_dir",
+          "kind": "function",
+          "line": 63,
+          "body_hash": "7a190f5cee6c73b1",
+          "body_lines": 8
+        },
+        {
+          "name": "test_block_outside_project",
+          "kind": "function",
+          "line": 71,
+          "body_hash": "6931247f98e04956",
+          "body_lines": 8
+        },
+        {
+          "name": "test_block_project_root_itself",
+          "kind": "function",
+          "line": 79,
+          "body_hash": "09ce7505eb797ce1",
+          "body_lines": 8
+        },
+        {
+          "name": "test_block_relative_path_traversal",
+          "kind": "function",
+          "line": 87,
+          "body_hash": "e632ca73a6e2a7dd",
+          "body_lines": 11
+        },
+        {
+          "name": "test_snapshot_write_validated",
+          "kind": "function",
+          "line": 98,
+          "body_hash": "99ac86aa1757e6ac",
+          "body_lines": 8
+        }
+      ]
+    },
+    {
+      "file": "tests/test_heuristic_adapter.py",
+      "module": "tests",
+      "symbols": [
+        "TestAdapterRegistry",
+        "TestHeuristicAnalyze",
+        "TestHeuristicDetect",
+        "test_analyze_basic",
+        "test_analyze_detects_tests",
+        "test_analyze_dirname_matching",
+        "test_analyze_edge_confidence",
+        "test_analyze_edges_created",
+        "test_analyze_empty_project",
+        "test_analyze_evidence",
+        "test_analyze_no_framework_conflict",
+        "test_detect_both_dirs",
+        "test_detect_code_only",
+        "test_detect_falls_back_to_heuristic",
+        "test_detect_neither",
+        "test_detect_no_adapter",
+        "test_detect_prefers_higher_score",
+        "test_detect_specs_only",
+        "test_spec_alternatives",
+        "test_src_alternatives"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.adapters"
+      ],
+      "file_hash": "17242471bac15e13",
+      "functions": [
+        {
+          "name": "TestHeuristicDetect",
+          "kind": "class",
+          "line": 12,
+          "body_hash": "1738975403b5c39f",
+          "body_lines": 3
+        },
+        {
+          "name": "test_detect_both_dirs",
+          "kind": "function",
+          "line": 15,
+          "body_hash": "66ab6b99ca900a36",
+          "body_lines": 6
+        },
+        {
+          "name": "test_detect_specs_only",
+          "kind": "function",
+          "line": 21,
+          "body_hash": "fdb96a22cb1b5640",
+          "body_lines": 9
+        },
+        {
+          "name": "test_detect_code_only",
+          "kind": "function",
+          "line": 30,
+          "body_hash": "c04f13acd2c61062",
+          "body_lines": 9
+        },
+        {
+          "name": "test_detect_neither",
+          "kind": "function",
+          "line": 39,
+          "body_hash": "44da9d4d2603fa6c",
+          "body_lines": 8
+        },
+        {
+          "name": "test_spec_alternatives",
+          "kind": "function",
+          "line": 47,
+          "body_hash": "0b6b4194fc442aa1",
+          "body_lines": 11
+        },
+        {
+          "name": "test_src_alternatives",
+          "kind": "function",
+          "line": 58,
+          "body_hash": "00dda16455bbe5ec",
+          "body_lines": 12
+        },
+        {
+          "name": "TestHeuristicAnalyze",
+          "kind": "class",
+          "line": 70,
+          "body_hash": "e19506e151c139e7",
+          "body_lines": 3
+        },
+        {
+          "name": "test_analyze_basic",
+          "kind": "function",
+          "line": 73,
+          "body_hash": "2edd2018eec75fdb",
+          "body_lines": 9
+        },
+        {
+          "name": "test_analyze_edges_created",
+          "kind": "function",
+          "line": 82,
+          "body_hash": "5371dc8a3492358e",
+          "body_lines": 9
+        },
+        {
+          "name": "test_analyze_edge_confidence",
+          "kind": "function",
+          "line": 91,
+          "body_hash": "e4022162dff1321b",
+          "body_lines": 7
+        },
+        {
+          "name": "test_analyze_evidence",
+          "kind": "function",
+          "line": 98,
+          "body_hash": "19c7c77628e9290f",
+          "body_lines": 8
+        },
+        {
+          "name": "test_analyze_no_framework_conflict",
+          "kind": "function",
+          "line": 106,
+          "body_hash": "d77500877decec15",
+          "body_lines": 7
+        },
+        {
+          "name": "test_analyze_empty_project",
+          "kind": "function",
+          "line": 113,
+          "body_hash": "2158ad97cae4f67b",
+          "body_lines": 10
+        },
+        {
+          "name": "test_analyze_dirname_matching",
+          "kind": "function",
+          "line": 123,
+          "body_hash": "50f03a2beeb67f1b",
+          "body_lines": 17
+        },
+        {
+          "name": "test_analyze_detects_tests",
+          "kind": "function",
+          "line": 140,
+          "body_hash": "4c9955f4cb35c2e1",
+          "body_lines": 15
+        },
+        {
+          "name": "TestAdapterRegistry",
+          "kind": "class",
+          "line": 155,
+          "body_hash": "130f777a3e2b1b90",
+          "body_lines": 3
+        },
+        {
+          "name": "test_detect_prefers_higher_score",
+          "kind": "function",
+          "line": 158,
+          "body_hash": "b55cf10d2fa0c008",
+          "body_lines": 7
+        },
+        {
+          "name": "test_detect_falls_back_to_heuristic",
+          "kind": "function",
+          "line": 165,
+          "body_hash": "f10554f307eae4ac",
+          "body_lines": 6
+        },
+        {
+          "name": "test_detect_no_adapter",
+          "kind": "function",
+          "line": 171,
+          "body_hash": "387493282cc2cae5",
+          "body_lines": 7
+        }
+      ]
+    },
+    {
+      "file": "tests/test_import_graph.py",
+      "module": "tests",
+      "symbols": [
+        "TestBuildDepGraph",
+        "graph_with_imports",
+        "test_creates_edges",
+        "test_empty_imports",
+        "test_login_depends_on_helpers",
+        "test_login_depends_on_token",
+        "test_no_duplicate_edges",
+        "test_no_self_depends",
+        "test_preserves_existing_edges",
+        "test_test_depends_on_login"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pytest",
+        "specbridge.analyzers.graph"
+      ],
+      "file_hash": "94d1d2d1e4e73384",
+      "functions": [
+        {
+          "name": "graph_with_imports",
+          "kind": "function",
+          "line": 18,
+          "body_hash": "918c4f7692a56303",
+          "body_lines": 35
+        },
+        {
+          "name": "TestBuildDepGraph",
+          "kind": "class",
+          "line": 53,
+          "body_hash": "8a064761b345014a",
+          "body_lines": 3
+        },
+        {
+          "name": "test_creates_edges",
+          "kind": "function",
+          "line": 56,
+          "body_hash": "44853390db5f6dac",
+          "body_lines": 6
+        },
+        {
+          "name": "test_login_depends_on_token",
+          "kind": "function",
+          "line": 62,
+          "body_hash": "14e02ea9368ded93",
+          "body_lines": 7
+        },
+        {
+          "name": "test_login_depends_on_helpers",
+          "kind": "function",
+          "line": 69,
+          "body_hash": "cd1a37743fa42e95",
+          "body_lines": 7
+        },
+        {
+          "name": "test_test_depends_on_login",
+          "kind": "function",
+          "line": 76,
+          "body_hash": "28ccf1b3c3fd7023",
+          "body_lines": 7
+        },
+        {
+          "name": "test_no_self_depends",
+          "kind": "function",
+          "line": 83,
+          "body_hash": "97c6cff9e80aa219",
+          "body_lines": 8
+        },
+        {
+          "name": "test_no_duplicate_edges",
+          "kind": "function",
+          "line": 91,
+          "body_hash": "f9025ceb1e10acc6",
+          "body_lines": 7
+        },
+        {
+          "name": "test_empty_imports",
+          "kind": "function",
+          "line": 98,
+          "body_hash": "edbdf9b166ec29e6",
+          "body_lines": 14
+        },
+        {
+          "name": "test_preserves_existing_edges",
+          "kind": "function",
+          "line": 112,
+          "body_hash": "a3c51fcccffeb2a2",
+          "body_lines": 8
+        }
+      ]
+    },
+    {
+      "file": "tests/test_plugin_discovery.py",
+      "module": "tests",
+      "symbols": [
+        "BuiltinAdapter",
+        "IdempotentAdapter",
+        "TestAdapter",
+        "TrackedAdapter",
+        "_DummyAdapter",
+        "_reset_registry",
+        "analyze",
+        "detect",
+        "test_discover_plugins_idempotent",
+        "test_discover_plugins_skips_non_adapter",
+        "test_example_plugin_installable",
+        "test_plugin_adapters_excludes_builtins",
+        "test_register_adds_adapter",
+        "test_register_with_package_tracking"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "pytest"
+      ],
+      "file_hash": "1405d7d130216dba",
+      "functions": [
+        {
+          "name": "_DummyAdapter",
+          "kind": "class",
+          "line": 22,
+          "body_hash": "9b069024f666469f",
+          "body_lines": 3
+        },
+        {
+          "name": "detect",
+          "kind": "function",
+          "line": 25,
+          "body_hash": "978d0b1446a4cbc9",
+          "body_lines": 3
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 28,
+          "body_hash": "7d02b48d9b562f2c",
+          "body_lines": 5
+        },
+        {
+          "name": "_reset_registry",
+          "kind": "function",
+          "line": 33,
+          "body_hash": "c77bdb1dfe858efb",
+          "body_lines": 15
+        },
+        {
+          "name": "test_register_adds_adapter",
+          "kind": "function",
+          "line": 48,
+          "body_hash": "c5d7bda3ee8cbecf",
+          "body_lines": 3
+        },
+        {
+          "name": "TestAdapter",
+          "kind": "class",
+          "line": 51,
+          "body_hash": "b2eff04997b3b0dd",
+          "body_lines": 1
+        },
+        {
+          "name": "detect",
+          "kind": "function",
+          "line": 52,
+          "body_hash": "77a40ef9a747781d",
+          "body_lines": 3
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 55,
+          "body_hash": "ba90ab5b0e8dcc61",
+          "body_lines": 7
+        },
+        {
+          "name": "test_register_with_package_tracking",
+          "kind": "function",
+          "line": 62,
+          "body_hash": "e54334b3a96eea49",
+          "body_lines": 3
+        },
+        {
+          "name": "TrackedAdapter",
+          "kind": "class",
+          "line": 65,
+          "body_hash": "908f31739d99c420",
+          "body_lines": 1
+        },
+        {
+          "name": "detect",
+          "kind": "function",
+          "line": 66,
+          "body_hash": "77a40ef9a747781d",
+          "body_lines": 3
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 69,
+          "body_hash": "3356bd4f0a542e31",
+          "body_lines": 10
+        },
+        {
+          "name": "test_plugin_adapters_excludes_builtins",
+          "kind": "function",
+          "line": 79,
+          "body_hash": "8a61884f8a553f2d",
+          "body_lines": 3
+        },
+        {
+          "name": "BuiltinAdapter",
+          "kind": "class",
+          "line": 82,
+          "body_hash": "3349e317ee10d600",
+          "body_lines": 1
+        },
+        {
+          "name": "detect",
+          "kind": "function",
+          "line": 83,
+          "body_hash": "102075b588fcdc93",
+          "body_lines": 3
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 86,
+          "body_hash": "bbdec3d9d22c8527",
+          "body_lines": 10
+        },
+        {
+          "name": "test_discover_plugins_skips_non_adapter",
+          "kind": "function",
+          "line": 96,
+          "body_hash": "fa26b7161277c564",
+          "body_lines": 15
+        },
+        {
+          "name": "test_discover_plugins_idempotent",
+          "kind": "function",
+          "line": 111,
+          "body_hash": "c85f0baa15770c94",
+          "body_lines": 4
+        },
+        {
+          "name": "IdempotentAdapter",
+          "kind": "class",
+          "line": 115,
+          "body_hash": "3a7b0bedaf1b7696",
+          "body_lines": 1
+        },
+        {
+          "name": "detect",
+          "kind": "function",
+          "line": 116,
+          "body_hash": "102075b588fcdc93",
+          "body_lines": 3
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 119,
+          "body_hash": "3ef97dbfadaa344a",
+          "body_lines": 19
+        },
+        {
+          "name": "test_example_plugin_installable",
+          "kind": "function",
+          "line": 138,
+          "body_hash": "34ec09f220d9395f",
+          "body_lines": 12
+        }
+      ]
+    },
+    {
+      "file": "tests/test_spectra_adapter.py",
+      "module": "tests",
+      "symbols": [
+        "TestSpectraAnalyze",
+        "TestSpectraDetect",
+        "test_analyze_all_explicit",
+        "test_analyze_code_nodes",
+        "test_analyze_coverage",
+        "test_analyze_design_nodes",
+        "test_analyze_edge_relations",
+        "test_analyze_evidence_on_edges",
+        "test_analyze_framework_origin",
+        "test_analyze_full_graph",
+        "test_analyze_no_duplicate_nodes",
+        "test_analyze_no_mapping_file",
+        "test_analyze_spec_nodes",
+        "test_analyze_test_nodes",
+        "test_detect_with_mapping",
+        "test_detect_without_mapping"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "specbridge.adapters.spectra"
+      ],
+      "file_hash": "e926825292e0cdb9",
+      "functions": [
+        {
+          "name": "TestSpectraDetect",
+          "kind": "class",
+          "line": 11,
+          "body_hash": "7264252fcdc04375",
+          "body_lines": 3
+        },
+        {
+          "name": "test_detect_with_mapping",
+          "kind": "function",
+          "line": 14,
+          "body_hash": "c84907f4f85b927e",
+          "body_lines": 6
+        },
+        {
+          "name": "test_detect_without_mapping",
+          "kind": "function",
+          "line": 20,
+          "body_hash": "42bf17748a5acfb6",
+          "body_lines": 7
+        },
+        {
+          "name": "TestSpectraAnalyze",
+          "kind": "class",
+          "line": 27,
+          "body_hash": "0f5535c85958443a",
+          "body_lines": 3
+        },
+        {
+          "name": "test_analyze_full_graph",
+          "kind": "function",
+          "line": 30,
+          "body_hash": "c9e6e871636a1df7",
+          "body_lines": 8
+        },
+        {
+          "name": "test_analyze_spec_nodes",
+          "kind": "function",
+          "line": 38,
+          "body_hash": "8ad85043f0acbf50",
+          "body_lines": 7
+        },
+        {
+          "name": "test_analyze_code_nodes",
+          "kind": "function",
+          "line": 45,
+          "body_hash": "4d3782b81340875b",
+          "body_lines": 7
+        },
+        {
+          "name": "test_analyze_test_nodes",
+          "kind": "function",
+          "line": 52,
+          "body_hash": "3e9a91c1640442ba",
+          "body_lines": 10
+        },
+        {
+          "name": "test_analyze_design_nodes",
+          "kind": "function",
+          "line": 62,
+          "body_hash": "040dad493307fd7b",
+          "body_lines": 7
+        },
+        {
+          "name": "test_analyze_edge_relations",
+          "kind": "function",
+          "line": 69,
+          "body_hash": "cbca93415f711708",
+          "body_lines": 9
+        },
+        {
+          "name": "test_analyze_all_explicit",
+          "kind": "function",
+          "line": 78,
+          "body_hash": "fbc272437642b154",
+          "body_lines": 7
+        },
+        {
+          "name": "test_analyze_evidence_on_edges",
+          "kind": "function",
+          "line": 85,
+          "body_hash": "60abdab2a20bc3f2",
+          "body_lines": 10
+        },
+        {
+          "name": "test_analyze_no_mapping_file",
+          "kind": "function",
+          "line": 95,
+          "body_hash": "52e84f9e7f0be891",
+          "body_lines": 6
+        },
+        {
+          "name": "test_analyze_framework_origin",
+          "kind": "function",
+          "line": 101,
+          "body_hash": "6f16fd074c189ca7",
+          "body_lines": 7
+        },
+        {
+          "name": "test_analyze_coverage",
+          "kind": "function",
+          "line": 108,
+          "body_hash": "e32740c61f4397cf",
+          "body_lines": 11
+        },
+        {
+          "name": "test_analyze_no_duplicate_nodes",
+          "kind": "function",
+          "line": 119,
+          "body_hash": "2d2435505ba5e2b2",
+          "body_lines": 7
+        }
+      ]
+    },
+    {
+      "file": "scripts/per_adapter_coverage.py",
+      "module": "scripts",
+      "symbols": [],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "specbridge.adapters",
+        "specbridge.analyzers",
+        "pathlib"
+      ],
+      "file_hash": "2a22cdbd04f6746e",
+      "functions": []
+    },
+    {
+      "file": "scripts/install-hooks.sh",
+      "module": "scripts",
+      "symbols": [],
+      "is_test": false,
+      "language": "Shell",
+      "imports": [],
+      "file_hash": "71f69f87fc01ac30",
+      "functions": []
+    },
+    {
+      "file": "scripts/setup.sh",
+      "module": "scripts",
+      "symbols": [],
+      "is_test": false,
+      "language": "Shell",
+      "imports": [],
+      "file_hash": "c6dfd57bf79972cf",
+      "functions": []
+    }
+  ],
   "orphan_spec_ids": [
+    ".agents.skills.specbridge.SKILL.1",
+    ".agents.skills.specbridge.SKILL.1.1",
+    ".agents.skills.specbridge.SKILL.1.2",
+    ".agents.skills.specbridge.SKILL.1.2.1",
+    ".agents.skills.specbridge.SKILL.1.2.2",
+    ".agents.skills.specbridge.SKILL.1.2.3",
+    ".agents.skills.specbridge.SKILL.1.3",
+    ".agents.skills.specbridge.SKILL.10",
+    ".agents.skills.specbridge.SKILL.11",
+    ".agents.skills.specbridge.SKILL.13",
+    ".agents.skills.specbridge.SKILL.13.1",
+    ".agents.skills.specbridge.SKILL.13.2",
+    ".agents.skills.specbridge.SKILL.13.3",
+    ".agents.skills.specbridge.SKILL.14",
+    ".agents.skills.specbridge.SKILL.14.1",
+    ".agents.skills.specbridge.SKILL.2",
+    ".agents.skills.specbridge.SKILL.3",
+    ".agents.skills.specbridge.SKILL.4",
+    ".agents.skills.specbridge.SKILL.4.1",
+    ".agents.skills.specbridge.SKILL.4.1.1",
+    ".agents.skills.specbridge.SKILL.4.1.2",
+    ".agents.skills.specbridge.SKILL.4.2",
+    ".agents.skills.specbridge.SKILL.4.2.1",
+    ".agents.skills.specbridge.SKILL.6",
+    ".agents.skills.specbridge.SKILL.7",
+    ".agents.skills.specbridge.SKILL.7.1",
+    ".agents.skills.specbridge.SKILL.7.1.1",
+    ".agents.skills.specbridge.SKILL.7.1.2",
+    ".agents.skills.specbridge.SKILL.7.1.3",
+    ".agents.skills.specbridge.SKILL.7.2.1",
+    ".agents.skills.specbridge.SKILL.7.2.2",
+    ".agents.skills.specbridge.SKILL.7.3",
+    ".agents.skills.specbridge.SKILL.7.4",
+    ".agents.skills.specbridge.SKILL.7.5",
+    ".agents.skills.specbridge.SKILL.9",
+    ".agents.skills.specbridge.SKILL.9.1",
     "docs.en.01-architecture.1",
     "docs.en.01-architecture.1.1",
     "docs.en.01-architecture.1.2",
@@ -5656,142 +10247,32 @@
     "docs.en.02-data-model.1.2.4",
     "docs.en.02-data-model.1.3",
     "docs.en.02-data-model.1.3.1",
-    "docs.en.02-data-model.1.3.2",
     "docs.en.02-data-model.1.3.3",
-    "docs.en.02-data-model.1.3.4",
     "docs.en.02-data-model.1.4",
     "docs.en.02-data-model.1.4.1",
     "docs.en.02-data-model.1.5",
     "docs.en.02-data-model.1.5.1",
     "docs.en.02-data-model.1.6",
-    "docs.en.02-data-model.1.7",
     "docs.en.03-adapter-plugin-system.1",
     "docs.en.03-adapter-plugin-system.1.1",
-    "docs.en.03-adapter-plugin-system.1.2",
     "docs.en.03-adapter-plugin-system.1.2.1",
-    "docs.en.03-adapter-plugin-system.1.3",
     "docs.en.03-adapter-plugin-system.1.3.1",
     "docs.en.03-adapter-plugin-system.1.3.2",
     "docs.en.03-adapter-plugin-system.1.3.3",
-    "docs.en.03-adapter-plugin-system.1.4",
     "docs.en.03-adapter-plugin-system.1.4.1",
     "docs.en.03-adapter-plugin-system.1.4.2",
-    "docs.en.03-adapter-plugin-system.1.5",
     "docs.en.03-adapter-plugin-system.1.5.1",
-    "docs.en.03-adapter-plugin-system.1.5.2",
     "docs.en.03-adapter-plugin-system.1.6",
     "docs.en.03-adapter-plugin-system.1.7",
     "docs.en.03-adapter-plugin-system.1.7.1",
     "docs.en.03-adapter-plugin-system.1.8",
-    "docs.en.04-discovery-engine.1",
-    "docs.en.04-discovery-engine.1.1",
-    "docs.en.04-discovery-engine.1.2",
-    "docs.en.04-discovery-engine.1.2.1",
-    "docs.en.04-discovery-engine.1.2.2",
-    "docs.en.04-discovery-engine.1.2.3",
-    "docs.en.04-discovery-engine.1.2.4",
-    "docs.en.04-discovery-engine.1.2.5",
-    "docs.en.04-discovery-engine.1.2.6",
-    "docs.en.04-discovery-engine.1.3",
-    "docs.en.04-discovery-engine.1.3.1",
-    "docs.en.04-discovery-engine.1.3.2",
-    "docs.en.04-discovery-engine.1.3.3",
-    "docs.en.04-discovery-engine.1.3.4",
-    "docs.en.04-discovery-engine.1.3.5",
-    "docs.en.04-discovery-engine.1.3.6",
-    "docs.en.04-discovery-engine.1.3.7",
-    "docs.en.04-discovery-engine.1.3.8",
-    "docs.en.04-discovery-engine.1.4",
-    "docs.en.04-discovery-engine.2",
-    "docs.en.04-discovery-engine.2.1",
     "docs.en.04-discovery-engine.2.1.1",
     "docs.en.04-discovery-engine.2.1.2",
     "docs.en.04-discovery-engine.2.2",
     "docs.en.04-discovery-engine.2.3",
-    "docs.en.05-heuristic-matching.1",
-    "docs.en.05-heuristic-matching.1.1",
-    "docs.en.05-heuristic-matching.1.2",
-    "docs.en.05-heuristic-matching.1.2.1",
-    "docs.en.05-heuristic-matching.1.2.2",
-    "docs.en.05-heuristic-matching.1.2.3",
-    "docs.en.05-heuristic-matching.1.2.4",
-    "docs.en.05-heuristic-matching.1.3",
-    "docs.en.05-heuristic-matching.1.3.1",
-    "docs.en.05-heuristic-matching.1.3.2",
-    "docs.en.05-heuristic-matching.1.3.3",
-    "docs.en.05-heuristic-matching.1.3.4",
-    "docs.en.05-heuristic-matching.1.3.5",
-    "docs.en.05-heuristic-matching.1.4",
-    "docs.en.05-heuristic-matching.1.5",
-    "docs.en.05-heuristic-matching.1.6",
-    "docs.en.05-heuristic-matching.1.6.1",
-    "docs.en.05-heuristic-matching.1.6.2",
-    "docs.en.05-heuristic-matching.1.6.3",
-    "docs.en.05-heuristic-matching.1.6.4",
-    "docs.en.05-heuristic-matching.1.7",
-    "docs.en.05-heuristic-matching.1.8",
-    "docs.en.05-heuristic-matching.1.9",
-    "docs.en.05-heuristic-matching.2",
-    "docs.en.05-heuristic-matching.2.1",
     "docs.en.05-heuristic-matching.2.1.1",
-    "docs.en.05-heuristic-matching.2.1.2",
-    "docs.en.05-heuristic-matching.2.1.3",
     "docs.en.05-heuristic-matching.2.1.4",
-    "docs.en.05-heuristic-matching.2.1.5",
-    "docs.en.06-drift-detection.1",
-    "docs.en.06-drift-detection.1.1",
-    "docs.en.06-drift-detection.1.2",
-    "docs.en.06-drift-detection.1.2.1",
-    "docs.en.06-drift-detection.1.2.2",
-    "docs.en.06-drift-detection.1.3",
-    "docs.en.06-drift-detection.1.3.1",
-    "docs.en.06-drift-detection.1.3.2",
-    "docs.en.06-drift-detection.1.3.3",
     "docs.en.06-drift-detection.2",
-    "docs.en.06-drift-detection.3",
-    "docs.en.06-drift-detection.3.1",
-    "docs.en.06-drift-detection.3.2",
-    "docs.en.06-drift-detection.3.2.1",
-    "docs.en.06-drift-detection.3.2.2",
-    "docs.en.06-drift-detection.3.2.3",
-    "docs.en.06-drift-detection.3.2.4",
-    "docs.en.06-drift-detection.4",
-    "docs.en.06-drift-detection.4.1",
-    "docs.en.06-drift-detection.4.2",
-    "docs.en.07-cli-commands.1",
-    "docs.en.07-cli-commands.1.1",
-    "docs.en.07-cli-commands.1.2",
-    "docs.en.07-cli-commands.1.2.1",
-    "docs.en.07-cli-commands.10",
-    "docs.en.07-cli-commands.11",
-    "docs.en.07-cli-commands.12",
-    "docs.en.07-cli-commands.13",
-    "docs.en.07-cli-commands.13.1",
-    "docs.en.07-cli-commands.13.2",
-    "docs.en.07-cli-commands.13.3",
-    "docs.en.07-cli-commands.14",
-    "docs.en.07-cli-commands.15",
-    "docs.en.07-cli-commands.16",
-    "docs.en.07-cli-commands.17",
-    "docs.en.07-cli-commands.18",
-    "docs.en.07-cli-commands.18.1",
-    "docs.en.07-cli-commands.18.2",
-    "docs.en.07-cli-commands.18.3",
-    "docs.en.07-cli-commands.18.4",
-    "docs.en.07-cli-commands.19",
-    "docs.en.07-cli-commands.2",
-    "docs.en.07-cli-commands.20",
-    "docs.en.07-cli-commands.21",
-    "docs.en.07-cli-commands.21.1",
-    "docs.en.07-cli-commands.21.2",
-    "docs.en.07-cli-commands.3",
-    "docs.en.07-cli-commands.4",
-    "docs.en.07-cli-commands.5",
-    "docs.en.07-cli-commands.6",
-    "docs.en.07-cli-commands.7",
-    "docs.en.07-cli-commands.8",
-    "docs.en.07-cli-commands.8.1",
-    "docs.en.07-cli-commands.9",
     "docs.en.08-output-rendering.1",
     "docs.en.08-output-rendering.1.1",
     "docs.en.08-output-rendering.1.2",
@@ -5803,29 +10284,9 @@
     "docs.en.08-output-rendering.1.4.4",
     "docs.en.08-output-rendering.1.5",
     "docs.en.08-output-rendering.1.6",
-    "docs.en.09-configuration.1",
-    "docs.en.09-configuration.1.1",
-    "docs.en.09-configuration.1.2",
-    "docs.en.09-configuration.1.2.1",
-    "docs.en.09-configuration.1.2.2",
-    "docs.en.09-configuration.2",
-    "docs.en.09-configuration.2.1",
-    "docs.en.09-configuration.2.1.1",
-    "docs.en.09-configuration.2.1.2",
-    "docs.en.09-configuration.2.1.3",
-    "docs.en.09-configuration.2.1.4",
-    "docs.en.09-configuration.2.1.5",
-    "docs.en.09-configuration.2.1.6",
-    "docs.en.09-configuration.2.2",
-    "docs.en.09-configuration.2.3",
-    "docs.en.09-configuration.3",
-    "docs.en.09-configuration.4",
-    "docs.en.09-configuration.4.1",
     "docs.en.10-mcp-integration.1",
     "docs.en.10-mcp-integration.1.1",
     "docs.en.10-mcp-integration.1.2",
-    "docs.en.10-mcp-integration.1.2.1",
-    "docs.en.10-mcp-integration.1.2.2",
     "docs.en.10-mcp-integration.1.2.3",
     "docs.en.10-mcp-integration.1.3",
     "docs.en.10-mcp-integration.1.3.1",
@@ -5833,8 +10294,6 @@
     "docs.en.10-mcp-integration.1.3.3",
     "docs.en.10-mcp-integration.1.3.4",
     "docs.en.10-mcp-integration.1.3.5",
-    "docs.en.10-mcp-integration.1.4",
-    "docs.en.10-mcp-integration.1.5",
     "docs.en.10-mcp-integration.1.6",
     "docs.en.10-mcp-integration.1.6.1",
     "docs.en.10-mcp-integration.2",
@@ -5852,10 +10311,7 @@
     "docs.en.11-testing-strategy.1.3.2",
     "docs.en.11-testing-strategy.1.3.3",
     "docs.en.11-testing-strategy.1.4",
-    "docs.en.11-testing-strategy.1.5",
     "docs.en.11-testing-strategy.2",
-    "docs.en.11-testing-strategy.3",
-    "docs.en.11-testing-strategy.4",
     "docs.en.11-testing-strategy.5",
     "docs.en.11-testing-strategy.6",
     "docs.en.11-testing-strategy.6.1",
@@ -5863,10 +10319,8 @@
     "docs.en.11-testing-strategy.6.3",
     "docs.en.11-testing-strategy.6.4",
     "docs.ja.01-architecture.1",
-    "docs.ja.01-architecture.1.1",
     "docs.ja.01-architecture.1.2",
     "docs.ja.01-architecture.1.3",
-    "docs.ja.01-architecture.1.4",
     "docs.ja.01-architecture.1.4.1",
     "docs.ja.01-architecture.1.4.2",
     "docs.ja.01-architecture.1.4.3",
@@ -5875,231 +10329,77 @@
     "docs.ja.01-architecture.1.6.1",
     "docs.ja.01-architecture.1.6.2",
     "docs.ja.01-architecture.1.6.3",
-    "docs.ja.01-architecture.1.7",
     "docs.ja.02-data-model.1",
     "docs.ja.02-data-model.1.1",
-    "docs.ja.02-data-model.1.2",
     "docs.ja.02-data-model.1.2.1",
     "docs.ja.02-data-model.1.2.2",
     "docs.ja.02-data-model.1.2.3",
     "docs.ja.02-data-model.1.2.4",
-    "docs.ja.02-data-model.1.3",
     "docs.ja.02-data-model.1.3.1",
-    "docs.ja.02-data-model.1.3.2",
     "docs.ja.02-data-model.1.3.3",
-    "docs.ja.02-data-model.1.3.4",
     "docs.ja.02-data-model.1.4",
     "docs.ja.02-data-model.1.4.1",
-    "docs.ja.02-data-model.1.5",
     "docs.ja.02-data-model.1.5.1",
-    "docs.ja.02-data-model.1.6",
-    "docs.ja.02-data-model.1.7",
     "docs.ja.03-adapter-plugin-system.1",
     "docs.ja.03-adapter-plugin-system.1.1",
-    "docs.ja.03-adapter-plugin-system.1.2",
     "docs.ja.03-adapter-plugin-system.1.2.1",
-    "docs.ja.03-adapter-plugin-system.1.3",
-    "docs.ja.03-adapter-plugin-system.1.3.1",
-    "docs.ja.03-adapter-plugin-system.1.3.2",
     "docs.ja.03-adapter-plugin-system.1.3.3",
-    "docs.ja.03-adapter-plugin-system.1.4",
-    "docs.ja.03-adapter-plugin-system.1.4.1",
     "docs.ja.03-adapter-plugin-system.1.4.2",
-    "docs.ja.03-adapter-plugin-system.1.5",
     "docs.ja.03-adapter-plugin-system.1.5.1",
-    "docs.ja.03-adapter-plugin-system.1.5.2",
     "docs.ja.03-adapter-plugin-system.1.6",
     "docs.ja.03-adapter-plugin-system.1.7",
     "docs.ja.03-adapter-plugin-system.1.7.1",
     "docs.ja.03-adapter-plugin-system.1.8",
     "docs.ja.04-discovery-engine.1",
-    "docs.ja.04-discovery-engine.1.1",
-    "docs.ja.04-discovery-engine.1.2",
-    "docs.ja.04-discovery-engine.1.2.1",
-    "docs.ja.04-discovery-engine.1.2.2",
-    "docs.ja.04-discovery-engine.1.2.3",
-    "docs.ja.04-discovery-engine.1.2.4",
-    "docs.ja.04-discovery-engine.1.2.5",
-    "docs.ja.04-discovery-engine.1.2.6",
-    "docs.ja.04-discovery-engine.1.3",
-    "docs.ja.04-discovery-engine.1.3.1",
-    "docs.ja.04-discovery-engine.1.3.2",
-    "docs.ja.04-discovery-engine.1.3.3",
-    "docs.ja.04-discovery-engine.1.3.4",
-    "docs.ja.04-discovery-engine.1.3.5",
-    "docs.ja.04-discovery-engine.1.3.6",
-    "docs.ja.04-discovery-engine.1.3.7",
-    "docs.ja.04-discovery-engine.1.3.8",
-    "docs.ja.04-discovery-engine.1.4",
-    "docs.ja.04-discovery-engine.2",
     "docs.ja.04-discovery-engine.2.1",
     "docs.ja.04-discovery-engine.2.1.1",
     "docs.ja.04-discovery-engine.2.1.2",
     "docs.ja.04-discovery-engine.2.2",
     "docs.ja.04-discovery-engine.2.3",
     "docs.ja.05-heuristic-matching.1",
-    "docs.ja.05-heuristic-matching.1.1",
-    "docs.ja.05-heuristic-matching.1.2",
-    "docs.ja.05-heuristic-matching.1.2.1",
-    "docs.ja.05-heuristic-matching.1.2.2",
-    "docs.ja.05-heuristic-matching.1.2.3",
-    "docs.ja.05-heuristic-matching.1.2.4",
-    "docs.ja.05-heuristic-matching.1.3",
     "docs.ja.05-heuristic-matching.1.3.1",
-    "docs.ja.05-heuristic-matching.1.3.2",
     "docs.ja.05-heuristic-matching.1.3.3",
-    "docs.ja.05-heuristic-matching.1.3.4",
-    "docs.ja.05-heuristic-matching.1.3.5",
-    "docs.ja.05-heuristic-matching.1.4",
     "docs.ja.05-heuristic-matching.1.5",
-    "docs.ja.05-heuristic-matching.1.6",
     "docs.ja.05-heuristic-matching.1.6.1",
-    "docs.ja.05-heuristic-matching.1.6.2",
-    "docs.ja.05-heuristic-matching.1.6.3",
-    "docs.ja.05-heuristic-matching.1.6.4",
-    "docs.ja.05-heuristic-matching.1.7",
-    "docs.ja.05-heuristic-matching.1.8",
-    "docs.ja.05-heuristic-matching.1.9",
-    "docs.ja.05-heuristic-matching.2",
-    "docs.ja.05-heuristic-matching.2.1",
     "docs.ja.05-heuristic-matching.2.1.1",
-    "docs.ja.05-heuristic-matching.2.1.2",
-    "docs.ja.05-heuristic-matching.2.1.3",
-    "docs.ja.05-heuristic-matching.2.1.4",
-    "docs.ja.05-heuristic-matching.2.1.5",
     "docs.ja.06-drift-detection.1",
-    "docs.ja.06-drift-detection.1.1",
-    "docs.ja.06-drift-detection.1.2",
-    "docs.ja.06-drift-detection.1.2.1",
-    "docs.ja.06-drift-detection.1.2.2",
-    "docs.ja.06-drift-detection.1.3",
-    "docs.ja.06-drift-detection.1.3.1",
-    "docs.ja.06-drift-detection.1.3.2",
-    "docs.ja.06-drift-detection.1.3.3",
     "docs.ja.06-drift-detection.2",
-    "docs.ja.06-drift-detection.3",
-    "docs.ja.06-drift-detection.3.1",
     "docs.ja.06-drift-detection.3.2",
-    "docs.ja.06-drift-detection.3.2.1",
-    "docs.ja.06-drift-detection.3.2.2",
-    "docs.ja.06-drift-detection.3.2.3",
-    "docs.ja.06-drift-detection.3.2.4",
-    "docs.ja.06-drift-detection.4",
-    "docs.ja.06-drift-detection.4.1",
-    "docs.ja.06-drift-detection.4.2",
-    "docs.ja.07-cli-commands.1",
-    "docs.ja.07-cli-commands.1.1",
-    "docs.ja.07-cli-commands.1.2",
-    "docs.ja.07-cli-commands.1.2.1",
-    "docs.ja.07-cli-commands.10",
-    "docs.ja.07-cli-commands.11",
-    "docs.ja.07-cli-commands.12",
-    "docs.ja.07-cli-commands.13",
-    "docs.ja.07-cli-commands.13.1",
-    "docs.ja.07-cli-commands.13.2",
-    "docs.ja.07-cli-commands.13.3",
-    "docs.ja.07-cli-commands.14",
-    "docs.ja.07-cli-commands.15",
-    "docs.ja.07-cli-commands.16",
-    "docs.ja.07-cli-commands.17",
-    "docs.ja.07-cli-commands.18",
-    "docs.ja.07-cli-commands.18.1",
-    "docs.ja.07-cli-commands.18.2",
-    "docs.ja.07-cli-commands.18.3",
-    "docs.ja.07-cli-commands.18.4",
-    "docs.ja.07-cli-commands.18.5",
-    "docs.ja.07-cli-commands.19",
-    "docs.ja.07-cli-commands.2",
-    "docs.ja.07-cli-commands.20",
-    "docs.ja.07-cli-commands.21",
-    "docs.ja.07-cli-commands.21.1",
-    "docs.ja.07-cli-commands.21.2",
-    "docs.ja.07-cli-commands.21.3",
-    "docs.ja.07-cli-commands.3",
-    "docs.ja.07-cli-commands.4",
-    "docs.ja.07-cli-commands.5",
-    "docs.ja.07-cli-commands.6",
-    "docs.ja.07-cli-commands.7",
-    "docs.ja.07-cli-commands.8",
-    "docs.ja.07-cli-commands.8.1",
-    "docs.ja.07-cli-commands.9",
+    "docs.ja.07-cli-commands.24",
     "docs.ja.08-output-rendering.1",
-    "docs.ja.08-output-rendering.1.1",
     "docs.ja.08-output-rendering.1.2",
     "docs.ja.08-output-rendering.1.3",
-    "docs.ja.08-output-rendering.1.4",
     "docs.ja.08-output-rendering.1.4.1",
     "docs.ja.08-output-rendering.1.4.2",
     "docs.ja.08-output-rendering.1.4.3",
     "docs.ja.08-output-rendering.1.4.4",
-    "docs.ja.08-output-rendering.1.5",
-    "docs.ja.08-output-rendering.1.6",
     "docs.ja.09-configuration.1",
-    "docs.ja.09-configuration.1.1",
-    "docs.ja.09-configuration.1.2",
-    "docs.ja.09-configuration.1.2.1",
-    "docs.ja.09-configuration.1.2.2",
-    "docs.ja.09-configuration.2",
-    "docs.ja.09-configuration.2.1",
-    "docs.ja.09-configuration.2.1.1",
-    "docs.ja.09-configuration.2.1.2",
-    "docs.ja.09-configuration.2.1.3",
-    "docs.ja.09-configuration.2.1.4",
-    "docs.ja.09-configuration.2.1.5",
-    "docs.ja.09-configuration.2.1.6",
-    "docs.ja.09-configuration.2.2",
-    "docs.ja.09-configuration.2.3",
-    "docs.ja.09-configuration.3",
-    "docs.ja.09-configuration.4",
-    "docs.ja.09-configuration.4.1",
-    "docs.ja.10-mcp-integration.1",
     "docs.ja.10-mcp-integration.1.1",
-    "docs.ja.10-mcp-integration.1.2",
-    "docs.ja.10-mcp-integration.1.2.1",
-    "docs.ja.10-mcp-integration.1.2.2",
-    "docs.ja.10-mcp-integration.1.2.3",
-    "docs.ja.10-mcp-integration.1.3",
-    "docs.ja.10-mcp-integration.1.3.1",
     "docs.ja.10-mcp-integration.1.3.2",
-    "docs.ja.10-mcp-integration.1.3.3",
     "docs.ja.10-mcp-integration.1.3.4",
-    "docs.ja.10-mcp-integration.1.3.5",
-    "docs.ja.10-mcp-integration.1.4",
     "docs.ja.10-mcp-integration.1.5",
-    "docs.ja.10-mcp-integration.1.6",
-    "docs.ja.10-mcp-integration.1.6.1",
     "docs.ja.10-mcp-integration.2",
     "docs.ja.10-mcp-integration.3",
-    "docs.ja.10-mcp-integration.3.1",
-    "docs.ja.10-mcp-integration.3.2",
     "docs.ja.10-mcp-integration.4",
     "docs.ja.10-mcp-integration.4.1",
     "docs.ja.10-mcp-integration.4.2",
     "docs.ja.11-testing-strategy.1",
-    "docs.ja.11-testing-strategy.1.1",
-    "docs.ja.11-testing-strategy.1.2",
-    "docs.ja.11-testing-strategy.1.3",
     "docs.ja.11-testing-strategy.1.3.1",
     "docs.ja.11-testing-strategy.1.3.2",
     "docs.ja.11-testing-strategy.1.3.3",
     "docs.ja.11-testing-strategy.1.4",
-    "docs.ja.11-testing-strategy.1.5",
     "docs.ja.11-testing-strategy.2",
-    "docs.ja.11-testing-strategy.3",
-    "docs.ja.11-testing-strategy.4",
     "docs.ja.11-testing-strategy.5",
     "docs.ja.11-testing-strategy.6",
     "docs.ja.11-testing-strategy.6.1",
-    "docs.ja.11-testing-strategy.6.2",
-    "docs.ja.11-testing-strategy.6.3",
-    "docs.ja.11-testing-strategy.6.4"
+    "docs.ja.11-testing-strategy.6.3"
   ],
   "coverage": {
-    "total": 460,
-    "covered": 0,
-    "orphan": 460,
-    "coverage_pct": 0.0,
-    "spec_count": 469,
-    "code_count": 0
+    "total": 508,
+    "covered": 303,
+    "orphan": 205,
+    "coverage_pct": 59.6,
+    "spec_count": 517,
+    "code_count": 44
   }
 }

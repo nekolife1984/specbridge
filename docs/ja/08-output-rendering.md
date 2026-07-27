@@ -1,7 +1,7 @@
 # 出力レンダリング
 
-> **日付:** 2026-07-26
-> **バージョン:** 0.0.1.dev0
+> **日付:** 2026-07-27
+> **バージョン:** 1.0.0
 
 ## 1. 概要
 <!-- @impl specbridge/adapters/_base.py::merge_graphs -->
@@ -19,7 +19,14 @@ TraceGraph
     └──▶ render_html()  → インタラクティブD3.jsフォース指向グラフ
 ```
 
+さらに、v1.0での新機能：
+
+- **色分けカバレッジ** — 🟢🟡🔴 インジケータでカバレッジ率を表示
+- **1行CIサマリー** — `--summary-only` モードのための `render_one_line_coverage()`
+- **Rich進捗表示** — `rich_utils.py` がスピナーとプログレスバーのヘルパーを提供
+
 ## 2. テキスト出力 (`outputs/text.py`)
+<!-- @impl specbridge/outputs/text.py::render_text -->
 
 デフォルトの出力形式。グラフを人間可読なターミナルレポートとしてレンダリングします。
 
@@ -47,7 +54,7 @@ Coverage: 83.3% (10/12)
 
 **関数レベルマッチング使用時:**
 
-ヒューリスティックアダプタ使用時は、関数レベルのノードが専用セクションに表示されます：
+`build_heuristic_graph()` 使用時（ヒューリスティックアダプタ）は、関数レベルのノードが専用セクションに表示されます：
 
 ```
 🔧 Function refs:
@@ -66,7 +73,38 @@ Coverage: 83.3% (10/12)
   ... and 5 more code files
 ```
 
+### 2.1 色分けカバレッジ
+<!-- @impl specbridge/outputs/text.py::render_one_line_coverage -->
+
+カバレッジ統計に視覚インジケータが含まれるようになりました：
+
+| カバレッジ | インジケータ | 意味 |
+|-----------|------------|------|
+| ≥ 80% | 🟢 緑 | 良好なカバレッジ |
+| ≥ 50% | 🟡 黄 | 中程度のカバレッジ |
+| < 50% | 🔴 赤 | 低いカバレッジ |
+
+```
+📊 Spec Coverage  🟢
+========================================
+  Total specs:  12
+  Covered:      10
+  Orphan specs: 2
+  Coverage:     83.3%
+```
+
+### 2.2 1行CIサマリー
+
+`render_one_line_coverage()` 関数は、CI対応のコンパクトな1行を生成します：
+
+```
+🟢 Coverage: 83.3% (10/12) | Specs: 12 | Code refs: 45 | 🟡 3 total orphans
+```
+
+`specbridge analyze --summary-only` で使用されます。
+
 ## 3. JSON出力 (`outputs/json_out.py`)
+<!-- @impl specbridge/outputs/json_out.py::render_json -->
 
 機械処理向けの構造化JSON。
 
@@ -74,7 +112,7 @@ Coverage: 83.3% (10/12)
 
 ```json
 {
-  "specbridge_version": "0.0.1.dev0",
+  "specbridge_version": "1.0.0",
   "nodes": [
     {
       "id": "auth.auth.1.1",
@@ -117,7 +155,7 @@ Coverage: 83.3% (10/12)
 ```python
 def render_json(graph: TraceGraph, indent: int = 2) -> str:
     payload = {
-        "specbridge_version": "0.0.1.dev0",
+        "specbridge_version": "1.0.0",
         "nodes": [_node_dict(n) for n in graph.nodes.values()],
         "edges": [_edge_dict(e) for e in graph.edges],
     }
@@ -141,6 +179,7 @@ def render_json(graph: TraceGraph, indent: int = 2) -> str:
 - **ホバーツールチップ** — ID、タイプ、ファイル、フレームワークを表示
 - **凡例** — 左下の色/形状リファレンス
 - **ヘッダー** — 仕様/コード/テスト/エッジ数を表示
+- **`--dry-run` サポート** — ディスクに保存せずにプレビュー
 
 ### D3.jsの実装
 <!-- @impl specbridge/outputs/html.py::render_html -->
@@ -156,35 +195,59 @@ HTMLはCDN（`https://d3js.org/d3.v7.min.js`）から読み込まれるD3.js v7�
 - ハイライト効果用のCSSトランジション
 
 ### 出力場所
+<!-- @impl specbridge/outputs/html.py::write_html_output -->
 
-HTMLファイルは `.specbridge/trace.html` に保存され、デフォルトブラウザで自動的に開かれます：
-
-```python
-out_path = root / ".specbridge" / "trace.html"
-out_path.parent.mkdir(parents=True, exist_ok=True)
-out_path.write_text(html, encoding="utf-8")
-webbrowser.open(f"file://{out_path.resolve()}")
-```
-
-### ノードの色と形状マップ
+HTMLファイルは `.specbridge/trace.html` に保存されます（`--dry-run` が設定されていない場合）：
 
 ```python
-NODE_COLORS = {
-    NodeType.SPEC:   "#4A90D9",  # 青
-    NodeType.CODE:   "#50B86C",  # 緑
-    NodeType.TEST:   "#F5A623",  # 黄/オレンジ
-    NodeType.DESIGN: "#9B59B6",  # 紫
-    NodeType.TASK:   "#7F8C8D",  # グレー
-}
+if dry_run:
+    click.echo("   📄 HTML output generated (--dry-run, not saved)", err=True)
+else:
+    out_path = root / ".specbridge" / "trace.html"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(html, encoding="utf-8")
+    webbrowser.open(f"file://{out_path.resolve()}")
 ```
 
-**HTML出力を使用するタイミング:**
-- トレース関係を視覚的に探索する場合
-- プレゼンテーションやコードレビュー
-- ヒューリスティックマッチング結果のデバッグ
-- プロジェクト構造を一目で理解する場合
+## 5. Rich進捗ユーティリティ (`outputs/rich_utils.py`) ✨ v1.0新機能
+<!-- @impl specbridge/outputs/rich_utils.py -->
+<!-- @impl specbridge/outputs/rich_utils.py::progress_spinner -->
+<!-- @impl specbridge/outputs/rich_utils.py::progress_bar -->
+<!-- @impl specbridge/outputs/rich_utils.py::get_console -->
 
-## 5. 証拠の表示
+長時間実行操作のためのRichベースの進捗表示を提供する新しいモジュール。
+
+### スピナー
+
+不確定な進捗用：
+
+```python
+with progress_spinner("🔍 プロジェクトをスキャン中..."):
+    # 長時間操作
+    result = do_work()
+```
+
+### プログレスバー
+
+既知のステップ数がある確定進捗用：
+
+```python
+with progress_bar("ファイルを分析中...", total=len(files)) as (progress, task):
+    for f in files:
+        # ファイルを処理
+        progress.advance(task)
+```
+
+### コンソール
+
+スタイル付き出力のための共有Rich Consoleインスタンス（デフォルトでstderr）：
+
+```python
+from specbridge.outputs.rich_utils import get_console
+console = get_console()
+```
+
+## 6. 証拠の表示
 
 3つの出力形式すべてに証拠情報が含まれます：
 
@@ -194,7 +257,7 @@ NODE_COLORS = {
 | **JSON** | 各エッジオブジェクトの `evidence` 配列 |
 | **HTML** | ホバーツールチップ + エッジラベル |
 
-## 6. テキスト vs JSON vs HTML
+## 7. テキスト vs JSON vs HTML
 
 | 機能 | テキスト | JSON | HTML |
 |------|---------|------|------|
@@ -205,3 +268,4 @@ NODE_COLORS = {
 | **出力場所** | stdout | stdout | `.specbridge/trace.html` |
 | **パイプ連鎖** | ✓ | ✓ (jq) | ✗ |
 | **CI対応** | ✓（テキスト解析） | ✓（JSONパーサー） | ✗ |
+| **サマリー専用モード** | ✓ | N/A | N/A |

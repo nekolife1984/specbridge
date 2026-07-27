@@ -1,11 +1,11 @@
 # CLI Commands Reference
 
-> **Date:** 2026-07-26
-> **Version:** 0.0.1.dev0
+> **Date:** 2026-07-27
+> **Version:** 1.0.0
 
 ## 1. Overview
 
-specbridge provides a Click-based CLI with **12 commands** for traceability analysis, drift detection, and project management.
+specbridge provides a Click-based CLI with **13 commands** for traceability analysis, drift detection, and project management.
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
@@ -22,8 +22,9 @@ Commands:
   coverage           Show spec coverage statistics.
   snapshot           Take a structural snapshot of specs and code.
   drift              Detect changes between snapshot and current state.
+  status             Show project state dashboard (config, snapshot, coverage, drift).
   validate-boundary  Validate that code refs stay within declared _Boundary:_ markers.
-  config             Show current specbridge configuration.
+  config             Show / validate current specbridge configuration.
   watch              Watch project for changes and re-analyze automatically.
   plugins            List installed specbridge adapter plugins.
   serve              Start MCP server for AI agent integration.
@@ -50,8 +51,19 @@ Options:
   --deps              Build code dependency graph from imports (adds DEPENDS edges)
   -c, --call-graph    Build call graph for transitive impact analysis
   --fast              Skip function-level matching for faster analysis on large projects
+  --dry-run           Analyze without writing any output files (.specbridge/)
+  --summary-only      Show only a one-line coverage summary (CI-friendly)
   --help              Show this message and exit.
 ```
+
+**New options (v1.0):**
+
+| Option | Purpose |
+|--------|---------|
+| `--dry-run` | Skip writing HTML output to `.specbridge/trace.html` |
+| `--summary-only` | Display a single CI-friendly line like `🟢 Coverage: 60.7% (259/427)` |
+
+**Progress display:** Long-running analysis operations show a spinner via Rich progress bar.
 
 **Examples:**
 
@@ -68,22 +80,14 @@ $ specbridge analyze --format html
 # Merge all matching adapters
 $ specbridge analyze --merge
 
-# Show only top 5 per category
-$ specbridge analyze --top 5
+# CI-friendly one-line summary
+$ specbridge analyze --summary-only
+🟢 Coverage: 83.3% (10/12)
 
-# Include code dependency graph
-$ specbridge analyze --deps
-
-# Include both dependency and call graph
-$ specbridge analyze --deps --call-graph
+# Dry run (preview without saving HTML)
+$ specbridge analyze --format html --dry-run
+   📄 HTML output generated (--dry-run, not saved)
 ```
-
-**Behavior:**
-
-1. Detects the best adapter for the project (or all adapters with `--merge`)
-2. Runs the adapter's `analyze()` to build a TraceGraph
-3. Optionally builds code dependency graph (`--deps`)
-4. Renders output in the selected format
 
 ### 2.2 `impact`
 
@@ -103,50 +107,9 @@ Options:
   --help              Show this message and exit.
 ```
 
-**Spec resolution order:**
-
-| Priority | Method | Example input → matched |
-|----------|--------|------------------------|
-| 1 | Exact node ID | `docs.en.02-data-model.1.2.1` |
-| 2 | `spec::` prefix | `1.1` → `spec::1.1` |
-| 3 | ID suffix match | `1.2.1` → `docs.en.02-data-model.1.2.1`, `docs.en.03-...1.2.1` ... |
-| 4 | Title substring | `TraceNode` → any spec with "TraceNode" in title |
-| 5 | Heading text | `build_heuristic_graph` → heading containing that text |
-
-When multiple specs match, all are displayed with their implementing artifacts.
-
-**Examples:**
-
-```
-# By ID suffix (finds all specs ending with 1.2.1)
-$ specbridge impact --spec-id 1.2.1
-📄 docs.en.02-data-model.1.2.1: TraceNode
-📄 docs.en.03-adapter-plugin-system.1.2.1: Contract
-📄 docs.en.04-discovery-engine.1.2.1: What It Does
-...
-
-# By title
-$ specbridge impact --spec-id TraceNode
-📄 docs.en.02-data-model.1.2.1: TraceNode
-  [INFERRED] specbridge/core/__init__.py  (implements)
-            ∵ heuristic:funcname: function 'TraceNode' matches spec 'TraceNode'
-
-# By full ID (exact match)
-$ specbridge impact --spec-id docs.en.02-data-model.1.2.1
-
-# Function-level results shown
-$ specbridge impact --spec-id build_heuristic_graph
-📄 docs.en.05-heuristic-matching.1.2: Algorithm: `build_heuristic_graph()`
-  [INFERRED] specbridge/infer/__init__.py  (implements)
-            ∵ heuristic:funcname: function 'build_heuristic_graph' matches spec
-
-# JSON output (handles multiple matches)
-$ specbridge impact --spec-id 1.2.1 --format json
-```
-
 ### 2.3 `coverage`
 
-Display spec coverage statistics.
+Display spec coverage statistics with color-coded indicators.
 
 ```
 Usage: specbridge coverage [OPTIONS]
@@ -159,21 +122,19 @@ Options:
   --help              Show this message and exit.
 ```
 
-**Examples:**
+**Example output:**
 
 ```
 $ specbridge coverage
-📊 Spec Coverage
+📊 Spec Coverage  🟢
 ========================================
   Total specs:  12
   Covered:      10
   Orphan specs: 2
   Coverage:     83.3%
-
-🟡 Orphan specs (no code ref):
-   - docs.auth.auth.3.1
-   - docs.auth.auth.4.0
 ```
+
+Coverage is color-coded: 🟢 ≥80%, 🟡 ≥50%, 🔴 <50%.
 
 ### 2.4 `snapshot`
 
@@ -186,9 +147,18 @@ Usage: specbridge snapshot [OPTIONS]
 
 Options:
   -d, --dir TEXT      Project directory  [default: .]
+  --config TEXT       Path to config file (default: auto-discover .specbridge.yaml / pyproject.toml)
   --reason TEXT       Description of why snapshot was taken
+  --dry-run           Build snapshot without writing to disk
   --help              Show this message and exit.
 ```
+
+**New options (v1.0):**
+
+| Option | Purpose |
+|--------|---------|
+| `--config` | Use a custom config file path instead of auto-discovery |
+| `--dry-run` | Build the snapshot in memory without saving to `.specbridge/snapshot.json` |
 
 **Example:**
 
@@ -211,6 +181,7 @@ Usage: specbridge drift [OPTIONS]
 
 Options:
   -d, --dir TEXT          Project directory  [default: .]
+  --config TEXT           Path to config file (default: auto-discover .specbridge.yaml / pyproject.toml)
   --snapshot TEXT         Path to snapshot file (default: .specbridge/snapshot.json)
   --gate                  Exit with code 1 if drift detected
   --format TEXT           Output format (text, json)  [default: text]
@@ -218,26 +189,58 @@ Options:
   --help                  Show this message and exit.
 ```
 
-**Examples:**
+### 2.6 `status` ✨ New in v1.0
+
+Show a unified project state dashboard: configuration, snapshot status, current coverage, and drift check — all in one command.
 
 ```
-# Compare against saved snapshot
-$ specbridge drift
+Usage: specbridge status [OPTIONS]
 
-# JSON report
-$ specbridge drift --format json
+  Show project state dashboard: config, snapshot, coverage, drift in one view.
 
-# CI gate (exit 1 if drift)
-$ specbridge drift --gate
-
-# Git-based comparison (no snapshot needed)
-$ specbridge drift --git-base main
-
-# Use a specific snapshot file
-$ specbridge drift --snapshot ./backups/snapshot-2026-01.json
+Options:
+  -d, --dir TEXT      Project directory  [default: .]
+  --format TEXT       Output format (text, json)  [default: text]
+  --help              Show this message and exit.
 ```
 
-### 2.6 `validate-boundary`
+**Example output:**
+
+```
+$ specbridge status
+📋 specbridge Status
+==================================================
+
+🔧 Configuration:
+   spec_dirs:        ['docs', 'spec']
+   source_dirs:      ['src', 'lib']
+   exclude_dirs:     15 patterns
+   min_confidence:   0.15
+
+📸 Snapshot:
+   Taken:           2026-07-27T10:30:00
+   Reason:          Before auth refactor
+   Coverage:        83.3%
+   Specs (snap):    12
+   Code files:      45
+
+📊 Current Coverage:
+   Coverage:        83.3%
+   Total specs:     12
+   Covered:         10
+   Orphan specs:    2
+   Orphan code:     1
+
+✅ No drift detected — project state matches snapshot.
+```
+
+**Use cases:**
+
+- **Quick health check** — one command to see if your project is in good shape
+- **CI diagnostics** — `status --format json` for machine parsing
+- **Before/after comparison** — run before and after changes to see impact
+
+### 2.7 `validate-boundary`
 
 Check that all code references stay within declared `_Boundary:_` markers in spec documents.
 
@@ -251,21 +254,9 @@ Options:
   --help              Show this message and exit.
 ```
 
-**Example:**
+### 2.8 `config`
 
-```
-$ specbridge validate-boundary
-⚠️  2 boundary violation(s):
-  auth.auth.1.1 in docs/auth/auth.md
-    declares boundaries: src/auth/
-    but tests/test_external_api.py is outside
-
-Tip: Add _Boundary:_ src/path/ or move the @impl to a file inside the boundary.
-```
-
-### 2.7 `config`
-
-Display the current specbridge configuration and its source.
+Display or validate the current specbridge configuration and its source.
 
 ```
 Usage: specbridge config [OPTIONS]
@@ -274,24 +265,40 @@ Usage: specbridge config [OPTIONS]
 
 Options:
   -d, --dir TEXT      Project directory  [default: .]
+  --config TEXT       Path to config file (default: auto-discover .specbridge.yaml / pyproject.toml)
   --yaml              Output config as YAML
+  --validate          Validate configuration for correctness
   --help              Show this message and exit.
 ```
+
+**New options (v1.0):**
+
+| Option | Purpose |
+|--------|---------|
+| `--config` | Load and display/validate a specific config file |
+| `--validate` | Check that spec directories and source directories exist, and that numeric values are in valid ranges |
+
+**Validation checks:**
+
+* `spec_dirs` and `source_dirs` are not empty
+* Every directory in `spec_dirs` and `source_dirs` actually exists on disk
+* `min_confidence` is between 0.0 and 1.0
+* `max_output_nodes` is ≥ 1
 
 **Example:**
 
 ```
-$ specbridge config
+$ specbridge config --validate
 📋 specbridge config (.specbridge.yaml)
 ========================================
+  ✅ Configuration is valid.
+
   spec_dirs:        ['docs', 'spec', 'specs']
   source_dirs:      ['src', 'lib', 'app']
-  exclude_dirs:     15 patterns
-  min_confidence:   0.15
-  max_output_nodes: 20
+  ...
 ```
 
-### 2.8 `watch`
+### 2.9 `watch`
 
 Watch the project directory for file changes and re-run analysis automatically. Requires `watchdog` package.
 
@@ -305,18 +312,11 @@ Usage: specbridge watch [OPTIONS]
 Options:
   -d, --dir TEXT          Project directory  [default: .]
   --interval FLOAT        Debounce interval in seconds  [default: 2.0]
+  --fast                  Skip function-level matching for faster analysis
   --help                  Show this message and exit.
 ```
 
-**Behavior:**
-
-- Uses `watchdog.observers.Observer` for file system monitoring
-- Debounces rapid changes (default: 2s interval)
-- Ignores `.specbridge/` directory changes to avoid re-trigger loops
-- Runs full analysis on each detected change
-- Clears terminal and re-renders output on each trigger
-
-### 2.9 `plugins`
+### 2.10 `plugins`
 
 List all installed adapter plugins (both built-in and third-party).
 
@@ -330,26 +330,7 @@ Options:
   --help          Show this message and exit.
 ```
 
-**Example:**
-
-```
-$ specbridge plugins
-🔌 Built-in adapters:
-   HeuristicAdapter
-   SpectraAdapter
-
-🔌 Plugin adapters (0):
-   (none)
-```
-
-## 3. Exit Codes
-
-| Code | Meaning |
-|------|---------|
-| 0 | Success (or no drift detected with `--gate`) |
-| 1 | Drift detected (`drift --gate`), no adapter found, or runtime error |
-
-## 4. Call Graph (`specbridge call-graph`)
+### 2.11 `call-graph`
 
 Analyze transitive (indirect) impact for a spec via function-level call graph.
 
@@ -366,32 +347,24 @@ Options:
   --help               Show this message and exit.
 ```
 
-**Examples:**
+### 2.12 `serve`
+
+Start an MCP server for AI agent integration.
 
 ```
-# Basic call graph analysis
-$ specbridge call-graph --spec-id 1.2.1
+Usage: specbridge serve [OPTIONS]
 
-# Deeper traversal
-$ specbridge call-graph --spec-id 1.2.1 --max-depth 5
+  Start MCP server for AI agent integration.
 
-# JSON output for CI/tooling
-$ specbridge call-graph --spec-id 1.2.1 --format json | jq '.transitive_files'
+  Exposes specbridge tools (analyze, impact, coverage, drift, validate_boundary)
+  via the Model Context Protocol. Requires: pip install specbridge[mcp]
+
+Options:
+  -d, --dir TEXT   Project directory  [default: .]
+  --help           Show this message and exit.
 ```
 
-**Output example (text):**
-```
-🔗 Call graph: 13 functions, 28 calls
-
-📄 Spec: docs.tasks.1
-   Direct files:     2
-     📁 src/tasks/service.py
-     📁 tests/test_tasks.py
-   🔗 Transitive files (1 hop(s)): 1
-     → src/tasks/db.py
-```
-
-## 5. Project Setup (`specbridge setup`)
+### 2.13 `setup`
 
 One‑command project bootstrap that creates config, installs hooks, deploys AI agent files, and takes the first snapshot.
 
@@ -406,60 +379,23 @@ Options:
   --help           Show this message and exit.
 ```
 
-**What it does:**
+## 3. Improved Error Messages (v1.0)
 
-| Step | Action |
-|------|--------|
-| 1 | Installs `specbridge` (if not already installed) |
-| 2 | Detects source dirs (`src/`, `lib/`, `app/`) and spec dirs (`docs/`, `spec/`) |
-| 3 | Creates `.specbridge.yaml` with detected paths |
-| 4 | Installs pre-commit drift hook |
-| 5 | Deploys `AGENTS.md` for AI agent workflow guidance |
-| 6 | Deploys Hermes skill (if `~/.hermes/` exists) |
-| 7 | Takes initial snapshot (`.specbridge/snapshot.json`) |
-| 8 | Optionally creates GitHub Actions CI workflow (`--ci`) |
-
-**Examples:**
+When specbridge cannot find a supported project structure, it now provides **actionable hints**:
 
 ```
-# Basic setup (interactive)
-$ specbridge setup
-
-# Setup a specific project
-$ specbridge setup --dir /path/to/project
-
-# Setup with CI workflow
-$ specbridge setup --ci
+❌ No recognized SSD framework found.
+   Hints:
+     • Ensure you are in a project with Markdown spec docs and source code.
+     • Default spec dirs: docs/, spec/, specs/
+     • Default source dirs: src/, lib/, app/
+     • Create .specbridge.yaml to configure custom directories.
+     • Run 'specbridge config' to see current discovered settings.
 ```
 
-Also available as a standalone script (no `pip install` needed):
+## 4. Exit Codes
 
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/nekolife1984/specbridge/main/scripts/setup.sh)
-```
-
-## 6. Plugin SDK (`specbridge plugins`)
-
-The `plugins` command discovers adapters registered via Python entry points:
-
-```
-$ pip install my-specbridge-plugin
-$ specbridge plugins --refresh
-🔌 Plugin adapters (1):
-   MyAdapter (from my-specbridge-plugin)
-```
-
-## 7. Help
-
-Every command supports `--help`:
-
-```
-$ specbridge analyze --help
-$ specbridge drift --help
-```
-
-The top-level help shows all available commands:
-
-```
-$ specbridge --help
-```
+| Code | Meaning |
+|------|---------|
+| 0 | Success (or no drift detected with `--gate`) |
+| 1 | Drift detected (`drift --gate`), no adapter found, config validation failure, or runtime error |
