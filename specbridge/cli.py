@@ -352,9 +352,9 @@ def _drift_git(project_dir: str, git_base: str, gate: bool) -> None:
     affected: list[dict[str, Any]] = []
     for cf in changed:
         for nid, node in graph.nodes.items():
-            if node.type == NodeType.CODE and node.source.file == cf:
+            if node.type in (NodeType.CODE, NodeType.TEST) and node.source.file == cf:
                 for edge in graph.edges_from(nid):
-                    if edge.relation.value in ("implements",):
+                    if edge.relation.value in ("implements", "verifies", "satisfies"):
                         affected.append({"file": cf, "spec_id": edge.dst_id})
 
     if not affected:
