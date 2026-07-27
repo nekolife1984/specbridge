@@ -13,7 +13,7 @@ fi
 # ── Helper: install a single hook ──
 install_hook() {
   SRC="$1"
-  NAME=$(basename "$SRC" .sh)
+  NAME=$(basename "$SRC" .specbridge.sh)  # e.g., "pre-commit.specbridge.sh" → "pre-commit"
   DST=".git/hooks/$NAME"
 
   if [ ! -f "$SRC" ]; then
