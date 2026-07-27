@@ -165,6 +165,7 @@ fi
 
 # ── 6. Deploy Hermes skill ────────────────────────────────────────────────────
 header "6. Deploying Hermes skill"
+SKILL_DEPLOYED=false
 if [ -d "$HOME/.hermes/skills" ]; then
     SKILL_DIR="$HOME/.hermes/skills/software-development/specbridge"
     if [ -d ".agents/skills/specbridge" ]; then
@@ -172,11 +173,17 @@ if [ -d "$HOME/.hermes/skills" ]; then
         mkdir -p "$HOME/.hermes/skills/software-development"
         ln -sf "$(pwd)/.agents/skills/specbridge" "$SKILL_DIR"
         ok "Hermes skill linked (repo → $SKILL_DIR)"
+        SKILL_DEPLOYED=true
     elif command -v curl >/dev/null 2>&1; then
         mkdir -p "$SKILL_DIR"
         SKILL_URL="https://raw.githubusercontent.com/nekolife1984/specbridge/main/.agents/skills/specbridge/SKILL.md"
         curl -fsSL "$SKILL_URL" -o "$SKILL_DIR/SKILL.md"
-        ok "Hermes skill downloaded → $SKILL_DIR"
+        if [ -f "$SKILL_DIR/SKILL.md" ]; then
+            ok "Hermes skill downloaded → $SKILL_DIR"
+            SKILL_DEPLOYED=true
+        else
+            warn "Download failed — check network or install manually"
+        fi
     else
         warn "Cannot download Hermes skill (no curl). Install manually:"
         warn "  mkdir -p ~/.hermes/skills/software-development/specbridge"
@@ -204,10 +211,38 @@ fi
 
 # ── 8. CI workflow (optional) ─────────────────────────────────────────────────
 header "8. CI workflow (GitHub Actions)"
+CI_FILE=""
 if [ -d ".github/workflows" ]; then
     CI_FILE=".github/workflows/specbridge-trace.yml"
     if [ -f "$CI_FILE" ]; then
         ok "CI workflow already exists ($CI_FILE)"
+    elif [ "${CI_SETUP:-}" = "1" ]; then
+        # Non‑interactive mode (specbridge setup --ci): auto‑create
+        mkdir -p ".github/workflows"
+        cat > "$CI_FILE" <<'CIYAML'
+name: specbridge trace-gate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  trace-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install git+https://github.com/nekolife1984/specbridge.git
+      - run: specbridge snapshot
+      - run: specbridge drift --gate
+      - run: specbridge analyze --merge --top 10
+CIYAML
+        ok "CI workflow created: $CI_FILE"
+        printf "\n   ${YELLOW}⚠️   Remember to add 'trace-gate' to branch protection rules!${NC}\n"
     else
         printf "${YELLOW}?${NC} Add specbridge traceability gate to CI? [Y/n] "
         read -r CI_CHOICE
@@ -232,7 +267,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install specbridge
+      - run: pip install git+https://github.com/nekolife1984/specbridge.git
       - run: specbridge snapshot
       - run: specbridge drift --gate
       - run: specbridge analyze --merge --top 10
@@ -248,8 +283,12 @@ fi
 
 # ── 9. Graphify adapter (optional) ─────────────────────────────────────────────
 header "9. Graphify adapter (AST code graph)"
-printf "${YELLOW}?${NC} Install graphify for deeper AST-based code analysis? [y/N] "
-read -r GFX_CHOICE
+if [ "${CI_SETUP:-}" != "1" ]; then
+    printf "${YELLOW}?${NC} Install graphify for deeper AST-based code analysis? [y/N] "
+    read -r GFX_CHOICE
+else
+    GFX_CHOICE="n"
+fi
 case "$GFX_CHOICE" in
     y|Y|yes)
         if command -v pipx >/dev/null 2>&1; then
@@ -294,6 +333,6 @@ done)
 
   ${BOLD}AI agents:${NC}
     • AGENTS.md → read by Hermes, OpenCode, Claude Code, Cursor, Codex
-    • Hermes skill → load with: ${CYAN}skill_view(name='software-development/specbridge')${NC}
+$(if [ "$SKILL_DEPLOYED" = "true" ]; then echo "    • Hermes skill → load with: ${CYAN}skill_view(name='specbridge')${NC}"; fi)
 
 SUMMARY

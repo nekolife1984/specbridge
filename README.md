@@ -210,8 +210,8 @@ That's it. No tags, no annotations — specbridge infers what it can out of the 
 specbridge includes a **pre-commit hook** that automatically checks for trace drift before every commit. If the code has changed but the corresponding spec hasn't been updated (or vice versa), the commit is blocked.
 
 ```
-git commit ─→ specbridge drift --git-base HEAD --gate ─→ driftなし → コミットOK
-                                                     └→ driftあり → ❌ コミットブロック
+git commit ─→ specbridge drift --git-base HEAD --gate ─→ no drift → commit OK
+                                                     └→ drift detected → ❌ commit blocked
 ```
 
 **Install:**
@@ -280,13 +280,13 @@ To make **any AI agent** (Hermes, Claude Code, OpenCode, Cursor, Codex) follow s
 
 This project uses **specbridge** for spec↔code traceability.
 
-## 必須ルール（コード変更前後）
+## Required rules (before and after every code change)
 
-1. `specbridge snapshot --reason "..."` で現状を保存
-2. コードを書く
-3. `specbridge drift` で解離チェック
-4. 解離があれば設計書を先に直す
-5. `git commit`（pre-commit hook が自動チェック）
+1. `specbridge snapshot --reason "..."` — save the current state
+2. Write code (and update specs if needed)
+3. `specbridge drift` — check for drift
+4. If drift is detected, update the design document first
+5. `git commit` (pre-commit hook auto-checks)
 ```
 
 See [AGENTS.md](AGENTS.md) in the specbridge repo for a complete example.
