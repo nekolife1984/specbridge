@@ -27,6 +27,7 @@ class SpecbridgeConfig:
     exclude_dirs: set[str]      # Default: [".git", "node_modules", ".venv", ...]
     min_confidence: float       # Default: 0.15
     max_output_nodes: int       # Default: 20
+    min_coverage: float         # Default: 50.0 (for coverage --gate)
 ```
 
 ### 2.2 Explicit Config Path (`--config` CLI Option) ✨ New in v1.0
@@ -92,6 +93,7 @@ exclude_dirs:
   - .specbridge
 min_confidence: 0.15
 max_output_nodes: 40
+min_coverage: 50.0
 ````
 ```
 
@@ -104,6 +106,7 @@ spec_dirs = ["docs", "spec", "specs"]
 source_dirs = ["src", "lib", "app"]
 min_confidence = 0.15
 max_output_nodes = 20
+min_coverage = 50.0
 ```
 
 ### 2.5 Config Loading Logic
@@ -180,7 +183,27 @@ $ specbridge config --config bad-config.yaml --validate
   • spec_dir 'nonexistent-docs' does not exist at /path/nonexistent-docs
 ```
 
-### 2.7 Configuration Display
+### 2.8 Coverage Gate Threshold (`min_coverage`) ✨ New in v1.1
+
+The `min_coverage` setting defines the minimum coverage percentage for `specbridge coverage --gate`:
+
+```yaml
+min_coverage: 50.0   # Fail if coverage drops below 50%
+```
+
+Default: `50.0`. Use in combination with `min_coverage` from config or `--min-coverage` CLI override.
+
+**CI workflow example:**
+
+```yaml
+- run: specbridge coverage --gate          # uses config threshold
+  # or
+- run: specbridge coverage --gate --min-coverage 80  # overrides to 80%
+```
+
+Together with `specbridge drift --gate`, this forms a complete CI quality gate:
+- `drift --gate` — blocks if specs/code have diverged from the snapshot
+- `coverage --gate` — blocks if spec coverage is below threshold
 
 The `specbridge config` command shows the resolved configuration and its source:
 

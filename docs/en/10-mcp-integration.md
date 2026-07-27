@@ -1,7 +1,7 @@
 # MCP Integration
 
-> **Date:** 2026-07-26
-> **Version:** 0.0.1.dev0
+> **Date:** 2026-07-28
+> **Version:** 1.1.0
 
 ## 1. Overview
 
@@ -10,7 +10,7 @@ specbridge provides an MCP (Model Context Protocol) server that exposes its anal
 ```mermaid
 flowchart TB
     AGENT["AI Agent<br/>(Claude, Hermes, Cursor, etc.)"]
-    MCP_SERV["specbridge MCP Server<br/>(mcp_server.py)<br/><br/>Tools:<br/>- analyze<br/>- impact<br/>- coverage<br/>- drift<br/>- validate_boundary"]
+    MCP_SERV["specbridge MCP Server<br/>(mcp_server.py)<br/><br/>Tools:<br/>- analyze<br/>- impact<br/>- coverage<br/>- drift<br/>- validate_boundary<br/>- gate"]
     PROJ["Project Directory<br/>(read-only)"]
 
     AGENT -->|"MCP Protocol (stdio)"| MCP_SERV
@@ -100,6 +100,15 @@ Check that code refs stay within declared `_Boundary:_` markers.
 - **Returns**: List of violations or "all clear"
 - **Use case**: Agent verifies boundary compliance after code changes
 
+### 3.6 `gate` ✨ New in v1.1
+
+Check if coverage meets the minimum threshold — a CI gate for spec coverage.
+
+- **Optional parameter**: `min_coverage` (float) — override the threshold from config
+- **Returns**: Pass/fail message with current coverage percentage
+- **Exit behavior**: Returns failure text when coverage is below threshold (the MCP client can check the message content)
+- **Use case**: Agent checks coverage gate before approving a PR
+
 ## 4. Tool Definitions (MCP Schema)
 
 ```python
@@ -146,6 +155,7 @@ flowchart TB
     COV["coverage: compute coverage_summary + orphans"]
     DRI["drift: load snapshot + compute_drift (or take new snapshot)"]
     VB["validate_boundary: check code refs against _Boundary:_ markers"]
+    GATE["gate: check coverage against min_coverage threshold"]
 
     RESP["Return TextContent response"]
 
@@ -155,11 +165,13 @@ flowchart TB
     BRANCH -->|coverage| COV
     BRANCH -->|drift| DRI
     BRANCH -->|validate_boundary| VB
+    BRANCH -->|gate| GATE
     ANA --> RESP
     IMP --> RESP
     COV --> RESP
     DRI --> RESP
     VB --> RESP
+    GATE --> RESP
 ```
 
 ## 6. Integration Patterns

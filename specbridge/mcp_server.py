@@ -107,6 +107,19 @@ def create_mcp_server(project_dir: str = ".") -> object:
                 description="Check code refs stay within declared _Boundary:_ markers",
                 inputSchema={"type": "object", "properties": {}},
             ),
+            Tool(
+                name="gate",
+                description="Check if coverage meets the minimum threshold (CI gate)",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "min_coverage": {
+                            "type": "number",
+                            "description": "Override min_coverage threshold (default: from config)",
+                        },
+                    },
+                },
+            ),
         ]
 
     @server.call_tool()  # type: ignore[untyped-decorator]
@@ -243,6 +256,15 @@ def create_mcp_server(project_dir: str = ".") -> object:
                 type="text",
                 text=f"Boundary violations ({len(boundary_issues)}):\n" + "\n".join(boundary_issues),
             )]
+
+        elif name == "gate":
+            from specbridge.analyzers import coverage_gate_check
+            min_cov = arguments.get("min_coverage", None)
+            cfg = _load_config()
+            threshold = min_cov if min_cov is not None else cfg.min_coverage
+            graph = _analyze_graph()
+            gate_result = coverage_gate_check(graph, threshold)
+            return [TextContent(type="text", text=gate_result["message"])]
 
         else:
             raise ValueError(f"Unknown tool: {name}")

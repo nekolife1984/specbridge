@@ -162,3 +162,62 @@ class TestFindOrphans:
         orphans = find_orphan_code(g)
         # DESIGN nodes should not appear in CODE orphan list
         assert len(orphans) == 0
+
+
+class TestCoverageGateCheck:
+    """Coverage gate check."""
+
+    def test_gate_passes(self, three_spec_graph: TraceGraph) -> None:
+        from specbridge.analyzers import coverage_gate_check
+        result = coverage_gate_check(three_spec_graph, min_coverage=30.0)
+        assert result["passed"] is True
+        assert result["coverage_pct"] == pytest.approx(33.3, rel=0.1)
+        assert "passed" in result["message"]
+
+    def test_gate_fails(self, three_spec_graph: TraceGraph) -> None:
+        from specbridge.analyzers import coverage_gate_check
+        result = coverage_gate_check(three_spec_graph, min_coverage=50.0)
+        assert result["passed"] is False
+        assert result["coverage_pct"] == pytest.approx(33.3, rel=0.1)
+        assert "FAILED" in result["message"]
+
+    def test_gate_perfect_coverage(self) -> None:
+        from specbridge.analyzers import coverage_gate_check
+        g = TraceGraph()
+        g.add_node(TraceNode(id="1", type=NodeType.SPEC, title="Auth",
+                             source=SourceRef(file="docs/auth.md"),
+                             framework_origin="heuristic"))
+        g.add_node(TraceNode(id="login.py", type=NodeType.CODE, title="login",
+                             source=SourceRef(file="login.py"),
+                             framework_origin="heuristic"))
+        g.add_edge(TraceEdge(src_id="login.py", dst_id="1",
+                             relation=EdgeRelation.IMPLEMENTS,
+                             strength=EdgeStrength.EXPLICIT))
+        result = coverage_gate_check(g, min_coverage=100.0)
+        assert result["passed"] is True
+        assert result["coverage_pct"] == 100.0
+
+    def test_gate_empty_graph(self) -> None:
+        from specbridge.analyzers import coverage_gate_check
+        g = TraceGraph()
+        result = coverage_gate_check(g, min_coverage=50.0)
+        assert result["passed"] is False
+        assert result["coverage_pct"] == 0.0
+        assert result["total"] == 0
+
+    def test_gate_default_threshold(self) -> None:
+        from specbridge.analyzers import coverage_gate_check
+        g = TraceGraph()
+        # Default threshold is 50.0
+        result = coverage_gate_check(g)
+        assert result["min_coverage"] == 50.0
+
+    def test_gate_result_structure(self, three_spec_graph: TraceGraph) -> None:
+        from specbridge.analyzers import coverage_gate_check
+        result = coverage_gate_check(three_spec_graph, min_coverage=30.0)
+        assert "passed" in result
+        assert "coverage_pct" in result
+        assert "covered" in result
+        assert "total" in result
+        assert "min_coverage" in result
+        assert "message" in result

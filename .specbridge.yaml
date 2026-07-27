@@ -35,3 +35,4 @@ exclude_dirs:
   - htmlcov
 min_confidence: 0.15
 max_output_nodes: 40
+min_coverage: 50.0

@@ -1,7 +1,7 @@
 # MCP統合
 
-> **日付:** 2026-07-26
-> **バージョン:** 0.0.1.dev0
+> **日付:** 2026-07-28
+> **バージョン:** 1.1.0
 
 ## 1. 概要
 
@@ -10,7 +10,7 @@ specbridgeはMCP（Model Context Protocol）サーバを提供し、その分析
 ```mermaid
 flowchart TB
     AGENT["AI Agent<br/>(Claude, Hermes, Cursor, etc.)"]
-    MCP_SERV["specbridge MCP Server<br/>(mcp_server.py)<br/><br/>ツール:<br/>- analyze<br/>- impact<br/>- coverage<br/>- drift<br/>- validate_boundary"]
+    MCP_SERV["specbridge MCP Server<br/>(mcp_server.py)<br/><br/>ツール:<br/>- analyze<br/>- impact<br/>- coverage<br/>- drift<br/>- validate_boundary<br/>- gate"]
     PROJ["プロジェクトDir<br/>(読み取り専用)"]
 
     AGENT -->|"MCP Protocol (stdio)"| MCP_SERV
@@ -97,6 +97,15 @@ pip install specbridge[mcp]
 - **戻り値**: 違反のリストまたは「すべてクリア」
 - **ユースケース**: エージェントがコード変更後にバウンダリ準拠を検証
 
+### 3.6 `gate` ✨ v1.1 新機能
+
+カバレッジが最低閾値を満たしているかチェック — specカバレッジ用のCIゲート。
+
+- **オプションパラメータ**: `min_coverage`（数値）— 設定ファイルの閾値を上書き
+- **戻り値**: 現在のカバレッジ率を含む合格/不合格メッセージ
+- **終了動作**: カバレッジが閾値未満の場合に失敗テキストを返す（MCPクライアントはメッセージ内容を確認可能）
+- **ユースケース**: エージェントがPR承認前にカバレッジゲートを確認
+
 ## 4. ツール定義（MCPスキーマ）
 
 ```python
@@ -143,6 +152,7 @@ flowchart TB
     COV["coverage用: coverage_summary + 孤立を計算"]
     DRI["drift用: スナップショット読み込み + compute_drift（または新規スナップショット）"]
     VB["validate_boundary用: _Boundary:_ マーカーに対してコード参照をチェック"]
+    GATE["gate用: カバレッジを min_coverage 閾値に対してチェック"]
 
     RESP["TextContent レスポンスを返す"]
 
@@ -152,11 +162,13 @@ flowchart TB
     BRANCH -->|coverage| COV
     BRANCH -->|drift| DRI
     BRANCH -->|validate_boundary| VB
+    BRANCH -->|gate| GATE
     ANA --> RESP
     IMP --> RESP
     COV --> RESP
     DRI --> RESP
     VB --> RESP
+    GATE --> RESP
 ```
 
 ## 6. 統合パターン

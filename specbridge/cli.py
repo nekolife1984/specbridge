@@ -239,10 +239,17 @@ def impact(dir: str, spec_id: str, output_fmt: str, call_graph: bool, max_depth:
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
 @click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
               help="Output format", show_default=True)
-def coverage(dir: str, output_fmt: str) -> None:
+@click.option("--gate", is_flag=True, default=False,
+              help="Exit with code 1 if coverage is below min_coverage threshold",
+              show_default=True)
+@click.option("--min-coverage", type=float, default=None,
+              help="Override min_coverage threshold for --gate (default: from config)",
+              show_default=True)
+def coverage(dir: str, output_fmt: str, gate: bool, min_coverage: float | None) -> None:
     """Show spec coverage statistics."""
     from specbridge.adapters import detect_adapter
-    from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
+    from specbridge.analyzers import coverage_gate_check, coverage_summary, find_orphan_code, find_orphan_specs
+    from specbridge.config import SpecbridgeConfig
 
     root = Path(dir).resolve()
     adapter = detect_adapter(str(root))
@@ -252,9 +259,19 @@ def coverage(dir: str, output_fmt: str) -> None:
         raise click.Abort()
 
     graph = adapter.analyze(str(root))
+    cfg = SpecbridgeConfig.load(str(root))
     cov = coverage_summary(graph)
     orphans_spec = find_orphan_specs(graph)
     orphans_code = find_orphan_code(graph)
+
+    # --gate mode: check threshold, exit with code if below
+    if gate:
+        threshold = min_coverage if min_coverage is not None else cfg.min_coverage
+        result = coverage_gate_check(graph, threshold)
+        click.echo(result["message"])
+        if not result["passed"]:
+            raise SystemExit(1)
+        return
 
     if output_fmt == "json":
         import json as _json

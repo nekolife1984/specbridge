@@ -1,5 +1,7 @@
 """Analysis utilities."""
 
+from typing import Any
+
 from specbridge.core import EdgeRelation, NodeType, TraceGraph
 
 
@@ -46,4 +48,39 @@ def coverage_summary(graph: TraceGraph) -> dict[str, int | float]:
         "covered": covered,
         "orphan": len(specs) - covered,
         "coverage_pct": round(covered / len(specs) * 100, 1),
+    }
+
+
+def coverage_gate_check(
+    graph: TraceGraph,
+    min_coverage: float = 50.0,
+) -> dict[str, Any]:
+    """Check coverage against a minimum threshold.
+
+    Returns a dict with:
+      - "passed": True if coverage >= min_coverage
+      - "coverage_pct": current coverage percentage
+      - "min_coverage": the threshold used
+      - "message": human-readable result
+    """
+    cov = coverage_summary(graph)
+    pct = float(cov["coverage_pct"])
+    passed = pct >= min_coverage
+    if passed:
+        message = (
+            f"✅ Coverage gate passed: {pct}% >= {min_coverage}% "
+            f"({cov['covered']}/{cov['total']} specs covered)"
+        )
+    else:
+        message = (
+            f"❌ Coverage gate FAILED: {pct}% < {min_coverage}% "
+            f"({cov['covered']}/{cov['total']} specs covered)"
+        )
+    return {
+        "passed": passed,
+        "coverage_pct": pct,
+        "covered": cov["covered"],
+        "total": cov["total"],
+        "min_coverage": min_coverage,
+        "message": message,
     }

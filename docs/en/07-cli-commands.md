@@ -122,9 +122,13 @@ Usage: specbridge coverage [OPTIONS]
   Show spec coverage statistics.
 
 Options:
-  -d, --dir TEXT      Project directory  [default: .]
-  --format TEXT       Output format (text, json)  [default: text]
-  --help              Show this message and exit.
+  -d, --dir TEXT          Project directory  [default: .]
+  --format TEXT           Output format (text, json)  [default: text]
+  --gate                  Exit with code 1 if coverage is below min_coverage
+                          threshold
+  --min-coverage FLOAT    Override min_coverage threshold for --gate
+                          (default: from config)
+  --help                  Show this message and exit.
 ```
 
 **Example output:**
@@ -140,6 +144,22 @@ $ specbridge coverage
 ```
 
 Coverage is color-coded: 🟢 ≥80%, 🟡 ≥50%, 🔴 <50%.
+
+**Coverage gate (CI mode):**
+
+```
+$ specbridge coverage --gate
+✅ Coverage gate passed: 83.3% >= 50.0% (10/12 specs covered)
+$ echo $?
+0
+
+$ specbridge coverage --gate --min-coverage 90
+❌ Coverage gate FAILED: 83.3% < 90.0% (10/12 specs covered)
+$ echo $?
+1
+```
+
+The `--gate` flag turns `specbridge coverage` into a CI gate: it exits with code 0 if coverage meets the threshold, or 1 if below. Use `--min-coverage` to override the threshold from config for a single run. Combined with `drift --gate`, this provides a complete pre-commit / CI quality gate.
 
 ### 2.4 `snapshot`
 
@@ -605,5 +625,5 @@ When specbridge cannot find a supported project structure, it now provides **act
 
 | Code | Meaning |
 |------|---------|
-| 0 | Success (or no drift detected with `--gate`) |
-| 1 | Drift detected (`drift --gate`), no adapter found, config validation failure, or runtime error |
+| 0 | Success (or no drift detected with `--gate`, coverage >= threshold with `coverage --gate`) |
+| 1 | Drift detected (`drift --gate`), coverage below threshold (`coverage --gate`), no adapter found, config validation failure, or runtime error |

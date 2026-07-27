@@ -22,6 +22,7 @@ DEFAULT_EXCLUDE_DIRS = {
 }
 DEFAULT_MIN_CONFIDENCE = 0.15
 DEFAULT_MAX_OUTPUT_NODES = 20  # truncation limit for --top
+DEFAULT_MIN_COVERAGE = 50.0  # minimum coverage percentage for --gate
 
 
 @dataclass
@@ -34,6 +35,7 @@ class SpecbridgeConfig:
     source_files: list[str] = field(default_factory=list)
     min_confidence: float = DEFAULT_MIN_CONFIDENCE
     max_output_nodes: int = DEFAULT_MAX_OUTPUT_NODES
+    min_coverage: float = DEFAULT_MIN_COVERAGE
 
     @classmethod
     def load(cls, project_dir: str | Path, config_path: str | Path | None = None) -> SpecbridgeConfig:
@@ -136,4 +138,5 @@ class SpecbridgeConfig:
             source_files=overrides.get("source_files", base.source_files),
             min_confidence=_safe_float(overrides.get("min_confidence"), base.min_confidence),
             max_output_nodes=_safe_int(overrides.get("max_output_nodes"), base.max_output_nodes),
+            min_coverage=_safe_float(overrides.get("min_coverage"), base.min_coverage),
         )

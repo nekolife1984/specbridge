@@ -31,6 +31,7 @@ class SpecbridgeConfig:
     exclude_dirs: set[str]      # デフォルト: [".git", "node_modules", ".venv", ...]
     min_confidence: float       # デフォルト: 0.15
     max_output_nodes: int       # デフォルト: 20
+    min_coverage: float         # デフォルト: 50.0（coverage --gate 用）
 ```
 
 ### 2.2 明示的な設定パス（`--config` CLIオプション） ✨ v1.0新機能
@@ -97,6 +98,7 @@ exclude_dirs:
   - .specbridge
 min_confidence: 0.15
 max_output_nodes: 40
+min_coverage: 50.0
 ````
 ```
 
@@ -109,6 +111,7 @@ spec_dirs = ["docs", "spec", "specs"]
 source_dirs = ["src", "lib", "app"]
 min_confidence = 0.15
 max_output_nodes = 20
+min_coverage = 50.0
 ```
 
 ### 2.5 設定読み込みロジック
@@ -185,7 +188,27 @@ $ specbridge config --config bad-config.yaml --validate
   • spec_dir 'nonexistent-docs' does not exist at /path/nonexistent-docs
 ```
 
-### 2.7 設定表示
+### 2.8 カバレッジゲート閾値（`min_coverage`）✨ v1.1 新機能
+
+`min_coverage` 設定は `specbridge coverage --gate` の最低カバレッジ率を定義します：
+
+```yaml
+min_coverage: 50.0   # カバレッジが50%未満で失敗
+```
+
+デフォルト: `50.0`。設定ファイルの `min_coverage` または `--min-coverage` CLIオプションで上書き可能です。
+
+**CIワークフロー例:**
+
+```yaml
+- run: specbridge coverage --gate          # 設定ファイルの閾値を使用
+  # または
+- run: specbridge coverage --gate --min-coverage 80  # 80%に上書き
+```
+
+`specbridge drift --gate` と組み合わせることで、完全なCI品質ゲートになります：
+- `drift --gate` — スナップショットからspec/codeが乖離している場合にブロック
+- `coverage --gate` — specカバレッジが閾値未満の場合にブロック
 
 `specbridge config` コマンドは解決された設定とそのソースを表示します：
 

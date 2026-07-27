@@ -122,9 +122,12 @@ Usage: specbridge coverage [OPTIONS]
   仕様カバレッジ統計を表示
 
 Options:
-  -d, --dir TEXT      プロジェクトディレクトリ  [default: .]
-  --format TEXT       出力形式 (text, json)  [default: text]
-  --help              ヘルプを表示
+  -d, --dir TEXT          プロジェクトディレクトリ  [default: .]
+  --format TEXT           出力形式 (text, json)  [default: text]
+  --gate                  カバレッジが min_coverage 閾値未満の場合に
+                          終了コード1で終了
+  --min-coverage FLOAT    --gate の閾値を上書き（デフォルト: configから）
+  --help                  ヘルプを表示
 ```
 
 **出力例:**
@@ -140,6 +143,22 @@ $ specbridge coverage
 ```
 
 カバレッジは色分けされます：🟢 ≥80%、🟡 ≥50%、🔴 <50%。
+
+**カバレッジゲート（CIモード）:**
+
+```
+$ specbridge coverage --gate
+✅ Coverage gate passed: 83.3% >= 50.0% (10/12 specs covered)
+$ echo $?
+0
+
+$ specbridge coverage --gate --min-coverage 90
+❌ Coverage gate FAILED: 83.3% < 90.0% (10/12 specs covered)
+$ echo $?
+1
+```
+
+`--gate` フラグは `specbridge coverage` をCIゲートに変えます：カバレッジが閾値以上なら終了コード0、未満なら1で終了します。`--min-coverage` で設定ファイルの閾値を1回だけ上書きできます。`drift --gate` と組み合わせることで、完全なpre-commit/CI品質ゲートになります。
 
 ### 2.4 `snapshot`
 
@@ -603,5 +622,5 @@ specbridgeがサポート対象のプロジェクト構造を見つけられな�
 
 | コード | 意味 |
 |-------|------|
-| 0 | 成功（または `--gate` でドリフトなし） |
-| 1 | ドリフト検出（`drift --gate`）、アダプタが見つからない、設定検証失敗、または実行時エラー |
+| 0 | 成功（または `--gate` でドリフトなし、`coverage --gate` でカバレッジ閾値以上） |
+| 1 | ドリフト検出（`drift --gate`）、カバレッジが閾値未満（`coverage --gate`）、アダプタが見つからない、設定検証失敗、または実行時エラー |
