@@ -30,6 +30,7 @@ Commands:
   serve              AIエージェント統合用のMCPサーバーを起動
   call-graph         コールグラフを構築し推移的（間接）影響を表示
   setup              ワンコマンドセットアップ（設定、フック、AGENTS.md、スナップショット）
+  shell-completion   シェル補完スクリプトを生成またはインストール
 ```
 
 ## 2. コマンド
@@ -240,7 +241,69 @@ $ specbridge status
 - **CI診断** — `status --format json` で機械処理
 - **変更前/後比較** — 変更の前後に実行して影響を確認
 
-### 2.7 `validate-boundary`
+### 2.7 `shell-completion` ✨ 新機能
+
+シェル補完スクリプト（Bash/Zsh/Fish）を生成またはインストールします。
+
+```
+Usage: specbridge shell-completion [OPTIONS]
+
+  Generate or install shell completion scripts.
+
+  specbridge uses Click's built-in shell completion.  After installing,
+  press TAB to auto-complete commands, options, and arguments.
+
+  Quick start:   specbridge shell-completion --install
+
+  Or manually:   eval "$(specbridge shell-completion --show --shell bash)"
+
+Options:
+  --shell [bash|zsh|fish]  ターゲットシェル（デフォルト: SHELL環境変数から自動検出）
+  --install                補完を永続的にインストール（シェルrcファイルに追記）
+  --show                   補完スクリプトをstdoutに出力（手動インストール用）
+  --help                   このメッセージを表示
+```
+
+**使用例:**
+
+```bash
+# シェルを自動検出して手順を表示
+$ specbridge shell-completion
+
+# 永続的にインストール
+$ specbridge shell-completion --install
+
+# 特定のシェルを指定してセットアップ
+$ eval "$(specbridge shell-completion --show --shell zsh)"
+```
+
+**動作仕組み:**
+
+specbridgeは Click 8.1+ のビルトインシェル補完を `_SPECBRIDGE_COMPLETE` 環境変数経由で使用します。この変数が設定されてCLIが呼び出されると、Clickはコマンド実行の代わりに補完スクリプトを出力します。
+
+**シェル別サポート:**
+
+| シェル | RCファイル | 補完環境変数 |
+|-------|-----------|-------------|
+| Bash | `~/.bashrc` | `_SPECBRIDGE_COMPLETE=bash_source` |
+| Zsh | `~/.zshrc` | `_SPECBRIDGE_COMPLETE=zsh_source` |
+| Fish | `~/.config/fish/config.fish` | `_SPECBRIDGE_COMPLETE=fish_source` |
+
+インストール後、TABキーでコマンドやオプションを補完できます：
+
+```
+$ specbridge [TAB]
+analyze       call-graph    config        coverage      drift
+impact        plugins       serve         setup         shell-completion
+snapshot      status        validate-boundary  watch
+
+$ specbridge analyze --[TAB]
+--call-graph  --config    --deps      --dir       --dry-run
+--fast        --format    --help      --merge     --summary-only
+--top
+```
+
+### 2.8 `validate-boundary`
 
 すべてのコード参照が仕様書で宣言された `_Boundary:_` マーカー内にあることをチェックします。
 
@@ -254,7 +317,7 @@ Options:
   --help              ヘルプを表示
 ```
 
-### 2.8 `config`
+### 2.9 `config`
 
 現在のspecbridge設定とそのソースを表示または検証します。
 
@@ -298,7 +361,7 @@ $ specbridge config --validate
   ...
 ```
 
-### 2.9 `watch`
+### 2.10 `watch`
 
 プロジェクトディレクトリのファイル変更を監視し、自動的に再分析します。`watchdog` パッケージが必要。
 
@@ -316,7 +379,7 @@ Options:
   --help                  ヘルプを表示
 ```
 
-### 2.10 `plugins`
+### 2.11 `plugins`
 
 インストールされているすべてのアダプタプラグイン（内蔵およびサードパーティ）を一覧表示します。
 
@@ -330,7 +393,7 @@ Options:
   --help          ヘルプを表示
 ```
 
-### 2.11 `call-graph`
+### 2.12 `call-graph`
 
 関数レベルのコールグラフを構築し、specに対する推移的（間接）影響を分析します。
 
@@ -347,7 +410,7 @@ Options:
   --help               ヘルプを表示
 ```
 
-### 2.12 `serve`
+### 2.13 `serve`
 
 AIエージェント統合用のMCPサーバーを起動します。
 
@@ -364,7 +427,7 @@ Options:
   --help           ヘルプを表示
 ```
 
-### 2.13 `setup`
+### 2.14 `setup`
 
 ワンコマンドでプロジェクトをブートストラップ。設定作成、フックインストール、AIエージェント用ファイル展開、初回スナップショットを自動実行します。
 

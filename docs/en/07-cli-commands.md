@@ -5,7 +5,7 @@
 
 ## 1. Overview
 
-specbridge provides a Click-based CLI with **13 commands** for traceability analysis, drift detection, and project management.
+specbridge provides a Click-based CLI with **14 commands** for traceability analysis, drift detection, and project management.
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
@@ -18,18 +18,19 @@ Options:
 
 Commands:
   analyze            Analyze a project and build a trace graph.
-  impact             Find what implements a given spec.
-  coverage           Show spec coverage statistics.
-  snapshot           Take a structural snapshot of specs and code.
-  drift              Detect changes between snapshot and current state.
-  status             Show project state dashboard (config, snapshot, coverage, drift).
-  validate-boundary  Validate that code refs stay within declared _Boundary:_ markers.
+  call-graph         Build call graph and show transitive (indirect) impact for a spec.
   config             Show / validate current specbridge configuration.
-  watch              Watch project for changes and re-analyze automatically.
+  coverage           Show spec coverage statistics.
+  drift              Detect changes between snapshot and current state.
+  impact             Find what implements a given spec.
   plugins            List installed specbridge adapter plugins.
   serve              Start MCP server for AI agent integration.
-  call-graph         Build call graph and show transitive (indirect) impact for a spec.
   setup              One‑command project setup (config, hook, AGENTS.md, snapshot).
+  shell-completion   Generate or install shell completion scripts.
+  snapshot           Take a structural snapshot of specs and code.
+  status             Show project state dashboard (config, snapshot, coverage, drift).
+  validate-boundary  Validate that code refs stay within declared _Boundary:_ markers.
+  watch              Watch project for changes and re-analyze automatically.
 ```
 
 ## 2. Commands
@@ -240,7 +241,71 @@ $ specbridge status
 - **CI diagnostics** — `status --format json` for machine parsing
 - **Before/after comparison** — run before and after changes to see impact
 
-### 2.7 `validate-boundary`
+### 2.7 `shell-completion` ✨ New
+
+Generate or install shell completion scripts for Bash, Zsh, and Fish.
+
+```
+Usage: specbridge shell-completion [OPTIONS]
+
+  Generate or install shell completion scripts.
+
+  specbridge uses Click's built-in shell completion.  After installing,
+  press TAB to auto-complete commands, options, and arguments.
+
+  Quick start:   specbridge shell-completion --install
+
+  Or manually:   eval "$(specbridge shell-completion --show --shell bash)"
+
+Options:
+  --shell [bash|zsh|fish]  Target shell (default: auto-detect from SHELL env)
+  --install                Install completion permanently (appends to shell rc
+                           file)
+  --show                   Print the completion script to stdout (for manual
+                           install)
+  --help                   Show this message and exit.
+```
+
+**Examples:**
+
+```bash
+# Auto-detect shell and show instructions
+$ specbridge shell-completion
+
+# Install permanently
+$ specbridge shell-completion --install
+
+# Manual setup for a specific shell
+$ eval "$(specbridge shell-completion --show --shell zsh)"
+```
+
+**How it works:**
+
+specbridge uses Click 8.1+'s built-in shell completion via the `_SPECBRIDGE_COMPLETE` environment variable. When this variable is set and the CLI is invoked, Click outputs the completion script instead of running the command.
+
+**Shell support:**
+
+| Shell | RC File | Completion Variable |
+|-------|---------|-------------------|
+| Bash | `~/.bashrc` | `_SPECBRIDGE_COMPLETE=bash_source` |
+| Zsh | `~/.zshrc` | `_SPECBRIDGE_COMPLETE=zsh_source` |
+| Fish | `~/.config/fish/config.fish` | `_SPECBRIDGE_COMPLETE=fish_source` |
+
+After installation, you can tab-complete commands, options, and arguments:
+
+```
+$ specbridge [TAB]
+analyze       call-graph    config        coverage      drift
+impact        plugins       serve         setup         shell-completion
+snapshot      status        validate-boundary  watch
+
+$ specbridge analyze --[TAB]
+--call-graph  --config    --deps      --dir       --dry-run
+--fast        --format    --help      --merge     --summary-only
+--top
+```
+
+### 2.8 `validate-boundary`
 
 Check that all code references stay within declared `_Boundary:_` markers in spec documents.
 
@@ -254,7 +319,7 @@ Options:
   --help              Show this message and exit.
 ```
 
-### 2.8 `config`
+### 2.9 `config`
 
 Display or validate the current specbridge configuration and its source.
 
@@ -298,7 +363,7 @@ $ specbridge config --validate
   ...
 ```
 
-### 2.9 `watch`
+### 2.10 `watch`
 
 Watch the project directory for file changes and re-run analysis automatically. Requires `watchdog` package.
 
@@ -316,7 +381,7 @@ Options:
   --help                  Show this message and exit.
 ```
 
-### 2.10 `plugins`
+### 2.11 `plugins`
 
 List all installed adapter plugins (both built-in and third-party).
 
@@ -330,7 +395,7 @@ Options:
   --help          Show this message and exit.
 ```
 
-### 2.11 `call-graph`
+### 2.12 `call-graph`
 
 Analyze transitive (indirect) impact for a spec via function-level call graph.
 
@@ -347,7 +412,7 @@ Options:
   --help               Show this message and exit.
 ```
 
-### 2.12 `serve`
+### 2.13 `serve`
 
 Start an MCP server for AI agent integration.
 
@@ -364,7 +429,7 @@ Options:
   --help           Show this message and exit.
 ```
 
-### 2.13 `setup`
+### 2.14 `setup`
 
 One‑command project bootstrap that creates config, installs hooks, deploys AI agent files, and takes the first snapshot.
 
