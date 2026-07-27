@@ -229,3 +229,11 @@ tests/
 ├── test_plugin_discovery.py
 └── test_spectra_adapter.py
 ```
+
+---
+
+## 8. Related Documents
+
+| Document | Source |
+|----------|--------|
+| Branching Strategy | [`docs/en/12-branching-strategy.md`](12-branching-strategy.md)

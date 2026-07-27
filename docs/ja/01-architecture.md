@@ -231,3 +231,11 @@ tests/
 ├── test_plugin_discovery.py
 └── test_spectra_adapter.py
 ```
+
+---
+
+## 8. 関連ドキュメント
+
+| ドキュメント | ソース |
+|------------|--------|
+| ブランチ戦略 | [`docs/ja/12-branching-strategy.md`](12-branching-strategy.md)

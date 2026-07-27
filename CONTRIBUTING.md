@@ -45,7 +45,11 @@ mypy specbridge/
 1. Tests pass: `python -m pytest tests/ -v`
 2. Linter clean: `ruff check specbridge/ tests/`
 3. Type check clean: `mypy specbridge/`
-4. One logical change per commit
+4. Branch from `main`, use naming convention: `feat/`, `fix/`, `chore/`, `docs/`
+5. One logical change per commit
+6. 📚 **Update docs (EN + JA)** — see [Branching Strategy](docs/en/12-branching-strategy.md)
+
+> **📖 Full branching guide:** [docs/en/12-branching-strategy.md](docs/en/12-branching-strategy.md)
 
 ---
 

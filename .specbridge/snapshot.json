@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-27T22:43:18",
-  "reason": "",
+  "timestamp": "2026-07-28T06:04:50",
+  "reason": "Session: ブランチ戦略ドキュメント追加 — re-snapshot for clean drift",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -165,10 +165,22 @@
       "heading_text": "7. File Layout",
       "depth": 2,
       "line": 182,
-      "body_hash": "b87b8fa525aa3e06",
-      "body_hash_content": "adfa2e5f45118b4d",
-      "body_line_count": 50,
+      "body_hash": "5bddb3ff8d2e4d6a",
+      "body_hash_content": "7f3ae89817502216",
+      "body_line_count": 52,
       "body_preview": "## 7. File Layout  ``` specbridge/ ├── __init__.py          # Version ├── cli.py"
+    },
+    {
+      "id": "docs.en.01-architecture.1.8",
+      "file": "docs/en/01-architecture.md",
+      "title": "Related Documents",
+      "heading_text": "8. Related Documents",
+      "depth": 2,
+      "line": 235,
+      "body_hash": "86f7ce0599c09113",
+      "body_hash_content": "fd69230f456939ac",
+      "body_line_count": 5,
+      "body_preview": "## 8. Related Documents  | Document | Source | |----------|--------| | Branching"
     },
     {
       "id": "docs.en.02-data-model.1",
@@ -549,9 +561,9 @@
       "heading_text": "5.2 Merge Mode",
       "depth": 3,
       "line": 194,
-      "body_hash": "6d68e26e20ea5c4d",
-      "body_hash_content": "a33a76e28f7701a0",
-      "body_line_count": 17,
+      "body_hash": "eff21757ef55c4fd",
+      "body_hash_content": "bdde9936859d6314",
+      "body_line_count": 28,
       "body_preview": "### 5.2 Merge Mode  ```python def detect_all(directory: str) -> list[tuple[float"
     },
     {
@@ -560,7 +572,7 @@
       "title": "Plugin Discovery Lifecycle",
       "heading_text": "6. Plugin Discovery Lifecycle",
       "depth": 2,
-      "line": 212,
+      "line": 223,
       "body_hash": "7be6a270ba1b845a",
       "body_hash_content": "f1e6f725a8f29ddd",
       "body_line_count": 11,
@@ -572,7 +584,7 @@
       "title": "Creating a Plugin (Step-by-Step)",
       "heading_text": "7. Creating a Plugin (Step-by-Step)",
       "depth": 2,
-      "line": 224,
+      "line": 235,
       "body_hash": "8248f79e75a370df",
       "body_hash_content": "cdf784cb2d07a6f7",
       "body_line_count": 11,
@@ -584,7 +596,7 @@
       "title": "Plugin Best Practices",
       "heading_text": "Plugin Best Practices",
       "depth": 3,
-      "line": 236,
+      "line": 247,
       "body_hash": "301d58ec5ecf4484",
       "body_hash_content": "362a4d80b90e3362",
       "body_line_count": 6,
@@ -596,7 +608,7 @@
       "title": "Adapter Comparison",
       "heading_text": "8. Adapter Comparison",
       "depth": 2,
-      "line": 243,
+      "line": 254,
       "body_hash": "a537a749c1cb5a4b",
       "body_hash_content": "6168f3850c7f498e",
       "body_line_count": 13,
@@ -1557,10 +1569,10 @@
       "heading_text": "1. Overview",
       "depth": 2,
       "line": 6,
-      "body_hash": "f3664afa08dded90",
-      "body_hash_content": "f165c21e1759026a",
-      "body_line_count": 28,
-      "body_preview": "## 1. Overview  specbridge provides a Click-based CLI with **13 commands** for t"
+      "body_hash": "a609bedb7acf67cb",
+      "body_hash_content": "b8782e364df153a3",
+      "body_line_count": 32,
+      "body_preview": "## 1. Overview  specbridge provides a Click-based CLI with **17 commands** for t"
     },
     {
       "id": "docs.en.07-cli-commands.1.2",
@@ -1568,7 +1580,7 @@
       "title": "Commands",
       "heading_text": "2. Commands",
       "depth": 2,
-      "line": 35,
+      "line": 39,
       "body_hash": "0e43b94835456fed",
       "body_hash_content": "e3b0c44298fc1c14",
       "body_line_count": 1,
@@ -1580,7 +1592,7 @@
       "title": "`analyze`",
       "heading_text": "2.1 `analyze`",
       "depth": 3,
-      "line": 37,
+      "line": 41,
       "body_hash": "9a0050c0d96da582",
       "body_hash_content": "3f2320ed59403fae",
       "body_line_count": 33,
@@ -1592,7 +1604,7 @@
       "title": "Basic analysis",
       "heading_text": "Basic analysis",
       "depth": 1,
-      "line": 71,
+      "line": 75,
       "body_hash": "12de65a8d097ce5d",
       "body_hash_content": "f074eeb113d6c6e2",
       "body_line_count": 2,
@@ -1604,7 +1616,7 @@
       "title": "JSON output for piping",
       "heading_text": "JSON output for piping",
       "depth": 1,
-      "line": 74,
+      "line": 78,
       "body_hash": "778a84bd6f49d066",
       "body_hash_content": "a43379a71f3849ca",
       "body_line_count": 2,
@@ -1616,7 +1628,7 @@
       "title": "Interactive HTML graph",
       "heading_text": "Interactive HTML graph",
       "depth": 1,
-      "line": 77,
+      "line": 81,
       "body_hash": "5a547c5aa34ba772",
       "body_hash_content": "30e3bc99428a2c55",
       "body_line_count": 2,
@@ -1628,7 +1640,7 @@
       "title": "Merge all matching adapters",
       "heading_text": "Merge all matching adapters",
       "depth": 1,
-      "line": 80,
+      "line": 84,
       "body_hash": "9e82700d41dfa092",
       "body_hash_content": "801ad8487aaecaca",
       "body_line_count": 2,
@@ -1640,7 +1652,7 @@
       "title": "CI-friendly one-line summary",
       "heading_text": "CI-friendly one-line summary",
       "depth": 1,
-      "line": 83,
+      "line": 87,
       "body_hash": "08c5528565aa0ef6",
       "body_hash_content": "1fe500b67db7007d",
       "body_line_count": 3,
@@ -1652,7 +1664,7 @@
       "title": "Dry run (preview without saving HTML)",
       "heading_text": "Dry run (preview without saving HTML)",
       "depth": 1,
-      "line": 87,
+      "line": 91,
       "body_hash": "aa55c2147dc1e3cf",
       "body_hash_content": "488250e08f1ec37e",
       "body_line_count": 4,
@@ -1664,7 +1676,7 @@
       "title": "`impact`",
       "heading_text": "2.2 `impact`",
       "depth": 3,
-      "line": 92,
+      "line": 96,
       "body_hash": "f83fe8778cbeca0d",
       "body_hash_content": "d91d873f01242ecf",
       "body_line_count": 17,
@@ -1676,7 +1688,7 @@
       "title": "`coverage`",
       "heading_text": "2.3 `coverage`",
       "depth": 3,
-      "line": 110,
+      "line": 114,
       "body_hash": "9ba862c5e017210b",
       "body_hash_content": "ffc3f646a7beb56a",
       "body_line_count": 28,
@@ -1688,7 +1700,7 @@
       "title": "`snapshot`",
       "heading_text": "2.4 `snapshot`",
       "depth": 3,
-      "line": 139,
+      "line": 143,
       "body_hash": "5112bf727002ca15",
       "body_hash_content": "1327694b074f8857",
       "body_line_count": 33,
@@ -1700,7 +1712,7 @@
       "title": "`drift`",
       "heading_text": "2.5 `drift`",
       "depth": 3,
-      "line": 173,
+      "line": 177,
       "body_hash": "8b3500ea2027500d",
       "body_hash_content": "b5b5c54dbb14fdc7",
       "body_line_count": 18,
@@ -1712,7 +1724,7 @@
       "title": "`status` ✨ New in v1.0",
       "heading_text": "2.6 `status` ✨ New in v1.0",
       "depth": 3,
-      "line": 192,
+      "line": 196,
       "body_hash": "db43c0507907d64e",
       "body_hash_content": "607f23475d06cfa5",
       "body_line_count": 50,
@@ -1721,106 +1733,190 @@
     {
       "id": "docs.en.07-cli-commands.7.6",
       "file": "docs/en/07-cli-commands.md",
-      "title": "`validate-boundary`",
-      "heading_text": "2.7 `validate-boundary`",
+      "title": "`shell-completion` ✨ New",
+      "heading_text": "2.7 `shell-completion` ✨ New",
       "depth": 3,
-      "line": 243,
-      "body_hash": "5af2c2902fc203b6",
+      "line": 247,
+      "body_hash": "72d7bcb7e3c2cae1",
+      "body_hash_content": "22b51bd340ddd774",
+      "body_line_count": 27,
+      "body_preview": "### 2.7 `shell-completion` ✨ New  Generate or install shell completion scripts f"
+    },
+    {
+      "id": "docs.en.07-cli-commands.8",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "Auto-detect shell and show instructions",
+      "heading_text": "Auto-detect shell and show instructions",
+      "depth": 1,
+      "line": 275,
+      "body_hash": "63ffec9555d52707",
+      "body_hash_content": "cbe684c01f153544",
+      "body_line_count": 2,
+      "body_preview": "# Auto-detect shell and show instructions $ specbridge shell-completion"
+    },
+    {
+      "id": "docs.en.07-cli-commands.9",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "Install permanently",
+      "heading_text": "Install permanently",
+      "depth": 1,
+      "line": 278,
+      "body_hash": "48fc341b101c8ae0",
+      "body_hash_content": "68c73ab6aa92aa44",
+      "body_line_count": 2,
+      "body_preview": "# Install permanently $ specbridge shell-completion --install"
+    },
+    {
+      "id": "docs.en.07-cli-commands.10",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "Manual setup for a specific shell",
+      "heading_text": "Manual setup for a specific shell",
+      "depth": 1,
+      "line": 281,
+      "body_hash": "6851f88e9002c718",
+      "body_hash_content": "e85ada01c550049c",
+      "body_line_count": 29,
+      "body_preview": "# Manual setup for a specific shell $ eval \"$(specbridge shell-completion --show"
+    },
+    {
+      "id": "docs.en.07-cli-commands.10.1",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "`validate-boundary`",
+      "heading_text": "2.8 `validate-boundary`",
+      "depth": 3,
+      "line": 311,
+      "body_hash": "f55d46e610744545",
       "body_hash_content": "4321f9d181c95451",
       "body_line_count": 13,
-      "body_preview": "### 2.7 `validate-boundary`  Check that all code references stay within declared"
+      "body_preview": "### 2.8 `validate-boundary`  Check that all code references stay within declared"
     },
     {
-      "id": "docs.en.07-cli-commands.7.7",
+      "id": "docs.en.07-cli-commands.10.2",
       "file": "docs/en/07-cli-commands.md",
       "title": "`config`",
-      "heading_text": "2.8 `config`",
+      "heading_text": "2.9 `config`",
       "depth": 3,
-      "line": 257,
-      "body_hash": "58683ab1f9136cab",
+      "line": 325,
+      "body_hash": "dc1900878f9becb6",
       "body_hash_content": "bcf3eeadea22c1c8",
       "body_line_count": 43,
-      "body_preview": "### 2.8 `config`  Display or validate the current specbridge configuration and i"
+      "body_preview": "### 2.9 `config`  Display or validate the current specbridge configuration and i"
     },
     {
-      "id": "docs.en.07-cli-commands.7.8",
+      "id": "docs.en.07-cli-commands.10.3",
       "file": "docs/en/07-cli-commands.md",
       "title": "`watch`",
-      "heading_text": "2.9 `watch`",
+      "heading_text": "2.10 `watch`",
       "depth": 3,
-      "line": 301,
-      "body_hash": "c309d0c657f68a3d",
+      "line": 369,
+      "body_hash": "92b63065c6e2f178",
       "body_hash_content": "ec27856b0dc6f5b2",
       "body_line_count": 17,
-      "body_preview": "### 2.9 `watch`  Watch the project directory for file changes and re-run analysi"
+      "body_preview": "### 2.10 `watch`  Watch the project directory for file changes and re-run analys"
     },
     {
-      "id": "docs.en.07-cli-commands.7.9",
+      "id": "docs.en.07-cli-commands.10.4",
       "file": "docs/en/07-cli-commands.md",
       "title": "`plugins`",
-      "heading_text": "2.10 `plugins`",
+      "heading_text": "2.11 `plugins`",
       "depth": 3,
-      "line": 319,
-      "body_hash": "7eb8b4fbf73cc0d4",
+      "line": 387,
+      "body_hash": "11c4cc800cad7c1c",
       "body_hash_content": "afb7f2e2bfc44c1c",
       "body_line_count": 13,
-      "body_preview": "### 2.10 `plugins`  List all installed adapter plugins (both built-in and third-"
+      "body_preview": "### 2.11 `plugins`  List all installed adapter plugins (both built-in and third-"
     },
     {
-      "id": "docs.en.07-cli-commands.7.10",
+      "id": "docs.en.07-cli-commands.10.5",
       "file": "docs/en/07-cli-commands.md",
       "title": "`call-graph`",
-      "heading_text": "2.11 `call-graph`",
+      "heading_text": "2.12 `call-graph`",
       "depth": 3,
-      "line": 333,
-      "body_hash": "de730b39cf8e0d35",
+      "line": 401,
+      "body_hash": "698fe1ee8226917a",
       "body_hash_content": "75c782d3cd150432",
       "body_line_count": 16,
-      "body_preview": "### 2.11 `call-graph`  Analyze transitive (indirect) impact for a spec via funct"
+      "body_preview": "### 2.12 `call-graph`  Analyze transitive (indirect) impact for a spec via funct"
     },
     {
-      "id": "docs.en.07-cli-commands.7.11",
+      "id": "docs.en.07-cli-commands.10.6",
       "file": "docs/en/07-cli-commands.md",
       "title": "`serve`",
-      "heading_text": "2.12 `serve`",
+      "heading_text": "2.13 `serve`",
       "depth": 3,
-      "line": 350,
-      "body_hash": "935773b45eea906e",
+      "line": 418,
+      "body_hash": "7997d68b4e2664d0",
       "body_hash_content": "c79b28052b6a161f",
       "body_line_count": 16,
-      "body_preview": "### 2.12 `serve`  Start an MCP server for AI agent integration.  ``` Usage: spec"
+      "body_preview": "### 2.13 `serve`  Start an MCP server for AI agent integration.  ``` Usage: spec"
     },
     {
-      "id": "docs.en.07-cli-commands.7.12",
+      "id": "docs.en.07-cli-commands.10.7",
       "file": "docs/en/07-cli-commands.md",
       "title": "`setup`",
-      "heading_text": "2.13 `setup`",
+      "heading_text": "2.14 `setup`",
       "depth": 3,
-      "line": 367,
-      "body_hash": "38f3565144a776ef",
+      "line": 435,
+      "body_hash": "0156cc79061bcbf2",
       "body_hash_content": "e6a3794fec99a25d",
       "body_line_count": 14,
-      "body_preview": "### 2.13 `setup`  One‑command project bootstrap that creates config, installs ho"
+      "body_preview": "### 2.14 `setup`  One‑command project bootstrap that creates config, installs ho"
     },
     {
-      "id": "docs.en.07-cli-commands.7.1",
+      "id": "docs.en.07-cli-commands.10.8",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "`init` ✨ New",
+      "heading_text": "2.15 `init` ✨ New",
+      "depth": 3,
+      "line": 450,
+      "body_hash": "2e5ff754da3fefe4",
+      "body_hash_content": "057b939a3da8168d",
+      "body_line_count": 52,
+      "body_preview": "### 2.15 `init` ✨ New  Interactive config generator that creates `.specbridge.ya"
+    },
+    {
+      "id": "docs.en.07-cli-commands.10.9",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "`diff` ✨ New",
+      "heading_text": "2.16 `diff` ✨ New",
+      "depth": 3,
+      "line": 503,
+      "body_hash": "01e465e0bb77e999",
+      "body_hash_content": "2a8e12c9562afaa2",
+      "body_line_count": 45,
+      "body_preview": "### 2.16 `diff` ✨ New  Compare two snapshot files and show a summary diff — like"
+    },
+    {
+      "id": "docs.en.07-cli-commands.10.10",
+      "file": "docs/en/07-cli-commands.md",
+      "title": "`suggest` ✨ New",
+      "heading_text": "2.17 `suggest` ✨ New",
+      "depth": 3,
+      "line": 549,
+      "body_hash": "f70304a53c86c07a",
+      "body_hash_content": "1785e8eaabbb0ced",
+      "body_line_count": 38,
+      "body_preview": "### 2.17 `suggest` ✨ New  Suggest code files that may implement uncovered (orpha"
+    },
+    {
+      "id": "docs.en.07-cli-commands.10.1",
       "file": "docs/en/07-cli-commands.md",
       "title": "Improved Error Messages (v1.0)",
       "heading_text": "3. Improved Error Messages (v1.0)",
       "depth": 2,
-      "line": 382,
+      "line": 588,
       "body_hash": "77014c2095b271ca",
       "body_hash_content": "0db714ca90a65b5b",
       "body_line_count": 13,
       "body_preview": "## 3. Improved Error Messages (v1.0)  When specbridge cannot find a supported pr"
     },
     {
-      "id": "docs.en.07-cli-commands.7.2",
+      "id": "docs.en.07-cli-commands.10.2",
       "file": "docs/en/07-cli-commands.md",
       "title": "Exit Codes",
       "heading_text": "4. Exit Codes",
       "depth": 2,
-      "line": 396,
+      "line": 602,
       "body_hash": "025873d2c3dfd9dd",
       "body_hash_content": "b638f9b64e45b727",
       "body_line_count": 6,
@@ -2661,10 +2757,10 @@
       "heading_text": "Testing Strategy",
       "depth": 1,
       "line": 1,
-      "body_hash": "71e224b29df117e3",
-      "body_hash_content": "3ca56f01156a1d7a",
+      "body_hash": "f6f973347f5c084a",
+      "body_hash_content": "2f71f4229ccf0482",
       "body_line_count": 4,
-      "body_preview": "# Testing Strategy  > **Date:** 2026-07-26 > **Version:** 0.0.1.dev0"
+      "body_preview": "# Testing Strategy  > **Date:** 2026-07-27 > **Version:** 1.0.0"
     },
     {
       "id": "docs.en.11-testing-strategy.1.1",
@@ -2673,9 +2769,9 @@
       "heading_text": "1. Overview",
       "depth": 2,
       "line": 6,
-      "body_hash": "9e0078fcc2af5a7c",
-      "body_hash_content": "fb47c9bc688db32d",
-      "body_line_count": 5,
+      "body_hash": "03541e1b909e9066",
+      "body_hash_content": "0997b60bd3651b5a",
+      "body_line_count": 7,
       "body_preview": "## 1. Overview  The specbridge test suite uses `pytest` and covers all major mod"
     },
     {
@@ -2684,10 +2780,10 @@
       "title": "Test Files",
       "heading_text": "2. Test Files",
       "depth": 2,
-      "line": 12,
-      "body_hash": "499326b8f03f28dd",
-      "body_hash_content": "71d4554fd55c8245",
-      "body_line_count": 17,
+      "line": 14,
+      "body_hash": "70fe32287655721c",
+      "body_hash_content": "dcc53e32d4c9558a",
+      "body_line_count": 20,
       "body_preview": "## 2. Test Files  | File | Module Under Test | Focus | |------|-----------------"
     },
     {
@@ -2696,7 +2792,7 @@
       "title": "Test Categories",
       "heading_text": "3. Test Categories",
       "depth": 2,
-      "line": 30,
+      "line": 35,
       "body_hash": "a7b7bc1bc235aec6",
       "body_hash_content": "e3b0c44298fc1c14",
       "body_line_count": 1,
@@ -2708,7 +2804,7 @@
       "title": "Unit Tests",
       "heading_text": "3.1 Unit Tests",
       "depth": 3,
-      "line": 32,
+      "line": 37,
       "body_hash": "75d9afd9899261c2",
       "body_hash_content": "1d519a8b091b6f25",
       "body_line_count": 9,
@@ -2720,7 +2816,7 @@
       "title": "Integration Tests",
       "heading_text": "3.2 Integration Tests",
       "depth": 3,
-      "line": 42,
+      "line": 47,
       "body_hash": "fb05aed6b1d3b0c7",
       "body_hash_content": "71b1c497adb4db32",
       "body_line_count": 9,
@@ -2732,10 +2828,10 @@
       "title": "Boundary Tests",
       "heading_text": "3.3 Boundary Tests",
       "depth": 3,
-      "line": 52,
-      "body_hash": "90cb3e40376106d9",
-      "body_hash_content": "a44bcf521ac9bea3",
-      "body_line_count": 12,
+      "line": 57,
+      "body_hash": "53ff38bc6c454c7e",
+      "body_hash_content": "1d3d900a7e707445",
+      "body_line_count": 15,
       "body_preview": "### 3.3 Boundary Tests  Test edge cases and error handling.  **Examples:** - Emp"
     },
     {
@@ -2744,7 +2840,7 @@
       "title": "Test Fixtures (`tests/conftest.py`)",
       "heading_text": "4. Test Fixtures (`tests/conftest.py`)",
       "depth": 2,
-      "line": 65,
+      "line": 73,
       "body_hash": "ed279229e8fae2d8",
       "body_hash_content": "2585de7f0081cbbf",
       "body_line_count": 11,
@@ -2756,7 +2852,7 @@
       "title": "Running Tests",
       "heading_text": "5. Running Tests",
       "depth": 2,
-      "line": 77,
+      "line": 85,
       "body_hash": "164c97ca0a3ee567",
       "body_hash_content": "5f046190424d4104",
       "body_line_count": 2,
@@ -2768,7 +2864,7 @@
       "title": "Standard test run",
       "heading_text": "Standard test run",
       "depth": 1,
-      "line": 80,
+      "line": 88,
       "body_hash": "c82d07eeaea159a4",
       "body_hash_content": "8004a972c3d5c274",
       "body_line_count": 2,
@@ -2780,7 +2876,7 @@
       "title": "With coverage",
       "heading_text": "With coverage",
       "depth": 1,
-      "line": 83,
+      "line": 91,
       "body_hash": "ffcf4a7e8e91e270",
       "body_hash_content": "615b3ecbc519f94b",
       "body_line_count": 2,
@@ -2792,7 +2888,7 @@
       "title": "Specific test file",
       "heading_text": "Specific test file",
       "depth": 1,
-      "line": 86,
+      "line": 94,
       "body_hash": "7c37cb8dd1befea1",
       "body_hash_content": "f0384509d8e72bf5",
       "body_line_count": 2,
@@ -2804,7 +2900,7 @@
       "title": "Verbose output",
       "heading_text": "Verbose output",
       "depth": 1,
-      "line": 89,
+      "line": 97,
       "body_hash": "29185c7116cb7012",
       "body_hash_content": "3955688298a7b9bb",
       "body_line_count": 2,
@@ -2816,7 +2912,7 @@
       "title": "Stop on first failure",
       "heading_text": "Stop on first failure",
       "depth": 1,
-      "line": 92,
+      "line": 100,
       "body_hash": "c05f907611ca5f2e",
       "body_hash_content": "37867ccaa6835108",
       "body_line_count": 3,
@@ -2828,7 +2924,7 @@
       "title": "Test Configuration",
       "heading_text": "6. Test Configuration",
       "depth": 2,
-      "line": 96,
+      "line": 104,
       "body_hash": "87c54291eae8df84",
       "body_hash_content": "95c84507a8bb741a",
       "body_line_count": 9,
@@ -2840,7 +2936,7 @@
       "title": "Linting and Type Checking",
       "heading_text": "7. Linting and Type Checking",
       "depth": 2,
-      "line": 106,
+      "line": 114,
       "body_hash": "d9d80703f395aeb7",
       "body_hash_content": "12e57a250abda09c",
       "body_line_count": 13,
@@ -2852,7 +2948,7 @@
       "title": "CI Integration",
       "heading_text": "8. CI Integration",
       "depth": 2,
-      "line": 120,
+      "line": 128,
       "body_hash": "25546b525c2622a3",
       "body_hash_content": "84b1c3be81083e25",
       "body_line_count": 10,
@@ -2864,11 +2960,299 @@
       "title": "Testing Principles",
       "heading_text": "9. Testing Principles",
       "depth": 2,
-      "line": 131,
+      "line": 139,
       "body_hash": "9f5915f6ccc264ef",
       "body_hash_content": "d8c2bfec32efdaa0",
       "body_line_count": 8,
       "body_preview": "## 9. Testing Principles  1. **Test the public API** — Prefer testing through pu"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.1",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Branching Strategy",
+      "heading_text": "Branching Strategy",
+      "depth": 1,
+      "line": 1,
+      "body_hash": "71f64600ae0aecf2",
+      "body_hash_content": "e4808424800e546d",
+      "body_line_count": 4,
+      "body_preview": "# Branching Strategy  > **Date:** 2026-07-28 > **Version:** 1.0.0"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.1.1",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Overview",
+      "heading_text": "1. Overview",
+      "depth": 2,
+      "line": 6,
+      "body_hash": "6665245be063d420",
+      "body_hash_content": "19fb27faf017f17a",
+      "body_line_count": 17,
+      "body_preview": "## 1. Overview  specbridge follows a **trunk-based development** model with shor"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.1.2",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Permanent Branches",
+      "heading_text": "2. Permanent Branches",
+      "depth": 2,
+      "line": 24,
+      "body_hash": "6923bb28aae6c4bb",
+      "body_hash_content": "fe7bbbe4e6003d7f",
+      "body_line_count": 7,
+      "body_preview": "## 2. Permanent Branches  | Branch | Purpose | Protection | |--------|---------|"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.1.3",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Branch Naming Convention",
+      "heading_text": "3. Branch Naming Convention",
+      "depth": 2,
+      "line": 32,
+      "body_hash": "f946973d21a95659",
+      "body_hash_content": "58a3e4b880ddfc4d",
+      "body_line_count": 17,
+      "body_preview": "## 3. Branch Naming Convention  | Prefix | Scope | Commit type | |--------|-----"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.1.4",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Workflow",
+      "heading_text": "4. Workflow",
+      "depth": 2,
+      "line": 50,
+      "body_hash": "60cae2cf623cb32c",
+      "body_hash_content": "5aba5039c17d216f",
+      "body_line_count": 13,
+      "body_preview": "## 4. Workflow  ```mermaid flowchart LR     A[Create branch from main] --> B[Imp"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.1.4.1",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Create a branch",
+      "heading_text": "4.1 Create a branch",
+      "depth": 3,
+      "line": 64,
+      "body_hash": "3d9990d4ffb9e796",
+      "body_hash_content": "2e53203ecd7dc4fb",
+      "body_line_count": 9,
+      "body_preview": "### 4.1 Create a branch  Always branch from the latest `main`:  ```bash git chec"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.1.4.2",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Make changes",
+      "heading_text": "4.2 Make changes",
+      "depth": 3,
+      "line": 74,
+      "body_hash": "5f4c803740dacc49",
+      "body_hash_content": "8ff13dcc15fd8226",
+      "body_line_count": 9,
+      "body_preview": "### 4.2 Make changes  Follow the [AGENTS.md](../AGENTS.md) workflow:  1. Code ch"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.1.4.3",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Open a pull request",
+      "heading_text": "4.3 Open a pull request",
+      "depth": 3,
+      "line": 84,
+      "body_hash": "dc7d25e94121ef6a",
+      "body_hash_content": "034b44a30e4fdc75",
+      "body_line_count": 16,
+      "body_preview": "### 4.3 Open a pull request  All changes — including single-developer changes — "
+    },
+    {
+      "id": "docs.en.12-branching-strategy.1.4.4",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Merge & cleanup",
+      "heading_text": "4.4 Merge & cleanup",
+      "depth": 3,
+      "line": 101,
+      "body_hash": "e62fbcdbc3cbd325",
+      "body_hash_content": "c130dbb7c8096559",
+      "body_line_count": 4,
+      "body_preview": "### 4.4 Merge & cleanup  Always **squash merge** to `main`, then delete the bran"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.2",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Done via GitHub PR interface",
+      "heading_text": "Done via GitHub PR interface",
+      "depth": 1,
+      "line": 106,
+      "body_hash": "62909080a9d942ce",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 0,
+      "body_preview": "# Done via GitHub PR interface"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.3",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Delete local branch after merge",
+      "heading_text": "Delete local branch after merge",
+      "depth": 1,
+      "line": 107,
+      "body_hash": "7a1948d73a7e5e5c",
+      "body_hash_content": "7d865679efd6531e",
+      "body_line_count": 5,
+      "body_preview": "# Delete local branch after merge git checkout main git pull git branch -d feat/"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.3.1",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Direct Push Exceptions",
+      "heading_text": "5. Direct Push Exceptions",
+      "depth": 2,
+      "line": 113,
+      "body_hash": "cb18269494c8ab4f",
+      "body_hash_content": "80cda72c41f2b029",
+      "body_line_count": 18,
+      "body_preview": "## 5. Direct Push Exceptions  Single-developer projects shouldn't be bureaucrati"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.3.2",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Release Process",
+      "heading_text": "6. Release Process",
+      "depth": 2,
+      "line": 132,
+      "body_hash": "c5d5eaabe602b14e",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 1,
+      "body_preview": "## 6. Release Process"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.3.2.1",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Versioning",
+      "heading_text": "6.1 Versioning",
+      "depth": 3,
+      "line": 134,
+      "body_hash": "30b68056b9105558",
+      "body_hash_content": "e85efe1594ececd5",
+      "body_line_count": 9,
+      "body_preview": "### 6.1 Versioning  specbridge follows **Semantic Versioning** (semver):  | Vers"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.3.2.2",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Tagging",
+      "heading_text": "6.2 Tagging",
+      "depth": 3,
+      "line": 144,
+      "body_hash": "1517a5f4f72d10a0",
+      "body_hash_content": "1bcad2edad5d2f48",
+      "body_line_count": 8,
+      "body_preview": "### 6.2 Tagging  Releases are tagged on `main`:  ```bash git tag -a v1.1.0 -m \"v"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.3.2.3",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "CHANGELOG",
+      "heading_text": "6.3 CHANGELOG",
+      "depth": 3,
+      "line": 153,
+      "body_hash": "bf5f01171e0c705f",
+      "body_hash_content": "b8a3c30ed9b9606a",
+      "body_line_count": 4,
+      "body_preview": "### 6.3 CHANGELOG  Keep a human-readable `CHANGELOG.md` that summarizes notable "
+    },
+    {
+      "id": "docs.en.12-branching-strategy.4",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Changelog",
+      "heading_text": "Changelog",
+      "depth": 1,
+      "line": 158,
+      "body_hash": "3e79c4cafb504a21",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 1,
+      "body_preview": "# Changelog"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.4.1",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "v1.1.0 (2026-07-28)",
+      "heading_text": "v1.1.0 (2026-07-28)",
+      "depth": 2,
+      "line": 160,
+      "body_hash": "2d0613f641bde1ba",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 1,
+      "body_preview": "## v1.1.0 (2026-07-28)"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.4.1.1",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Added",
+      "heading_text": "Added",
+      "depth": 3,
+      "line": 162,
+      "body_hash": "08c723e586bc96d0",
+      "body_hash_content": "c602f8fe98e01883",
+      "body_line_count": 2,
+      "body_preview": "### Added - Graphify adapter for deep AST-based code graph (#45)"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.4.1.2",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Fixed",
+      "heading_text": "Fixed",
+      "depth": 3,
+      "line": 165,
+      "body_hash": "9efdc3ff4e529419",
+      "body_hash_content": "92f7e79b7bb97693",
+      "body_line_count": 2,
+      "body_preview": "### Fixed - Setup script path resolution on macOS (#42)"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.4.1.3",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Changed",
+      "heading_text": "Changed",
+      "depth": 3,
+      "line": 168,
+      "body_hash": "ab4fe1480e71e2e5",
+      "body_hash_content": "82f51c836a9fe142",
+      "body_line_count": 5,
+      "body_preview": "### Changed - Upgraded CI to actions/checkout@v7 ```  Conventional commit messag"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.4.2",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Hotfix Flow",
+      "heading_text": "7. Hotfix Flow",
+      "depth": 2,
+      "line": 174,
+      "body_hash": "189cf771c7119126",
+      "body_hash_content": "d5d3c3abd0f45010",
+      "body_line_count": 19,
+      "body_preview": "## 7. Hotfix Flow  For urgent fixes to a released version:  1. Branch from the t"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.4.3",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "CI Gates",
+      "heading_text": "8. CI Gates",
+      "depth": 2,
+      "line": 194,
+      "body_hash": "8ed78df143482399",
+      "body_hash_content": "77cfa2b5efcd945b",
+      "body_line_count": 8,
+      "body_preview": "## 8. CI Gates  Every PR to `main` triggers:  1. **ci.yml** — Ruff lint → mypy t"
+    },
+    {
+      "id": "docs.en.12-branching-strategy.4.4",
+      "file": "docs/en/12-branching-strategy.md",
+      "title": "Branch Protection Rules (GitHub)",
+      "heading_text": "9. Branch Protection Rules (GitHub)",
+      "depth": 2,
+      "line": 203,
+      "body_hash": "dd3b779b74372d3b",
+      "body_hash_content": "9fdcda3878999d47",
+      "body_line_count": 11,
+      "body_preview": "## 9. Branch Protection Rules (GitHub)  Recommended settings for `main`:  - ☐ Re"
     },
     {
       "id": "docs.ja.01-architecture.1",
@@ -3033,10 +3417,22 @@
       "heading_text": "7. ファイルレイアウト",
       "depth": 2,
       "line": 184,
-      "body_hash": "b99b6b5368691a42",
-      "body_hash_content": "d86a74dd38ea1a50",
-      "body_line_count": 50,
+      "body_hash": "86f02099e931d1e5",
+      "body_hash_content": "237b332b7e61e092",
+      "body_line_count": 52,
       "body_preview": "## 7. ファイルレイアウト  ``` specbridge/ ├── __init__.py          # バージョン ├── cli.py    "
+    },
+    {
+      "id": "docs.ja.01-architecture.1.8",
+      "file": "docs/ja/01-architecture.md",
+      "title": "関連ドキュメント",
+      "heading_text": "8. 関連ドキュメント",
+      "depth": 2,
+      "line": 237,
+      "body_hash": "4bb3f8d439c5be3e",
+      "body_hash_content": "f0bd2e41c4f73c2d",
+      "body_line_count": 5,
+      "body_preview": "## 8. 関連ドキュメント  | ドキュメント | ソース | |------------|--------| | ブランチ戦略 | [`docs/ja/12"
     },
     {
       "id": "docs.ja.02-data-model.1",
@@ -3261,10 +3657,10 @@
       "heading_text": "アダプタ＆プラグインシステム",
       "depth": 1,
       "line": 1,
-      "body_hash": "0090f3018cb0dcb0",
-      "body_hash_content": "301cee76dd0065cc",
+      "body_hash": "f083ae2ba0a2068b",
+      "body_hash_content": "add0d2b7eab87d93",
       "body_line_count": 4,
-      "body_preview": "# アダプタ＆プラグインシステム  > **日付:** 2026-07-26 > **バージョン:** 0.0.1.dev0"
+      "body_preview": "# アダプタ＆プラグインシステム  > **日付:** 2026-07-27 > **バージョン:** 1.0.0"
     },
     {
       "id": "docs.ja.03-adapter-plugin-system.1.1",
@@ -3417,9 +3813,9 @@
       "heading_text": "5.2 マージモード",
       "depth": 3,
       "line": 210,
-      "body_hash": "868595ec771bb901",
-      "body_hash_content": "6a6396f9d5b4de2a",
-      "body_line_count": 17,
+      "body_hash": "b8d2ed0d96ae1071",
+      "body_hash_content": "110719e5393bd499",
+      "body_line_count": 28,
       "body_preview": "### 5.2 マージモード  ```python def detect_all(directory: str) -> list[tuple[float, Pr"
     },
     {
@@ -3428,7 +3824,7 @@
       "title": "プラグイン発見のライフサイクル",
       "heading_text": "6. プラグイン発見のライフサイクル",
       "depth": 2,
-      "line": 228,
+      "line": 239,
       "body_hash": "115b1805f3955e92",
       "body_hash_content": "eca251bc82b01a17",
       "body_line_count": 11,
@@ -3440,7 +3836,7 @@
       "title": "プラグイン作成手順",
       "heading_text": "7. プラグイン作成手順",
       "depth": 2,
-      "line": 240,
+      "line": 251,
       "body_hash": "716cc2b6394ab01a",
       "body_hash_content": "242483380746efc1",
       "body_line_count": 11,
@@ -3452,7 +3848,7 @@
       "title": "プラグインのベストプラクティス",
       "heading_text": "プラグインのベストプラクティス",
       "depth": 3,
-      "line": 252,
+      "line": 263,
       "body_hash": "e1f890ec25e260ac",
       "body_hash_content": "54abf5a5f9d45723",
       "body_line_count": 6,
@@ -3464,7 +3860,7 @@
       "title": "アダプタ比較",
       "heading_text": "8. アダプタ比較",
       "depth": 2,
-      "line": 259,
+      "line": 270,
       "body_hash": "60914a4c6986b657",
       "body_hash_content": "adfc5bf9ce58ef30",
       "body_line_count": 13,
@@ -4425,10 +4821,10 @@
       "heading_text": "1. 概要",
       "depth": 2,
       "line": 6,
-      "body_hash": "18b2e678b00e3ee3",
-      "body_hash_content": "c27138bae1528759",
-      "body_line_count": 28,
-      "body_preview": "## 1. 概要  specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**13のコマンド**を"
+      "body_hash": "007061e3bd4b1f98",
+      "body_hash_content": "9127f880c3e87539",
+      "body_line_count": 32,
+      "body_preview": "## 1. 概要  specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**17のコマンド**を"
     },
     {
       "id": "docs.ja.07-cli-commands.1.2",
@@ -4436,7 +4832,7 @@
       "title": "コマンド",
       "heading_text": "2. コマンド",
       "depth": 2,
-      "line": 35,
+      "line": 39,
       "body_hash": "c40896037bb9cde4",
       "body_hash_content": "e3b0c44298fc1c14",
       "body_line_count": 1,
@@ -4448,7 +4844,7 @@
       "title": "`analyze`",
       "heading_text": "2.1 `analyze`",
       "depth": 3,
-      "line": 37,
+      "line": 41,
       "body_hash": "185e9fb11b8237d1",
       "body_hash_content": "5fbac815eb90e7db",
       "body_line_count": 33,
@@ -4460,7 +4856,7 @@
       "title": "基本分析",
       "heading_text": "基本分析",
       "depth": 1,
-      "line": 71,
+      "line": 75,
       "body_hash": "d3bb32041c34518a",
       "body_hash_content": "f074eeb113d6c6e2",
       "body_line_count": 2,
@@ -4472,7 +4868,7 @@
       "title": "JSON出力（パイプ処理用）",
       "heading_text": "JSON出力（パイプ処理用）",
       "depth": 1,
-      "line": 74,
+      "line": 78,
       "body_hash": "c36dff8c4ea4e4ee",
       "body_hash_content": "a43379a71f3849ca",
       "body_line_count": 2,
@@ -4484,7 +4880,7 @@
       "title": "インタラクティブHTMLグラフ",
       "heading_text": "インタラクティブHTMLグラフ",
       "depth": 1,
-      "line": 77,
+      "line": 81,
       "body_hash": "c5c26388cabc59f3",
       "body_hash_content": "30e3bc99428a2c55",
       "body_line_count": 2,
@@ -4496,7 +4892,7 @@
       "title": "全アダプタをマージ",
       "heading_text": "全アダプタをマージ",
       "depth": 1,
-      "line": 80,
+      "line": 84,
       "body_hash": "b5b27a96afb1faf2",
       "body_hash_content": "801ad8487aaecaca",
       "body_line_count": 2,
@@ -4508,7 +4904,7 @@
       "title": "CI対応の1行サマリー",
       "heading_text": "CI対応の1行サマリー",
       "depth": 1,
-      "line": 83,
+      "line": 87,
       "body_hash": "d0c64391ff72cd12",
       "body_hash_content": "1fe500b67db7007d",
       "body_line_count": 3,
@@ -4520,7 +4916,7 @@
       "title": "ドライラン（HTML保存なしでプレビュー）",
       "heading_text": "ドライラン（HTML保存なしでプレビュー）",
       "depth": 1,
-      "line": 87,
+      "line": 91,
       "body_hash": "e44521bf65fe9a70",
       "body_hash_content": "488250e08f1ec37e",
       "body_line_count": 4,
@@ -4532,7 +4928,7 @@
       "title": "`impact`",
       "heading_text": "2.2 `impact`",
       "depth": 3,
-      "line": 92,
+      "line": 96,
       "body_hash": "e1f9c3ad3fc05bc7",
       "body_hash_content": "3e5e012846b9c681",
       "body_line_count": 17,
@@ -4544,7 +4940,7 @@
       "title": "`coverage`",
       "heading_text": "2.3 `coverage`",
       "depth": 3,
-      "line": 110,
+      "line": 114,
       "body_hash": "472c78f863bd25fd",
       "body_hash_content": "2f6f470e541b01ed",
       "body_line_count": 28,
@@ -4556,7 +4952,7 @@
       "title": "`snapshot`",
       "heading_text": "2.4 `snapshot`",
       "depth": 3,
-      "line": 139,
+      "line": 143,
       "body_hash": "5af460dfe46935aa",
       "body_hash_content": "ac6083b6a6c619c3",
       "body_line_count": 33,
@@ -4568,7 +4964,7 @@
       "title": "`drift`",
       "heading_text": "2.5 `drift`",
       "depth": 3,
-      "line": 173,
+      "line": 177,
       "body_hash": "cbad1b54512bad63",
       "body_hash_content": "4867433f5caee747",
       "body_line_count": 18,
@@ -4580,7 +4976,7 @@
       "title": "`status` ✨ v1.0新機能",
       "heading_text": "2.6 `status` ✨ v1.0新機能",
       "depth": 3,
-      "line": 192,
+      "line": 196,
       "body_hash": "7d9de03fb09c7d29",
       "body_hash_content": "f81ad8d03cae5105",
       "body_line_count": 50,
@@ -4589,106 +4985,190 @@
     {
       "id": "docs.ja.07-cli-commands.7.6",
       "file": "docs/ja/07-cli-commands.md",
-      "title": "`validate-boundary`",
-      "heading_text": "2.7 `validate-boundary`",
+      "title": "`shell-completion` ✨ 新機能",
+      "heading_text": "2.7 `shell-completion` ✨ 新機能",
       "depth": 3,
-      "line": 243,
-      "body_hash": "5c2071d142e5ee00",
+      "line": 247,
+      "body_hash": "be3d5bbf213dda12",
+      "body_hash_content": "f0be1cf61f2e7c85",
+      "body_line_count": 25,
+      "body_preview": "### 2.7 `shell-completion` ✨ 新機能  シェル補完スクリプト（Bash/Zsh/Fish）を生成またはインストールします。  ```"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.8",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "シェルを自動検出して手順を表示",
+      "heading_text": "シェルを自動検出して手順を表示",
+      "depth": 1,
+      "line": 273,
+      "body_hash": "87c14f8162915172",
+      "body_hash_content": "cbe684c01f153544",
+      "body_line_count": 2,
+      "body_preview": "# シェルを自動検出して手順を表示 $ specbridge shell-completion"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.9",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "永続的にインストール",
+      "heading_text": "永続的にインストール",
+      "depth": 1,
+      "line": 276,
+      "body_hash": "76ee276c4e011976",
+      "body_hash_content": "68c73ab6aa92aa44",
+      "body_line_count": 2,
+      "body_preview": "# 永続的にインストール $ specbridge shell-completion --install"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.10",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "特定のシェルを指定してセットアップ",
+      "heading_text": "特定のシェルを指定してセットアップ",
+      "depth": 1,
+      "line": 279,
+      "body_hash": "06a7442c2ae24d0c",
+      "body_hash_content": "8a2cc26a16b07630",
+      "body_line_count": 29,
+      "body_preview": "# 特定のシェルを指定してセットアップ $ eval \"$(specbridge shell-completion --show --shell zsh)\" `"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.10.1",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "`validate-boundary`",
+      "heading_text": "2.8 `validate-boundary`",
+      "depth": 3,
+      "line": 309,
+      "body_hash": "043c81d29c4084c2",
       "body_hash_content": "456c44baa098da7e",
       "body_line_count": 13,
-      "body_preview": "### 2.7 `validate-boundary`  すべてのコード参照が仕様書で宣言された `_Boundary:_` マーカー内にあることをチェックしま"
+      "body_preview": "### 2.8 `validate-boundary`  すべてのコード参照が仕様書で宣言された `_Boundary:_` マーカー内にあることをチェックしま"
     },
     {
-      "id": "docs.ja.07-cli-commands.7.7",
+      "id": "docs.ja.07-cli-commands.10.2",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`config`",
-      "heading_text": "2.8 `config`",
+      "heading_text": "2.9 `config`",
       "depth": 3,
-      "line": 257,
-      "body_hash": "666fd3a6752a6e3b",
+      "line": 323,
+      "body_hash": "ee38e0a81621a2e1",
       "body_hash_content": "f77c47b1aa4347fc",
       "body_line_count": 43,
-      "body_preview": "### 2.8 `config`  現在のspecbridge設定とそのソースを表示または検証します。  ``` Usage: specbridge confi"
+      "body_preview": "### 2.9 `config`  現在のspecbridge設定とそのソースを表示または検証します。  ``` Usage: specbridge confi"
     },
     {
-      "id": "docs.ja.07-cli-commands.7.8",
+      "id": "docs.ja.07-cli-commands.10.3",
       "file": "docs/ja/07-cli-commands.md",
       "title": "`watch`",
-      "heading_text": "2.9 `watch`",
-      "depth": 3,
-      "line": 301,
-      "body_hash": "fe1abd8777182ffe",
-      "body_hash_content": "9562e3948da4e6da",
-      "body_line_count": 17,
-      "body_preview": "### 2.9 `watch`  プロジェクトディレクトリのファイル変更を監視し、自動的に再分析します。`watchdog` パッケージが必要。  ``` Us"
-    },
-    {
-      "id": "docs.ja.07-cli-commands.7.9",
-      "file": "docs/ja/07-cli-commands.md",
-      "title": "`plugins`",
-      "heading_text": "2.10 `plugins`",
-      "depth": 3,
-      "line": 319,
-      "body_hash": "d731877a95e9534f",
-      "body_hash_content": "d31bcd235787902f",
-      "body_line_count": 13,
-      "body_preview": "### 2.10 `plugins`  インストールされているすべてのアダプタプラグイン（内蔵およびサードパーティ）を一覧表示します。  ``` Usage: "
-    },
-    {
-      "id": "docs.ja.07-cli-commands.7.10",
-      "file": "docs/ja/07-cli-commands.md",
-      "title": "`call-graph`",
-      "heading_text": "2.11 `call-graph`",
-      "depth": 3,
-      "line": 333,
-      "body_hash": "0a297fe7f3d49c45",
-      "body_hash_content": "79d3136649bed30e",
-      "body_line_count": 16,
-      "body_preview": "### 2.11 `call-graph`  関数レベルのコールグラフを構築し、specに対する推移的（間接）影響を分析します。  ``` Usage: spe"
-    },
-    {
-      "id": "docs.ja.07-cli-commands.7.11",
-      "file": "docs/ja/07-cli-commands.md",
-      "title": "`serve`",
-      "heading_text": "2.12 `serve`",
-      "depth": 3,
-      "line": 350,
-      "body_hash": "73da030aa934f998",
-      "body_hash_content": "496b4898ed4b8c79",
-      "body_line_count": 16,
-      "body_preview": "### 2.12 `serve`  AIエージェント統合用のMCPサーバーを起動します。  ``` Usage: specbridge serve [OPTIO"
-    },
-    {
-      "id": "docs.ja.07-cli-commands.7.12",
-      "file": "docs/ja/07-cli-commands.md",
-      "title": "`setup`",
-      "heading_text": "2.13 `setup`",
+      "heading_text": "2.10 `watch`",
       "depth": 3,
       "line": 367,
-      "body_hash": "745dea41ce199036",
-      "body_hash_content": "870800811042fb19",
-      "body_line_count": 14,
-      "body_preview": "### 2.13 `setup`  ワンコマンドでプロジェクトをブートストラップ。設定作成、フックインストール、AIエージェント用ファイル展開、初回スナップショ"
+      "body_hash": "5f7eab09c474bc4d",
+      "body_hash_content": "9562e3948da4e6da",
+      "body_line_count": 17,
+      "body_preview": "### 2.10 `watch`  プロジェクトディレクトリのファイル変更を監視し、自動的に再分析します。`watchdog` パッケージが必要。  ``` U"
     },
     {
-      "id": "docs.ja.07-cli-commands.7.1",
+      "id": "docs.ja.07-cli-commands.10.4",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "`plugins`",
+      "heading_text": "2.11 `plugins`",
+      "depth": 3,
+      "line": 385,
+      "body_hash": "f49597b982c192a1",
+      "body_hash_content": "d31bcd235787902f",
+      "body_line_count": 13,
+      "body_preview": "### 2.11 `plugins`  インストールされているすべてのアダプタプラグイン（内蔵およびサードパーティ）を一覧表示します。  ``` Usage: "
+    },
+    {
+      "id": "docs.ja.07-cli-commands.10.5",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "`call-graph`",
+      "heading_text": "2.12 `call-graph`",
+      "depth": 3,
+      "line": 399,
+      "body_hash": "d633859e103a5008",
+      "body_hash_content": "79d3136649bed30e",
+      "body_line_count": 16,
+      "body_preview": "### 2.12 `call-graph`  関数レベルのコールグラフを構築し、specに対する推移的（間接）影響を分析します。  ``` Usage: spe"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.10.6",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "`serve`",
+      "heading_text": "2.13 `serve`",
+      "depth": 3,
+      "line": 416,
+      "body_hash": "124d784b339bd4c0",
+      "body_hash_content": "496b4898ed4b8c79",
+      "body_line_count": 16,
+      "body_preview": "### 2.13 `serve`  AIエージェント統合用のMCPサーバーを起動します。  ``` Usage: specbridge serve [OPTIO"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.10.7",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "`setup`",
+      "heading_text": "2.14 `setup`",
+      "depth": 3,
+      "line": 433,
+      "body_hash": "12cbbc555d768ca8",
+      "body_hash_content": "870800811042fb19",
+      "body_line_count": 14,
+      "body_preview": "### 2.14 `setup`  ワンコマンドでプロジェクトをブートストラップ。設定作成、フックインストール、AIエージェント用ファイル展開、初回スナップショ"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.10.8",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "`init` ✨ 新機能",
+      "heading_text": "2.15 `init` ✨ 新機能",
+      "depth": 3,
+      "line": 448,
+      "body_hash": "1d07cac32b77dac6",
+      "body_hash_content": "7706b63388ac5dbc",
+      "body_line_count": 52,
+      "body_preview": "### 2.15 `init` ✨ 新機能  対話的に `.specbridge.yaml` を生成する設定ジェネレーターです。  ``` Usage: spe"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.10.9",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "`diff` ✨ 新機能",
+      "heading_text": "2.16 `diff` ✨ 新機能",
+      "depth": 3,
+      "line": 501,
+      "body_hash": "8a79592ba149ede6",
+      "body_hash_content": "84724bc1a8795d7d",
+      "body_line_count": 45,
+      "body_preview": "### 2.16 `diff` ✨ 新機能  2つのスナップショットファイルを比較し、要約差分を表示します。spec版の `git diff --stat` の"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.10.10",
+      "file": "docs/ja/07-cli-commands.md",
+      "title": "`suggest` ✨ 新機能",
+      "heading_text": "2.17 `suggest` ✨ 新機能",
+      "depth": 3,
+      "line": 547,
+      "body_hash": "670a46438a01bd1d",
+      "body_hash_content": "77496d364a8b5ead",
+      "body_line_count": 38,
+      "body_preview": "### 2.17 `suggest` ✨ 新機能  カバレッジのない孤立specに対して、実装候補となるコードファイルを提案します。  ``` Usage: s"
+    },
+    {
+      "id": "docs.ja.07-cli-commands.10.1",
       "file": "docs/ja/07-cli-commands.md",
       "title": "改善されたエラーメッセージ（v1.0）",
       "heading_text": "3. 改善されたエラーメッセージ（v1.0）",
       "depth": 2,
-      "line": 382,
+      "line": 586,
       "body_hash": "b77509ee4fed457f",
       "body_hash_content": "10afcdd5c42f728d",
       "body_line_count": 13,
       "body_preview": "## 3. 改善されたエラーメッセージ（v1.0）  specbridgeがサポート対象のプロジェクト構造を見つけられない場合、**実行可能なヒント**を提供す"
     },
     {
-      "id": "docs.ja.07-cli-commands.7.2",
+      "id": "docs.ja.07-cli-commands.10.2",
       "file": "docs/ja/07-cli-commands.md",
       "title": "終了コード",
       "heading_text": "4. 終了コード",
       "depth": 2,
-      "line": 396,
+      "line": 600,
       "body_hash": "9bb2775d030d3f07",
       "body_hash_content": "561f8e2a8679e7dc",
       "body_line_count": 6,
@@ -5529,10 +6009,10 @@
       "heading_text": "テスト戦略",
       "depth": 1,
       "line": 1,
-      "body_hash": "4461c0429ce07f01",
-      "body_hash_content": "301cee76dd0065cc",
+      "body_hash": "ee7b50cb3b12c4f6",
+      "body_hash_content": "add0d2b7eab87d93",
       "body_line_count": 4,
-      "body_preview": "# テスト戦略  > **日付:** 2026-07-26 > **バージョン:** 0.0.1.dev0"
+      "body_preview": "# テスト戦略  > **日付:** 2026-07-27 > **バージョン:** 1.0.0"
     },
     {
       "id": "docs.ja.11-testing-strategy.1.1",
@@ -5541,10 +6021,10 @@
       "heading_text": "1. 概要",
       "depth": 2,
       "line": 6,
-      "body_hash": "2b7da39eff86011e",
-      "body_hash_content": "c6a9a419232412a3",
-      "body_line_count": 5,
-      "body_preview": "## 1. 概要  specbridgeのテストスイートは `pytest` を使用し、すべての主要モジュールを単体テスト、統合テスト、境界テストでカバーします"
+      "body_hash": "d967799ed726fbb9",
+      "body_hash_content": "4dc3eb29efd275bb",
+      "body_line_count": 7,
+      "body_preview": "## 1. 概要  specbridgeのテストスイートは `pytest` を使用し、すべての主要モジュールを単体テスト、統合テスト、規模テスト、エッジケース"
     },
     {
       "id": "docs.ja.11-testing-strategy.1.2",
@@ -5552,10 +6032,10 @@
       "title": "テストファイル",
       "heading_text": "2. テストファイル",
       "depth": 2,
-      "line": 12,
-      "body_hash": "bf7cb5fe0d4e5a07",
-      "body_hash_content": "7dcbcc34371bb76a",
-      "body_line_count": 17,
+      "line": 14,
+      "body_hash": "b930ac6c40283f4f",
+      "body_hash_content": "7dbe8367ca71b90a",
+      "body_line_count": 20,
       "body_preview": "## 2. テストファイル  | ファイル | テスト対象モジュール | 焦点 | |---------|---------------------|-----"
     },
     {
@@ -5564,11 +6044,11 @@
       "title": "テストカテゴリ",
       "heading_text": "3. テストカテゴリ",
       "depth": 2,
-      "line": 30,
-      "body_hash": "d1194bdd24cae02a",
-      "body_hash_content": "cefe6c16fcfb9271",
-      "body_line_count": 4,
-      "body_preview": "## 3. テストカテゴリ <!-- @impl specbridge/analyzers/__init__.py::find_orphan_code --> "
+      "line": 35,
+      "body_hash": "2c2da773e3ef9ecf",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 1,
+      "body_preview": "## 3. テストカテゴリ"
     },
     {
       "id": "docs.ja.11-testing-strategy.1.3.1",
@@ -5576,11 +6056,11 @@
       "title": "単体テスト",
       "heading_text": "3.1 単体テスト",
       "depth": 3,
-      "line": 35,
-      "body_hash": "8e24720e1c9f0791",
-      "body_hash_content": "0b3cccf1f0df4c37",
+      "line": 37,
+      "body_hash": "e635221d9b378d4d",
+      "body_hash_content": "86689407b141a79c",
       "body_line_count": 9,
-      "body_preview": "### 3.1 単体テスト  個々の関数とクラスを独立してテスト。  **例:** - `discovery/spec.py`: `_split_section"
+      "body_preview": "### 3.1 単体テスト  個々の関数やクラスを独立してテストします。  **例:** - `discovery/spec.py`: `_split_sect"
     },
     {
       "id": "docs.ja.11-testing-strategy.1.3.2",
@@ -5588,11 +6068,11 @@
       "title": "統合テスト",
       "heading_text": "3.2 統合テスト",
       "depth": 3,
-      "line": 45,
-      "body_hash": "4bb141001227a861",
-      "body_hash_content": "76656fd17dc4c1c7",
+      "line": 47,
+      "body_hash": "128c46559949cfb2",
+      "body_hash_content": "0601d347fd231e6a",
       "body_line_count": 9,
-      "body_preview": "### 3.2 統合テスト  モジュールが連携して動作する方法をテスト。  **例:** - 実際のプロジェクトディレクトリ構造を使用した `build_heu"
+      "body_preview": "### 3.2 統合テスト  モジュールが連携して動作することをテストします。  **例:** - 実際のプロジェクトディレクトリ構造を使用した `build_"
     },
     {
       "id": "docs.ja.11-testing-strategy.1.3.3",
@@ -5600,11 +6080,11 @@
       "title": "境界テスト",
       "heading_text": "3.3 境界テスト",
       "depth": 3,
-      "line": 55,
-      "body_hash": "2e3109ff261ef608",
-      "body_hash_content": "33deb49aa3f6b955",
-      "body_line_count": 12,
-      "body_preview": "### 3.3 境界テスト  エッジケースとエラーハンドリングをテスト。  **例:** - 空のプロジェクトディレクトリ（仕様なし、コードなし） - 見出しの"
+      "line": 57,
+      "body_hash": "1e30a6e36ae0e349",
+      "body_hash_content": "d181dba903dc4b85",
+      "body_line_count": 15,
+      "body_preview": "### 3.3 境界テスト  エッジケースとエラーハンドリングをテストします。  **例:** - 空のプロジェクトディレクトリ（specなし、コードなし） -"
     },
     {
       "id": "docs.ja.11-testing-strategy.1.4",
@@ -5612,11 +6092,11 @@
       "title": "テストフィクスチャ（`tests/conftest.py`）",
       "heading_text": "4. テストフィクスチャ（`tests/conftest.py`）",
       "depth": 2,
-      "line": 68,
-      "body_hash": "834060bb0aed232d",
-      "body_hash_content": "580f441fb2eb9e3b",
+      "line": 73,
+      "body_hash": "c52435b285ff57e9",
+      "body_hash_content": "48275f49b0a778bf",
       "body_line_count": 11,
-      "body_preview": "## 4. テストフィクスチャ（`tests/conftest.py`）  テストスイートは共有フィクスチャを使用してボイラープレートを削減。  **典型的なフ"
+      "body_preview": "## 4. テストフィクスチャ（`tests/conftest.py`）  テストスイートは共有フィクスチャを使用してボイラープレートを削減します。  **代表"
     },
     {
       "id": "docs.ja.11-testing-strategy.1.5",
@@ -5624,11 +6104,11 @@
       "title": "テストの実行",
       "heading_text": "5. テストの実行",
       "depth": 2,
-      "line": 80,
-      "body_hash": "e3f781b470f05cff",
-      "body_hash_content": "fc42ba6a6c6f2946",
-      "body_line_count": 3,
-      "body_preview": "## 5. テストの実行 <!-- @impl tests/__init__.py -->  ```bash"
+      "line": 85,
+      "body_hash": "690af980b3fbd977",
+      "body_hash_content": "5f046190424d4104",
+      "body_line_count": 2,
+      "body_preview": "## 5. テストの実行  ```bash"
     },
     {
       "id": "docs.ja.11-testing-strategy.2",
@@ -5636,7 +6116,7 @@
       "title": "標準テスト実行",
       "heading_text": "標準テスト実行",
       "depth": 1,
-      "line": 84,
+      "line": 88,
       "body_hash": "9a7d53584c08a22f",
       "body_hash_content": "8004a972c3d5c274",
       "body_line_count": 2,
@@ -5648,7 +6128,7 @@
       "title": "カバレッジ付き",
       "heading_text": "カバレッジ付き",
       "depth": 1,
-      "line": 87,
+      "line": 91,
       "body_hash": "c102d9ea68df08de",
       "body_hash_content": "615b3ecbc519f94b",
       "body_line_count": 2,
@@ -5660,7 +6140,7 @@
       "title": "特定のテストファイル",
       "heading_text": "特定のテストファイル",
       "depth": 1,
-      "line": 90,
+      "line": 94,
       "body_hash": "b57426f6a80fc9d7",
       "body_hash_content": "f0384509d8e72bf5",
       "body_line_count": 2,
@@ -5672,7 +6152,7 @@
       "title": "詳細出力",
       "heading_text": "詳細出力",
       "depth": 1,
-      "line": 93,
+      "line": 97,
       "body_hash": "40447587f54ffae5",
       "body_hash_content": "3955688298a7b9bb",
       "body_line_count": 2,
@@ -5684,7 +6164,7 @@
       "title": "最初の失敗で停止",
       "heading_text": "最初の失敗で停止",
       "depth": 1,
-      "line": 96,
+      "line": 100,
       "body_hash": "58b392f685206a4b",
       "body_hash_content": "37867ccaa6835108",
       "body_line_count": 3,
@@ -5696,11 +6176,11 @@
       "title": "テスト設定",
       "heading_text": "6. テスト設定",
       "depth": 2,
-      "line": 100,
-      "body_hash": "974a173d1fe071b4",
-      "body_hash_content": "44c1f0dba66f8490",
+      "line": 104,
+      "body_hash": "6f8ee25ddd66e2af",
+      "body_hash_content": "c02d4387d3ae55e1",
       "body_line_count": 9,
-      "body_preview": "## 6. テスト設定  `pyproject.toml` より：  ```toml [tool.pytest.ini_options] testpaths ="
+      "body_preview": "## 6. テスト設定  `pyproject.toml` より:  ```toml [tool.pytest.ini_options] testpaths ="
     },
     {
       "id": "docs.ja.11-testing-strategy.6.2",
@@ -5708,11 +6188,11 @@
       "title": "リンターと型チェック",
       "heading_text": "7. リンターと型チェック",
       "depth": 2,
-      "line": 110,
-      "body_hash": "48a9324e1a06f160",
-      "body_hash_content": "ad8967db9548b205",
+      "line": 114,
+      "body_hash": "855f1cff988b7a4f",
+      "body_hash_content": "3a6820d425d0d737",
       "body_line_count": 13,
-      "body_preview": "## 7. リンターと型チェック  プロジェクトは以下も強制します：  - **Ruff** — ルールセット E, F, W, I, B, UP, C4, S"
+      "body_preview": "## 7. リンターと型チェック  プロジェクトは以下も強制します:  - **Ruff** — リンター（ルールセット: E, F, W, I, B, UP,"
     },
     {
       "id": "docs.ja.11-testing-strategy.6.3",
@@ -5720,11 +6200,11 @@
       "title": "CI統合",
       "heading_text": "8. CI統合",
       "depth": 2,
-      "line": 124,
-      "body_hash": "03333f5942214e8b",
-      "body_hash_content": "e7429674df02752b",
+      "line": 128,
+      "body_hash": "cc647a3a29c72ebe",
+      "body_hash_content": "3c72851fb109c259",
       "body_line_count": 10,
-      "body_preview": "## 8. CI統合  GitHub Actions（`/.github/workflows/ci.yml`）：  ```yaml - run: pip ins"
+      "body_preview": "## 8. CI統合  GitHub Actions（`/.github/workflows/ci.yml`）:  ```yaml - run: pip ins"
     },
     {
       "id": "docs.ja.11-testing-strategy.6.4",
@@ -5732,11 +6212,299 @@
       "title": "テスト原則",
       "heading_text": "9. テスト原則",
       "depth": 2,
-      "line": 135,
-      "body_hash": "1452bc3e672e736c",
-      "body_hash_content": "c5e61e610ad4a943",
+      "line": 139,
+      "body_hash": "b03f9dd7b19454e2",
+      "body_hash_content": "44c1128ffd342b03",
       "body_line_count": 8,
-      "body_preview": "## 9. テスト原則  1. **パブリックAPIをテスト** — プライベートメソッドではなく、公開関数シグネチャを通じてテストを優先 2. **現実的なフ"
+      "body_preview": "## 9. テスト原則  1. **公開APIをテスト** — プライベートメソッドではなく、公開関数シグネチャを通してテスト 2. **現実的なフィクスチャ*"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.1",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "ブランチ戦略",
+      "heading_text": "ブランチ戦略",
+      "depth": 1,
+      "line": 1,
+      "body_hash": "586e4c88a361d13a",
+      "body_hash_content": "7eff384937b39163",
+      "body_line_count": 4,
+      "body_preview": "# ブランチ戦略  > **日付:** 2026-07-28 > **バージョン:** 1.0.0"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.1.1",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "概要",
+      "heading_text": "1. 概要",
+      "depth": 2,
+      "line": 6,
+      "body_hash": "1bd37e5d5ae7849b",
+      "body_hash_content": "97a17d3c9757cdec",
+      "body_line_count": 17,
+      "body_preview": "## 1. 概要  specbridgeは **trunk-based development**（幹線開発）モデルを採用し、短命なトピックブランチを使用します"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.1.2",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "永続ブランチ",
+      "heading_text": "2. 永続ブランチ",
+      "depth": 2,
+      "line": 24,
+      "body_hash": "460c54681b3724c6",
+      "body_hash_content": "65faf2c2fc0a8162",
+      "body_line_count": 7,
+      "body_preview": "## 2. 永続ブランチ  | ブランチ | 目的 | 保護 | |---------|------|------| | `main` | 常にリリース可能。全"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.1.3",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "ブランチ命名規則",
+      "heading_text": "3. ブランチ命名規則",
+      "depth": 2,
+      "line": 32,
+      "body_hash": "464d50e4cd4e757d",
+      "body_hash_content": "9175d31aa4d99b2b",
+      "body_line_count": 17,
+      "body_preview": "## 3. ブランチ命名規則  | プレフィックス | 対象 | コミット種別 | |--------------|------|------------| |"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.1.4",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "ワークフロー",
+      "heading_text": "4. ワークフロー",
+      "depth": 2,
+      "line": 50,
+      "body_hash": "dbf0920660256fdc",
+      "body_hash_content": "036b2e111dfbeeb5",
+      "body_line_count": 13,
+      "body_preview": "## 4. ワークフロー  ```mermaid flowchart LR     A[ブランチ作成] --> B[変更を実装]     B --> C[ドキュ"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.1.4.1",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "ブランチ作成",
+      "heading_text": "4.1 ブランチ作成",
+      "depth": 3,
+      "line": 64,
+      "body_hash": "1a1b0ad22ec0f584",
+      "body_hash_content": "d89fd20533f7f0c4",
+      "body_line_count": 9,
+      "body_preview": "### 4.1 ブランチ作成  常に最新の `main` からブランチを作成:  ```bash git checkout main git pull git "
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.1.4.2",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "変更を実装",
+      "heading_text": "4.2 変更を実装",
+      "depth": 3,
+      "line": 74,
+      "body_hash": "2b959900bba5dc0f",
+      "body_hash_content": "cf90155989506c18",
+      "body_line_count": 9,
+      "body_preview": "### 4.2 変更を実装  [AGENTS.md](../AGENTS.md) のワークフローに従います:  1. コード変更 2. 📚 **ドキュメント同期"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.1.4.3",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "プルリクエストを作成",
+      "heading_text": "4.3 プルリクエストを作成",
+      "depth": 3,
+      "line": 84,
+      "body_hash": "1c2c305b43e4b11e",
+      "body_hash_content": "9967526f14d3c4d1",
+      "body_line_count": 16,
+      "body_preview": "### 4.3 プルリクエストを作成  単一開発者の変更も含め、すべての変更はPR経由で行います。これにより:  - CIが自動実行される（テスト + lint"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.1.4.4",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "マージ & クリーンアップ",
+      "heading_text": "4.4 マージ & クリーンアップ",
+      "depth": 3,
+      "line": 101,
+      "body_hash": "51a693993c2dada1",
+      "body_hash_content": "f8021a24a4ceec82",
+      "body_line_count": 4,
+      "body_preview": "### 4.4 マージ & クリーンアップ  常に **squash merge** で `main` にマージし、ブランチを削除します:  ```bash"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.2",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "GitHub PR画面から実行",
+      "heading_text": "GitHub PR画面から実行",
+      "depth": 1,
+      "line": 106,
+      "body_hash": "1120593a11b5629b",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 0,
+      "body_preview": "# GitHub PR画面から実行"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.3",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "マージ後にローカルブランチを削除",
+      "heading_text": "マージ後にローカルブランチを削除",
+      "depth": 1,
+      "line": 107,
+      "body_hash": "8e06228b10229ade",
+      "body_hash_content": "7d865679efd6531e",
+      "body_line_count": 5,
+      "body_preview": "# マージ後にローカルブランチを削除 git checkout main git pull git branch -d feat/my-feature ```"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.3.1",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "直接pushの例外",
+      "heading_text": "5. 直接pushの例外",
+      "depth": 2,
+      "line": 113,
+      "body_hash": "3a4a7cd8e8a10f8c",
+      "body_hash_content": "8b45b8d4397c20b7",
+      "body_line_count": 18,
+      "body_preview": "## 5. 直接pushの例外  単一開発者プロジェクトで過度な官僚主義は避けるべきです。以下の変更はPRなしで `main` に直接pushして構いません: "
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.3.2",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "リリースプロセス",
+      "heading_text": "6. リリースプロセス",
+      "depth": 2,
+      "line": 132,
+      "body_hash": "b1aca9fb81c2dee4",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 1,
+      "body_preview": "## 6. リリースプロセス"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.3.2.1",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "バージョニング",
+      "heading_text": "6.1 バージョニング",
+      "depth": 3,
+      "line": 134,
+      "body_hash": "12633469eae2bb29",
+      "body_hash_content": "fa8cf0d106a71cf0",
+      "body_line_count": 9,
+      "body_preview": "### 6.1 バージョニング  specbridgeは **セマンティックバージョニング** (semver) に従います:  | バージョン | フェーズ "
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.3.2.2",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "タグ付け",
+      "heading_text": "6.2 タグ付け",
+      "depth": 3,
+      "line": 144,
+      "body_hash": "9e3fb51f2008ecb3",
+      "body_hash_content": "9a9f391a3bc0386b",
+      "body_line_count": 8,
+      "body_preview": "### 6.2 タグ付け  リリースは `main` にタグを付けます:  ```bash git tag -a v1.1.0 -m \"v1.1.0 — Gra"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.3.2.3",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "CHANGELOG",
+      "heading_text": "6.3 CHANGELOG",
+      "depth": 3,
+      "line": 153,
+      "body_hash": "e8e7c24787831046",
+      "body_hash_content": "18e91b9ab386b8c5",
+      "body_line_count": 4,
+      "body_preview": "### 6.3 CHANGELOG  リリースごとに主要な変更をまとめた `CHANGELOG.md` を管理します:  ```"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.4",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "Changelog",
+      "heading_text": "Changelog",
+      "depth": 1,
+      "line": 158,
+      "body_hash": "3e79c4cafb504a21",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 1,
+      "body_preview": "# Changelog"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.4.1",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "v1.1.0 (2026-07-28)",
+      "heading_text": "v1.1.0 (2026-07-28)",
+      "depth": 2,
+      "line": 160,
+      "body_hash": "2d0613f641bde1ba",
+      "body_hash_content": "e3b0c44298fc1c14",
+      "body_line_count": 1,
+      "body_preview": "## v1.1.0 (2026-07-28)"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.4.1.1",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "Added",
+      "heading_text": "Added",
+      "depth": 3,
+      "line": 162,
+      "body_hash": "08c723e586bc96d0",
+      "body_hash_content": "c602f8fe98e01883",
+      "body_line_count": 2,
+      "body_preview": "### Added - Graphify adapter for deep AST-based code graph (#45)"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.4.1.2",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "Fixed",
+      "heading_text": "Fixed",
+      "depth": 3,
+      "line": 165,
+      "body_hash": "9efdc3ff4e529419",
+      "body_hash_content": "92f7e79b7bb97693",
+      "body_line_count": 2,
+      "body_preview": "### Fixed - Setup script path resolution on macOS (#42)"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.4.1.3",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "Changed",
+      "heading_text": "Changed",
+      "depth": 3,
+      "line": 168,
+      "body_hash": "ad50487e68660d71",
+      "body_hash_content": "4b8c53c96c2e38e9",
+      "body_line_count": 5,
+      "body_preview": "### Changed - Upgraded CI to actions/checkout@v7 ```  Conventional commit形式のコミット"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.4.2",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "ホットフィックスフロー",
+      "heading_text": "7. ホットフィックスフロー",
+      "depth": 2,
+      "line": 174,
+      "body_hash": "e6d4069acf71a232",
+      "body_hash_content": "d379f656793f88c3",
+      "body_line_count": 19,
+      "body_preview": "## 7. ホットフィックスフロー  リリース済みバージョンの緊急修正:  1. タグからブランチ作成: `git checkout -b fix/hotfix"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.4.3",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "CIゲート",
+      "heading_text": "8. CIゲート",
+      "depth": 2,
+      "line": 194,
+      "body_hash": "4e7362d5a485fe70",
+      "body_hash_content": "f986e68f414be85b",
+      "body_line_count": 8,
+      "body_preview": "## 8. CIゲート  `main` へのPRは以下をトリガーします:  1. **ci.yml** — Ruff lint → mypy型チェック → py"
+    },
+    {
+      "id": "docs.ja.12-branching-strategy.4.4",
+      "file": "docs/ja/12-branching-strategy.md",
+      "title": "ブランチ保護ルール（GitHub）",
+      "heading_text": "9. ブランチ保護ルール（GitHub）",
+      "depth": 2,
+      "line": 203,
+      "body_hash": "a9853c74e26a11ea",
+      "body_hash_content": "87d55ae1c658e92d",
+      "body_line_count": 11,
+      "body_preview": "## 9. ブランチ保護ルール（GitHub）  `main` の推奨設定:  - ☐ マージ前にプルリクエストを必須にする - ☐ ステータスチェックを必須に"
     },
     {
       "id": ".agents.skills.specbridge.SKILL.1",
@@ -6249,6 +7017,7 @@
       "symbols": [
         "ProjectAdapter",
         "_ensure_plugins_discovered",
+        "_normalize_spec_ids",
         "all_adapters",
         "analyze",
         "detect",
@@ -6266,7 +7035,7 @@
         "abc",
         "importlib.metadata"
       ],
-      "file_hash": "1b88d6b861a4cf27",
+      "file_hash": "ee059d1b04bc29d0",
       "functions": [
         {
           "name": "ProjectAdapter",
@@ -6342,8 +7111,15 @@
           "name": "merge_graphs",
           "kind": "function",
           "line": 164,
-          "body_hash": "ba73ed44be789edd",
-          "body_lines": 14
+          "body_hash": "eb0321b049f839fd",
+          "body_lines": 23
+        },
+        {
+          "name": "_normalize_spec_ids",
+          "kind": "function",
+          "line": 187,
+          "body_hash": "bbb417c857251e96",
+          "body_lines": 83
         }
       ]
     },
@@ -6711,6 +7487,7 @@
         "load_snapshot",
         "render_text",
         "save_snapshot",
+        "snapshot_diff",
         "to_dict"
       ],
       "is_test": false,
@@ -6720,7 +7497,7 @@
         "json",
         "datetime"
       ],
-      "file_hash": "2d0c0ce49a948ded",
+      "file_hash": "4a0d2af44848a08a",
       "functions": [
         {
           "name": "build_snapshot",
@@ -6782,8 +7559,15 @@
           "name": "compute_drift",
           "kind": "function",
           "line": 259,
-          "body_hash": "a7295b5f3cfa3863",
-          "body_lines": 165
+          "body_hash": "90c44888004b45aa",
+          "body_lines": 166
+        },
+        {
+          "name": "snapshot_diff",
+          "kind": "function",
+          "line": 425,
+          "body_hash": "3f09f4778a7d5a31",
+          "body_lines": 94
         }
       ]
     },
@@ -6906,6 +7690,8 @@
         "SpecbridgeHandler",
         "__init__",
         "_drift_git",
+        "_emit_completion_script",
+        "_install_completion",
         "_no_adapter_hint",
         "_validate_config",
         "analyze",
@@ -6913,14 +7699,18 @@
         "cli",
         "config",
         "coverage",
+        "diff",
         "drift",
         "impact",
+        "init",
         "on_any_event",
         "plugins",
         "serve",
         "setup",
+        "shell_completion",
         "snapshot",
         "status",
+        "suggest",
         "validate_boundary",
         "watch"
       ],
@@ -6931,7 +7721,7 @@
         "pathlib",
         "typing"
       ],
-      "file_hash": "09f94f64f2e300bf",
+      "file_hash": "8e743ce4e4b657b6",
       "functions": [
         {
           "name": "cli",
@@ -7063,13 +7853,55 @@
           "name": "setup",
           "kind": "function",
           "line": 852,
-          "body_hash": "b755be4d3baa7f37",
-          "body_lines": 56
+          "body_hash": "e85fc9fa67ba4bc0",
+          "body_lines": 57
+        },
+        {
+          "name": "init",
+          "kind": "function",
+          "line": 909,
+          "body_hash": "cb1f41965add5f51",
+          "body_lines": 128
+        },
+        {
+          "name": "shell_completion",
+          "kind": "function",
+          "line": 1037,
+          "body_hash": "90abf912df22a1bf",
+          "body_lines": 55
+        },
+        {
+          "name": "_emit_completion_script",
+          "kind": "function",
+          "line": 1092,
+          "body_hash": "14e738fb634b4fe6",
+          "body_lines": 9
+        },
+        {
+          "name": "_install_completion",
+          "kind": "function",
+          "line": 1101,
+          "body_hash": "cd54f0c95e3acd41",
+          "body_lines": 47
+        },
+        {
+          "name": "diff",
+          "kind": "function",
+          "line": 1148,
+          "body_hash": "29d67245c4560362",
+          "body_lines": 92
+        },
+        {
+          "name": "suggest",
+          "kind": "function",
+          "line": 1240,
+          "body_hash": "0834ff34f19a60cf",
+          "body_lines": 97
         },
         {
           "name": "_validate_config",
           "kind": "function",
-          "line": 908,
+          "line": 1337,
           "body_hash": "24ca1b3568aec8ad",
           "body_lines": 34
         }
@@ -7081,6 +7913,8 @@
       "symbols": [
         "SpecbridgeConfig",
         "_merge_dict",
+        "_safe_float",
+        "_safe_int",
         "_try_read_pyproject",
         "_try_read_yaml",
         "load"
@@ -7092,7 +7926,7 @@
         "dataclasses",
         "pathlib"
       ],
-      "file_hash": "c41dc92409ae61aa",
+      "file_hash": "bef093418f1f0f2a",
       "functions": [
         {
           "name": "SpecbridgeConfig",
@@ -7126,8 +7960,22 @@
           "name": "_merge_dict",
           "kind": "function",
           "line": 115,
-          "body_hash": "50203d42e3c125e8",
-          "body_lines": 10
+          "body_hash": "7a2861dc638725e0",
+          "body_lines": 2
+        },
+        {
+          "name": "_safe_float",
+          "kind": "function",
+          "line": 117,
+          "body_hash": "796397fba4845ad0",
+          "body_lines": 6
+        },
+        {
+          "name": "_safe_int",
+          "kind": "function",
+          "line": 123,
+          "body_hash": "1680fcd3a6497281",
+          "body_lines": 14
         }
       ]
     },
@@ -7157,7 +8005,7 @@
         "uuid",
         "dataclasses"
       ],
-      "file_hash": "c86830f44d07337d",
+      "file_hash": "b815c3fbd346af0a",
       "functions": [
         {
           "name": "NodeType",
@@ -7254,8 +8102,8 @@
           "name": "find_spec_nodes",
           "kind": "function",
           "line": 100,
-          "body_hash": "a6c7ab4051ba84e7",
-          "body_lines": 34
+          "body_hash": "fc945b9bb90b0061",
+          "body_lines": 35
         }
       ]
     },
@@ -8095,6 +8943,7 @@
         "TestDetectAll",
         "TestMergeCLI",
         "TestMergeGraphs",
+        "TestNormalizeSpecIds",
         "make_graph_a",
         "make_graph_b",
         "test_detect_all_order",
@@ -8106,7 +8955,10 @@
         "test_merge_second_overwrites",
         "test_merge_single",
         "test_merge_union_nodes",
-        "test_returns_multiple_adapters"
+        "test_returns_multiple_adapters",
+        "test_spec_prefix_no_heuristic",
+        "test_spec_prefix_normalized",
+        "test_spec_prefix_partial_suffix"
       ],
       "is_test": true,
       "language": "Python",
@@ -8115,7 +8967,7 @@
         "pathlib",
         "specbridge.adapters._base"
       ],
-      "file_hash": "ee94da8c3b3e3b3e",
+      "file_hash": "ada4db6028574d55",
       "functions": [
         {
           "name": "TestDetectAll",
@@ -8209,16 +9061,44 @@
           "body_lines": 10
         },
         {
-          "name": "TestMergeCLI",
+          "name": "TestNormalizeSpecIds",
           "kind": "class",
           "line": 126,
+          "body_hash": "054ef758985f555b",
+          "body_lines": 3
+        },
+        {
+          "name": "test_spec_prefix_normalized",
+          "kind": "function",
+          "line": 129,
+          "body_hash": "4da4b97a7c49f1cc",
+          "body_lines": 29
+        },
+        {
+          "name": "test_spec_prefix_no_heuristic",
+          "kind": "function",
+          "line": 158,
+          "body_hash": "f741afe104ab5209",
+          "body_lines": 11
+        },
+        {
+          "name": "test_spec_prefix_partial_suffix",
+          "kind": "function",
+          "line": 169,
+          "body_hash": "09913a9a41edcd0c",
+          "body_lines": 15
+        },
+        {
+          "name": "TestMergeCLI",
+          "kind": "class",
+          "line": 184,
           "body_hash": "8142dccd89257b8f",
           "body_lines": 3
         },
         {
           "name": "test_merge_produces_graph",
           "kind": "function",
-          "line": 129,
+          "line": 187,
           "body_hash": "3378f6fec60628a2",
           "body_lines": 11
         }
@@ -8982,19 +9862,98 @@
       ]
     },
     {
+      "file": "tests/test_concurrent.py",
+      "module": "tests",
+      "symbols": [
+        "TestConcurrentSnapshot",
+        "_analyze",
+        "_save",
+        "_snapshot",
+        "project",
+        "test_concurrent_analysis_and_snapshot",
+        "test_concurrent_snapshot_save"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "threading",
+        "pathlib"
+      ],
+      "file_hash": "1027b814ce8bfc3a",
+      "functions": [
+        {
+          "name": "TestConcurrentSnapshot",
+          "kind": "class",
+          "line": 17,
+          "body_hash": "fb01afd1e1bd00f4",
+          "body_lines": 4
+        },
+        {
+          "name": "project",
+          "kind": "function",
+          "line": 21,
+          "body_hash": "f7cad4a69b1c8c21",
+          "body_lines": 19
+        },
+        {
+          "name": "test_concurrent_snapshot_save",
+          "kind": "function",
+          "line": 40,
+          "body_hash": "13dcf4d832942aac",
+          "body_lines": 4
+        },
+        {
+          "name": "_save",
+          "kind": "function",
+          "line": 44,
+          "body_hash": "7991ed98ab42d47d",
+          "body_lines": 17
+        },
+        {
+          "name": "test_concurrent_analysis_and_snapshot",
+          "kind": "function",
+          "line": 61,
+          "body_hash": "1c469c571f16d537",
+          "body_lines": 4
+        },
+        {
+          "name": "_analyze",
+          "kind": "function",
+          "line": 65,
+          "body_hash": "b947733def764e6a",
+          "body_lines": 8
+        },
+        {
+          "name": "_snapshot",
+          "kind": "function",
+          "line": 73,
+          "body_hash": "730e58669b3d0ff6",
+          "body_lines": 21
+        }
+      ]
+    },
+    {
       "file": "tests/test_config.py",
       "module": "tests",
       "symbols": [
         "TestConfigCLI",
         "TestConfigDefaults",
+        "TestConfigEdgeCases",
         "TestConfigYaml",
         "test_broken_yaml",
         "test_config_command_defaults",
         "test_config_command_shows_source",
         "test_config_command_yaml",
         "test_defaults",
+        "test_empty_yaml_returns_defaults",
+        "test_invalid_yaml_returns_defaults",
         "test_load_no_project_file",
         "test_load_without_file_at_root",
+        "test_unknown_keys_ignored",
+        "test_validation_out_of_range",
+        "test_validation_reports_missing_dirs",
+        "test_wrong_value_types",
         "test_yaml_custom_source_dirs",
         "test_yaml_custom_spec_dirs",
         "test_yaml_exclude_dirs",
@@ -9009,7 +9968,7 @@
         "pathlib",
         "specbridge.config"
       ],
-      "file_hash": "17c441010818f576",
+      "file_hash": "df37a69969ce4fe7",
       "functions": [
         {
           "name": "TestConfigDefaults",
@@ -9120,8 +10079,57 @@
           "name": "test_config_command_yaml",
           "kind": "function",
           "line": 142,
-          "body_hash": "4a8e1e9d3622b239",
-          "body_lines": 13
+          "body_hash": "2113b6a556386f0b",
+          "body_lines": 14
+        },
+        {
+          "name": "TestConfigEdgeCases",
+          "kind": "class",
+          "line": 156,
+          "body_hash": "d18da96e005e41a6",
+          "body_lines": 3
+        },
+        {
+          "name": "test_invalid_yaml_returns_defaults",
+          "kind": "function",
+          "line": 159,
+          "body_hash": "9fdbfdc8ca7d1b76",
+          "body_lines": 10
+        },
+        {
+          "name": "test_empty_yaml_returns_defaults",
+          "kind": "function",
+          "line": 169,
+          "body_hash": "efdb17f3d416df24",
+          "body_lines": 9
+        },
+        {
+          "name": "test_unknown_keys_ignored",
+          "kind": "function",
+          "line": 178,
+          "body_hash": "e8169d88551de8ba",
+          "body_lines": 11
+        },
+        {
+          "name": "test_wrong_value_types",
+          "kind": "function",
+          "line": 189,
+          "body_hash": "708da150cb312d67",
+          "body_lines": 15
+        },
+        {
+          "name": "test_validation_reports_missing_dirs",
+          "kind": "function",
+          "line": 204,
+          "body_hash": "f1110a860d152be8",
+          "body_lines": 14
+        },
+        {
+          "name": "test_validation_out_of_range",
+          "kind": "function",
+          "line": 218,
+          "body_hash": "70290c7bcbc45eb5",
+          "body_lines": 16
         }
       ]
     },
@@ -9338,6 +10346,110 @@
           "line": 252,
           "body_hash": "9ba6bce566ac6535",
           "body_lines": 6
+        }
+      ]
+    },
+    {
+      "file": "tests/test_edge_cases.py",
+      "module": "tests",
+      "symbols": [
+        "TestCorruptedInput",
+        "TestPathEdgeCases",
+        "corrupted_project",
+        "edge_project",
+        "test_binary_file_ignored",
+        "test_config_with_special_paths",
+        "test_empty_file_no_crash",
+        "test_large_heading_not_truncated",
+        "test_no_headings_still_scanned",
+        "test_snapshot_with_special_paths",
+        "test_special_paths_analyze"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "pytest"
+      ],
+      "file_hash": "74b457273669cedf",
+      "functions": [
+        {
+          "name": "TestPathEdgeCases",
+          "kind": "class",
+          "line": 17,
+          "body_hash": "9246d16ab95d7703",
+          "body_lines": 4
+        },
+        {
+          "name": "edge_project",
+          "kind": "function",
+          "line": 21,
+          "body_hash": "ce6b3de3477effe8",
+          "body_lines": 62
+        },
+        {
+          "name": "test_special_paths_analyze",
+          "kind": "function",
+          "line": 83,
+          "body_hash": "f7f4b74e8e92de50",
+          "body_lines": 9
+        },
+        {
+          "name": "test_config_with_special_paths",
+          "kind": "function",
+          "line": 92,
+          "body_hash": "dfe55b4eaa8991de",
+          "body_lines": 8
+        },
+        {
+          "name": "test_snapshot_with_special_paths",
+          "kind": "function",
+          "line": 100,
+          "body_hash": "6538a4533f9763e5",
+          "body_lines": 8
+        },
+        {
+          "name": "TestCorruptedInput",
+          "kind": "class",
+          "line": 108,
+          "body_hash": "bc8a242b841caf92",
+          "body_lines": 4
+        },
+        {
+          "name": "corrupted_project",
+          "kind": "function",
+          "line": 112,
+          "body_hash": "69c64efee843484e",
+          "body_lines": 36
+        },
+        {
+          "name": "test_binary_file_ignored",
+          "kind": "function",
+          "line": 148,
+          "body_hash": "6aaa7471b999d270",
+          "body_lines": 9
+        },
+        {
+          "name": "test_empty_file_no_crash",
+          "kind": "function",
+          "line": 157,
+          "body_hash": "bf0026c99e892428",
+          "body_lines": 8
+        },
+        {
+          "name": "test_no_headings_still_scanned",
+          "kind": "function",
+          "line": 165,
+          "body_hash": "f1170c176039e194",
+          "body_lines": 9
+        },
+        {
+          "name": "test_large_heading_not_truncated",
+          "kind": "function",
+          "line": 174,
+          "body_hash": "af45b01de538c0cf",
+          "body_lines": 9
         }
       ]
     },
@@ -9998,6 +11110,78 @@
       ]
     },
     {
+      "file": "tests/test_large_scale.py",
+      "module": "tests",
+      "symbols": [
+        "TestLargeProjectScale",
+        "_generate_large_project",
+        "large_project",
+        "test_analysis_completes",
+        "test_coverage_summary",
+        "test_fast_mode",
+        "test_snapshot_and_drift"
+      ],
+      "is_test": true,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "pytest"
+      ],
+      "file_hash": "99447a4fa89b944b",
+      "functions": [
+        {
+          "name": "_generate_large_project",
+          "kind": "function",
+          "line": 19,
+          "body_hash": "320144e3b90c5c12",
+          "body_lines": 49
+        },
+        {
+          "name": "TestLargeProjectScale",
+          "kind": "class",
+          "line": 68,
+          "body_hash": "4e3b1acf031d9c40",
+          "body_lines": 4
+        },
+        {
+          "name": "large_project",
+          "kind": "function",
+          "line": 72,
+          "body_hash": "69694c8ced93f88a",
+          "body_lines": 6
+        },
+        {
+          "name": "test_analysis_completes",
+          "kind": "function",
+          "line": 78,
+          "body_hash": "bee61e748cc2a7f8",
+          "body_lines": 12
+        },
+        {
+          "name": "test_coverage_summary",
+          "kind": "function",
+          "line": 90,
+          "body_hash": "45528a3bbeeb21dc",
+          "body_lines": 10
+        },
+        {
+          "name": "test_snapshot_and_drift",
+          "kind": "function",
+          "line": 100,
+          "body_hash": "d09d38a1e9d970b5",
+          "body_lines": 9
+        },
+        {
+          "name": "test_fast_mode",
+          "kind": "function",
+          "line": 109,
+          "body_hash": "d2f44f05dbf5cabb",
+          "body_lines": 8
+        }
+      ]
+    },
+    {
       "file": "tests/test_plugin_discovery.py",
       "module": "tests",
       "symbols": [
@@ -10411,6 +11595,7 @@
     "docs.en.01-architecture.1.6.2",
     "docs.en.01-architecture.1.6.3",
     "docs.en.01-architecture.1.7",
+    "docs.en.01-architecture.1.8",
     "docs.en.02-data-model.1",
     "docs.en.02-data-model.1.1",
     "docs.en.02-data-model.1.2",
@@ -10444,6 +11629,7 @@
     "docs.en.04-discovery-engine.2.2",
     "docs.en.04-discovery-engine.2.3",
     "docs.en.06-drift-detection.2",
+    "docs.en.07-cli-commands.3",
     "docs.en.08-output-rendering.1",
     "docs.en.08-output-rendering.1.1",
     "docs.en.08-output-rendering.1.2",
@@ -10487,7 +11673,6 @@
     "docs.en.11-testing-strategy.1.3",
     "docs.en.11-testing-strategy.1.3.1",
     "docs.en.11-testing-strategy.1.3.2",
-    "docs.en.11-testing-strategy.1.3.3",
     "docs.en.11-testing-strategy.1.4",
     "docs.en.11-testing-strategy.2",
     "docs.en.11-testing-strategy.5",
@@ -10496,6 +11681,30 @@
     "docs.en.11-testing-strategy.6.2",
     "docs.en.11-testing-strategy.6.3",
     "docs.en.11-testing-strategy.6.4",
+    "docs.en.12-branching-strategy.1",
+    "docs.en.12-branching-strategy.1.1",
+    "docs.en.12-branching-strategy.1.2",
+    "docs.en.12-branching-strategy.1.3",
+    "docs.en.12-branching-strategy.1.4",
+    "docs.en.12-branching-strategy.1.4.1",
+    "docs.en.12-branching-strategy.1.4.2",
+    "docs.en.12-branching-strategy.1.4.3",
+    "docs.en.12-branching-strategy.1.4.4",
+    "docs.en.12-branching-strategy.2",
+    "docs.en.12-branching-strategy.3",
+    "docs.en.12-branching-strategy.3.1",
+    "docs.en.12-branching-strategy.3.2",
+    "docs.en.12-branching-strategy.3.2.1",
+    "docs.en.12-branching-strategy.3.2.2",
+    "docs.en.12-branching-strategy.3.2.3",
+    "docs.en.12-branching-strategy.4",
+    "docs.en.12-branching-strategy.4.1",
+    "docs.en.12-branching-strategy.4.1.1",
+    "docs.en.12-branching-strategy.4.1.2",
+    "docs.en.12-branching-strategy.4.1.3",
+    "docs.en.12-branching-strategy.4.2",
+    "docs.en.12-branching-strategy.4.3",
+    "docs.en.12-branching-strategy.4.4",
     "docs.ja.01-architecture.1",
     "docs.ja.01-architecture.1.2",
     "docs.ja.01-architecture.1.3",
@@ -10507,6 +11716,7 @@
     "docs.ja.01-architecture.1.6.1",
     "docs.ja.01-architecture.1.6.2",
     "docs.ja.01-architecture.1.6.3",
+    "docs.ja.01-architecture.1.8",
     "docs.ja.02-data-model.1",
     "docs.ja.02-data-model.1.1",
     "docs.ja.02-data-model.1.2.1",
@@ -10543,6 +11753,7 @@
     "docs.ja.06-drift-detection.1",
     "docs.ja.06-drift-detection.2",
     "docs.ja.06-drift-detection.3.2",
+    "docs.ja.07-cli-commands.7.5",
     "docs.ja.08-output-rendering.1",
     "docs.ja.08-output-rendering.1.4.1",
     "docs.ja.08-output-rendering.1.4.2",
@@ -10561,22 +11772,44 @@
     "docs.ja.10-mcp-integration.4.1",
     "docs.ja.10-mcp-integration.4.2",
     "docs.ja.11-testing-strategy.1",
+    "docs.ja.11-testing-strategy.1.3",
     "docs.ja.11-testing-strategy.1.3.1",
     "docs.ja.11-testing-strategy.1.3.2",
     "docs.ja.11-testing-strategy.1.3.3",
     "docs.ja.11-testing-strategy.1.4",
-    "docs.ja.11-testing-strategy.2",
-    "docs.ja.11-testing-strategy.5",
-    "docs.ja.11-testing-strategy.6",
+    "docs.ja.11-testing-strategy.1.5",
     "docs.ja.11-testing-strategy.6.1",
-    "docs.ja.11-testing-strategy.6.3"
+    "docs.ja.11-testing-strategy.6.3",
+    "docs.ja.12-branching-strategy.1",
+    "docs.ja.12-branching-strategy.1.1",
+    "docs.ja.12-branching-strategy.1.2",
+    "docs.ja.12-branching-strategy.1.3",
+    "docs.ja.12-branching-strategy.1.4",
+    "docs.ja.12-branching-strategy.1.4.1",
+    "docs.ja.12-branching-strategy.1.4.2",
+    "docs.ja.12-branching-strategy.1.4.3",
+    "docs.ja.12-branching-strategy.1.4.4",
+    "docs.ja.12-branching-strategy.2",
+    "docs.ja.12-branching-strategy.3",
+    "docs.ja.12-branching-strategy.3.1",
+    "docs.ja.12-branching-strategy.3.2",
+    "docs.ja.12-branching-strategy.3.2.2",
+    "docs.ja.12-branching-strategy.3.2.3",
+    "docs.ja.12-branching-strategy.4",
+    "docs.ja.12-branching-strategy.4.1",
+    "docs.ja.12-branching-strategy.4.1.1",
+    "docs.ja.12-branching-strategy.4.1.2",
+    "docs.ja.12-branching-strategy.4.1.3",
+    "docs.ja.12-branching-strategy.4.2",
+    "docs.ja.12-branching-strategy.4.3",
+    "docs.ja.12-branching-strategy.4.4"
   ],
   "coverage": {
-    "total": 508,
-    "covered": 299,
-    "orphan": 209,
-    "coverage_pct": 58.9,
-    "spec_count": 518,
-    "code_count": 46
+    "total": 572,
+    "covered": 314,
+    "orphan": 258,
+    "coverage_pct": 54.9,
+    "spec_count": 582,
+    "code_count": 49
   }
 }

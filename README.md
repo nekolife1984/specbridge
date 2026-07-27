@@ -321,7 +321,7 @@ See [AGENTS.md](AGENTS.md) in the specbridge repo for a complete example.
 
 ## Documentation
 
-Full design docs are in [`docs/`](docs/) (EN + JA, 11 categories):
+Full design docs are in [`docs/`](docs/) (EN + JA, 12 categories):
 
 | Doc | Description |
 |-----|-------------|
@@ -335,7 +335,8 @@ Full design docs are in [`docs/`](docs/) (EN + JA, 11 categories):
 | [Output Rendering](docs/en/08-output-rendering.md) | Text, JSON, HTML output formats |
 | [Configuration](docs/en/09-configuration.md) | .specbridge.yaml, layered config |
 | [MCP Integration](docs/en/10-mcp-integration.md) | AI agent integration |
-| [Testing Strategy](docs/en/11-testing-strategy.md) | Test architecture |
+|| [Testing Strategy](docs/en/11-testing-strategy.md) | Test architecture |
+|| [Branching Strategy](docs/en/12-branching-strategy.md) | Branch conventions, PR workflow, release process |
 
 ---
 
