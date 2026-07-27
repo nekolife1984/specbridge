@@ -100,13 +100,13 @@ class GraphifyAdapter(ProjectAdapter):
         graph_json = root / self._GRAPHFIFY_JSON
         if not graph_json.exists():
             self._run_graphify(directory)
-
-        # 2. Re-read (in case of concurrent writes)
         if not graph_json.exists():
-            print("[graphify] graphify-out/graph.json not found — running graphify", file=sys.stderr)
-            self._run_graphify(directory)
+            raise FileNotFoundError(
+                f"graphify の出力が見つかりません: {graph_json}。"
+                f" graphify CLI がインストールされているか確認してください。"
+            )
 
-        # 3. Parse graphify output
+        # 2. Parse graphify output
         with open(graph_json) as f:
             gdata = json.load(f)
 
