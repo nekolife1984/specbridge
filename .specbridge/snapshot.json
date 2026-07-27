@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T08:39:56",
-  "reason": "Session: #47 YAML spec support — commit point",
+  "timestamp": "2026-07-28T08:41:34",
+  "reason": "Session: #46 HTML coverage report — commit point",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -8442,7 +8442,7 @@
         "pathlib",
         "typing"
       ],
-      "file_hash": "dd30af938a5f8afe",
+      "file_hash": "0e6b8054971967cc",
       "functions": [
         {
           "name": "cli",
@@ -8455,188 +8455,188 @@
           "name": "_no_adapter_hint",
           "kind": "function",
           "line": 22,
-          "body_hash": "e061c83e8ee9684d",
-          "body_lines": 36
+          "body_hash": "dafa6e9112ef9ef3",
+          "body_lines": 39
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 58,
-          "body_hash": "9d7699479d979627",
-          "body_lines": 99
+          "line": 61,
+          "body_hash": "c091dc6addcc7a66",
+          "body_lines": 115
         },
         {
           "name": "impact",
           "kind": "function",
-          "line": 157,
+          "line": 176,
           "body_hash": "e69176bafff2a69d",
           "body_lines": 28
         },
         {
           "name": "_forward_impact",
           "kind": "function",
-          "line": 185,
+          "line": 204,
           "body_hash": "f3ef6cfa6bbe837d",
           "body_lines": 85
         },
         {
           "name": "_reverse_impact",
           "kind": "function",
-          "line": 270,
+          "line": 289,
           "body_hash": "7469b8fa3378f572",
           "body_lines": 166
         },
         {
           "name": "coverage",
           "kind": "function",
-          "line": 436,
+          "line": 455,
           "body_hash": "1170fe2adedb970d",
           "body_lines": 64
         },
         {
           "name": "snapshot",
           "kind": "function",
-          "line": 500,
+          "line": 519,
           "body_hash": "0cba8996eb6ac415",
           "body_lines": 41
         },
         {
           "name": "drift",
           "kind": "function",
-          "line": 541,
+          "line": 560,
           "body_hash": "d3c3ff19d6403e7d",
           "body_lines": 48
         },
         {
           "name": "_drift_git",
           "kind": "function",
-          "line": 589,
+          "line": 608,
           "body_hash": "f2e693d3de6e8168",
           "body_lines": 52
         },
         {
           "name": "validate_boundary",
           "kind": "function",
-          "line": 641,
+          "line": 660,
           "body_hash": "87aa4915d37ac348",
           "body_lines": 67
         },
         {
           "name": "status",
           "kind": "function",
-          "line": 708,
+          "line": 727,
           "body_hash": "69983f5576368029",
           "body_lines": 102
         },
         {
           "name": "config",
           "kind": "function",
-          "line": 810,
+          "line": 829,
           "body_hash": "4fde42903847f58e",
           "body_lines": 62
         },
         {
           "name": "watch",
           "kind": "function",
-          "line": 872,
+          "line": 891,
           "body_hash": "69cfba071467f247",
           "body_lines": 19
         },
         {
           "name": "SpecbridgeHandler",
           "kind": "class",
-          "line": 891,
+          "line": 910,
           "body_hash": "ae2a7008499982ae",
           "body_lines": 1
         },
         {
           "name": "__init__",
           "kind": "function",
-          "line": 892,
+          "line": 911,
           "body_hash": "67dc46120c3f5b72",
           "body_lines": 5
         },
         {
           "name": "on_any_event",
           "kind": "function",
-          "line": 897,
+          "line": 916,
           "body_hash": "e47dbcd34d55736f",
           "body_lines": 59
         },
         {
           "name": "plugins",
           "kind": "function",
-          "line": 956,
+          "line": 975,
           "body_hash": "48df660ccb0d77f4",
           "body_lines": 32
         },
         {
           "name": "serve",
           "kind": "function",
-          "line": 988,
+          "line": 1007,
           "body_hash": "c1dce52f645d6988",
           "body_lines": 26
         },
         {
           "name": "call_graph",
           "kind": "function",
-          "line": 1014,
+          "line": 1033,
           "body_hash": "c6bc02a60197debe",
           "body_lines": 54
         },
         {
           "name": "setup",
           "kind": "function",
-          "line": 1068,
+          "line": 1087,
           "body_hash": "e85fc9fa67ba4bc0",
           "body_lines": 57
         },
         {
           "name": "init",
           "kind": "function",
-          "line": 1125,
+          "line": 1144,
           "body_hash": "56768e834cab37d4",
           "body_lines": 127
         },
         {
           "name": "shell_completion",
           "kind": "function",
-          "line": 1252,
+          "line": 1271,
           "body_hash": "90abf912df22a1bf",
           "body_lines": 55
         },
         {
           "name": "_emit_completion_script",
           "kind": "function",
-          "line": 1307,
+          "line": 1326,
           "body_hash": "14e738fb634b4fe6",
           "body_lines": 9
         },
         {
           "name": "_install_completion",
           "kind": "function",
-          "line": 1316,
+          "line": 1335,
           "body_hash": "cd54f0c95e3acd41",
           "body_lines": 47
         },
         {
           "name": "diff",
           "kind": "function",
-          "line": 1363,
+          "line": 1382,
           "body_hash": "aeca0dd827ee9f56",
           "body_lines": 92
         },
         {
           "name": "suggest",
           "kind": "function",
-          "line": 1455,
+          "line": 1474,
           "body_hash": "a2555433d8edc6ce",
           "body_lines": 95
         },
         {
           "name": "_validate_config",
           "kind": "function",
-          "line": 1550,
+          "line": 1569,
           "body_hash": "24ca1b3568aec8ad",
           "body_lines": 34
         }
@@ -10062,7 +10062,11 @@
       "module": "outputs",
       "symbols": [
         "_graph_data",
-        "render_html"
+        "_spec_row",
+        "filterTable",
+        "render_html",
+        "render_html_report",
+        "searchTable"
       ],
       "is_test": false,
       "language": "Python",
@@ -10071,7 +10075,7 @@
         "json",
         "specbridge.core"
       ],
-      "file_hash": "6aadf6e6c17b36af",
+      "file_hash": "40e5e174a3bcaeb8",
       "functions": [
         {
           "name": "_graph_data",
@@ -10081,9 +10085,37 @@
           "body_lines": 27
         },
         {
-          "name": "render_html",
+          "name": "render_html_report",
           "kind": "function",
           "line": 61,
+          "body_hash": "06613a45f8b12b68",
+          "body_lines": 37
+        },
+        {
+          "name": "_spec_row",
+          "kind": "function",
+          "line": 98,
+          "body_hash": "1bf208051e2e7f63",
+          "body_lines": 141
+        },
+        {
+          "name": "filterTable",
+          "kind": "function",
+          "line": 239,
+          "body_hash": "e49ee35eabf18408",
+          "body_lines": 14
+        },
+        {
+          "name": "searchTable",
+          "kind": "function",
+          "line": 253,
+          "body_hash": "58b85c1b98777af7",
+          "body_lines": 14
+        },
+        {
+          "name": "render_html",
+          "kind": "function",
+          "line": 267,
           "body_hash": "06ca197dd35ecfa5",
           "body_lines": 242
         }
@@ -13379,6 +13411,7 @@
     "docs.ja.01-architecture.1",
     "docs.ja.01-architecture.1.2",
     "docs.ja.01-architecture.1.3",
+    "docs.ja.01-architecture.1.4",
     "docs.ja.01-architecture.1.4.1",
     "docs.ja.01-architecture.1.4.2",
     "docs.ja.01-architecture.1.4.3",
@@ -13398,6 +13431,7 @@
     "docs.ja.02-data-model.1.3.3",
     "docs.ja.02-data-model.1.4",
     "docs.ja.02-data-model.1.4.1",
+    "docs.ja.02-data-model.1.5",
     "docs.ja.02-data-model.1.5.1",
     "docs.ja.03-adapter-plugin-system.1",
     "docs.ja.03-adapter-plugin-system.1.1",
@@ -13425,9 +13459,11 @@
     "docs.ja.06-drift-detection.3.2",
     "docs.ja.07-cli-commands.11.4",
     "docs.ja.08-output-rendering.1",
+    "docs.ja.08-output-rendering.1.2",
     "docs.ja.08-output-rendering.1.4.1",
     "docs.ja.08-output-rendering.1.4.2",
     "docs.ja.08-output-rendering.1.4.3",
+    "docs.ja.08-output-rendering.1.6",
     "docs.ja.09-configuration.1",
     "docs.ja.09-configuration.3.2",
     "docs.ja.09-configuration.3.3",
@@ -13551,9 +13587,9 @@
   ],
   "coverage": {
     "total": 683,
-    "covered": 339,
-    "orphan": 344,
-    "coverage_pct": 49.6,
+    "covered": 335,
+    "orphan": 348,
+    "coverage_pct": 49.0,
     "spec_count": 693,
     "code_count": 51
   }

@@ -58,6 +58,212 @@ def _graph_data(graph: TraceGraph) -> dict:
     return {"nodes": nodes, "edges": edges}
 
 
+def render_html_report(graph: TraceGraph, min_coverage: float = 50.0) -> str:
+    """Render a rich coverage report as a self-contained HTML page.
+
+    Features:
+    - Coverage summary with progress bar
+    - Spec list grouped by status: covered, partial, orphan
+    - Color-coded rows (green/yellow/red)
+    - Uncovered-only filter
+    - Per-spec code file breakdown
+    """
+    from specbridge.analyzers import coverage_summary, find_orphan_specs, find_orphan_code
+
+    cov = coverage_summary(graph)
+    orphans_spec = find_orphan_specs(graph)
+    orphans_code = find_orphan_code(graph)
+
+    # Build spec list with status
+    covered_specs: list[str] = []
+    partial_specs: list[str] = []
+    orphan_specs_list: list[str] = []
+
+    for nid, node in graph.nodes.items():
+        if node.type != NodeType.SPEC:
+            continue
+        edges = graph.edges_to(nid)
+        impl_edges = [e for e in edges if e.relation.value in ("implements", "verifies", "satisfies")]
+        if not impl_edges:
+            orphan_specs_list.append(nid)
+        else:
+            code_count = len(set(e.src_id for e in impl_edges))
+            test_count = len([e for e in impl_edges if e.relation.value == "verifies"])
+            if test_count == 0:
+                partial_specs.append(nid)
+            else:
+                covered_specs.append(nid)
+
+    # Build spec details
+    def _spec_row(nid: str) -> str:
+        node = graph.nodes.get(nid)
+        if not node:
+            return ""
+        edges = graph.edges_to(nid)
+        impl_files = []
+        for e in edges:
+            if e.relation.value in ("implements", "verifies", "satisfies"):
+                src = graph.nodes.get(e.src_id)
+                if src:
+                    impl_files.append(f'<span class="file-badge badge-{e.relation.value}">{e.relation.value}: {src.source.file}</span>')
+        files_html = " ".join(impl_files) if impl_files else '<span class="none">—</span>'
+        return f"""<tr>
+  <td class="spec-id">{nid}</td>
+  <td class="spec-title">{node.title}</td>
+  <td>{files_html}</td>
+</tr>"""
+
+    covered_rows = "\n".join(_spec_row(s) for s in sorted(covered_specs))
+    partial_rows = "\n".join(_spec_row(s) for s in sorted(partial_specs))
+    orphan_rows = "\n".join(_spec_row(s) for s in sorted(orphan_specs_list))
+
+    pct = float(cov["coverage_pct"])
+    bar_color = "#34a853" if pct >= 80 else "#fbbc04" if pct >= 50 else "#ea4335"
+    pass_icon = "✅" if pct >= min_coverage else "❌"
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>specbridge — Coverage Report</title>
+<style>
+  * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+  body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 24px; }}
+  h1 {{ font-size: 22px; margin-bottom: 8px; }}
+  .subtitle {{ color: #888; font-size: 13px; margin-bottom: 24px; }}
+  .summary {{ display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }}
+  .stat-card {{ background: #16213e; border-radius: 10px; padding: 16px 20px; min-width: 130px; }}
+  .stat-card .num {{ font-size: 28px; font-weight: 700; }}
+  .stat-card .label {{ font-size: 12px; color: #888; margin-top: 2px; }}
+  .stat-card.green .num {{ color: #34a853; }}
+  .stat-card.yellow .num {{ color: #fbbc04; }}
+  .stat-card.red .num {{ color: #ea4335; }}
+  .progress-bar {{ background: #2a2a4e; height: 18px; border-radius: 9px; overflow: hidden; margin: 12px 0 20px; }}
+  .progress-fill {{ height: 100%; border-radius: 9px; background: {bar_color}; transition: width 0.5s; }}
+  .progress-text {{ font-size: 13px; color: #aaa; margin-bottom: 8px; }}
+  .gate-result {{ font-size: 14px; padding: 8px 14px; border-radius: 6px; display: inline-block; margin-bottom: 16px; }}
+  .gate-result.pass {{ background: rgba(52,168,83,0.15); color: #34a853; border: 1px solid rgba(52,168,83,0.3); }}
+  .gate-result.fail {{ background: rgba(234,67,53,0.15); color: #ea4335; border: 1px solid rgba(234,67,53,0.3); }}
+  .tabs {{ display: flex; gap: 8px; margin-bottom: 16px; }}
+  .tab-btn {{ padding: 8px 16px; border: 1px solid #333; border-radius: 6px; background: transparent; color: #ccc; cursor: pointer; font-size: 13px; }}
+  .tab-btn:hover {{ background: #2a2a4e; }}
+  .tab-btn.active {{ background: #1a73e8; border-color: #1a73e8; color: #fff; }}
+  table {{ width: 100%; border-collapse: collapse; font-size: 13px; }}
+  th {{ text-align: left; padding: 8px 12px; border-bottom: 2px solid #333; color: #888; font-weight: 600; font-size: 11px; text-transform: uppercase; }}
+  td {{ padding: 8px 12px; border-bottom: 1px solid #2a2a4e; }}
+  .spec-id {{ font-family: monospace; color: #8ab4f8; white-space: nowrap; }}
+  .spec-title {{ color: #e0e0e0; }}
+  .badge-implements {{ background: rgba(52,168,83,0.12); color: #34a853; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin: 1px 2px; display: inline-block; }}
+  .badge-verifies {{ background: rgba(251,188,4,0.12); color: #fbbc04; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin: 1px 2px; display: inline-block; }}
+  .badge-satisfies {{ background: rgba(155,89,182,0.12); color: #9b59b6; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin: 1px 2px; display: inline-block; }}
+  .none {{ color: #666; font-style: italic; }}
+  .covered-row td:first-child {{ border-left: 3px solid #34a853; }}
+  .partial-row td:first-child {{ border-left: 3px solid #fbbc04; }}
+  .orphan-row td:first-child {{ border-left: 3px solid #ea4335; }}
+  .filter-bar {{ margin-bottom: 12px; }}
+  .filter-bar input {{ background: #2a2a4e; border: 1px solid #444; border-radius: 6px; padding: 6px 12px; color: #e0e0e0; font-size: 13px; width: 260px; }}
+  .filter-bar input:focus {{ outline: none; border-color: #1a73e8; }}
+  .count-badge {{ display: inline-block; background: #2a2a4e; border-radius: 12px; padding: 0 10px; font-size: 12px; line-height: 22px; }}
+  .orphan-code-list {{ margin-top: 20px; }}
+  .orphan-code-list h3 {{ font-size: 14px; margin-bottom: 6px; color: #ea4335; }}
+  .orphan-code-list li {{ color: #aaa; font-size: 12px; margin: 2px 0; }}
+</style>
+</head>
+<body>
+
+<h1>{pass_icon} specbridge Coverage Report</h1>
+<div class="subtitle">Generated automatically · {cov['covered']}/{cov['total']} specs covered</div>
+
+<div class="gate-result { 'pass' if pct >= min_coverage else 'fail' }">
+  {pass_icon} Coverage: {pct}% {'≥' if pct >= min_coverage else '<'} {min_coverage}% threshold
+</div>
+
+<div class="progress-text">Overall coverage</div>
+<div class="progress-bar">
+  <div class="progress-fill" style="width:{pct}%"></div>
+</div>
+
+<div class="summary">
+  <div class="stat-card green">
+    <div class="num">{cov['covered']}</div>
+    <div class="label">Covered specs</div>
+  </div>
+  <div class="stat-card yellow">
+    <div class="num">{len(partial_specs)}</div>
+    <div class="label">Partial (no tests)</div>
+  </div>
+  <div class="stat-card red">
+    <div class="num">{len(orphan_specs_list)}</div>
+    <div class="label">Orphan specs</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">{len(orphans_code)}</div>
+    <div class="label">Orphan code files</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="filterTable('all')">All <span class="count-badge">{cov['total']}</span></button>
+  <button class="tab-btn" onclick="filterTable('covered')">Covered <span class="count-badge">{len(covered_specs)}</span></button>
+  <button class="tab-btn" onclick="filterTable('partial')">Partial <span class="count-badge">{len(partial_specs)}</span></button>
+  <button class="tab-btn" onclick="filterTable('orphan')">Orphan <span class="count-badge">{len(orphan_specs_list)}</span></button>
+</div>
+
+<div class="filter-bar">
+  <input type="text" id="searchInput" placeholder="Filter by ID or title..." onkeyup="searchTable()">
+</div>
+
+<table id="spec-table">
+  <thead>
+    <tr>
+      <th>Spec ID</th><th>Title</th><th>Code / Test Files</th>
+    </tr>
+  </thead>
+  <tbody>
+    {covered_rows}
+    {partial_rows}
+    {orphan_rows}
+  </tbody>
+</table>
+
+<div class="orphan-code-list">
+  <h3>📁 Orphan code files ({len(orphans_code)})</h3>
+  <ul>
+    {''.join(f'<li>{c}</li>' for c in sorted(orphans_code)[:30])}
+  </ul>
+  {f'<p style="color:#666;font-size:12px">... and {len(orphans_code) - 30} more</p>' if len(orphans_code) > 30 else ''}
+</div>
+
+<script>
+function filterTable(filter) {{
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  const rows = document.querySelectorAll('#spec-table tbody tr');
+  rows.forEach(row => {{
+    if (filter === 'all') {{ row.style.display = ''; return; }}
+    const cls = row.className;
+    if (filter === 'covered' && cls === 'covered-row') {{ row.style.display = ''; return; }}
+    if (filter === 'partial' && cls === 'partial-row') {{ row.style.display = ''; return; }}
+    if (filter === 'orphan' && cls === 'orphan-row') {{ row.style.display = ''; return; }}
+    row.style.display = 'none';
+  }});
+}}
+
+function searchTable() {{
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const rows = document.querySelectorAll('#spec-table tbody tr');
+  rows.forEach(row => {{
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(q) ? '' : 'none';
+  }});
+}}
+</script>
+
+</body>
+</html>"""
+
+
 def render_html(graph: TraceGraph) -> str:
     """Render the trace graph as a self-contained interactive HTML page.
 

@@ -55,8 +55,12 @@ def _no_adapter_hint() -> None:
 @click.option("--summary-only", is_flag=True, default=False,
               help="Show only a one-line coverage summary (CI-friendly)",
               show_default=True)
+@click.option("--report", is_flag=True, default=False,
+              help="Generate rich HTML coverage report with filters and gauges",
+              show_default=True)
 def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
-            call_graph: bool, fast: bool, func_match: bool, dry_run: bool, summary_only: bool) -> None:
+            call_graph: bool, fast: bool, func_match: bool, dry_run: bool, summary_only: bool,
+            report: bool) -> None:
     """Analyze a project and build a trace graph."""
     from specbridge.adapters import detect_adapter, detect_all, merge_graphs
     from specbridge.outputs.rich_utils import progress_spinner
@@ -121,6 +125,21 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
 
     click.echo(f"\n   Nodes: {len(graph.nodes)} | Edges: {len(graph.edges)}", err=True)
     click.echo(f"   Specs: {spec_count} | Code refs: {code_count} | Tests: {test_count}", err=True)
+
+    # --report flag: generate rich HTML coverage report
+    if report:
+        from specbridge.outputs.html import render_html_report
+        html = render_html_report(graph)
+        if dry_run:
+            click.echo("   📄 HTML report generated (--dry-run, not saved)", err=True)
+        else:
+            out_path = root / ".specbridge" / "report.html"
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(html, encoding="utf-8")
+            click.echo(f"   📊 Coverage report saved to: {out_path}", err=True)
+            import webbrowser
+            webbrowser.open(f"file://{out_path.resolve()}")
+        return
 
     if output_fmt == "json":
         click.echo(render_json(graph))
