@@ -115,7 +115,8 @@ def find_spec_nodes(graph: TraceGraph, query: str) -> list[TraceNode]:
     specs = graph.nodes_by_type(NodeType.SPEC)
 
     # 3. Suffix match: query matches the trailing part of an ID
-    suffix_matches = [n for n in specs if n.id.endswith(f".{query}")]
+    #    Also handles spec:: prefix (e.g. query "1.1" matches "spec::1.1")
+    suffix_matches = [n for n in specs if n.id.endswith(f".{query}") or n.id == f"spec::{query}"]
     if suffix_matches:
         return sorted(suffix_matches, key=lambda x: x.id)
 

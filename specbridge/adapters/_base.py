@@ -166,6 +166,10 @@ def merge_graphs(graphs: list[TraceGraph]) -> TraceGraph:
 
     Later graphs' nodes overwrite earlier ones with the same ID.
     Edges from all graphs are concatenated.
+
+    After merging, spec IDs are normalized: if the same spec exists with
+    both a ``spec::X`` ID (from SpectraAdapter) and a heuristic ID
+    (e.g. ``docs.auth.X``), they are folded into a single canonical node.
     """
     merged = TraceGraph()
     for g in graphs:
@@ -173,4 +177,92 @@ def merge_graphs(graphs: list[TraceGraph]) -> TraceGraph:
             merged.nodes[nid] = node
         for e in g.edges:
             merged.edges.append(e)
+
+    # Normalize spec IDs: fold spec::X → canonical heuristic IDs
+    _normalize_spec_ids(merged)
+
     return merged
+
+
+def _normalize_spec_ids(graph: TraceGraph) -> None:
+    """Fold duplicate spec nodes with different ID formats into one.
+
+    HeuristicAdapter produces IDs like ``docs.auth.1.1``.
+    SpectraAdapter produces IDs like ``spec::1.1`` using ``spec::`` prefix.
+
+    When both refer to the same spec number (e.g. ``1.1``), the
+    ``spec::`` node is merged into the heuristic node.
+    """
+    from specbridge.core import NodeType, TraceNode
+
+    # 1. Collect all spec nodes; track spec:: nodes separately
+    spec_nodes: dict[str, TraceNode] = {}
+    spec_prefix_nodes: dict[str, TraceNode] = {}  # num → node  (e.g. "1.1" → node)
+    heuristic_nodes: dict[str, list[TraceNode]] = {}  # num → [nodes]
+
+    for nid, node in list(graph.nodes.items()):
+        if node.type != NodeType.SPEC:
+            continue
+        spec_nodes[nid] = node
+        if nid.startswith("spec::"):
+            num = nid[len("spec::"):]
+            spec_prefix_nodes[num] = node
+        else:
+            # Extract trailing numeric suffix like "1.1" from "docs.auth.1.1"
+            import re
+            m = re.search(r"\.(\d[\d.]*)$", nid)
+            if m:
+                num = m.group(1)
+                heuristic_nodes.setdefault(num, []).append(node)
+            # Also index by title to catch non-numeric IDs
+            title_key = node.title.lower().strip()
+            if title_key:
+                heuristic_nodes.setdefault(f"__title__:{title_key}", []).append(node)
+
+    # 2. For each spec:: node, find a matching heuristic node
+    aliases: dict[str, str] = {}  # spec:: ID → canonical heuristic ID
+    nodes_to_remove: set[str] = set()
+
+    for num, sp_node in spec_prefix_nodes.items():
+        candidates = heuristic_nodes.get(num, [])
+        if not candidates:
+            # Try partial suffix match: "1.1" inside "auth.1.1" or "2.1"
+            import re
+            for h_id, h_nodes in heuristic_nodes.items():
+                if h_id.startswith("__title__:"):
+                    continue
+                if h_id.endswith(f".{num}") or num.endswith(f".{h_id}"):
+                    candidates.extend(h_nodes)
+                # Check if one is contained in the other (e.g. "1" in "auth.1.1")
+                elif num in h_id or h_id in num:
+                    candidates.extend(h_nodes)
+
+        if candidates:
+            # Pick the first heuristic candidate as canonical
+            canonical = candidates[0]
+            alias_id = sp_node.id
+            canonical_id = canonical.id
+
+            if alias_id != canonical_id:
+                aliases[alias_id] = canonical_id
+                nodes_to_remove.add(alias_id)
+                # Propagate metadata
+                existing_aliases = canonical.metadata.get("aliases", [])
+                if alias_id not in existing_aliases:
+                    canonical.metadata["aliases"] = existing_aliases + [alias_id]
+
+                if sp_node.title and not canonical.title:
+                    canonical.title = sp_node.title
+                if sp_node.confidence > canonical.confidence:
+                    canonical.confidence = sp_node.confidence
+
+    # 3. Redirect edges from alias IDs to canonical IDs
+    for edge in graph.edges:
+        if edge.src_id in aliases:
+            edge.src_id = aliases[edge.src_id]
+        if edge.dst_id in aliases:
+            edge.dst_id = aliases[edge.dst_id]
+
+    # 4. Remove alias nodes
+    for nid in nodes_to_remove:
+        graph.nodes.pop(nid, None)

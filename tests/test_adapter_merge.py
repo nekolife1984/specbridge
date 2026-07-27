@@ -123,6 +123,64 @@ class TestMergeGraphs:
         assert len(codes) == 1
 
 
+class TestNormalizeSpecIds:
+    """spec::X ID normalization in merge_graphs."""
+
+    def test_spec_prefix_normalized(self) -> None:
+        """spec::1.1 is folded into docs.auth.1.1 when both exist."""
+        g = TraceGraph()
+        # Heuristic-style node
+        g.add_node(TraceNode(id="docs.auth.1.1", type=NodeType.SPEC, title="Auth",
+                             source=SourceRef(file="docs/auth.md"),
+                             framework_origin="heuristic", confidence=0.8))
+        # Spectra-style node (same spec, different ID)
+        g.add_node(TraceNode(id="spec::1.1", type=NodeType.SPEC, title="Auth",
+                             source=SourceRef(file="docs/auth.md"),
+                             framework_origin="spectra", confidence=0.95))
+        # Code node with edge to spec::1.1
+        g.add_node(TraceNode(id="login.py", type=NodeType.CODE, title="login",
+                             source=SourceRef(file="src/auth/login.py"),
+                             framework_origin="heuristic"))
+        g.add_edge(TraceEdge(src_id="login.py", dst_id="spec::1.1",
+                             relation=EdgeRelation.IMPLEMENTS,
+                             strength=EdgeStrength.INFERRED))
+
+        merged = merge_graphs([g])
+
+        # spec::1.1 should be gone, edges redirected to docs.auth.1.1
+        assert "spec::1.1" not in merged.nodes
+        assert "docs.auth.1.1" in merged.nodes
+        # Edge should now point to canonical ID
+        edges = merged.edges_to("docs.auth.1.1")
+        assert len(edges) == 1
+        assert edges[0].src_id == "login.py"
+
+    def test_spec_prefix_no_heuristic(self) -> None:
+        """spec:: node stays if no matching heuristic node exists."""
+        g = TraceGraph()
+        g.add_node(TraceNode(id="spec::2.1", type=NodeType.SPEC, title="Reports",
+                             source=SourceRef(file="docs/reports.md"),
+                             framework_origin="spectra"))
+
+        merged = merge_graphs([g])
+        assert "spec::2.1" in merged.nodes
+        assert len(merged.nodes) == 1
+
+    def test_spec_prefix_partial_suffix(self) -> None:
+        """Partial suffix matching works for nested IDs."""
+        g = TraceGraph()
+        g.add_node(TraceNode(id="docs.auth.3.1.2", type=NodeType.SPEC, title="Sub Auth",
+                             source=SourceRef(file="docs/auth.md"),
+                             framework_origin="heuristic"))
+        g.add_node(TraceNode(id="spec::3.1.2", type=NodeType.SPEC, title="Sub Auth",
+                             source=SourceRef(file="docs/auth.md"),
+                             framework_origin="spectra"))
+
+        merged = merge_graphs([g])
+        assert "spec::3.1.2" not in merged.nodes
+        assert "docs.auth.3.1.2" in merged.nodes
+
+
 class TestMergeCLI:
     """CLI --merge flag integration (tested via adapter code path)."""
 
