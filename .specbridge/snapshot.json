@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T07:04:30",
-  "reason": "",
+  "timestamp": "2026-07-28T07:13:16",
+  "reason": "Session: fix function name matching in drift",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -8635,7 +8635,7 @@
         "json",
         "datetime"
       ],
-      "file_hash": "3163c78fca31a459",
+      "file_hash": "e4aef0ceafd5462c",
       "functions": [
         {
           "name": "build_snapshot",
@@ -8697,7 +8697,7 @@
           "name": "compute_drift",
           "kind": "function",
           "line": 261,
-          "body_hash": "8db6baec4ff4cbc4",
+          "body_hash": "cf8b1ebe24561b0c",
           "body_lines": 168
         },
         {
@@ -9064,7 +9064,7 @@
         "dataclasses",
         "pathlib"
       ],
-      "file_hash": "6bb475b9d0d2b0b4",
+      "file_hash": "544b29adad71352e",
       "functions": [
         {
           "name": "SpecbridgeConfig",
@@ -9091,7 +9091,7 @@
           "name": "_try_read_pyproject",
           "kind": "function",
           "line": 100,
-          "body_hash": "00e85b481dba5b52",
+          "body_hash": "8dc2e6d0c18feb86",
           "body_lines": 17
         },
         {
@@ -12353,161 +12353,161 @@
         "pathlib",
         "pytest"
       ],
-      "file_hash": "1405d7d130216dba",
+      "file_hash": "3b4d969b3e547bf9",
       "functions": [
         {
           "name": "_DummyAdapter",
           "kind": "class",
-          "line": 22,
+          "line": 24,
           "body_hash": "9b069024f666469f",
           "body_lines": 3
         },
         {
           "name": "detect",
           "kind": "function",
-          "line": 25,
+          "line": 27,
           "body_hash": "978d0b1446a4cbc9",
           "body_lines": 3
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 28,
+          "line": 30,
           "body_hash": "7d02b48d9b562f2c",
           "body_lines": 5
         },
         {
           "name": "_reset_registry",
           "kind": "function",
-          "line": 33,
+          "line": 35,
           "body_hash": "c77bdb1dfe858efb",
           "body_lines": 15
         },
         {
           "name": "test_register_adds_adapter",
           "kind": "function",
-          "line": 48,
+          "line": 50,
           "body_hash": "c5d7bda3ee8cbecf",
           "body_lines": 3
         },
         {
           "name": "TestAdapter",
           "kind": "class",
-          "line": 51,
+          "line": 53,
           "body_hash": "b2eff04997b3b0dd",
           "body_lines": 1
         },
         {
           "name": "detect",
           "kind": "function",
-          "line": 52,
+          "line": 54,
           "body_hash": "77a40ef9a747781d",
           "body_lines": 3
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 55,
+          "line": 57,
           "body_hash": "ba90ab5b0e8dcc61",
           "body_lines": 7
         },
         {
           "name": "test_register_with_package_tracking",
           "kind": "function",
-          "line": 62,
+          "line": 64,
           "body_hash": "e54334b3a96eea49",
           "body_lines": 3
         },
         {
           "name": "TrackedAdapter",
           "kind": "class",
-          "line": 65,
+          "line": 67,
           "body_hash": "908f31739d99c420",
           "body_lines": 1
         },
         {
           "name": "detect",
           "kind": "function",
-          "line": 66,
+          "line": 68,
           "body_hash": "77a40ef9a747781d",
           "body_lines": 3
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 69,
+          "line": 71,
           "body_hash": "3356bd4f0a542e31",
           "body_lines": 10
         },
         {
           "name": "test_plugin_adapters_excludes_builtins",
           "kind": "function",
-          "line": 79,
+          "line": 81,
           "body_hash": "8a61884f8a553f2d",
           "body_lines": 3
         },
         {
           "name": "BuiltinAdapter",
           "kind": "class",
-          "line": 82,
+          "line": 84,
           "body_hash": "3349e317ee10d600",
           "body_lines": 1
         },
         {
           "name": "detect",
           "kind": "function",
-          "line": 83,
+          "line": 85,
           "body_hash": "102075b588fcdc93",
           "body_lines": 3
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 86,
+          "line": 88,
           "body_hash": "bbdec3d9d22c8527",
           "body_lines": 10
         },
         {
           "name": "test_discover_plugins_skips_non_adapter",
           "kind": "function",
-          "line": 96,
+          "line": 98,
           "body_hash": "fa26b7161277c564",
           "body_lines": 15
         },
         {
           "name": "test_discover_plugins_idempotent",
           "kind": "function",
-          "line": 111,
+          "line": 113,
           "body_hash": "c85f0baa15770c94",
           "body_lines": 4
         },
         {
           "name": "IdempotentAdapter",
           "kind": "class",
-          "line": 115,
+          "line": 117,
           "body_hash": "3a7b0bedaf1b7696",
           "body_lines": 1
         },
         {
           "name": "detect",
           "kind": "function",
-          "line": 116,
+          "line": 118,
           "body_hash": "102075b588fcdc93",
           "body_lines": 3
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 119,
+          "line": 121,
           "body_hash": "3ef97dbfadaa344a",
           "body_lines": 19
         },
         {
           "name": "test_example_plugin_installable",
           "kind": "function",
-          "line": 138,
-          "body_hash": "34ec09f220d9395f",
-          "body_lines": 12
+          "line": 140,
+          "body_hash": "9db3765a2802a1d8",
+          "body_lines": 16
         }
       ]
     },

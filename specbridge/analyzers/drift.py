@@ -359,11 +359,11 @@ def compute_drift(
             removed_syms = old_syms - new_syms
 
             # Function body hashes
-            snap_funcs = {f["name"]: f for f in snap_c.get("functions", [])}
+            snap_funcs = {(f["name"], f["line"]): f for f in snap_c.get("functions", [])}
             changed_funcs: list[dict[str, Any]] = []
 
             for cf_func in curr_code.functions:
-                snap_f = snap_funcs.get(cf_func.name)
+                snap_f = snap_funcs.get((cf_func.name, cf_func.line))
                 if snap_f and cf_func.body_hash != snap_f["body_hash"]:
                     changed_funcs.append({
                         "name": cf_func.name,
