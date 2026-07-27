@@ -128,10 +128,69 @@ fi
 # ── 5. Deploy AGENTS.md ────────────────────────────────────────────────────────
 header "5. Deploying AGENTS.md"
 AGENTS_SRC="AGENTS.md"
+SENTINEL_MARKER="<!-- specbridge -->"
+
 if [ -f "$AGENTS_SRC" ]; then
-    ok "AGENTS.md already exists (skipping)"
+    # 既存ファイル → センチネルマーカーで追跡要否判断
+    if grep -qF "$SENTINEL_MARKER" "$AGENTS_SRC" 2>/dev/null; then
+        ok "AGENTS.md already contains specbridge section (marker found, skipping)"
+    else
+        # マーカーなし → 追記
+        cat >> "$AGENTS_SRC" <<'AGENTS'
+
+<!-- specbridge -->
+<!-- This section is auto‑managed by `specbridge setup`. Do not remove the marker. -->
+
+## specbridge — Spec↔Code Traceability
+
+This project uses **specbridge** for spec↔code traceability.
+
+### 🔴 必須ルール（コード変更前後）
+
+```
+コードを変更する前に → 仕様書を確認・更新する
+コードを変更したら  → specbridge drift で解離がないか確認する
+```
+
+### 🚀 セッションライフサイクル（AIエージェント用）
+
+**セッション開始時:**
+```bash
+specbridge snapshot --reason "Session: <今回やること>"
+```
+
+**セッション終了時:**
+```bash
+specbridge drift
+```
+
+drift があれば → 先に設計書を直すこと。コードだけ直してコミットしない。
+
+1. `specbridge snapshot --reason "変更内容"` で現状を保存
+2. コードを書く
+3. `specbridge drift` で解離チェック
+4. 解離があれば設計書を先に直す
+5. `git commit`（pre-commit hook が自動チェック）
+
+### 📋 よく使うコマンド
+
+| 目的 | コマンド |
+|------|---------|
+| 分析 | `specbridge analyze --merge` |
+| 影響調査 | `specbridge impact --spec-id <id>` |
+| カバレッジ | `specbridge coverage` |
+| スナップショット | `specbridge snapshot --reason "..."` |
+| ドリフト検出 | `specbridge drift` |
+| CIゲート | `specbridge drift --git-base HEAD --gate` |
+AGENTS
+        ok "AGENTS.md updated with specbridge section (appended)"
+    fi
 else
+    # 新規作成
     cat > "$AGENTS_SRC" <<'AGENTS'
+<!-- specbridge -->
+<!-- This section is auto‑managed by `specbridge setup`. Do not remove the marker. -->
+
 # Project Guide
 
 This project uses **specbridge** for spec↔code traceability.

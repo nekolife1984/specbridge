@@ -1,3 +1,6 @@
+<!-- specbridge -->
+<!-- This section is auto‑managed by `specbridge setup`. Do not remove the marker. -->
+
 # specbridge — AI Agent Workflow Guide
 
 > **Documentation-first development.** Every code change MUST be accompanied by corresponding documentation updates in both EN and JA.
