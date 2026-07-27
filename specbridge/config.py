@@ -35,56 +35,68 @@ class SpecbridgeConfig:
 
     @classmethod
     def load(cls, project_dir: str | Path) -> SpecbridgeConfig:
-        """Load config from project directory, falling back to defaults."""
+        """Load config from project directory, merging from multiple sources.
+
+        Resolution order (later sources override earlier ones):
+          1. Defaults (hardcoded)
+          2. pyproject.toml  [tool.specbridge]
+          3. .specbridge.yaml (overrides pyproject)
+        """
         root = Path(project_dir).resolve()
 
-        # 1. Try .specbridge.yaml
-        yaml_path = root / ".specbridge.yaml"
-        if yaml_path.exists():
-            return cls._from_yaml(yaml_path)
+        # Start with defaults
+        config = cls()
 
-        # 2. Try pyproject.toml
+        # 1. Try pyproject.toml as base
         pyproject = root / "pyproject.toml"
         if pyproject.exists():
-            return cls._from_pyproject(pyproject)
+            data = cls._try_read_pyproject(pyproject)
+            if data:
+                config = cls._merge_dict(config, data)
 
-        # 3. Defaults
-        return cls()
+        # 2. Try .specbridge.yaml as override
+        yaml_path = root / ".specbridge.yaml"
+        if yaml_path.exists():
+            data = cls._try_read_yaml(yaml_path)
+            if data:
+                config = cls._merge_dict(config, data)
+
+        return config
 
     @classmethod
-    def _from_yaml(cls, path: Path) -> SpecbridgeConfig:
-        """Parse .specbridge.yaml into config."""
+    def _try_read_yaml(cls, path: Path) -> dict[str, Any] | None:
+        """Read .specbridge.yaml, returning None on error."""
         try:
             import yaml
             data = yaml.safe_load(path.read_text(encoding="utf-8"))
+            return data or None
         except Exception:
-            return cls()
-        return cls._from_dict(data or {})
+            return None
 
     @classmethod
-    def _from_pyproject(cls, path: Path) -> SpecbridgeConfig:
-        """Parse [tool.specbridge] from pyproject.toml."""
+    def _try_read_pyproject(cls, path: Path) -> dict[str, Any] | None:
+        """Read [tool.specbridge] from pyproject.toml, returning None on error."""
         try:
             import tomllib  # type: ignore[import-not-found]  # Python 3.11+
         except ImportError:
             try:
                 import tomli as tomllib  # type: ignore[import-not-found]  # backport
             except ImportError:
-                return cls()
+                return None
         try:
             data = tomllib.loads(path.read_text(encoding="utf-8"))
-            data = data.get("tool", {}).get("specbridge", {})
+            specbridge_data = data.get("tool", {}).get("specbridge", {})
+            return specbridge_data if specbridge_data else None
         except Exception:
-            return cls()
-        return cls._from_dict(data)
+            return None
 
     @classmethod
-    def _from_dict(cls, data: dict[str, Any]) -> SpecbridgeConfig:
-        """Convert parsed dict to config, merging with defaults."""
+    def _merge_dict(cls, base: SpecbridgeConfig, overrides: dict[str, Any]) -> SpecbridgeConfig:
+        """Merge a dict of overrides into an existing config, keeping unspecified fields."""
         return cls(
-            spec_dirs=data.get("spec_dirs", list(DEFAULT_SPEC_DIRS)),
-            source_dirs=data.get("source_dirs", list(DEFAULT_SOURCE_DIRS)),
-            exclude_dirs=set(data.get("exclude_dirs", list(DEFAULT_EXCLUDE_DIRS))),
-            min_confidence=float(data.get("min_confidence", DEFAULT_MIN_CONFIDENCE)),
-            max_output_nodes=int(data.get("max_output_nodes", DEFAULT_MAX_OUTPUT_NODES)),
+            spec_dirs=overrides.get("spec_dirs", base.spec_dirs),
+            source_dirs=overrides.get("source_dirs", base.source_dirs),
+            exclude_dirs=set(overrides.get("exclude_dirs", list(base.exclude_dirs))),
+            min_confidence=float(overrides.get("min_confidence", base.min_confidence)),
+            max_output_nodes=int(overrides.get("max_output_nodes", base.max_output_nodes)),
         )
