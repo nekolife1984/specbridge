@@ -10,7 +10,7 @@ specbridge provides an MCP (Model Context Protocol) server that exposes its anal
 ```mermaid
 flowchart TB
     AGENT["AI Agent<br/>(Claude, Hermes, Cursor, etc.)"]
-    MCP_SERV["specbridge MCP Server<br/>(mcp_server.py)<br/><br/>Tools:<br/>- analyze<br/>- impact<br/>- coverage<br/>- drift<br/>- validate_boundary<br/>- gate"]
+    MCP_SERV["specbridge MCP Server<br/>(mcp_server.py)<br/><br/>Tools:<br/>- analyze<br/>- impact<br/>- coverage<br/>- drift<br/>- validate_boundary<br/>- gate<br/>- snapshot<br/>- config<br/>- status"]
     PROJ["Project Directory<br/>(read-only)"]
 
     AGENT -->|"MCP Protocol (stdio)"| MCP_SERV
@@ -109,6 +109,30 @@ Check if coverage meets the minimum threshold — a CI gate for spec coverage.
 - **Exit behavior**: Returns failure text when coverage is below threshold (the MCP client can check the message content)
 - **Use case**: Agent checks coverage gate before approving a PR
 
+### 3.7 `snapshot` ✨ New in v1.1
+
+Take a structural snapshot of specs and code for later drift comparison.
+
+- **Optional parameter**: `reason` (string) — description of why the snapshot was taken
+- **Returns**: Summary with spec count, code file count, and coverage percentage
+- **Use case**: Agent takes a baseline before making changes
+
+### 3.8 `config` ✨ New in v1.1
+
+Show current specbridge configuration.
+
+- **No input parameters**
+- **Returns**: Current configuration values (spec_dirs, source_dirs, min_confidence, etc.)
+- **Use case**: Agent inspects project setup
+
+### 3.9 `status` ✨ New in v1.1
+
+Show project state dashboard: configuration, snapshot status, current coverage, and orphan counts in one view.
+
+- **No input parameters**
+- **Returns**: Unified status with config, snapshot info, coverage, and orphan counts
+- **Use case**: Agent gets a quick overview of project traceability health
+
 ## 4. Tool Definitions (MCP Schema)
 
 ```python
@@ -156,6 +180,9 @@ flowchart TB
     DRI["drift: load snapshot + compute_drift (or take new snapshot)"]
     VB["validate_boundary: check code refs against _Boundary:_ markers"]
     GATE["gate: check coverage against min_coverage threshold"]
+    SNAP["snapshot: take structural snapshot"]
+    CONF["config: show current configuration"]
+    STAT["status: show project state dashboard"]
 
     RESP["Return TextContent response"]
 
@@ -166,12 +193,18 @@ flowchart TB
     BRANCH -->|drift| DRI
     BRANCH -->|validate_boundary| VB
     BRANCH -->|gate| GATE
+    BRANCH -->|snapshot| SNAP
+    BRANCH -->|config| CONF
+    BRANCH -->|status| STAT
     ANA --> RESP
     IMP --> RESP
     COV --> RESP
     DRI --> RESP
     VB --> RESP
     GATE --> RESP
+    SNAP --> RESP
+    CONF --> RESP
+    STAT --> RESP
 ```
 
 ## 6. Integration Patterns

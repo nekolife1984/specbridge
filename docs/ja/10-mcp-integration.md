@@ -10,7 +10,7 @@ specbridgeはMCP（Model Context Protocol）サーバを提供し、その分析
 ```mermaid
 flowchart TB
     AGENT["AI Agent<br/>(Claude, Hermes, Cursor, etc.)"]
-    MCP_SERV["specbridge MCP Server<br/>(mcp_server.py)<br/><br/>ツール:<br/>- analyze<br/>- impact<br/>- coverage<br/>- drift<br/>- validate_boundary<br/>- gate"]
+    MCP_SERV["specbridge MCP Server<br/>(mcp_server.py)<br/><br/>ツール:<br/>- analyze<br/>- impact<br/>- coverage<br/>- drift<br/>- validate_boundary<br/>- gate<br/>- snapshot<br/>- config<br/>- status"]
     PROJ["プロジェクトDir<br/>(読み取り専用)"]
 
     AGENT -->|"MCP Protocol (stdio)"| MCP_SERV
@@ -106,6 +106,30 @@ pip install specbridge[mcp]
 - **終了動作**: カバレッジが閾値未満の場合に失敗テキストを返す（MCPクライアントはメッセージ内容を確認可能）
 - **ユースケース**: エージェントがPR承認前にカバレッジゲートを確認
 
+### 3.7 `snapshot` ✨ v1.1 新機能
+
+仕様とコードの構造的スナップショットを取得し、後続のドリフト比較に使用します。
+
+- **オプションパラメータ**: `reason`（文字列）— スナップショットを取った理由
+- **戻り値**: Spec数、コードファイル数、カバレッジ率を含むサマリ
+- **ユースケース**: エージェントが変更前にベースラインを取得
+
+### 3.8 `config` ✨ v1.1 新機能
+
+現在のspecbridge設定を表示します。
+
+- **入力パラメータなし**
+- **戻り値**: 現在の設定値（spec_dirs, source_dirs, min_confidence 等）
+- **ユースケース**: エージェントがプロジェクト設定を確認
+
+### 3.9 `status` ✨ v1.1 新機能
+
+設定、スナップショットステータス、現在のカバレッジ、孤立カウントを1つのビューで表示します。
+
+- **入力パラメータなし**
+- **戻り値**: 設定、スナップショット情報、カバレッジ、孤立カウントを含む統合ステータス
+- **ユースケース**: エージェントがプロジェクトのトレーサビリティ状態を素早く把握
+
 ## 4. ツール定義（MCPスキーマ）
 
 ```python
@@ -153,6 +177,9 @@ flowchart TB
     DRI["drift用: スナップショット読み込み + compute_drift（または新規スナップショット）"]
     VB["validate_boundary用: _Boundary:_ マーカーに対してコード参照をチェック"]
     GATE["gate用: カバレッジを min_coverage 閾値に対してチェック"]
+    SNAP["snapshot用: 構造的スナップショットを取得"]
+    CONF["config用: 現在の設定を表示"]
+    STAT["status用: プロジェクト状態ダッシュボードを表示"]
 
     RESP["TextContent レスポンスを返す"]
 
@@ -163,12 +190,18 @@ flowchart TB
     BRANCH -->|drift| DRI
     BRANCH -->|validate_boundary| VB
     BRANCH -->|gate| GATE
+    BRANCH -->|snapshot| SNAP
+    BRANCH -->|config| CONF
+    BRANCH -->|status| STAT
     ANA --> RESP
     IMP --> RESP
     COV --> RESP
     DRI --> RESP
     VB --> RESP
     GATE --> RESP
+    SNAP --> RESP
+    CONF --> RESP
+    STAT --> RESP
 ```
 
 ## 6. 統合パターン
