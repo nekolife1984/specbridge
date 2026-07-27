@@ -212,6 +212,20 @@ Options:
 | `--config` | Use a custom config file path instead of auto-discovery |
 | `--dry-run` | Build the snapshot in memory without saving to `.specbridge/snapshot.json` |
 
+**HTML coverage report (v1.1+):**
+
+```
+$ specbridge analyze --merge --report
+```
+
+Generates a rich self-contained HTML coverage report at `.specbridge/report.html` with:
+- Coverage progress bar with pass/fail gate indicator
+- Tabbed view: All / Covered / Partial (code only) / Orphan (uncovered)
+- Search/filter by spec ID or title
+- Color-coded rows (green/yellow/red)
+- Orphan code files list
+- Interactive JavaScript filtering (no build step required)
+
 **Example:**
 
 ```
