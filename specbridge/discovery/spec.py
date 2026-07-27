@@ -166,7 +166,7 @@ def _parse_sections(fpath: Path, text: str, root: Path) -> list[SpecCandidate]:
     parent_path = fpath.parent.relative_to(root)
     # Include the file stem to avoid cross-file ID collisions
     file_stem = fpath.stem
-    id_prefix = str(parent_path).replace("/", ".") + "." if str(parent_path) != "." else ""
+    id_prefix = str(parent_path).replace("/", ".") + "." if str(parent_path) != "." else "root."
     id_prefix += file_stem + "."
 
     sections = _split_sections(text)
