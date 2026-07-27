@@ -1,6 +1,6 @@
 [project]
 name = "specbridge"
-version = "0.0.1.dev0"
+version = "1.0.0"
 description = "Spec-Code bridge: framework-agnostic, read-only traceability analyzer for spec-driven development."
 readme = "README.md"
 requires-python = ">=3.10"

@@ -6,6 +6,7 @@ import json
 from dataclasses import asdict
 from typing import Any
 
+from specbridge import __version__
 from specbridge.core import TraceGraph
 
 
@@ -24,7 +25,7 @@ def _edge_dict(e: Any) -> dict[str, Any]:
 
 def render_json(graph: TraceGraph, indent: int = 2) -> str:
     payload = {
-        "specbridge_version": "0.0.1.dev0",
+        "specbridge_version": __version__,
         "nodes": [_node_dict(n) for n in graph.nodes.values()],
         "edges": [_edge_dict(e) for e in graph.edges],
     }
