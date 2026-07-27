@@ -268,10 +268,10 @@ This transparency is a core principle — users always see the reasoning behind 
 ## 8. Performance Characteristics
 
 - **Time complexity**: O(token_lookups) after v1.0 — an inverted index (token → code file indices) is built once and reused, reducing the original O(S × C) scan to O(S × M) where M = matching candidates per spec.
-- **Fast mode** (`fast=True`): skips function-level matching (section 10), reducing overall complexity further for snapshot and drift commands.
+- **Fast mode** (`fast=True` by default): skips function-level matching (section 10), reducing overall complexity further. Enabled by default for performance; use `--func-match` on the CLI to enable function-level matching.
 - **Directory index**: a secondary index maps directory names → code file indices, enabling dirname-based candidate pruning without scanning all files.
 - **No I/O during matching** (all data already discovered)
-- Tokenization and Jaccard computation are CPU-light for typical project sizes (< 500 candidates each). For larger projects, use `--fast` on the CLI.
+- Tokenization and Jaccard computation are CPU-light for typical project sizes (< 500 candidates each). For larger projects, fast mode is enabled by default; use `--func-match` to opt into function-level matching when needed.
 
 ## 9. Input Parameters
 
@@ -281,8 +281,11 @@ The function accepts optional pre-computed candidates to avoid redundant re-disc
 # Used by drift detection (already has specs and codes from snapshot re-discover)
 build_heuristic_graph(root, specs=curr_specs, codes=curr_codes, spec_dirs=config.spec_dirs, source_dirs=config.source_dirs)
 
-# Fast mode: skip function-level matching (used by snapshot / drift for coverage-only analysis)
-build_heuristic_graph(root, fast=True)
+# Fast mode (default): skip function-level matching for performance
+build_heuristic_graph(root)
+
+# Function-level matching: opt-in via fast=False
+build_heuristic_graph(root, fast=False)
 ```
 
 ## 10. Function-Level Traceability

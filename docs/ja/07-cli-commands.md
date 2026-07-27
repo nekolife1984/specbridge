@@ -54,13 +54,14 @@ Options:
   --top INTEGER       カテゴリごとに上位N件のみ表示（デフォルト：すべて）
   --deps              インポートからコード依存関係グラフを構築（DEPENDSエッジを追加）
   -c, --call-graph    推移的影響分析のためのコールグラフを構築
-  --fast              大規模プロジェクトでは関数レベルマッチングをスキップして高速化
+  --fast              関数レベルマッチングをスキップ [デフォルト: on, --func-matchで有効化]
+  --func-match        関数レベルマッチングを有効化（大規模プロジェクトでは低速）
   --dry-run           `.specbridge/`への出力ファイル書き込みなしで分析
   --summary-only      CI対応の1行カバレッジサマリーのみ表示
   --help              ヘルプを表示
 ```
 
-**v1.0の新オプション:**
+**v1.1の新オプション:**
 
 | オプション | 目的 |
 |-----------|------|
@@ -302,7 +303,7 @@ snapshot      status        validate-boundary  watch
 
 $ specbridge analyze --[TAB]
 --call-graph  --config    --deps      --dir       --dry-run
---fast        --format    --help      --merge     --summary-only
+--fast        --format    --func-match  --help      --merge     --summary-only
 --top
 ```
 
@@ -378,7 +379,8 @@ Usage: specbridge watch [OPTIONS]
 Options:
   -d, --dir TEXT          プロジェクトディレクトリ  [default: .]
   --interval FLOAT        デバウンス間隔（秒）  [default: 2.0]
-  --fast                  高速分析のため関数レベルマッチングをスキップ
+  --fast                  関数レベルマッチングをスキップ [デフォルト: on]
+  --func-match            関数レベルマッチングを有効化（大規模プロジェクトでは低速）
   --help                  ヘルプを表示
 ```
 

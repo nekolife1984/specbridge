@@ -72,7 +72,7 @@ def build_heuristic_graph(
     source_dirs: list[str] | None = None,
     spec_files: list[str] | None = None,
     source_files: list[str] | None = None,
-    fast: bool = False,
+    fast: bool = True,
 ) -> TraceGraph:
     """Build a TraceGraph using only structural heuristics.
 
@@ -84,7 +84,7 @@ def build_heuristic_graph(
     *spec_files* and *source_files* are forwarded to ``discover_specs`` and
     ``discover_code`` for explicit file list support (root-level files).
 
-    When *fast* is True, function-level traceability matching is skipped,
+    When *fast* is True (default), function-level traceability matching is skipped,
     reducing O(N×M×F) complexity to O(N×M) for large projects.
     """
     graph = TraceGraph()
