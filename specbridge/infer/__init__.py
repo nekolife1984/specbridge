@@ -70,6 +70,7 @@ def build_heuristic_graph(
     codes: list[CodeCandidate] | None = None,
     spec_dirs: list[str] | None = None,
     source_dirs: list[str] | None = None,
+    fast: bool = False,
 ) -> TraceGraph:
     """Build a TraceGraph using only structural heuristics.
 
@@ -77,6 +78,9 @@ def build_heuristic_graph(
 
     Pass pre-discovered *specs* and *codes* to avoid redundant re-discovery
     (used by drift detection which already has them).
+
+    When *fast* is True, function-level traceability matching is skipped,
+    reducing O(N×M×F) complexity to O(N×M) for large projects.
     """
     graph = TraceGraph()
 
@@ -123,8 +127,30 @@ def build_heuristic_graph(
         )
         graph.add_node(node)
 
-    # 5. Match specs ↔ code
-    for sc in specs:
+    # ── Inverted index: token → set of code candidate indices ──
+    # Build once and reuse for all specs, reducing O(N×M) → O(token_lookups).
+    code_token_index: dict[str, set[int]] = {}
+    code_dir_index: dict[str, set[int]] = {}  # dirname → indices
+    for i, cc in enumerate(codes):
+        # Index by code symbols + function body previews (for keyword matching)
+        code_text = f"{cc.file} {' '.join(cc.symbols)}"
+        if cc.functions:
+            code_text += " " + " ".join(f.body_preview for f in cc.functions)
+        for token in _tokenize(code_text):
+            code_token_index.setdefault(token, set()).add(i)
+        # Also index filename stem
+        stem = Path(cc.file).stem
+        if stem == "__init__":
+            stem = Path(cc.file).parent.name
+        for token in _tokenize(stem):
+            code_token_index.setdefault(token, set()).add(i)
+        # Index by directory for dirname-based pruning
+        cd = _dirname(cc.file)
+        if cd:
+            code_dir_index.setdefault(cd, set()).add(i)
+
+    # 5. Match specs ↔ code (using inverted index)
+    for sc_idx, sc in enumerate(specs):
         # Build spec tokens from title, heading text, parent chain, and body content
         spec_text = f"{sc.title} {sc.heading_text}"
         if sc.parent_chain:
@@ -134,7 +160,24 @@ def build_heuristic_graph(
             spec_text += " " + sc.body_text[:300]
         spec_tokens = _tokenize(spec_text)
 
-        for cc in codes:
+        # Find candidate code files via inverted index (token-based)
+        candidate_indices: set[int] = set()
+        for token in spec_tokens:
+            if token in code_token_index:
+                candidate_indices.update(code_token_index[token])
+
+        # Also add directory-based candidates (for dirname/filename matching)
+        spec_dir = _dirname(sc.file)
+        if spec_dir and spec_dir in code_dir_index:
+            candidate_indices.update(code_dir_index[spec_dir])
+        # Partial dirname match: e.g. "auth" in "authentication"
+        if spec_dir:
+            for code_dir, indices in code_dir_index.items():
+                if spec_dir != code_dir and (spec_dir in code_dir or code_dir in spec_dir):
+                    candidate_indices.update(indices)
+
+        for ci in candidate_indices:
+            cc = codes[ci]
             conf, evidence = _score_edge(sc, cc, spec_tokens, project_dir)
 
             if conf < _MIN_CONFIDENCE:
@@ -151,51 +194,52 @@ def build_heuristic_graph(
                 evidence=evidence,
             ))
 
-    # 6. Match specs ↔ individual code functions (function-level traceability)
-    for sc in specs:
-        spec_text = f"{sc.title} {sc.heading_text}"
-        if sc.parent_chain:
-            spec_text += " " + " ".join(sc.parent_chain)
-        if sc.body_text:
-            spec_text += " " + sc.body_text[:300]
-        spec_tokens = _tokenize(spec_text)
+    # 6. Match specs ↔ individual code functions (skipped in fast mode)
+    if not fast:
+        for sc in specs:
+            spec_text = f"{sc.title} {sc.heading_text}"
+            if sc.parent_chain:
+                spec_text += " " + " ".join(sc.parent_chain)
+            if sc.body_text:
+                spec_text += " " + sc.body_text[:300]
+            spec_tokens = _tokenize(spec_text)
 
-        for cc in codes:
-            if not cc.functions:
-                continue
-            for func in cc.functions:
-                func_id = f"{cc.file}::{func.name}"
-                func_tokens = _tokenize(f"{func.name} {func.body_preview}")
-                conf = _score_func_edge(sc, func, spec_tokens, func_tokens)
-                if conf < _MIN_CONFIDENCE:
+            for cc in codes:
+                if not cc.functions:
                     continue
-                # Add function node (skip if already added)
-                if func_id not in graph.nodes:
-                    graph.add_node(TraceNode(
-                        id=func_id,
-                        type=NodeType.CODE,
-                        title=f"{func.name}()",
-                        source=SourceRef(file=cc.file, line=func.line),
-                        framework_origin="heuristic",
-                        confidence=conf,
-                        metadata={"func_name": func.name, "file": cc.file, "line": func.line},
+                for func in cc.functions:
+                    func_id = f"{cc.file}::{func.name}"
+                    func_tokens = _tokenize(f"{func.name} {func.body_preview}")
+                    conf = _score_func_edge(sc, func, spec_tokens, func_tokens)
+                    if conf < _MIN_CONFIDENCE:
+                        continue
+                    # Add function node (skip if already added)
+                    if func_id not in graph.nodes:
+                        graph.add_node(TraceNode(
+                            id=func_id,
+                            type=NodeType.CODE,
+                            title=f"{func.name}()",
+                            source=SourceRef(file=cc.file, line=func.line),
+                            framework_origin="heuristic",
+                            confidence=conf,
+                            metadata={"func_name": func.name, "file": cc.file, "line": func.line},
+                        ))
+                    func_evidence: list[Evidence] = [
+                        Evidence(
+                            kind="heuristic:funcname",
+                            value=f"function '{func.name}' matches spec '{sc.title}'",
+                            source=SourceRef(file=cc.file, line=func.line),
+                        ),
+                    ]
+                    relation = EdgeRelation.VERIFIES if cc.is_test else EdgeRelation.IMPLEMENTS
+                    strength = EdgeStrength.WEAK if conf < 0.4 else EdgeStrength.INFERRED
+                    graph.add_edge(TraceEdge(
+                        src_id=func_id,
+                        dst_id=sc.auto_id,
+                        relation=relation,
+                        strength=strength,
+                        evidence=func_evidence,
                     ))
-                func_evidence: list[Evidence] = [
-                    Evidence(
-                        kind="heuristic:funcname",
-                        value=f"function '{func.name}' matches spec '{sc.title}'",
-                        source=SourceRef(file=cc.file, line=func.line),
-                    ),
-                ]
-                relation = EdgeRelation.VERIFIES if cc.is_test else EdgeRelation.IMPLEMENTS
-                strength = EdgeStrength.WEAK if conf < 0.4 else EdgeStrength.INFERRED
-                graph.add_edge(TraceEdge(
-                    src_id=func_id,
-                    dst_id=sc.auto_id,
-                    relation=relation,
-                    strength=strength,
-                    evidence=func_evidence,
-                ))
 
     return graph
 

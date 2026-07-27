@@ -34,8 +34,11 @@ def cli() -> None:
 @click.option("--call-graph", "-c", is_flag=True, default=False,
               help="Build call graph for transitive impact analysis",
               show_default=True)
+@click.option("--fast", is_flag=True, default=False,
+              help="Skip function-level matching for faster analysis on large projects",
+              show_default=True)
 def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
-            call_graph: bool) -> None:
+            call_graph: bool, fast: bool) -> None:
     """Analyze a project and build a trace graph."""
     from specbridge.adapters import detect_adapter, detect_all, merge_graphs
 
@@ -50,6 +53,8 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
         graphs = []
         for score, adapter in scored:
             click.echo(f"   Using {type(adapter).__name__} (confidence {score})", err=True)
+            if fast and hasattr(adapter, 'fast'):
+                adapter.fast = True
             g = adapter.analyze(str(root))
             graphs.append(g)
         graph = merge_graphs(graphs)
@@ -58,6 +63,8 @@ def analyze(dir: str, output_fmt: str, merge: bool, top: int | None, deps: bool,
         if detected is None:
             click.echo("❌ No recognized SSD framework found.", err=True)
             raise click.Abort()
+        if fast and hasattr(detected, 'fast'):
+            detected.fast = True
         graph = detected.analyze(str(root))
 
     # Build code dependency graph if requested

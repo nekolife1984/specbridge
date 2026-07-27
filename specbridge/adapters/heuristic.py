@@ -25,6 +25,9 @@ class HeuristicAdapter(ProjectAdapter):
     directory and a src/ (or lib/ or app/) directory.
     """
 
+    def __init__(self) -> None:
+        self.fast: bool = False
+
     def detect(self, directory: str) -> float:
         root = Path(directory).resolve()
 
@@ -47,4 +50,5 @@ class HeuristicAdapter(ProjectAdapter):
             directory,
             spec_dirs=cfg.spec_dirs,
             source_dirs=cfg.source_dirs,
+            fast=self.fast,
         )
