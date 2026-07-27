@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T06:42:30",
-  "reason": "Session: spec_files + source_files機能",
+  "timestamp": "2026-07-28T06:50:00",
+  "reason": "Session: #35 #36 #37 対応",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -9145,7 +9145,7 @@
         "uuid",
         "dataclasses"
       ],
-      "file_hash": "b815c3fbd346af0a",
+      "file_hash": "6c0692661751850c",
       "functions": [
         {
           "name": "NodeType",
@@ -9200,48 +9200,48 @@
           "name": "TraceGraph",
           "kind": "class",
           "line": 76,
-          "body_hash": "e123b5306562bfbc",
-          "body_lines": 5
+          "body_hash": "2e412ff3df525a9d",
+          "body_lines": 6
         },
         {
           "name": "add_node",
           "kind": "function",
-          "line": 81,
+          "line": 82,
           "body_hash": "186eb224502ce28a",
           "body_lines": 6
         },
         {
           "name": "add_edge",
           "kind": "function",
-          "line": 87,
-          "body_hash": "3061c8781364ea89",
-          "body_lines": 3
+          "line": 88,
+          "body_hash": "0bfd8eed34d05e9a",
+          "body_lines": 7
         },
         {
           "name": "nodes_by_type",
           "kind": "function",
-          "line": 90,
+          "line": 95,
           "body_hash": "52427c4cbe1e7906",
           "body_lines": 3
         },
         {
           "name": "edges_to",
           "kind": "function",
-          "line": 93,
+          "line": 98,
           "body_hash": "901aed4c2b57ab8b",
           "body_lines": 3
         },
         {
           "name": "edges_from",
           "kind": "function",
-          "line": 96,
+          "line": 101,
           "body_hash": "1b3fec40efabf059",
           "body_lines": 4
         },
         {
           "name": "find_spec_nodes",
           "kind": "function",
-          "line": 100,
+          "line": 105,
           "body_hash": "fc945b9bb90b0061",
           "body_lines": 35
         }
@@ -9524,7 +9524,7 @@
         "hashlib",
         "re"
       ],
-      "file_hash": "1cbc0f762df30750",
+      "file_hash": "58262160c6b43200",
       "functions": [
         {
           "name": "FuncBlock",
@@ -9565,13 +9565,13 @@
           "name": "discover_code",
           "kind": "function",
           "line": 152,
-          "body_hash": "86e3a3dc73c30e38",
-          "body_lines": 91
+          "body_hash": "469f09459d162122",
+          "body_lines": 93
         },
         {
           "name": "_extract_symbol_names",
           "kind": "function",
-          "line": 243,
+          "line": 245,
           "body_hash": "947067ac1e77b638",
           "body_lines": 11
         }
@@ -9595,7 +9595,7 @@
         "hashlib",
         "re"
       ],
-      "file_hash": "424693562ade3670",
+      "file_hash": "be76ea68e54e8f0d",
       "functions": [
         {
           "name": "SpecCandidate",
@@ -9629,13 +9629,13 @@
           "name": "discover_specs",
           "kind": "function",
           "line": 105,
-          "body_hash": "d2a201897525baef",
-          "body_lines": 50
+          "body_hash": "4a2ef0afec9ef1c9",
+          "body_lines": 58
         },
         {
           "name": "_parse_sections",
           "kind": "function",
-          "line": 155,
+          "line": 163,
           "body_hash": "604065f426bb0a80",
           "body_lines": 65
         }

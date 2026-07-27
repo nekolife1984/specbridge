@@ -122,6 +122,7 @@ def discover_specs(
         exclude_dirs = set(_EXCLUDE_DIRS)
 
     candidates: list[SpecCandidate] = []
+    seen_files: set[str] = set()  # track processed file paths to avoid duplicates
 
     for sd in spec_dirs:
         scan_path = root / sd
@@ -136,12 +137,19 @@ def discover_specs(
                 text = fpath.read_text(encoding="utf-8")
             except Exception:
                 continue
+            rel = str(fpath.relative_to(root))
+            seen_files.add(rel)
             candidates.extend(_parse_sections(fpath, text, root))
 
-    # ✨ Explicit spec files (bypass _EXCLUDE_FILES)
+    # ✨ Explicit spec files (bypass _EXCLUDE_FILES, skip if already seen)
     for fname in (spec_files or []):
         fpath = root / fname
+        rel = str(Path(fname))
+        if rel in seen_files:
+            continue
         if not fpath.exists() or not fpath.is_file():
+            import warnings
+            warnings.warn(f"spec_file not found: {fname}")
             continue
         try:
             text = fpath.read_text(encoding="utf-8")

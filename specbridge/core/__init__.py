@@ -77,6 +77,7 @@ class TraceGraph:
     """The full result of analyzing a project."""
     nodes: dict[str, TraceNode] = field(default_factory=dict)
     edges: list[TraceEdge] = field(default_factory=list)
+    _edge_keys: set[tuple[str, str, EdgeRelation]] = field(default_factory=set)
 
     def add_node(self, node: TraceNode) -> str:
         uid = node.id or str(uuid.uuid4())
@@ -85,6 +86,10 @@ class TraceGraph:
         return uid
 
     def add_edge(self, edge: TraceEdge) -> None:
+        key = (edge.src_id, edge.dst_id, edge.relation)
+        if key in self._edge_keys:
+            return
+        self._edge_keys.add(key)
         self.edges.append(edge)
 
     def nodes_by_type(self, t: NodeType) -> list[TraceNode]:

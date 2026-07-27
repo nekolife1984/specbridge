@@ -205,6 +205,8 @@ def discover_code(
     for fname in (source_files or []):
         fpath = root / fname
         if not fpath.exists() or not fpath.is_file():
+            import warnings
+            warnings.warn(f"source_file not found: {fname}")
             continue
         ext = fpath.suffix
         if ext not in _SOURCE_MAP:
