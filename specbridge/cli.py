@@ -903,6 +903,131 @@ def setup(dir: str, ci: bool) -> None:
 
 
 @cli.command()
+@click.option("--dir", "-d", default=".", help="Project directory to initialize", show_default=True)
+@click.option("--force", is_flag=True, default=False,
+              help="Overwrite existing .specbridge.yaml without confirmation")
+def init(dir: str, force: bool) -> None:
+    """Interactive config generator — create .specbridge.yaml step by step.
+
+    Scans the project for spec directories (docs/, spec/, specs/, ...) and
+    source directories (src/, lib/, app/, tests/, ...), then guides you
+    through selecting which to include and writing the config file.
+    """
+    from specbridge.config import SpecbridgeConfig, DEFAULT_SPEC_DIRS, DEFAULT_SOURCE_DIRS
+
+    root = Path(dir).resolve()
+
+    # Check for existing config
+    yaml_path = root / ".specbridge.yaml"
+    if yaml_path.exists() and not force:
+        click.echo(f"⚠️  .specbridge.yaml already exists in {root}", err=True)
+        if not click.confirm("   Overwrite?", default=False):
+            click.echo("   Canceled.")
+            return
+
+    click.echo(f"\n🔍 Scanning {root} ...")
+
+    # ── Detect spec directories ──
+    known_spec_dirs = ["docs", "spec", "specs", "design", "requirements", "ドキュメント", "仕様"]
+    found_spec_dirs: list[str] = []
+    for d in known_spec_dirs:
+        p = root / d
+        if p.exists() and p.is_dir():
+            md_count = len(list(p.rglob("*.md")))
+            found_spec_dirs.append(f"{d}/  ({md_count} .md files)")
+
+    if found_spec_dirs:
+        click.echo(f"\n📁 Spec directories found:")
+        for d in found_spec_dirs:
+            click.echo(f"    {d}")
+        use_all_spec = click.confirm("   Include all of them?", default=True)
+        if use_all_spec:
+            spec_dirs = [d.split("/")[0] for d in found_spec_dirs]
+        else:
+            spec_dirs = []
+            for s in found_spec_dirs:
+                dir_name = s.split("/")[0]
+                if click.confirm(f"   Include {dir_name}/?", default=True):
+                    spec_dirs.append(dir_name)
+    else:
+        click.echo("   No standard spec directories found.")
+        custom = click.prompt("   Enter custom spec dir(s) (comma-separated, or empty for 'docs')",
+                              default="")
+        spec_dirs = [d.strip() for d in custom.split(",")] if custom.strip() else ["docs"]
+
+    # ── Detect source directories ──
+    known_source_dirs = ["src", "lib", "app", "tests", "source", "コード", "ソースコード"]
+    found_source_dirs: list[str] = []
+    for d in known_source_dirs:
+        p = root / d
+        if p.exists() and p.is_dir():
+            # Count source files
+            extensions = {".py", ".ts", ".js", ".rs", ".go", ".rb", ".java", ".kt", ".swift", ".cpp", ".c", ".h"}
+            src_count = sum(1 for f in p.rglob("*") if f.is_file() and f.suffix.lower() in extensions)
+            found_source_dirs.append(f"{d}/  ({src_count} source files)")
+
+    if found_source_dirs:
+        click.echo(f"\n🔧 Source directories found:")
+        for d in found_source_dirs:
+            click.echo(f"    {d}")
+        use_all_src = click.confirm("   Include all of them?", default=True)
+        if use_all_src:
+            source_dirs = [d.split("/")[0] for d in found_source_dirs]
+        else:
+            source_dirs = []
+            for s in found_source_dirs:
+                dir_name = s.split("/")[0]
+                if click.confirm(f"   Include {dir_name}/?", default=True):
+                    source_dirs.append(dir_name)
+    else:
+        click.echo("   No standard source directories found.")
+        custom = click.prompt("   Enter custom source dir(s) (comma-separated, or empty for 'src')",
+                              default="")
+        source_dirs = [d.strip() for d in custom.split(",")] if custom.strip() else ["src"]
+
+    # ── Advanced options ──
+    click.echo("")
+    if click.confirm("   Configure advanced options (min_confidence, max_output_nodes)?",
+                     default=False):
+        min_confidence = click.prompt("   Minimum confidence (0.0-1.0)",
+                                      type=float, default=0.15)
+        max_output_nodes = click.prompt("   Max output nodes per category",
+                                        type=int, default=20)
+    else:
+        min_confidence = 0.15
+        max_output_nodes = 20
+
+    # ── Preview & confirm ──
+    click.echo(f"\n📝 Config preview:")
+    click.echo(f"    spec_dirs:        {spec_dirs}")
+    click.echo(f"    source_dirs:      {source_dirs}")
+    click.echo(f"    min_confidence:   {min_confidence}")
+    click.echo(f"    max_output_nodes: {max_output_nodes}")
+
+    if not click.confirm("\n   Write .specbridge.yaml?", default=True):
+        click.echo("   Canceled.")
+        return
+
+    # ── Write .specbridge.yaml ──
+    import yaml
+    config_data = {
+        "spec_dirs": spec_dirs,
+        "source_dirs": source_dirs,
+        "min_confidence": min_confidence,
+        "max_output_nodes": max_output_nodes,
+    }
+    yaml_path.write_text(yaml.dump(config_data, default_flow_style=False), encoding="utf-8")
+    click.echo(f"\n✅ .specbridge.yaml created in {root}")
+
+    # ── Offer next steps ──
+    click.echo("")
+    click.echo("💡 Next steps:")
+    click.echo("   1. Run 'specbridge setup' to install pre-commit hook and AGENTS.md")
+    click.echo("   2. Run 'specbridge snapshot' to create the initial baseline")
+    click.echo("   3. Run 'specbridge analyze' to see your trace graph")
+
+
+@cli.command()
 @click.option("--shell", type=click.Choice(["bash", "zsh", "fish"]), default=None,
               help="Target shell (default: auto-detect from SHELL env)")
 @click.option("--install", is_flag=True, default=False,

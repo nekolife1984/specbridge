@@ -5,7 +5,7 @@
 
 ## 1. 概要
 
-specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**13のコマンド**を持ちます。
+specbridgeはClickベースのCLIを提供し、トレーサビリティ分析、ドリフト検出、プロジェクト管理のための**15のコマンド**を持ちます。
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
@@ -19,6 +19,7 @@ Options:
 Commands:
   analyze            プロジェクトを分析しトレースグラフを構築
   impact             指定された仕様を実装するものを検索
+  init               対話的設定ジェネレーター（.specbridge.yaml）
   coverage           仕様カバレッジ統計を表示
   snapshot           仕様とコードの構造的スナップショットを取得
   drift              スナップショットと現在の状態の変化を検出
@@ -440,6 +441,59 @@ Options:
   -d, --dir TEXT   セットアップするプロジェクトディレクトリ  [default: .]
   --ci             GitHub Actions CIワークフローも作成
   --help           ヘルプを表示
+```
+
+### 2.15 `init` ✨ 新機能
+
+対話的に `.specbridge.yaml` を生成する設定ジェネレーターです。
+
+```
+Usage: specbridge init [OPTIONS]
+
+  Interactive config generator — create .specbridge.yaml step by step.
+
+  Scans the project for spec directories (docs/, spec/, specs/, ...) and
+  source directories (src/, lib/, app/, tests/, ...), then guides you
+  through selecting which to include and writing the config file.
+
+Options:
+  -d, --dir TEXT   プロジェクトディレクトリ  [default: .]
+  --force          既存の .specbridge.yaml を確認なしで上書き
+  --help           ヘルプを表示
+```
+
+**対話フロー:**
+
+```
+$ specbridge init
+
+🔍 Scanning /home/user/myproject ...
+
+📁 Spec directories found:
+    docs/  (12 .md files)
+    specs/  (3 .md files)
+   Include all of them? [Y/n] y
+
+🔧 Source directories found:
+    src/  (45 source files)
+    lib/  (12 source files)
+    tests/  (18 source files)
+   Include all of them? [Y/n] y
+
+📝 Config preview:
+    spec_dirs:        ['docs', 'specs']
+    source_dirs:      ['src', 'lib', 'tests']
+    min_confidence:   0.15
+    max_output_nodes: 20
+
+   Write .specbridge.yaml? [Y/n] y
+
+✅ .specbridge.yaml created in /home/user/myproject
+
+💡 Next steps:
+   1. Run 'specbridge setup' to install pre-commit hook and AGENTS.md
+   2. Run 'specbridge snapshot' to create the initial baseline
+   3. Run 'specbridge analyze' to see your trace graph
 ```
 
 ## 3. 改善されたエラーメッセージ（v1.0）

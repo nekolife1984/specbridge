@@ -5,7 +5,7 @@
 
 ## 1. Overview
 
-specbridge provides a Click-based CLI with **14 commands** for traceability analysis, drift detection, and project management.
+specbridge provides a Click-based CLI with **15 commands** for traceability analysis, drift detection, and project management.
 
 ```
 Usage: specbridge [OPTIONS] COMMAND [ARGS]...
@@ -23,6 +23,7 @@ Commands:
   coverage           Show spec coverage statistics.
   drift              Detect changes between snapshot and current state.
   impact             Find what implements a given spec.
+  init               Interactive config generator (.specbridge.yaml).
   plugins            List installed specbridge adapter plugins.
   serve              Start MCP server for AI agent integration.
   setup              One‑command project setup (config, hook, AGENTS.md, snapshot).
@@ -442,6 +443,59 @@ Options:
   -d, --dir TEXT   Project directory to set up  [default: .]
   --ci             Also create GitHub Actions CI workflow
   --help           Show this message and exit.
+```
+
+### 2.15 `init` ✨ New
+
+Interactive config generator that creates `.specbridge.yaml` step by step.
+
+```
+Usage: specbridge init [OPTIONS]
+
+  Interactive config generator — create .specbridge.yaml step by step.
+
+  Scans the project for spec directories (docs/, spec/, specs/, ...) and
+  source directories (src/, lib/, app/, tests/, ...), then guides you
+  through selecting which to include and writing the config file.
+
+Options:
+  -d, --dir TEXT   Project directory to initialize  [default: .]
+  --force          Overwrite existing .specbridge.yaml without confirmation
+  --help           Show this message and exit.
+```
+
+**Interactive flow:**
+
+```
+$ specbridge init
+
+🔍 Scanning /home/user/myproject ...
+
+📁 Spec directories found:
+    docs/  (12 .md files)
+    specs/  (3 .md files)
+   Include all of them? [Y/n] y
+
+🔧 Source directories found:
+    src/  (45 source files)
+    lib/  (12 source files)
+    tests/  (18 source files)
+   Include all of them? [Y/n] y
+
+📝 Config preview:
+    spec_dirs:        ['docs', 'specs']
+    source_dirs:      ['src', 'lib', 'tests']
+    min_confidence:   0.15
+    max_output_nodes: 20
+
+   Write .specbridge.yaml? [Y/n] y
+
+✅ .specbridge.yaml created in /home/user/myproject
+
+💡 Next steps:
+   1. Run 'specbridge setup' to install pre-commit hook and AGENTS.md
+   2. Run 'specbridge snapshot' to create the initial baseline
+   3. Run 'specbridge analyze' to see your trace graph
 ```
 
 ## 3. Improved Error Messages (v1.0)
