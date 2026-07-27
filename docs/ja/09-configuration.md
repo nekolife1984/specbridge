@@ -4,6 +4,10 @@
 > **バージョン:** 1.0.0
 
 ## 1. 概要
+<!-- @impl specbridge/adapters/_base.py::ProjectAdapter -->
+<!-- @impl specbridge/cli.py::cli -->
+<!-- @impl specbridge/cli.py::config -->
+<!-- @impl tests/test_code_discovery.py::TestDiscoverCode -->
 
 specbridgeは階層的な設定システムと厳格な読み取り専用ガードを使用して、ツールが仕様やソースコードを決して変更しないことを保証します。
 
@@ -29,9 +33,10 @@ class SpecbridgeConfig:
     max_output_nodes: int       # デフォルト: 20
 ```
 
-### 2.2 明示的な設定パス（`--config` CLIオプション）✨ v1.0 新機能
+### 2.2 明示的な設定パス（`--config` CLIオプション） ✨ v1.0新機能
+<!-- @impl specbridge/config.py::SpecbridgeConfig.load -->
 
-設定を使用するすべてのコマンド（`snapshot`、`drift`、`config`）がカスタム設定ファイルパスを指定する `--config` オプションをサポートします：
+設定を使用するすべてのコマンド（`snapshot`、`drift`、`config`）が、カスタム設定ファイルパスを指定する `--config` オプションをサポートするようになりました：
 
 ```bash
 # カスタム設定ファイルを使用
@@ -41,10 +46,10 @@ $ specbridge snapshot --config /path/to/custom-config.yaml
 $ specbridge config --config ./ci-specbridge.yaml --validate
 ```
 
-`--config` が指定された場合、`.specbridge.yaml` と `pyproject.toml` の自動検出は**完全にスキップ**され、指定されたファイルのみが読み込まれます。これは以下の場合に便利です：
+`--config` が指定された場合、`.specbridge.yaml` と `pyproject.toml` の自動検出は**完全にスキップ**され、指定されたファイルのみが読み込まれます。これは以下で役立ちます：
 
 - **CI/CDパイプライン** — ローカル開発とCIで異なる設定を使用
-- **マルチプロジェクト分析** — 様々なプロジェクト設定を指定
+- **マルチプロジェクト分析** — 異なるプロジェクト設定を指定
 - **検証ワークフロー** — デプロイ前に設定を検証
 
 ### 2.3 YAML設定形式（`.specbridge.yaml`）
@@ -285,16 +290,22 @@ path.parent.mkdir(parents=True, exist_ok=True)
 path.write_text(...)
 ```
 
-## 4. キャッシュモジュール（`cache.py`）✨ v1.0 新機能
+## 4. キャッシュモジュール (`cache.py`) ✨ v1.0新機能
+<!-- @impl specbridge/cache.py -->
+<!-- @impl specbridge/cache.py::load_cache -->
+<!-- @impl specbridge/cache.py::save_cache -->
+<!-- @impl specbridge/cache.py::filter_cached -->
+<!-- @impl specbridge/cache.py::resolve_file_list -->
+<!-- @impl specbridge/cache.py::clear_cache -->
 
-ファイルハッシュキャッシュモジュールは、ファイルコンテンツのハッシュを追跡することで、繰り返しの分析を高速化します。
+新しいファイルハッシュキャッシュモジュールで、ファイルのコンテンツハッシュを追跡して繰り返しの分析を高速化します。
 
 ### 主要関数
 
 | 関数 | 目的 |
 |----------|---------|
 | `load_cache()` | `.specbridge/cache.json` からキャッシュを読み込み |
-| `save_cache()` | キャッシュをディスクに保存（ガード保護あり） |
+| `save_cache()` | キャッシュをディスクに永続化（ガード保護） |
 | `filter_cached()` | ファイルハッシュをキャッシュと比較し、変更されたファイルのみを返す |
 | `resolve_file_list()` | 指定された拡張子に一致するファイルをソースディレクトリ内から再帰的にリスト |
 | `clear_cache()` | キャッシュファイルを削除（設定変更後など） |
