@@ -246,11 +246,18 @@ def coverage(dir: str, output_fmt: str) -> None:
 def snapshot(dir: str, reason: str) -> None:
     """Take a structural snapshot of specs and code."""
     from specbridge.analyzers.drift import build_snapshot, save_snapshot
+    from specbridge.config import SpecbridgeConfig
 
     root = Path(dir).resolve()
     click.echo(f"📸 Snapshotting {root} ...", err=True)
 
-    snap = build_snapshot(str(root), reason=reason)
+    cfg = SpecbridgeConfig.load(str(root))
+    snap = build_snapshot(
+        str(root),
+        reason=reason,
+        spec_dirs=cfg.spec_dirs,
+        source_dirs=cfg.source_dirs,
+    )
     path = save_snapshot(snap, str(root))
 
     click.echo(f"   Specs: {len(snap['specs'])} | Code files: {len(snap['code'])}")

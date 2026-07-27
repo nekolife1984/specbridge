@@ -4,6 +4,7 @@ spec_dirs:
 source_dirs:
   - specbridge
   - tests
+  - scripts
 exclude_dirs:
   - .git
   - node_modules
