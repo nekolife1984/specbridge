@@ -1,13 +1,15 @@
 # Testing Strategy
 
-> **Date:** 2026-07-26
-> **Version:** 0.0.1.dev0
+> **Date:** 2026-07-27
+> **Version:** 1.0.0
 
 ## 1. Overview
 
-The specbridge test suite uses `pytest` and covers all major modules with unit tests, integration tests, and boundary tests.
+The specbridge test suite uses `pytest` and covers all major modules with unit tests, integration tests, scale tests, edge-case tests, and concurrent access tests.
 
 **Test location:** `tests/`
+
+**Current count:** 220 tests (all passing)
 
 ## 2. Test Files
 
@@ -18,14 +20,17 @@ The specbridge test suite uses `pytest` and covers all major modules with unit t
 | `test_extract.py` | `core/extract.py` | Tag extraction from spec and source files |
 | `test_heuristic_adapter.py` | `adapters/heuristic.py`, `infer/` | Heuristic matching engine |
 | `test_spectra_adapter.py` | `adapters/spectra.py` | Spectra framework adapter |
-| `test_adapter_merge.py` | `adapters/_base.py` | Adapter detection and graph merging |
+| `test_adapter_merge.py` | `adapters/_base.py` | Adapter detection, graph merging, spec:: ID normalization |
 | `test_analyzers.py` | `analyzers/__init__.py` | Coverage, orphan detection |
 | `test_drift.py` | `analyzers/drift.py` | Snapshot and drift detection |
 | `test_import_graph.py` | `analyzers/graph.py` | Code dependency graph |
 | `test_boundary.py` | `cli.py` | Boundary validation |
 | `test_guard.py` | `guard.py` | Read-only write path enforcement |
-| `test_config.py` | `config.py` | Config loading from YAML / pyproject.toml |
+| `test_config.py` | `config.py` | Config loading from YAML / pyproject.toml, edge-case configs |
 | `test_plugin_discovery.py` | `adapters/_base.py` | Plugin discovery via entry points |
+| `test_large_scale.py` ✨ | Full pipeline | Scale test with 50+ spec files and 200+ code files |
+| `test_edge_cases.py` ✨ | Full pipeline | Unicode paths, spaces, binary files, empty files, large headings |
+| `test_concurrent.py` ✨ | `analyzers/drift.py` | Concurrent snapshot save/load during analysis |
 
 ## 3. Test Categories
 
@@ -61,6 +66,9 @@ Test edge cases and error handling.
 - Files outside project root
 - Unicode in file names and content
 - `_Boundary:_` violations
+- Paths with spaces, emoji, and 250+ character filenames ✨
+- Binary files and empty files in spec directories ✨
+- Config with wrong value types (safe_float/safe_int fallback) ✨
 
 ## 4. Test Fixtures (`tests/conftest.py`)
 
