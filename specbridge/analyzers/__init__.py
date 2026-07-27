@@ -1,11 +1,4 @@
 """Analysis utilities."""
-from specbridge.analyzers.call_graph import (
-    CallGraph,
-    build_call_graph,
-    transitive_impact,
-)
-
-from typing import Any
 
 from specbridge.core import EdgeRelation, NodeType, TraceGraph
 

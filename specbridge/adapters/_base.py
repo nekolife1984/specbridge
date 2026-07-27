@@ -231,10 +231,7 @@ def _normalize_spec_ids(graph: TraceGraph) -> None:
             for h_id, h_nodes in heuristic_nodes.items():
                 if h_id.startswith("__title__:"):
                     continue
-                if h_id.endswith(f".{num}") or num.endswith(f".{h_id}"):
-                    candidates.extend(h_nodes)
-                # Check if one is contained in the other (e.g. "1" in "auth.1.1")
-                elif num in h_id or h_id in num:
+                if h_id.endswith(f".{num}") or num.endswith(f".{h_id}") or num in h_id or h_id in num:
                     candidates.extend(h_nodes)
 
         if candidates:

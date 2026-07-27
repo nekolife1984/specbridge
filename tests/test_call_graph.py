@@ -79,7 +79,8 @@ class TestBuildCallGraph:
     def test_build_from_trace_graph(self) -> None:
         graph = _make_graph()
         # Create a temporary source file so the builder can scan calls
-        import tempfile, os
+        import os
+        import tempfile
         d = tempfile.mkdtemp()
         srcdir = os.path.join(d, "src")
         os.makedirs(srcdir, exist_ok=True)

@@ -10,8 +10,8 @@ from pathlib import Path
 
 import pytest
 
-from specbridge.analyzers.drift import build_snapshot, compute_drift, save_snapshot
 from specbridge.adapters._base import detect_adapter
+from specbridge.analyzers.drift import build_snapshot, compute_drift, save_snapshot
 
 
 class TestConcurrentSnapshot:

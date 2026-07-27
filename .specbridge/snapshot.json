@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T06:50:00",
-  "reason": "Session: #35 #36 #37 対応",
+  "timestamp": "2026-07-28T07:13:16",
+  "reason": "Session: fix function name matching in drift",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -7035,7 +7035,7 @@
       "body_preview": "## Related Skills  - `heuristic-traceability` — deep-dive into coverage improvem"
     },
     {
-      "id": "README.1",
+      "id": "root.README.1",
       "file": "README.md",
       "title": "specbridge",
       "heading_text": "specbridge",
@@ -7047,7 +7047,7 @@
       "body_preview": "# specbridge  > **Spec ↔ Code bridge.** Framework-agnostic, read-only traceabili"
     },
     {
-      "id": "README.1.1",
+      "id": "root.README.1.1",
       "file": "README.md",
       "title": "Install (limited release)",
       "heading_text": "Install (limited release)",
@@ -7059,7 +7059,7 @@
       "body_preview": "## Install (limited release)  ```bash pip install git+https://github.com/nekolif"
     },
     {
-      "id": "README.2",
+      "id": "root.README.2",
       "file": "README.md",
       "title": "Interactive setup: detects dirs, installs hook, deploys AGENTS.md",
       "heading_text": "Interactive setup: detects dirs, installs hook, deploys AGENTS.md",
@@ -7071,7 +7071,7 @@
       "body_preview": "# Interactive setup: detects dirs, installs hook, deploys AGENTS.md specbridge s"
     },
     {
-      "id": "README.2.1",
+      "id": "root.README.2.1",
       "file": "README.md",
       "title": "Quickstart (3 minutes)",
       "heading_text": "Quickstart (3 minutes)",
@@ -7083,7 +7083,7 @@
       "body_preview": "## Quickstart (3 minutes)"
     },
     {
-      "id": "README.2.1.1",
+      "id": "root.README.2.1.1",
       "file": "README.md",
       "title": "One-command setup",
       "heading_text": "0. One-command setup",
@@ -7095,7 +7095,7 @@
       "body_preview": "### 0. One-command setup  ```bash specbridge setup ```  This creates `.specbridg"
     },
     {
-      "id": "README.2.1.2",
+      "id": "root.README.2.1.2",
       "file": "README.md",
       "title": "Try the example project",
       "heading_text": "1. Try the example project",
@@ -7107,7 +7107,7 @@
       "body_preview": "### 1. Try the example project  ```bash cd examples/todo-app specbridge analyze "
     },
     {
-      "id": "README.2.1.3",
+      "id": "root.README.2.1.3",
       "file": "README.md",
       "title": "Run it on your own project",
       "heading_text": "2. Run it on your own project",
@@ -7119,7 +7119,7 @@
       "body_preview": "### 2. Run it on your own project  Create a `.specbridge.yaml` in your project r"
     },
     {
-      "id": "README.2.1.4",
+      "id": "root.README.2.1.4",
       "file": "README.md",
       "title": "See what else you can do",
       "heading_text": "3. See what else you can do",
@@ -7131,7 +7131,7 @@
       "body_preview": "### 3. See what else you can do  ```bash specbridge coverage                  # "
     },
     {
-      "id": "README.2.2",
+      "id": "root.README.2.2",
       "file": "README.md",
       "title": "What is specbridge good for?",
       "heading_text": "What is specbridge good for?",
@@ -7143,7 +7143,7 @@
       "body_preview": "## What is specbridge good for?  | Use case | Command | Why it matters | |------"
     },
     {
-      "id": "README.2.3",
+      "id": "root.README.2.3",
       "file": "README.md",
       "title": "Key features",
       "heading_text": "Key features",
@@ -7155,7 +7155,7 @@
       "body_preview": "## Key features  - **Read-only**: Never touches your specs or code. All output g"
     },
     {
-      "id": "README.2.4",
+      "id": "root.README.2.4",
       "file": "README.md",
       "title": "Demo: see it in action",
       "heading_text": "Demo: see it in action",
@@ -7167,7 +7167,7 @@
       "body_preview": "## Demo: see it in action  ```bash"
     },
     {
-      "id": "README.3",
+      "id": "root.README.3",
       "file": "README.md",
       "title": "Clone once",
       "heading_text": "Clone once",
@@ -7179,7 +7179,7 @@
       "body_preview": "# Clone once git clone https://github.com/nekolife1984/specbridge.git cd specbri"
     },
     {
-      "id": "README.4",
+      "id": "root.README.4",
       "file": "README.md",
       "title": "Run the example",
       "heading_text": "Run the example",
@@ -7191,7 +7191,7 @@
       "body_preview": "# Run the example specbridge analyze --dir examples/todo-app --merge"
     },
     {
-      "id": "README.5",
+      "id": "root.README.5",
       "file": "README.md",
       "title": "Show coverage",
       "heading_text": "Show coverage",
@@ -7203,7 +7203,7 @@
       "body_preview": "# Show coverage specbridge coverage --dir examples/todo-app"
     },
     {
-      "id": "README.6",
+      "id": "root.README.6",
       "file": "README.md",
       "title": "HTML graph (open .specbridge/trace.html in browser)",
       "heading_text": "HTML graph (open .specbridge/trace.html in browser)",
@@ -7215,7 +7215,7 @@
       "body_preview": "# HTML graph (open .specbridge/trace.html in browser) specbridge analyze --dir e"
     },
     {
-      "id": "README.7",
+      "id": "root.README.7",
       "file": "README.md",
       "title": "Watch mode (live update on file changes)",
       "heading_text": "Watch mode (live update on file changes)",
@@ -7227,7 +7227,7 @@
       "body_preview": "# Watch mode (live update on file changes) specbridge watch --dir examples/todo-"
     },
     {
-      "id": "README.7.1",
+      "id": "root.README.7.1",
       "file": "README.md",
       "title": "Project structure",
       "heading_text": "Project structure",
@@ -7239,7 +7239,7 @@
       "body_preview": "## Project structure  ```text specbridge/ ├── specbridge/         # Core library"
     },
     {
-      "id": "README.7.2",
+      "id": "root.README.7.2",
       "file": "README.md",
       "title": "Required setup",
       "heading_text": "Required setup",
@@ -7251,7 +7251,7 @@
       "body_preview": "## Required setup  Every project needs a `.specbridge.yaml` (or `[tool.specbridg"
     },
     {
-      "id": "README.7.3",
+      "id": "root.README.7.3",
       "file": "README.md",
       "title": "Git Hooks",
       "heading_text": "Git Hooks",
@@ -7263,7 +7263,7 @@
       "body_preview": "## Git Hooks  specbridge ships with git hooks for **two audiences**:  | Audience"
     },
     {
-      "id": "README.8",
+      "id": "root.README.8",
       "file": "README.md",
       "title": "specbridge development — full enforcement",
       "heading_text": "specbridge development — full enforcement",
@@ -7275,7 +7275,7 @@
       "body_preview": "# specbridge development — full enforcement git commit       → pre-commit: branc"
     },
     {
-      "id": "README.9",
+      "id": "root.README.9",
       "file": "README.md",
       "title": "Downstream project — drift gate only",
       "heading_text": "Downstream project — drift gate only",
@@ -7287,7 +7287,7 @@
       "body_preview": "# Downstream project — drift gate only git commit       → pre-commit: drift clea"
     },
     {
-      "id": "README.9.1",
+      "id": "root.README.9.1",
       "file": "README.md",
       "title": "🔧 For specbridge developers",
       "heading_text": "🔧 For specbridge developers",
@@ -7299,7 +7299,7 @@
       "body_preview": "### 🔧 For specbridge developers  ```bash sh scripts/install-hooks.sh ```  This i"
     },
     {
-      "id": "README.9.2",
+      "id": "root.README.9.2",
       "file": "README.md",
       "title": "📦 For downstream users",
       "heading_text": "📦 For downstream users",
@@ -7311,7 +7311,7 @@
       "body_preview": "### 📦 For downstream users  ```bash specbridge setup ```  This installs a **stre"
     },
     {
-      "id": "README.9.1",
+      "id": "root.README.9.1",
       "file": "README.md",
       "title": "AI Agent Skill",
       "heading_text": "AI Agent Skill",
@@ -7323,7 +7323,7 @@
       "body_preview": "## AI Agent Skill  specbridge ships with an **AI agent skill** at `.agents/skill"
     },
     {
-      "id": "README.10",
+      "id": "root.README.10",
       "file": "README.md",
       "title": "Recommended: specbridge setup handles this automatically",
       "heading_text": "Recommended: specbridge setup handles this automatically",
@@ -7335,7 +7335,7 @@
       "body_preview": "# Recommended: specbridge setup handles this automatically specbridge setup"
     },
     {
-      "id": "README.11",
+      "id": "root.README.11",
       "file": "README.md",
       "title": "Or manually:",
       "heading_text": "Or manually:",
@@ -7347,7 +7347,7 @@
       "body_preview": "# Or manually: bash scripts/install-hooks.sh ```  This symlinks both the pre-com"
     },
     {
-      "id": "README.11.1",
+      "id": "root.README.11.1",
       "file": "README.md",
       "title": "Setting up AGENTS.md for your project",
       "heading_text": "Setting up AGENTS.md for your project",
@@ -7359,7 +7359,7 @@
       "body_preview": "### Setting up AGENTS.md for your project  To make **any AI agent** (Hermes, Cla"
     },
     {
-      "id": "README.12",
+      "id": "root.README.12",
       "file": "README.md",
       "title": "Project Guide",
       "heading_text": "Project Guide",
@@ -7371,7 +7371,7 @@
       "body_preview": "# Project Guide  This project uses **specbridge** for spec↔code traceability."
     },
     {
-      "id": "README.12.1",
+      "id": "root.README.12.1",
       "file": "README.md",
       "title": "Required rules (before and after every code change)",
       "heading_text": "Required rules (before and after every code change)",
@@ -7383,7 +7383,7 @@
       "body_preview": "## Required rules (before and after every code change)  1. `specbridge snapshot "
     },
     {
-      "id": "README.12.2",
+      "id": "root.README.12.2",
       "file": "README.md",
       "title": "Architecture",
       "heading_text": "Architecture",
@@ -7395,7 +7395,7 @@
       "body_preview": "## Architecture  ```text ┌──────────────────────────────────────────────┐ │  SSD"
     },
     {
-      "id": "README.12.3",
+      "id": "root.README.12.3",
       "file": "README.md",
       "title": "Documentation",
       "heading_text": "Documentation",
@@ -7407,7 +7407,7 @@
       "body_preview": "## Documentation  Full design docs are in [`docs/`](docs/) (EN + JA, 12 categori"
     },
     {
-      "id": "README.12.4",
+      "id": "root.README.12.4",
       "file": "README.md",
       "title": "Feedback (limited release)",
       "heading_text": "Feedback (limited release)",
@@ -7419,7 +7419,7 @@
       "body_preview": "## Feedback (limited release)  This is a private beta. Feedback, bugs, and featu"
     },
     {
-      "id": "README.12.5",
+      "id": "root.README.12.5",
       "file": "README.md",
       "title": "License",
       "heading_text": "License",
@@ -7431,7 +7431,7 @@
       "body_preview": "## License  MIT"
     },
     {
-      "id": "README.ja.1",
+      "id": "root.README.ja.1",
       "file": "README.ja.md",
       "title": "specbridge",
       "heading_text": "specbridge",
@@ -7443,7 +7443,7 @@
       "body_preview": "# specbridge  > **Spec ↔ Code bridge.** フレームワーク非依存の読み取り専用トレーサビリティ解析ツール。  ![Pytho"
     },
     {
-      "id": "README.ja.1.1",
+      "id": "root.README.ja.1.1",
       "file": "README.ja.md",
       "title": "インストール（限定公開）",
       "heading_text": "インストール（限定公開）",
@@ -7455,7 +7455,7 @@
       "body_preview": "## インストール（限定公開）  ```bash pip install git+https://github.com/nekolife1984/specbri"
     },
     {
-      "id": "README.ja.2",
+      "id": "root.README.ja.2",
       "file": "README.ja.md",
       "title": "対話的セットアップ：ディレクトリ検出、hookインストール、AGENTS.md配置",
       "heading_text": "対話的セットアップ：ディレクトリ検出、hookインストール、AGENTS.md配置",
@@ -7467,7 +7467,7 @@
       "body_preview": "# 対話的セットアップ：ディレクトリ検出、hookインストール、AGENTS.md配置 specbridge setup ```  またはスタンドアロンスクリプ"
     },
     {
-      "id": "README.ja.2.1",
+      "id": "root.README.ja.2.1",
       "file": "README.ja.md",
       "title": "クイックスタート（3分）",
       "heading_text": "クイックスタート（3分）",
@@ -7479,7 +7479,7 @@
       "body_preview": "## クイックスタート（3分）"
     },
     {
-      "id": "README.ja.2.1.1",
+      "id": "root.README.ja.2.1.1",
       "file": "README.ja.md",
       "title": "ワンコマンドセットアップ",
       "heading_text": "0. ワンコマンドセットアップ",
@@ -7491,7 +7491,7 @@
       "body_preview": "### 0. ワンコマンドセットアップ  ```bash specbridge setup ```  これで `.specbridge.yaml` の作成、pr"
     },
     {
-      "id": "README.ja.2.1.2",
+      "id": "root.README.ja.2.1.2",
       "file": "README.ja.md",
       "title": "サンプルプロジェクトで試す",
       "heading_text": "1. サンプルプロジェクトで試す",
@@ -7503,7 +7503,7 @@
       "body_preview": "### 1. サンプルプロジェクトで試す  ```bash cd examples/todo-app specbridge analyze --merge ``"
     },
     {
-      "id": "README.ja.2.1.3",
+      "id": "root.README.ja.2.1.3",
       "file": "README.ja.md",
       "title": "自分のプロジェクトで試す",
       "heading_text": "2. 自分のプロジェクトで試す",
@@ -7515,7 +7515,7 @@
       "body_preview": "### 2. 自分のプロジェクトで試す  プロジェクトルートに `.specbridge.yaml` を作成：  ```yaml spec_dirs:   - "
     },
     {
-      "id": "README.ja.2.1.4",
+      "id": "root.README.ja.2.1.4",
       "file": "README.ja.md",
       "title": "他のコマンド",
       "heading_text": "3. 他のコマンド",
@@ -7527,7 +7527,7 @@
       "body_preview": "### 3. 他のコマンド  ```bash specbridge coverage                  # カバレッジ集計 specbridge"
     },
     {
-      "id": "README.ja.2.2",
+      "id": "root.README.ja.2.2",
       "file": "README.ja.md",
       "title": "何に使える？",
       "heading_text": "何に使える？",
@@ -7539,7 +7539,7 @@
       "body_preview": "## 何に使える？  | ユースケース | コマンド | 効果 | |-------------|---------|------| | **カバレッジ監査**"
     },
     {
-      "id": "README.ja.2.3",
+      "id": "root.README.ja.2.3",
       "file": "README.ja.md",
       "title": "主な特徴",
       "heading_text": "主な特徴",
@@ -7551,7 +7551,7 @@
       "body_preview": "## 主な特徴  - **読み取り専用**: 設計書やコードを一切変更しません。出力は `.specbridge/` にのみ書き込みます。 - **デュアルモー"
     },
     {
-      "id": "README.ja.2.4",
+      "id": "root.README.ja.2.4",
       "file": "README.ja.md",
       "title": "デモ",
       "heading_text": "デモ",
@@ -7563,7 +7563,7 @@
       "body_preview": "## デモ  ```bash"
     },
     {
-      "id": "README.ja.3",
+      "id": "root.README.ja.3",
       "file": "README.ja.md",
       "title": "Clone",
       "heading_text": "Clone",
@@ -7575,7 +7575,7 @@
       "body_preview": "# Clone git clone https://github.com/nekolife1984/specbridge.git cd specbridge p"
     },
     {
-      "id": "README.ja.4",
+      "id": "root.README.ja.4",
       "file": "README.ja.md",
       "title": "サンプルプロジェクトを解析",
       "heading_text": "サンプルプロジェクトを解析",
@@ -7587,7 +7587,7 @@
       "body_preview": "# サンプルプロジェクトを解析 specbridge analyze --dir examples/todo-app --merge"
     },
     {
-      "id": "README.ja.5",
+      "id": "root.README.ja.5",
       "file": "README.ja.md",
       "title": "カバレッジを表示",
       "heading_text": "カバレッジを表示",
@@ -7599,7 +7599,7 @@
       "body_preview": "# カバレッジを表示 specbridge coverage --dir examples/todo-app"
     },
     {
-      "id": "README.ja.6",
+      "id": "root.README.ja.6",
       "file": "README.ja.md",
       "title": "HTMLグラフ（.specbridge/trace.html をブラウザで開く）",
       "heading_text": "HTMLグラフ（.specbridge/trace.html をブラウザで開く）",
@@ -7611,7 +7611,7 @@
       "body_preview": "# HTMLグラフ（.specbridge/trace.html をブラウザで開く） specbridge analyze --dir examples/tod"
     },
     {
-      "id": "README.ja.7",
+      "id": "root.README.ja.7",
       "file": "README.ja.md",
       "title": "ウォッチモード（ファイル変更を検出して自動再解析）",
       "heading_text": "ウォッチモード（ファイル変更を検出して自動再解析）",
@@ -7623,7 +7623,7 @@
       "body_preview": "# ウォッチモード（ファイル変更を検出して自動再解析） specbridge watch --dir examples/todo-app --merge ```"
     },
     {
-      "id": "README.ja.7.1",
+      "id": "root.README.ja.7.1",
       "file": "README.ja.md",
       "title": "プロジェクト構造",
       "heading_text": "プロジェクト構造",
@@ -7635,7 +7635,7 @@
       "body_preview": "## プロジェクト構造  ```text specbridge/ ├── specbridge/         # コアライブラリ │   ├── cli.p"
     },
     {
-      "id": "README.ja.7.2",
+      "id": "root.README.ja.7.2",
       "file": "README.ja.md",
       "title": "必要なセットアップ",
       "heading_text": "必要なセットアップ",
@@ -7647,7 +7647,7 @@
       "body_preview": "## 必要なセットアップ  各プロジェクトに `.specbridge.yaml`（または `pyproject.toml` の `[tool.specbrid"
     },
     {
-      "id": "README.ja.7.3",
+      "id": "root.README.ja.7.3",
       "file": "README.ja.md",
       "title": "Git Hooks",
       "heading_text": "Git Hooks",
@@ -7659,7 +7659,7 @@
       "body_preview": "## Git Hooks  specbridge は **2つの対象者** 向けに git hook を提供しています：  | 対象者 | インストール方法 |"
     },
     {
-      "id": "README.ja.8",
+      "id": "root.README.ja.8",
       "file": "README.ja.md",
       "title": "specbridge開発 — フル適用",
       "heading_text": "specbridge開発 — フル適用",
@@ -7671,7 +7671,7 @@
       "body_preview": "# specbridge開発 — フル適用 git commit       → pre-commit: ブランチ名OK？ + drift clean？ → ✅"
     },
     {
-      "id": "README.ja.9",
+      "id": "root.README.ja.9",
       "file": "README.ja.md",
       "title": "下流プロジェクト — drift gate のみ",
       "heading_text": "下流プロジェクト — drift gate のみ",
@@ -7683,7 +7683,7 @@
       "body_preview": "# 下流プロジェクト — drift gate のみ git commit       → pre-commit: drift clean？ → ✅ git p"
     },
     {
-      "id": "README.ja.9.1",
+      "id": "root.README.ja.9.1",
       "file": "README.ja.md",
       "title": "🔧 specbridge開発者向け",
       "heading_text": "🔧 specbridge開発者向け",
@@ -7695,7 +7695,7 @@
       "body_preview": "### 🔧 specbridge開発者向け  ```bash sh scripts/install-hooks.sh ```  以下の2つのhookがインストー"
     },
     {
-      "id": "README.ja.9.2",
+      "id": "root.README.ja.9.2",
       "file": "README.ja.md",
       "title": "📦 下流ユーザー向け",
       "heading_text": "📦 下流ユーザー向け",
@@ -7707,7 +7707,7 @@
       "body_preview": "### 📦 下流ユーザー向け  ```bash specbridge setup ```  **drift gate のみ** の簡略化された pre-comm"
     },
     {
-      "id": "README.ja.9.1",
+      "id": "root.README.ja.9.1",
       "file": "README.ja.md",
       "title": "AIエージェントスキル",
       "heading_text": "AIエージェントスキル",
@@ -7719,7 +7719,7 @@
       "body_preview": "## AIエージェントスキル  specbridge には **AIエージェントスキル** が `.agents/skills/specbridge/SKILL"
     },
     {
-      "id": "README.ja.10",
+      "id": "root.README.ja.10",
       "file": "README.ja.md",
       "title": "推奨: specbridge setup が自動処理",
       "heading_text": "推奨: specbridge setup が自動処理",
@@ -7731,7 +7731,7 @@
       "body_preview": "# 推奨: specbridge setup が自動処理 specbridge setup"
     },
     {
-      "id": "README.ja.11",
+      "id": "root.README.ja.11",
       "file": "README.ja.md",
       "title": "または手動:",
       "heading_text": "または手動:",
@@ -7743,7 +7743,7 @@
       "body_preview": "# または手動: bash scripts/install-hooks.sh ```  これで pre-commit hook とスキルの両方が `~/.her"
     },
     {
-      "id": "README.ja.11.1",
+      "id": "root.README.ja.11.1",
       "file": "README.ja.md",
       "title": "プロジェクトに AGENTS.md を設定する",
       "heading_text": "プロジェクトに AGENTS.md を設定する",
@@ -7755,7 +7755,7 @@
       "body_preview": "### プロジェクトに AGENTS.md を設定する  **任意のAIエージェント**（Hermes、Claude Code、OpenCode、Cursor、"
     },
     {
-      "id": "README.ja.12",
+      "id": "root.README.ja.12",
       "file": "README.ja.md",
       "title": "プロジェクトガイド",
       "heading_text": "プロジェクトガイド",
@@ -7767,7 +7767,7 @@
       "body_preview": "# プロジェクトガイド  このプロジェクトは **specbridge** を使用して spec↔code トレーサビリティを管理しています。"
     },
     {
-      "id": "README.ja.12.1",
+      "id": "root.README.ja.12.1",
       "file": "README.ja.md",
       "title": "必須ルール（コード変更前後）",
       "heading_text": "必須ルール（コード変更前後）",
@@ -7779,7 +7779,7 @@
       "body_preview": "## 必須ルール（コード変更前後）  1. `specbridge snapshot --reason \"...\"` — 変更前の状態を保存 2. コードを書く"
     },
     {
-      "id": "README.ja.12.2",
+      "id": "root.README.ja.12.2",
       "file": "README.ja.md",
       "title": "アーキテクチャ",
       "heading_text": "アーキテクチャ",
@@ -7791,7 +7791,7 @@
       "body_preview": "## アーキテクチャ  ```text ┌──────────────────────────────────────────────┐ │  SSD フレーム"
     },
     {
-      "id": "README.ja.12.3",
+      "id": "root.README.ja.12.3",
       "file": "README.ja.md",
       "title": "ドキュメント",
       "heading_text": "ドキュメント",
@@ -7803,7 +7803,7 @@
       "body_preview": "## ドキュメント  詳細設計書は [`docs/`](docs/) にあります（日本語 + 英語、12カテゴリ）：  | 設計書 | 説明 | |------"
     },
     {
-      "id": "README.ja.12.4",
+      "id": "root.README.ja.12.4",
       "file": "README.ja.md",
       "title": "フィードバック（限定公開）",
       "heading_text": "フィードバック（限定公開）",
@@ -7815,7 +7815,7 @@
       "body_preview": "## フィードバック（限定公開）  このツールはプライベートベータです。バグ報告やフィードバックをお待ちしています：  - **GitHub Issues**:"
     },
     {
-      "id": "README.ja.12.5",
+      "id": "root.README.ja.12.5",
       "file": "README.ja.md",
       "title": "ライセンス",
       "heading_text": "ライセンス",
@@ -7827,7 +7827,7 @@
       "body_preview": "## ライセンス  MIT"
     },
     {
-      "id": "AGENTS.1",
+      "id": "root.AGENTS.1",
       "file": "AGENTS.md",
       "title": "specbridge — AI Agent Workflow Guide",
       "heading_text": "specbridge — AI Agent Workflow Guide",
@@ -7839,7 +7839,7 @@
       "body_preview": "# specbridge — AI Agent Workflow Guide  > **Documentation-first development.** E"
     },
     {
-      "id": "AGENTS.1.1",
+      "id": "root.AGENTS.1.1",
       "file": "AGENTS.md",
       "title": "Mandatory Workflow",
       "heading_text": "Mandatory Workflow",
@@ -7851,7 +7851,7 @@
       "body_preview": "## Mandatory Workflow  When making changes to specbridge code, follow this **unb"
     },
     {
-      "id": "AGENTS.1.1.1",
+      "id": "root.AGENTS.1.1.1",
       "file": "AGENTS.md",
       "title": "Step-by-step",
       "heading_text": "Step-by-step",
@@ -7863,7 +7863,7 @@
       "body_preview": "### Step-by-step"
     },
     {
-      "id": "AGENTS.1.1.2",
+      "id": "root.AGENTS.1.1.2",
       "file": "AGENTS.md",
       "title": "Before starting",
       "heading_text": "1. Before starting",
@@ -7875,7 +7875,7 @@
       "body_preview": "### 1. Before starting Run `specbridge snapshot --reason \"Session: <task>\"` to b"
     },
     {
-      "id": "AGENTS.1.1.3",
+      "id": "root.AGENTS.1.1.3",
       "file": "AGENTS.md",
       "title": "Code changes",
       "heading_text": "2. Code changes",
@@ -7887,7 +7887,7 @@
       "body_preview": "### 2. Code changes Make the implementation changes."
     },
     {
-      "id": "AGENTS.1.1.4",
+      "id": "root.AGENTS.1.1.4",
       "file": "AGENTS.md",
       "title": "📚 Documentation Sync (MANDATORY — DO NOT SKIP)",
       "heading_text": "3. 📚 Documentation Sync (MANDATORY — DO NOT SKIP)",
@@ -7899,7 +7899,7 @@
       "body_preview": "### 3. 📚 Documentation Sync (MANDATORY — DO NOT SKIP) **Before committing ANY co"
     },
     {
-      "id": "AGENTS.1.1.5",
+      "id": "root.AGENTS.1.1.5",
       "file": "AGENTS.md",
       "title": "Testing",
       "heading_text": "4. Testing",
@@ -7911,7 +7911,7 @@
       "body_preview": "### 4. Testing Run the full test suite and mypy: ```bash pytest tests/ -q mypy s"
     },
     {
-      "id": "AGENTS.1.1.6",
+      "id": "root.AGENTS.1.1.6",
       "file": "AGENTS.md",
       "title": "Commit & push",
       "heading_text": "5. Commit & push",
@@ -7923,7 +7923,7 @@
       "body_preview": "### 5. Commit & push Use conventional commits format. Reference issues in the co"
     },
     {
-      "id": "AGENTS.1.2",
+      "id": "root.AGENTS.1.2",
       "file": "AGENTS.md",
       "title": "Convention",
       "heading_text": "Convention",
@@ -7935,7 +7935,7 @@
       "body_preview": "## Convention  - Commit messages: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`"
     },
     {
-      "id": "CONTRIBUTING.1",
+      "id": "root.CONTRIBUTING.1",
       "file": "CONTRIBUTING.md",
       "title": "Contributing to specbridge (limited release)",
       "heading_text": "Contributing to specbridge (limited release)",
@@ -7947,7 +7947,7 @@
       "body_preview": "# Contributing to specbridge (limited release)  Thanks for trying specbridge! Th"
     },
     {
-      "id": "CONTRIBUTING.1.1",
+      "id": "root.CONTRIBUTING.1.1",
       "file": "CONTRIBUTING.md",
       "title": "Quick feedback",
       "heading_text": "Quick feedback",
@@ -7959,7 +7959,7 @@
       "body_preview": "## Quick feedback  The most helpful things you can send:  1. **`specbridge --ver"
     },
     {
-      "id": "CONTRIBUTING.2",
+      "id": "root.CONTRIBUTING.2",
       "file": "CONTRIBUTING.md",
       "title": "Include this in your report:",
       "heading_text": "Include this in your report:",
@@ -7971,7 +7971,7 @@
       "body_preview": "# Include this in your report: echo \"=== version ===\" && specbridge --version ec"
     },
     {
-      "id": "CONTRIBUTING.2.1",
+      "id": "root.CONTRIBUTING.2.1",
       "file": "CONTRIBUTING.md",
       "title": "Where to send it",
       "heading_text": "Where to send it",
@@ -7983,7 +7983,7 @@
       "body_preview": "## Where to send it  - **GitHub Issues**: https://github.com/nekolife1984/specbr"
     },
     {
-      "id": "CONTRIBUTING.2.2",
+      "id": "root.CONTRIBUTING.2.2",
       "file": "CONTRIBUTING.md",
       "title": "Running the project locally",
       "heading_text": "Running the project locally",
@@ -7995,7 +7995,7 @@
       "body_preview": "## Running the project locally  ```bash git clone https://github.com/nekolife198"
     },
     {
-      "id": "CONTRIBUTING.3",
+      "id": "root.CONTRIBUTING.3",
       "file": "CONTRIBUTING.md",
       "title": "Run tests",
       "heading_text": "Run tests",
@@ -8007,7 +8007,7 @@
       "body_preview": "# Run tests python -m pytest tests/ -v"
     },
     {
-      "id": "CONTRIBUTING.4",
+      "id": "root.CONTRIBUTING.4",
       "file": "CONTRIBUTING.md",
       "title": "Run linter",
       "heading_text": "Run linter",
@@ -8019,7 +8019,7 @@
       "body_preview": "# Run linter ruff check specbridge/ tests/"
     },
     {
-      "id": "CONTRIBUTING.5",
+      "id": "root.CONTRIBUTING.5",
       "file": "CONTRIBUTING.md",
       "title": "Type check",
       "heading_text": "Type check",
@@ -8031,7 +8031,7 @@
       "body_preview": "# Type check mypy specbridge/ ```"
     },
     {
-      "id": "CONTRIBUTING.5.1",
+      "id": "root.CONTRIBUTING.5.1",
       "file": "CONTRIBUTING.md",
       "title": "Before sending a PR",
       "heading_text": "Before sending a PR",
@@ -8148,7 +8148,7 @@
         "specbridge.adapters",
         "specbridge.adapters._base"
       ],
-      "file_hash": "e87f60e8895e68d0",
+      "file_hash": "1a48486ee3be01f7",
       "functions": []
     },
     {
@@ -8175,7 +8175,7 @@
         "abc",
         "importlib.metadata"
       ],
-      "file_hash": "ee059d1b04bc29d0",
+      "file_hash": "6ea774263bff6da2",
       "functions": [
         {
           "name": "ProjectAdapter",
@@ -8258,8 +8258,8 @@
           "name": "_normalize_spec_ids",
           "kind": "function",
           "line": 187,
-          "body_hash": "bbb417c857251e96",
-          "body_lines": 83
+          "body_hash": "75f7c8e5faa6b2f8",
+          "body_lines": 80
         }
       ]
     },
@@ -8466,30 +8466,28 @@
       "is_test": false,
       "language": "Python",
       "imports": [
-        "specbridge.analyzers.call_graph",
-        "typing",
         "specbridge.core"
       ],
-      "file_hash": "b989436828f9fde4",
+      "file_hash": "b2b2f07dd8295cb6",
       "functions": [
         {
           "name": "find_orphan_specs",
           "kind": "function",
-          "line": 13,
+          "line": 6,
           "body_hash": "d231249c7868e31e",
           "body_lines": 14
         },
         {
           "name": "find_orphan_code",
           "kind": "function",
-          "line": 27,
+          "line": 20,
           "body_hash": "b041a77e072fdaf9",
           "body_lines": 12
         },
         {
           "name": "coverage_summary",
           "kind": "function",
-          "line": 39,
+          "line": 32,
           "body_hash": "2203b5f5bd77cd32",
           "body_lines": 19
         }
@@ -8520,97 +8518,97 @@
         "json",
         "re"
       ],
-      "file_hash": "934650f6faa97378",
+      "file_hash": "9dd49e91c8ad1ee8",
       "functions": [
         {
           "name": "CallGraphNode",
           "kind": "class",
-          "line": 32,
+          "line": 31,
           "body_hash": "247e81fbb0cc9ad7",
           "body_lines": 8
         },
         {
           "name": "CallGraph",
           "kind": "class",
-          "line": 40,
+          "line": 39,
           "body_hash": "64a3da08b7f63d58",
           "body_lines": 9
         },
         {
           "name": "add_call",
           "kind": "function",
-          "line": 49,
+          "line": 48,
           "body_hash": "771312bb4f6e80a7",
           "body_lines": 4
         },
         {
           "name": "callees_of",
           "kind": "function",
-          "line": 53,
+          "line": 52,
           "body_hash": "61412f2e71dc698b",
           "body_lines": 4
         },
         {
           "name": "callers_of",
           "kind": "function",
-          "line": 57,
+          "line": 56,
           "body_hash": "9094ff44dd38a08c",
           "body_lines": 4
         },
         {
           "name": "files_of",
           "kind": "function",
-          "line": 61,
-          "body_hash": "e007d320843fea2d",
+          "line": 60,
+          "body_hash": "392d94b862443a87",
           "body_lines": 36
         },
         {
           "name": "build_call_graph",
           "kind": "function",
-          "line": 97,
+          "line": 96,
           "body_hash": "4036f2c638798056",
           "body_lines": 65
         },
         {
           "name": "_find_calls",
           "kind": "function",
-          "line": 162,
+          "line": 161,
           "body_hash": "1b31aba6637cfd05",
           "body_lines": 14
         },
         {
           "name": "_resolve_callee",
           "kind": "function",
-          "line": 176,
+          "line": 175,
           "body_hash": "a52748b5f76529d0",
           "body_lines": 42
         },
         {
           "name": "import_crg_json",
           "kind": "function",
-          "line": 218,
+          "line": 217,
           "body_hash": "c00f9352e06b3aae",
           "body_lines": 46
         },
         {
           "name": "_resolve_crg_ref",
           "kind": "function",
-          "line": 264,
+          "line": 263,
           "body_hash": "e2d1fbb80834c539",
           "body_lines": 18
         },
         {
           "name": "run_crg_tool",
           "kind": "function",
-          "line": 282,
+          "line": 281,
           "body_hash": "70c9c316330091f5",
           "body_lines": 30
         },
         {
           "name": "transitive_impact",
           "kind": "function",
-          "line": 312,
-          "body_hash": "fec47c65d65fe410",
+          "line": 311,
+          "body_hash": "fd239386ac6c1c24",
           "body_lines": 77
         }
       ]
@@ -8637,7 +8635,7 @@
         "json",
         "datetime"
       ],
-      "file_hash": "3163c78fca31a459",
+      "file_hash": "e4aef0ceafd5462c",
       "functions": [
         {
           "name": "build_snapshot",
@@ -8699,7 +8697,7 @@
           "name": "compute_drift",
           "kind": "function",
           "line": 261,
-          "body_hash": "8db6baec4ff4cbc4",
+          "body_hash": "cf8b1ebe24561b0c",
           "body_lines": 168
         },
         {
@@ -8767,57 +8765,57 @@
       "language": "Python",
       "imports": [
         "__future__",
-        "json",
-        "hashlib"
+        "hashlib",
+        "json"
       ],
-      "file_hash": "f121ae893d03da2f",
+      "file_hash": "f30153d5f26c2cbf",
       "functions": [
         {
           "name": "_file_hash",
           "kind": "function",
-          "line": 27,
+          "line": 26,
           "body_hash": "3d8da63209c23db8",
           "body_lines": 12
         },
         {
           "name": "_should_exclude",
           "kind": "function",
-          "line": 39,
+          "line": 38,
           "body_hash": "b9a59ed69283da50",
           "body_lines": 9
         },
         {
           "name": "load_cache",
           "kind": "function",
-          "line": 48,
+          "line": 47,
           "body_hash": "461454f13cf25ed2",
           "body_lines": 11
         },
         {
           "name": "save_cache",
           "kind": "function",
-          "line": 59,
+          "line": 58,
           "body_hash": "3097362e2662387c",
           "body_lines": 10
         },
         {
           "name": "resolved_file_list",
           "kind": "function",
-          "line": 69,
+          "line": 68,
           "body_hash": "f94e86a38a80a23e",
           "body_lines": 33
         },
         {
           "name": "filter_cached",
           "kind": "function",
-          "line": 102,
+          "line": 101,
           "body_hash": "ed855241c952cfd7",
           "body_lines": 41
         },
         {
           "name": "clear_cache",
           "kind": "function",
-          "line": 143,
+          "line": 142,
           "body_hash": "496c4b590ddc557a",
           "body_lines": 6
         }
@@ -8861,7 +8859,7 @@
         "pathlib",
         "typing"
       ],
-      "file_hash": "97e1d64a46be2f2c",
+      "file_hash": "77dcb40e103d3e40",
       "functions": [
         {
           "name": "cli",
@@ -8881,167 +8879,167 @@
           "name": "analyze",
           "kind": "function",
           "line": 55,
-          "body_hash": "5721efad9bd36a4d",
-          "body_lines": 97
+          "body_hash": "67e26b668b0f8641",
+          "body_lines": 96
         },
         {
           "name": "impact",
           "kind": "function",
-          "line": 152,
+          "line": 151,
           "body_hash": "b6d6b7efbf729c80",
           "body_lines": 88
         },
         {
           "name": "coverage",
           "kind": "function",
-          "line": 240,
+          "line": 239,
           "body_hash": "9581ab8e0072ffc1",
           "body_lines": 53
         },
         {
           "name": "snapshot",
           "kind": "function",
-          "line": 293,
-          "body_hash": "b29a5adf1943d74d",
+          "line": 292,
+          "body_hash": "0cba8996eb6ac415",
           "body_lines": 41
         },
         {
           "name": "drift",
           "kind": "function",
-          "line": 334,
+          "line": 333,
           "body_hash": "d3c3ff19d6403e7d",
           "body_lines": 48
         },
         {
           "name": "_drift_git",
           "kind": "function",
-          "line": 382,
+          "line": 381,
           "body_hash": "f2e693d3de6e8168",
           "body_lines": 52
         },
         {
           "name": "validate_boundary",
           "kind": "function",
-          "line": 434,
+          "line": 433,
           "body_hash": "87aa4915d37ac348",
           "body_lines": 67
         },
         {
           "name": "status",
           "kind": "function",
-          "line": 501,
-          "body_hash": "1ff33f80427689c2",
+          "line": 500,
+          "body_hash": "69983f5576368029",
           "body_lines": 102
         },
         {
           "name": "config",
           "kind": "function",
-          "line": 603,
+          "line": 602,
           "body_hash": "943b713b56084196",
           "body_lines": 59
         },
         {
           "name": "watch",
           "kind": "function",
-          "line": 662,
+          "line": 661,
           "body_hash": "b55a7d8252992074",
           "body_lines": 19
         },
         {
           "name": "SpecbridgeHandler",
           "kind": "class",
-          "line": 681,
+          "line": 680,
           "body_hash": "ae2a7008499982ae",
           "body_lines": 1
         },
         {
           "name": "__init__",
           "kind": "function",
-          "line": 682,
+          "line": 681,
           "body_hash": "67dc46120c3f5b72",
           "body_lines": 5
         },
         {
           "name": "on_any_event",
           "kind": "function",
-          "line": 687,
+          "line": 686,
           "body_hash": "c2da064ca5060ef4",
           "body_lines": 59
         },
         {
           "name": "plugins",
           "kind": "function",
-          "line": 746,
+          "line": 745,
           "body_hash": "48df660ccb0d77f4",
           "body_lines": 32
         },
         {
           "name": "serve",
           "kind": "function",
-          "line": 778,
+          "line": 777,
           "body_hash": "c1dce52f645d6988",
           "body_lines": 26
         },
         {
           "name": "call_graph",
           "kind": "function",
-          "line": 804,
+          "line": 803,
           "body_hash": "c6bc02a60197debe",
           "body_lines": 54
         },
         {
           "name": "setup",
           "kind": "function",
-          "line": 858,
+          "line": 857,
           "body_hash": "e85fc9fa67ba4bc0",
           "body_lines": 57
         },
         {
           "name": "init",
           "kind": "function",
-          "line": 915,
-          "body_hash": "cb1f41965add5f51",
-          "body_lines": 128
+          "line": 914,
+          "body_hash": "56768e834cab37d4",
+          "body_lines": 127
         },
         {
           "name": "shell_completion",
           "kind": "function",
-          "line": 1043,
+          "line": 1041,
           "body_hash": "90abf912df22a1bf",
           "body_lines": 55
         },
         {
           "name": "_emit_completion_script",
           "kind": "function",
-          "line": 1098,
+          "line": 1096,
           "body_hash": "14e738fb634b4fe6",
           "body_lines": 9
         },
         {
           "name": "_install_completion",
           "kind": "function",
-          "line": 1107,
+          "line": 1105,
           "body_hash": "cd54f0c95e3acd41",
           "body_lines": 47
         },
         {
           "name": "diff",
           "kind": "function",
-          "line": 1154,
-          "body_hash": "29d67245c4560362",
+          "line": 1152,
+          "body_hash": "aeca0dd827ee9f56",
           "body_lines": 92
         },
         {
           "name": "suggest",
           "kind": "function",
-          "line": 1246,
-          "body_hash": "838b816755c00295",
-          "body_lines": 97
+          "line": 1244,
+          "body_hash": "a2555433d8edc6ce",
+          "body_lines": 95
         },
         {
           "name": "_validate_config",
           "kind": "function",
-          "line": 1343,
+          "line": 1339,
           "body_hash": "24ca1b3568aec8ad",
           "body_lines": 34
         }
@@ -9066,7 +9064,7 @@
         "dataclasses",
         "pathlib"
       ],
-      "file_hash": "6bb475b9d0d2b0b4",
+      "file_hash": "544b29adad71352e",
       "functions": [
         {
           "name": "SpecbridgeConfig",
@@ -9093,7 +9091,7 @@
           "name": "_try_read_pyproject",
           "kind": "function",
           "line": 100,
-          "body_hash": "00e85b481dba5b52",
+          "body_hash": "8dc2e6d0c18feb86",
           "body_lines": 17
         },
         {
@@ -9382,7 +9380,7 @@
         "hashlib",
         "pathlib"
       ],
-      "file_hash": "c0e9241fdc3b1be3",
+      "file_hash": "7d1c82082860362e",
       "functions": [
         {
           "name": "is_available",
@@ -9524,7 +9522,7 @@
         "hashlib",
         "re"
       ],
-      "file_hash": "58262160c6b43200",
+      "file_hash": "7c364e47062fa7c7",
       "functions": [
         {
           "name": "FuncBlock",
@@ -9565,7 +9563,7 @@
           "name": "discover_code",
           "kind": "function",
           "line": 152,
-          "body_hash": "469f09459d162122",
+          "body_hash": "b97532e64f69b0d2",
           "body_lines": 93
         },
         {
@@ -9595,7 +9593,7 @@
         "hashlib",
         "re"
       ],
-      "file_hash": "be76ea68e54e8f0d",
+      "file_hash": "1ee7c2ddb44702b4",
       "functions": [
         {
           "name": "SpecCandidate",
@@ -9629,14 +9627,14 @@
           "name": "discover_specs",
           "kind": "function",
           "line": 105,
-          "body_hash": "4a2ef0afec9ef1c9",
+          "body_hash": "70028ae869d4a7be",
           "body_lines": 58
         },
         {
           "name": "_parse_sections",
           "kind": "function",
           "line": 163,
-          "body_hash": "604065f426bb0a80",
+          "body_hash": "d5bcb467a3b26850",
           "body_lines": 65
         }
       ]
@@ -9681,7 +9679,7 @@
         "os",
         "re"
       ],
-      "file_hash": "39c9808afa4587bc",
+      "file_hash": "3f50ac1c80dc1774",
       "functions": [
         {
           "name": "_tokenize",
@@ -9701,7 +9699,7 @@
           "name": "build_heuristic_graph",
           "kind": "function",
           "line": 66,
-          "body_hash": "0d9dca986291021b",
+          "body_hash": "1294eebb30b40b69",
           "body_lines": 186
         },
         {
@@ -9806,21 +9804,21 @@
       "imports": [
         "__future__",
         "json",
-        "typing"
+        "specbridge.core"
       ],
-      "file_hash": "b9cfd450073d6966",
+      "file_hash": "6aadf6e6c17b36af",
       "functions": [
         {
           "name": "_graph_data",
           "kind": "function",
-          "line": 35,
+          "line": 34,
           "body_hash": "aa40e9791ca04102",
           "body_lines": 27
         },
         {
           "name": "render_html",
           "kind": "function",
-          "line": 62,
+          "line": 61,
           "body_hash": "06ca197dd35ecfa5",
           "body_lines": 242
         }
@@ -9879,9 +9877,9 @@
       "imports": [
         "__future__",
         "contextlib",
-        "typing"
+        "collections.abc"
       ],
-      "file_hash": "fec1b57d01e16fd7",
+      "file_hash": "764856cde4765ffd",
       "functions": [
         {
           "name": "get_console",
@@ -9922,49 +9920,49 @@
       "imports": [
         "typing",
         "rich.console",
-        "rich.table"
+        "specbridge.core"
       ],
-      "file_hash": "69eeadd043d53e81",
+      "file_hash": "4d6b4523e1489843",
       "functions": [
         {
           "name": "render_text",
           "kind": "function",
-          "line": 14,
+          "line": 12,
           "body_hash": "a9bbf89ff3c70aa8",
           "body_lines": 21
         },
         {
           "name": "_maybe_truncate",
           "kind": "function",
-          "line": 35,
+          "line": 33,
           "body_hash": "c6ea80f99ce276be",
           "body_lines": 5
         },
         {
           "name": "_is_func_node",
           "kind": "function",
-          "line": 40,
+          "line": 38,
           "body_hash": "de7db75f6ab5c502",
           "body_lines": 69
         },
         {
           "name": "render_coverage",
           "kind": "function",
-          "line": 109,
-          "body_hash": "0f927dedf8dc8cb4",
+          "line": 107,
+          "body_hash": "0ff422d7ac05a703",
           "body_lines": 36
         },
         {
           "name": "render_status_summary",
           "kind": "function",
-          "line": 145,
+          "line": 143,
           "body_hash": "0f68f6f6cffb71b2",
           "body_lines": 22
         },
         {
           "name": "render_one_line_coverage",
           "kind": "function",
-          "line": 167,
+          "line": 165,
           "body_hash": "2aafc49598c55b0a",
           "body_lines": 13
         }
@@ -10410,7 +10408,7 @@
         "pathlib",
         "specbridge.discovery.ast"
       ],
-      "file_hash": "d81c6577446b62be",
+      "file_hash": "2264f3626385628d",
       "functions": [
         {
           "name": "TestExtractFunctionsPython",
@@ -10768,7 +10766,7 @@
         "pathlib",
         "specbridge.analyzers.call_graph"
       ],
-      "file_hash": "7d3f2bc652fee928",
+      "file_hash": "0898f7eee480038c",
       "functions": [
         {
           "name": "_make_graph",
@@ -10788,118 +10786,118 @@
           "name": "test_build_from_trace_graph",
           "kind": "function",
           "line": 79,
-          "body_hash": "167c8c738ff540cc",
-          "body_lines": 22
+          "body_hash": "39f316906e6b937c",
+          "body_lines": 23
         },
         {
           "name": "test_empty_graph",
           "kind": "function",
-          "line": 101,
+          "line": 102,
           "body_hash": "5255cc291be98dc0",
           "body_lines": 7
         },
         {
           "name": "TestCallGraphData",
           "kind": "class",
-          "line": 108,
+          "line": 109,
           "body_hash": "a4729239d594bfdc",
           "body_lines": 3
         },
         {
           "name": "test_add_call_dedup",
           "kind": "function",
-          "line": 111,
+          "line": 112,
           "body_hash": "8ac37ccdc7deab72",
           "body_lines": 6
         },
         {
           "name": "test_callees_of",
           "kind": "function",
-          "line": 117,
+          "line": 118,
           "body_hash": "26ceefcc33e44148",
           "body_lines": 6
         },
         {
           "name": "test_callers_of",
           "kind": "function",
-          "line": 123,
+          "line": 124,
           "body_hash": "60db7dc003f84bd5",
           "body_lines": 6
         },
         {
           "name": "test_files_of",
           "kind": "function",
-          "line": 129,
+          "line": 130,
           "body_hash": "1016c2fa0cec1698",
           "body_lines": 9
         },
         {
           "name": "TestImportCRG",
           "kind": "class",
-          "line": 138,
+          "line": 139,
           "body_hash": "1224efb07f53937f",
           "body_lines": 3
         },
         {
           "name": "test_import_basic",
           "kind": "function",
-          "line": 141,
+          "line": 142,
           "body_hash": "b623f37910c819a0",
           "body_lines": 12
         },
         {
           "name": "test_import_not_found",
           "kind": "function",
-          "line": 153,
+          "line": 154,
           "body_hash": "102bcd3840d6b04e",
           "body_lines": 4
         },
         {
           "name": "test_import_invalid_json",
           "kind": "function",
-          "line": 157,
+          "line": 158,
           "body_hash": "e5e6e508498f5041",
           "body_lines": 6
         },
         {
           "name": "test_import_empty",
           "kind": "function",
-          "line": 163,
+          "line": 164,
           "body_hash": "3c991896d3b0972a",
           "body_lines": 7
         },
         {
           "name": "TestTransitiveImpact",
           "kind": "class",
-          "line": 170,
+          "line": 171,
           "body_hash": "3f54643ecc74259e",
           "body_lines": 3
         },
         {
           "name": "test_basic_transitive",
           "kind": "function",
-          "line": 173,
+          "line": 174,
           "body_hash": "2a6e4d38906b7ce2",
           "body_lines": 13
         },
         {
           "name": "test_max_depth",
           "kind": "function",
-          "line": 186,
+          "line": 187,
           "body_hash": "643dccad509b3165",
           "body_lines": 22
         },
         {
           "name": "test_no_call_graph",
           "kind": "function",
-          "line": 208,
+          "line": 209,
           "body_hash": "d92eb189b0b6b7a5",
           "body_lines": 7
         },
         {
           "name": "test_no_matching_spec",
           "kind": "function",
-          "line": 215,
+          "line": 216,
           "body_hash": "90c2a05af3d0488f",
           "body_lines": 6
         }
@@ -11028,7 +11026,7 @@
         "threading",
         "pathlib"
       ],
-      "file_hash": "1027b814ce8bfc3a",
+      "file_hash": "a468e408c56c66b9",
       "functions": [
         {
           "name": "TestConcurrentSnapshot",
@@ -12276,13 +12274,13 @@
         "pathlib",
         "pytest"
       ],
-      "file_hash": "99447a4fa89b944b",
+      "file_hash": "395d0707f3578bf3",
       "functions": [
         {
           "name": "_generate_large_project",
           "kind": "function",
           "line": 19,
-          "body_hash": "320144e3b90c5c12",
+          "body_hash": "ffcaac7c9571b46a",
           "body_lines": 49
         },
         {
@@ -12355,161 +12353,161 @@
         "pathlib",
         "pytest"
       ],
-      "file_hash": "1405d7d130216dba",
+      "file_hash": "3b4d969b3e547bf9",
       "functions": [
         {
           "name": "_DummyAdapter",
           "kind": "class",
-          "line": 22,
+          "line": 24,
           "body_hash": "9b069024f666469f",
           "body_lines": 3
         },
         {
           "name": "detect",
           "kind": "function",
-          "line": 25,
+          "line": 27,
           "body_hash": "978d0b1446a4cbc9",
           "body_lines": 3
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 28,
+          "line": 30,
           "body_hash": "7d02b48d9b562f2c",
           "body_lines": 5
         },
         {
           "name": "_reset_registry",
           "kind": "function",
-          "line": 33,
+          "line": 35,
           "body_hash": "c77bdb1dfe858efb",
           "body_lines": 15
         },
         {
           "name": "test_register_adds_adapter",
           "kind": "function",
-          "line": 48,
+          "line": 50,
           "body_hash": "c5d7bda3ee8cbecf",
           "body_lines": 3
         },
         {
           "name": "TestAdapter",
           "kind": "class",
-          "line": 51,
+          "line": 53,
           "body_hash": "b2eff04997b3b0dd",
           "body_lines": 1
         },
         {
           "name": "detect",
           "kind": "function",
-          "line": 52,
+          "line": 54,
           "body_hash": "77a40ef9a747781d",
           "body_lines": 3
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 55,
+          "line": 57,
           "body_hash": "ba90ab5b0e8dcc61",
           "body_lines": 7
         },
         {
           "name": "test_register_with_package_tracking",
           "kind": "function",
-          "line": 62,
+          "line": 64,
           "body_hash": "e54334b3a96eea49",
           "body_lines": 3
         },
         {
           "name": "TrackedAdapter",
           "kind": "class",
-          "line": 65,
+          "line": 67,
           "body_hash": "908f31739d99c420",
           "body_lines": 1
         },
         {
           "name": "detect",
           "kind": "function",
-          "line": 66,
+          "line": 68,
           "body_hash": "77a40ef9a747781d",
           "body_lines": 3
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 69,
+          "line": 71,
           "body_hash": "3356bd4f0a542e31",
           "body_lines": 10
         },
         {
           "name": "test_plugin_adapters_excludes_builtins",
           "kind": "function",
-          "line": 79,
+          "line": 81,
           "body_hash": "8a61884f8a553f2d",
           "body_lines": 3
         },
         {
           "name": "BuiltinAdapter",
           "kind": "class",
-          "line": 82,
+          "line": 84,
           "body_hash": "3349e317ee10d600",
           "body_lines": 1
         },
         {
           "name": "detect",
           "kind": "function",
-          "line": 83,
+          "line": 85,
           "body_hash": "102075b588fcdc93",
           "body_lines": 3
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 86,
+          "line": 88,
           "body_hash": "bbdec3d9d22c8527",
           "body_lines": 10
         },
         {
           "name": "test_discover_plugins_skips_non_adapter",
           "kind": "function",
-          "line": 96,
+          "line": 98,
           "body_hash": "fa26b7161277c564",
           "body_lines": 15
         },
         {
           "name": "test_discover_plugins_idempotent",
           "kind": "function",
-          "line": 111,
+          "line": 113,
           "body_hash": "c85f0baa15770c94",
           "body_lines": 4
         },
         {
           "name": "IdempotentAdapter",
           "kind": "class",
-          "line": 115,
+          "line": 117,
           "body_hash": "3a7b0bedaf1b7696",
           "body_lines": 1
         },
         {
           "name": "detect",
           "kind": "function",
-          "line": 116,
+          "line": 118,
           "body_hash": "102075b588fcdc93",
           "body_lines": 3
         },
         {
           "name": "analyze",
           "kind": "function",
-          "line": 119,
+          "line": 121,
           "body_hash": "3ef97dbfadaa344a",
           "body_lines": 19
         },
         {
           "name": "test_example_plugin_installable",
           "kind": "function",
-          "line": 138,
-          "body_hash": "34ec09f220d9395f",
-          "body_lines": 12
+          "line": 140,
+          "body_hash": "9db3765a2802a1d8",
+          "body_lines": 16
         }
       ]
     },
@@ -12678,7 +12676,7 @@
       "is_test": false,
       "language": "Shell",
       "imports": [],
-      "file_hash": "e568cab66d2bfd28",
+      "file_hash": "a6e3e72e225fe1a1",
       "functions": []
     },
     {
@@ -12736,77 +12734,6 @@
     ".github.pull_request_template.4.1",
     ".github.pull_request_template.5",
     ".github.pull_request_template.6",
-    "AGENTS.1",
-    "AGENTS.1.1",
-    "AGENTS.1.1.2",
-    "AGENTS.1.1.3",
-    "AGENTS.1.1.4",
-    "AGENTS.1.1.5",
-    "AGENTS.1.1.6",
-    "AGENTS.1.2",
-    "CONTRIBUTING.1",
-    "CONTRIBUTING.1.1",
-    "CONTRIBUTING.2",
-    "CONTRIBUTING.2.1",
-    "CONTRIBUTING.2.2",
-    "CONTRIBUTING.5.1",
-    "README.1",
-    "README.1.1",
-    "README.11",
-    "README.11.1",
-    "README.12",
-    "README.12.1",
-    "README.12.2",
-    "README.12.3",
-    "README.12.4",
-    "README.12.5",
-    "README.2",
-    "README.2.1",
-    "README.2.1.1",
-    "README.2.1.2",
-    "README.2.1.3",
-    "README.2.1.4",
-    "README.2.2",
-    "README.2.3",
-    "README.2.4",
-    "README.3",
-    "README.4",
-    "README.5",
-    "README.6",
-    "README.7",
-    "README.7.1",
-    "README.7.2",
-    "README.7.3",
-    "README.8",
-    "README.9",
-    "README.9.1",
-    "README.9.2",
-    "README.ja.1",
-    "README.ja.1.1",
-    "README.ja.11.1",
-    "README.ja.12.1",
-    "README.ja.12.3",
-    "README.ja.12.4",
-    "README.ja.12.5",
-    "README.ja.2",
-    "README.ja.2.1",
-    "README.ja.2.1.1",
-    "README.ja.2.1.2",
-    "README.ja.2.1.3",
-    "README.ja.2.1.4",
-    "README.ja.2.2",
-    "README.ja.2.3",
-    "README.ja.2.4",
-    "README.ja.3",
-    "README.ja.4",
-    "README.ja.6",
-    "README.ja.7",
-    "README.ja.7.1",
-    "README.ja.7.2",
-    "README.ja.8",
-    "README.ja.9",
-    "README.ja.9.1",
-    "README.ja.9.2",
     "docs.en.01-architecture.1",
     "docs.en.01-architecture.1.1",
     "docs.en.01-architecture.1.2",
@@ -13032,7 +12959,78 @@
     "docs.ja.12-branching-strategy.4.1.3",
     "docs.ja.12-branching-strategy.4.2",
     "docs.ja.12-branching-strategy.4.3",
-    "docs.ja.12-branching-strategy.4.4"
+    "docs.ja.12-branching-strategy.4.4",
+    "root.AGENTS.1",
+    "root.AGENTS.1.1",
+    "root.AGENTS.1.1.2",
+    "root.AGENTS.1.1.3",
+    "root.AGENTS.1.1.4",
+    "root.AGENTS.1.1.5",
+    "root.AGENTS.1.1.6",
+    "root.AGENTS.1.2",
+    "root.CONTRIBUTING.1",
+    "root.CONTRIBUTING.1.1",
+    "root.CONTRIBUTING.2",
+    "root.CONTRIBUTING.2.1",
+    "root.CONTRIBUTING.2.2",
+    "root.CONTRIBUTING.5.1",
+    "root.README.1",
+    "root.README.1.1",
+    "root.README.11",
+    "root.README.11.1",
+    "root.README.12",
+    "root.README.12.1",
+    "root.README.12.2",
+    "root.README.12.3",
+    "root.README.12.4",
+    "root.README.12.5",
+    "root.README.2",
+    "root.README.2.1",
+    "root.README.2.1.1",
+    "root.README.2.1.2",
+    "root.README.2.1.3",
+    "root.README.2.1.4",
+    "root.README.2.2",
+    "root.README.2.3",
+    "root.README.2.4",
+    "root.README.3",
+    "root.README.4",
+    "root.README.5",
+    "root.README.6",
+    "root.README.7",
+    "root.README.7.1",
+    "root.README.7.2",
+    "root.README.7.3",
+    "root.README.8",
+    "root.README.9",
+    "root.README.9.1",
+    "root.README.9.2",
+    "root.README.ja.1",
+    "root.README.ja.1.1",
+    "root.README.ja.11.1",
+    "root.README.ja.12.1",
+    "root.README.ja.12.3",
+    "root.README.ja.12.4",
+    "root.README.ja.12.5",
+    "root.README.ja.2",
+    "root.README.ja.2.1",
+    "root.README.ja.2.1.1",
+    "root.README.ja.2.1.2",
+    "root.README.ja.2.1.3",
+    "root.README.ja.2.1.4",
+    "root.README.ja.2.2",
+    "root.README.ja.2.3",
+    "root.README.ja.2.4",
+    "root.README.ja.3",
+    "root.README.ja.4",
+    "root.README.ja.6",
+    "root.README.ja.7",
+    "root.README.ja.7.1",
+    "root.README.ja.7.2",
+    "root.README.ja.8",
+    "root.README.ja.9",
+    "root.README.ja.9.1",
+    "root.README.ja.9.2"
   ],
   "coverage": {
     "total": 665,

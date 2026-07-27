@@ -22,7 +22,6 @@ from typing import Any
 
 from specbridge.core import NodeType, TraceGraph
 
-
 # ---------------------------------------------------------------------------
 # Data structures
 # ---------------------------------------------------------------------------
@@ -87,9 +86,9 @@ _STDLIB_LIKE = frozenset({
     "fmt", "log", "error", "panic", "recover", "make", "new", "append", "copy",
     "close", "delete", "println", "printf", "sprintf",
     "Some", "None", "Ok", "Err", "Box", "Rc", "Arc", "Mutex",
-    "unwrap", "expect", "clone", "into", "from", "as_ref",
+    "unwrap", "clone", "into", "from", "as_ref",
     "to_string", "to_owned", "collect", "iter", "into_iter",
-    "map", "and_then", "or_else", "filter", "fold",
+    "and_then", "or_else", "fold",
     "String", "Vec", "HashMap", "Option", "Result",
 })
 
@@ -381,7 +380,7 @@ def transitive_impact(
 
     result["direct_files"] = sorted(set(direct_files))
     result["transitive_files"] = sorted(set(call_graph.files_of(transitive_keys)))
-    result["transitive_edges"] = [(c, l) for c, l in transitive_edges]
+    result["transitive_edges"] = [(c, _l) for c, _l in transitive_edges]
     result["hops"] = max_hops
 
     return result

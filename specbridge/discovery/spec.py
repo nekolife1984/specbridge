@@ -149,7 +149,7 @@ def discover_specs(
             continue
         if not fpath.exists() or not fpath.is_file():
             import warnings
-            warnings.warn(f"spec_file not found: {fname}")
+            warnings.warn(f"spec_file not found: {fname}", stacklevel=2)
             continue
         try:
             text = fpath.read_text(encoding="utf-8")
@@ -166,7 +166,7 @@ def _parse_sections(fpath: Path, text: str, root: Path) -> list[SpecCandidate]:
     parent_path = fpath.parent.relative_to(root)
     # Include the file stem to avoid cross-file ID collisions
     file_stem = fpath.stem
-    id_prefix = str(parent_path).replace("/", ".") + "." if str(parent_path) != "." else ""
+    id_prefix = str(parent_path).replace("/", ".") + "." if str(parent_path) != "." else "root."
     id_prefix += file_stem + "."
 
     sections = _split_sections(text)

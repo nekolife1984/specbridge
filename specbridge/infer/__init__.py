@@ -155,7 +155,7 @@ def build_heuristic_graph(
             code_dir_index.setdefault(cd, set()).add(i)
 
     # 5. Match specs ↔ code (using inverted index)
-    for sc_idx, sc in enumerate(specs):
+    for _sc_idx, sc in enumerate(specs):
         # Build spec tokens from title, heading text, parent chain, and body content
         spec_text = f"{sc.title} {sc.heading_text}"
         if sc.parent_chain:

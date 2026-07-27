@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import contextlib
-from typing import Any, Generator, Iterator
+from collections.abc import Generator
 
 from rich.console import Console
 from rich.progress import (

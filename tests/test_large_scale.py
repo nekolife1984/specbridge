@@ -47,9 +47,9 @@ def _generate_large_project(
         lines = [f"# {topic.title()} {i // len(topics)}", ""]
         for j in range(subheadings):
             lines.append(f"## {j+1}.{i+1} Sub Topic {topic} {j}")
-            lines.append(f"")
+            lines.append("")
             lines.append(f"Description for sub-topic {j} of {topic}.")
-            lines.append(f"")
+            lines.append("")
         doc_file.write_text("\n".join(lines), encoding="utf-8")
 
     for i in range(code_count):
