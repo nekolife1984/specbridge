@@ -283,6 +283,7 @@ def drift(dir: str, snapshot_path: str | None, gate: bool, output_fmt: str, git_
         return
 
     from specbridge.analyzers.drift import compute_drift, load_snapshot
+    from specbridge.config import SpecbridgeConfig
 
     if snapshot_path:
         snap_path = Path(snapshot_path)
@@ -301,7 +302,12 @@ def drift(dir: str, snapshot_path: str | None, gate: bool, output_fmt: str, git_
 
     click.echo(f"🔍 Comparing {root} against snapshot from {snapshot.get('timestamp', '?')} ...", err=True)
 
-    report = compute_drift(snapshot, str(root))
+    cfg = SpecbridgeConfig.load(str(root))
+    report = compute_drift(
+        snapshot, str(root),
+        spec_dirs=cfg.spec_dirs,
+        source_dirs=cfg.source_dirs,
+    )
 
     if output_fmt == "json":
         import json as _json
