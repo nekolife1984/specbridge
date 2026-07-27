@@ -13,7 +13,7 @@ from specbridge.outputs.json_out import render_json
 from specbridge.outputs.text import render_text
 
 
-@click.group()
+@click.group(name="specbridge")
 @click.version_option(version=__version__, prog_name="specbridge")
 def cli() -> None:
     """Spec ↔ Code bridge: read-only traceability analyzer for SSD."""
@@ -900,6 +900,116 @@ def setup(dir: str, ci: bool) -> None:
     if result.returncode != 0:
         click.echo("❌ Setup script failed.", err=True)
         raise click.Abort()
+
+
+@cli.command()
+@click.option("--shell", type=click.Choice(["bash", "zsh", "fish"]), default=None,
+              help="Target shell (default: auto-detect from SHELL env)")
+@click.option("--install", is_flag=True, default=False,
+              help="Install completion permanently (appends to shell rc file)")
+@click.option("--show", is_flag=True, default=False,
+              help="Print the completion script to stdout (for manual install)")
+def shell_completion(shell: str | None, install: bool, show: bool) -> None:
+    """Generate or install shell completion scripts.
+
+    specbridge uses Click's built-in shell completion.  After installing,
+    press TAB to auto-complete commands, options, and arguments.
+
+    Quick start:
+      specbridge shell-completion --install
+
+    Or manually:
+      eval "$(specbridge shell-completion --show --shell bash)"
+    """
+    auto_shell = shell
+    if auto_shell is None:
+        import os
+        shell_env = os.environ.get("SHELL", "")
+        if "zsh" in shell_env:
+            auto_shell = "zsh"
+        elif "fish" in shell_env:
+            auto_shell = "fish"
+        else:
+            auto_shell = "bash"
+
+    root_cmd = cli  # the top-level Click group
+
+    if show:
+        _emit_completion_script(root_cmd, auto_shell)
+        return
+
+    if install:
+        _install_completion(root_cmd, auto_shell)
+        return
+
+    # Default: show instructions
+    click.echo(f"🔧 Shell completion for specbridge ({auto_shell})")
+    click.echo(f"{'=' * 50}")
+    click.echo("")
+
+    if auto_shell == "bash":
+        click.echo("  Add this to your ~/.bashrc:")
+        click.echo('    eval "$(_SPECBRIDGE_COMPLETE=bash_source specbridge)"')
+    elif auto_shell == "zsh":
+        click.echo("  Add this to your ~/.zshrc:")
+        click.echo('    eval "$(_SPECBRIDGE_COMPLETE=zsh_source specbridge)"')
+    elif auto_shell == "fish":
+        click.echo("  Add this to your ~/.config/fish/config.fish:")
+        click.echo('    eval (env _SPECBRIDGE_COMPLETE=fish_source specbridge)')
+
+    click.echo("")
+    click.echo("  Or simply run:")
+    click.echo(f"    specbridge shell-completion --install --shell {auto_shell}")
+    click.echo("")
+    click.echo("  Then restart your shell or source your rc file.")
+
+
+def _emit_completion_script(cmd: click.BaseCommand, shell: str) -> None:  # type: ignore[valid-type]
+    """Print the shell eval command for enabling completion."""
+    var = "_SPECBRIDGE_COMPLETE"
+    if shell == "fish":
+        click.echo(f'eval (env {var}=fish_source specbridge)')
+    else:
+        click.echo(f'eval "$({var}={shell}_source specbridge)"')
+
+
+def _install_completion(cmd: click.BaseCommand, shell: str) -> None:  # type: ignore[valid-type]
+    """Append the completion eval line to the user's shell rc file."""
+    from pathlib import Path
+
+    rc_map = {
+        "bash": Path.home() / ".bashrc",
+        "zsh": Path.home() / ".zshrc",
+        "fish": Path.home() / ".config" / "fish" / "config.fish",
+    }
+    rc_path = rc_map.get(shell)
+    if rc_path is None:
+        click.echo(f"❌ Unknown shell: {shell}", err=True)
+        raise click.Abort()
+
+    var = "_SPECBRIDGE_COMPLETE"
+    if shell == "fish":
+        line = f'eval (env {var}=fish_source specbridge)'
+    else:
+        line = f'eval "$({var}={shell}_source specbridge)"'
+
+    # Check if already installed
+    if rc_path.exists():
+        existing = rc_path.read_text(encoding="utf-8")
+        if line in existing:
+            click.echo(f"✅ specbridge completion already installed in {rc_path}")
+            return
+
+    rc_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(rc_path, "a", encoding="utf-8") as f:
+        f.write(f"\n# specbridge shell completion\n{line}\n")
+
+    click.echo(f"✅ specbridge completion installed in {rc_path}")
+    click.echo("   Restart your shell or run:")
+    if shell == "fish":
+        click.echo(f"     source {rc_path}")
+    else:
+        click.echo(f"     source {rc_path}")
 
 
 # ── Config validation ──────────────────────────────────────
