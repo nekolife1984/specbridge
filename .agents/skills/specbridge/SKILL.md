@@ -242,21 +242,26 @@ Config can also live in `pyproject.toml` under `[tool.specbridge]`.
 
 ## Git Hooks Setup
 
-```bash
-# One-command install (pre-commit + pre-push)
-bash scripts/install-hooks.sh
+specbridge provides hooks for **two audiences**:
 
-# Or manually
-ln -sf ../../.agents/scripts/pre-commit.specbridge.sh .git/hooks/pre-commit
-ln -sf ../../.agents/scripts/pre-push.specbridge.sh .git/hooks/pre-push
+| Audience | Command | What's installed |
+|----------|---------|-----------------|
+| **specbridge developers** | `sh scripts/install-hooks.sh` | pre-commit (branch validation + drift) + pre-push (block push to main) |
+| **Downstream users** | `specbridge setup` or `bash scripts/setup.sh` | pre-commit (drift gate only) |
+
+### For specbridge development (this repo)
+
+```bash
+bash scripts/install-hooks.sh
 ```
 
-The pre-commit hook:
-1. Validates branch name follows convention (`feat/`, `fix/`, `chore/`, `docs/`, `refactor/`)
-2. Warns if code changed but docs not updated
-3. Runs `specbridge drift --gate` — blocks if drift is detected
+### For downstream projects
 
-The pre-push hook blocks direct pushes to `main` — all changes must go through a PR.
+```bash
+specbridge setup
+```
+
+The pre-commit hook is shared between both audiences — it **auto-detects** whether it's running inside the specbridge repo (by checking for `specbridge/cli.py`). Branch validation and doc sync warnings only activate when inside the specbridge repo. Downstream projects get the drift gate only.
 
 ## Drift Detection
 

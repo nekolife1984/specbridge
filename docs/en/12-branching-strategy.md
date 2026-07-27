@@ -31,11 +31,11 @@ Only one permanent branch exists. All development happens on short-lived topic b
 
 ### 🔒 Enforced by Git Hooks
 
-Two automated hooks protect the workflow:
+Two automated hooks protect the specbridge development workflow:
 
 | Hook | What it does | Blocked if |
 |------|-------------|------------|
-| **pre-commit** (`pre-commit.specbridge.sh`) | Validates branch name follows convention | `xyz/abc` doesn't match `feat/`, `fix/`, `chore/`, etc. |
+| **pre-commit** (`pre-commit.specbridge.sh`) | Validates branch name follows convention + checks trace drift | Branch name doesn't match `feat/`, `fix/`, etc. |
 | **pre-push** (`pre-push.specbridge.sh`) | Blocks direct pushes to `main` or `master` | `git push origin main` without `--no-verify` |
 
 Install both with:
@@ -43,6 +43,8 @@ Install both with:
 ```bash
 sh scripts/install-hooks.sh
 ```
+
+> **Note for downstream users:** If you use `specbridge setup` in your own project, only the drift gate is installed — branch naming and push protection are specbridge development conventions only.
 
 ## 3. Branch Naming Convention
 

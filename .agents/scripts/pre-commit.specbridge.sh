@@ -1,56 +1,70 @@
 #!/bin/sh
 # specbridge pre-commit hook
-# 1. Validates branch name follows convention
-# 2. Blocks commits when trace drift is detected
-# 3. Warns when code changed but docs not updated
+# Blocks commits when trace drift is detected between specs and code.
 #
-# Install: sh scripts/install-hooks.sh
-#   or ln -sf ../../.agents/scripts/pre-commit.specbridge.sh .git/hooks/pre-commit
+# When run inside the specbridge development repository, also:
+#   - Validates branch name follows convention (feat/, fix/, ...)
+#   - Warns when source code changed but docs/ not updated
+#
+# Install for downstream users:  specbridge setup
+# Install for specbridge devs:    sh scripts/install-hooks.sh
 
 set -e
 
-BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "detached")
+# ── Detect if we're inside the specbridge development repo ──
+# The presence of specbridge/cli.py at the repo root means this is
+# the specbridge source repository itself (not a downstream project).
+IS_SPECBRIDGE_REPO=0
+if [ -f "specbridge/cli.py" ]; then
+  IS_SPECBRIDGE_REPO=1
+fi
 
-# ── 1. Branch name validation ──
-case "$BRANCH" in
-  main|dependabot/*)
-    ;; # main is allowed (rare direct commits); dependabot is auto-generated
-  feat/*|fix/*|chore/*|docs/*|refactor/*)
-    ;; # Convention-compliant
-  *)
-    echo ""
-    echo "❌ Branch name '$BRANCH' doesn't match convention."
-    echo "   Allowed patterns:"
-    echo "     feat/<desc>     New feature"
-    echo "     fix/<desc>      Bug fix"
-    echo "     chore/<desc>    CI, maintenance, refactoring"
-    echo "     docs/<desc>     Documentation-only changes"
-    echo "     refactor/<desc> Code restructuring"
-    echo "     main            (direct push exceptions)"
-    echo "     dependabot/*    (auto-generated)"
-    echo ""
-    echo "   Run 'git branch -m <correct-name>' to rename,"
-    echo "   or 'git commit --no-verify' to bypass this check."
-    echo ""
-    exit 1
-    ;;
-esac
+# ── 1. Branch name validation (specbridge repo only) ──
+if [ "$IS_SPECBRIDGE_REPO" -eq 1 ]; then
+  BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "detached")
+
+  case "$BRANCH" in
+    main|dependabot/*)
+      ;; # main is allowed (rare direct commits); dependabot is auto-generated
+    feat/*|fix/*|chore/*|docs/*|refactor/*)
+      ;; # Convention-compliant
+    *)
+      echo ""
+      echo "❌ Branch name '$BRANCH' doesn't match convention."
+      echo "   Allowed patterns:"
+      echo "     feat/<desc>     New feature"
+      echo "     fix/<desc>      Bug fix"
+      echo "     chore/<desc>    CI, maintenance, refactoring"
+      echo "     docs/<desc>     Documentation-only changes"
+      echo "     refactor/<desc> Code restructuring"
+      echo "     main            (direct push exceptions)"
+      echo "     dependabot/*    (auto-generated)"
+      echo ""
+      echo "   Run 'git branch -m <correct-name>' to rename,"
+      echo "   or 'git commit --no-verify' to bypass this check."
+      echo ""
+      exit 1
+      ;;
+  esac
+fi
 
 SNAP=".specbridge/snapshot.json"
 
-# ── 2. Doc sync warning ──
-CHANGED=$(git diff --cached --name-only)
-CODE_CHANGED=$(echo "$CHANGED" | grep -c "^specbridge/\|^tests/" || true)
-DOCS_CHANGED=$(echo "$CHANGED" | grep -c "^docs/en/\|^docs/ja/" || true)
-if [ "$CODE_CHANGED" -gt 0 ] && [ "$DOCS_CHANGED" -eq 0 ]; then
-  echo "   ⚠️  Code/tests changed but no docs/ updated!"
-  echo "      Run 'git diff --cached --name-only' to see what changed."
-  echo "      ➡  Update docs/en/ and docs/ja/ to match the code changes."
-  echo "      (Use --no-verify to bypass this warning)"
-  echo ""
+# ── 2. Doc sync warning (specbridge repo only) ──
+if [ "$IS_SPECBRIDGE_REPO" -eq 1 ]; then
+  CHANGED=$(git diff --cached --name-only)
+  CODE_CHANGED=$(echo "$CHANGED" | grep -c "^specbridge/\|^tests/" || true)
+  DOCS_CHANGED=$(echo "$CHANGED" | grep -c "^docs/en/\|^docs/ja/" || true)
+  if [ "$CODE_CHANGED" -gt 0 ] && [ "$DOCS_CHANGED" -eq 0 ]; then
+    echo "   ⚠️  Code/tests changed but no docs/ updated!"
+    echo "      Run 'git diff --cached --name-only' to see what changed."
+    echo "      ➡  Update docs/en/ and docs/ja/ to match the code changes."
+    echo "      (Use --no-verify to bypass this warning)"
+    echo ""
+  fi
 fi
 
-# ── 3. Drift gate ──
+# ── 3. Drift gate (universal) ──
 if [ ! -f "$SNAP" ]; then
   echo "   📸 No baseline found."
   echo "   Run 'specbridge snapshot && git add .specbridge/' first."

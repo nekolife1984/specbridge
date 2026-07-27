@@ -31,11 +31,11 @@ gitGraph
 
 ### 🔒 Git Hooksによる強制
 
-2つの自動フックがワークフローを保護します:
+2つの自動フックが specbridge 開発ワークフローを保護します:
 
 | Hook | 動作 | ブロック条件 |
 |------|------|------------|
-| **pre-commit** (`pre-commit.specbridge.sh`) | ブランチ名が命名規則に従っているか検証 | `xyz/abc` は `feat/` 等のプレフィックスに一致しない |
+| **pre-commit** (`pre-commit.specbridge.sh`) | ブランチ名が命名規則に従っているか検証 + trace drift チェック | ブランチ名が `feat/` 等のプレフィックスに一致しない |
 | **pre-push** (`pre-push.specbridge.sh`) | `main` / `master` への直接pushをブロック | `git push origin main`（`--no-verify` なし） |
 
 両方のインストール:
@@ -43,6 +43,8 @@ gitGraph
 ```bash
 sh scripts/install-hooks.sh
 ```
+
+> **下流ユーザーへの注意:** 自分のプロジェクトで `specbridge setup` を使った場合、drift gate のみがインストールされます。ブランチ命名規則と push 保護は specbridge 開発用の規約です。
 
 ## 3. ブランチ命名規則
 

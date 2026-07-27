@@ -211,49 +211,41 @@ That's it. No tags, no annotations — specbridge infers what it can out of the 
 
 ## Git Hooks
 
-specbridge ships with **two git hooks** that enforce the branching strategy and traceability discipline:
+specbridge ships with git hooks for **two audiences**:
 
-| Hook | File | What it does |
-|------|------|-------------|
-| **pre-commit** | `.agents/scripts/pre-commit.specbridge.sh` | Validates branch name follows convention + checks trace drift |
-| **pre-push** | `.agents/scripts/pre-push.specbridge.sh` | Blocks direct push to `main` — all changes must go through a PR |
+| Audience | Install command | What's installed |
+|----------|----------------|-----------------|
+| **specbridge developers** (this repo) | `sh scripts/install-hooks.sh` | pre-commit (branch validation + drift) + pre-push (block direct push to main) |
+| **Downstream users** (your project) | `specbridge setup` | pre-commit (drift gate only) |
 
 ```text
-git commit ─→ pre-commit: branch name OK? + drift clean? ─→ commit OK
-             └→ wrong branch name or drift detected → ❌ commit blocked
+# specbridge development — full enforcement
+git commit       → pre-commit: branch name OK? + drift clean? → ✅
+git push main    → pre-push: blocked ❌ (use a PR)
 
-git push origin main ─→ pre-push: destination is main? ─→ ❌ blocked
-                                                       (use a PR instead)
+# Downstream project — drift gate only
+git commit       → pre-commit: drift clean? → ✅
+git push main    → no hook (your own workflow)
 ```
 
-### Install
+### 🔧 For specbridge developers
 
 ```bash
-# Recommended: one‑command setup (creates config, installs hooks, deploys AGENTS.md)
+sh scripts/install-hooks.sh
+```
+
+This installs both hooks:
+
+- **pre-commit**: validates branch name follows `feat/` / `fix/` / `chore/` / `docs/` / `refactor/`, then checks trace drift
+- **pre-push**: blocks direct push to `main` — all changes go through a PR
+
+### 📦 For downstream users
+
+```bash
 specbridge setup
-
-# Or install hooks only:
-bash scripts/install-hooks.sh
-
-# Or manually:
-ln -sf ../../.agents/scripts/pre-commit.specbridge.sh .git/hooks/pre-commit
-ln -sf ../../.agents/scripts/pre-push.specbridge.sh .git/hooks/pre-push
 ```
 
-### Bypass (emergency only)
-
-```bash
-git commit --no-verify   # Skip pre-commit
-git push --no-verify     # Skip pre-push (e.g. hotfix to main)
-```
-
-### How the pre-commit hook works
-
-The hook does three things:
-
-1. **Branch name validation** — rejects names that don't match `feat/`, `fix/`, `chore/`, `docs/`, or `refactor/`
-2. **Doc sync warning** — warns if code/tests changed but docs/ not updated
-3. **Drift gate** — runs `specbridge drift --git-base HEAD --gate` to block commits with spec↔code drift
+This installs a **streamlined pre-commit hook** that only runs the drift gate — no branch naming rules, no push protection. The hook auto-detects whether it's inside the specbridge repo and skips specbridge-specific checks.
 
 **What happens when drift is detected:**
 
