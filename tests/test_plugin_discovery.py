@@ -1,4 +1,6 @@
-"""Tests for the Plugin SDK — adapter discovery and registration."""
+"""
+Tests for the Plugin SDK — adapter discovery and registration.
+"""
 
 from __future__ import annotations
 
@@ -137,7 +139,11 @@ def test_discover_plugins_idempotent():
 )
 def test_example_plugin_installable():
     """The example plugin's pyproject.toml should be valid TOML."""
-    import tomllib
+    try:
+        import tomllib  # Python 3.11+
+    except ImportError:
+        import tomli as tomllib  # backport
+
     plugin_pyproject = (
         Path(__file__).resolve().parent.parent
         / "examples/example-plugin/pyproject.toml"
