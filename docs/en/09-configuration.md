@@ -1,7 +1,7 @@
 # Configuration & Read-Only Guard
 
 > **Date:** 2026-07-26
-> **Version:** 0.0.1.dev0
+> **Version:** 1.0.0
 
 ## 1. Overview
 
@@ -9,13 +9,15 @@ specbridge uses a layered configuration system and a strict read-only guard to e
 
 ## 2. Configuration (`config.py`)
 
-### 2.1 Config Sources
+### 2.1 Config Sources (merged, not exclusive)
 
-Configuration is loaded in the following priority order:
+Configuration is loaded by **merging** multiple sources. Later sources override specific fields:
 
-1. **`.specbridge.yaml`** — Project-specific config file in the project root
-2. **`pyproject.toml`** — `[tool.specbridge]` section (Python project standard)
-3. **Defaults** — Hardcoded defaults
+1. **Defaults** — Hardcoded defaults
+2. **`pyproject.toml`** — `[tool.specbridge]` section (base settings)
+3. **`.specbridge.yaml`** — Overrides specific fields (highest priority)
+
+If both `pyproject.toml` and `.specbridge.yaml` exist, they are **merged** — unspecified fields are inherited from the upstream source. This allows e.g. `source_dirs` in `pyproject.toml` and `spec_dirs` in `.specbridge.yaml` to coexist.
 
 ```python
 @dataclass

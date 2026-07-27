@@ -49,6 +49,7 @@ Options:
   --top INTEGER       Show only top N items per category (default: all)
   --deps              Build code dependency graph from imports (adds DEPENDS edges)
   -c, --call-graph    Build call graph for transitive impact analysis
+  --fast              Skip function-level matching for faster analysis on large projects
   --help              Show this message and exit.
 ```
 

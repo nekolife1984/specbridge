@@ -63,13 +63,16 @@ Run full spec-code trace analysis on the project.
 
 ### 3.2 `impact`
 
-Find what implements a given spec. Supports **fuzzy spec resolution** — you can search by ID suffix, title, or heading text.
+Find what implements a given spec. Supports **fuzzy spec resolution** — you can search by ID suffix, title, or heading text. Also supports **transitive (indirect) impact** via call graph analysis (v1.0).
 
 - **Required parameter**: `spec_id` — e.g. `"1.1"`, `"TraceNode"`, `"build_heuristic_graph"`
+- **Optional parameters**:
+  - `call_graph` (boolean, default: false) — include transitive (indirect) impact via function-level call graph
+  - `max_depth` (integer, default: 3) — max call-graph traversal depth
 - **Resolution order**: exact ID → `spec::` prefix → ID suffix match → title substring → heading text
 - **Multiple matches**: when more than one spec matches, all are returned with their implementing artifacts
-- **Returns**: List of implementing code/test files with confidence and evidence, including function-level edges
-- **Use case**: Agent asks "what implements spec TraceNode?"
+- **Returns**: List of implementing code/test files with confidence and evidence, including function-level and transitive edges
+- **Use case**: Agent asks "what implements spec TraceNode?" or "what files are indirectly impacted by spec 1.1?"
 
 ### 3.3 `coverage`
 
