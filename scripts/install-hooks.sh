@@ -4,32 +4,37 @@
 
 set -e
 
-HOOK_SRC=".agents/scripts/pre-commit.specbridge.sh"
-HOOK_DST=".git/hooks/pre-commit"
-
 # Make sure we're in the project root
 if [ ! -d ".git" ]; then
   echo "❌ Run this script from the project root (where .git/ is)."
   exit 1
 fi
 
-# Check source exists
-if [ ! -f "$HOOK_SRC" ]; then
-  echo "❌ $HOOK_SRC not found. Have you run this from the project root?"
-  exit 1
-fi
+# ── Helper: install a single hook ──
+install_hook() {
+  SRC="$1"
+  NAME=$(basename "$SRC" .sh)
+  DST=".git/hooks/$NAME"
 
-# Symlink hook
-if [ -f "$HOOK_DST" ] && [ ! -L "$HOOK_DST" ]; then
-  echo "⚠️  $HOOK_DST already exists (not a symlink). Backing up to ${HOOK_DST}.bak"
-  mv "$HOOK_DST" "${HOOK_DST}.bak"
-fi
+  if [ ! -f "$SRC" ]; then
+    echo "❌ $SRC not found. Have you run this from the project root?"
+    exit 1
+  fi
 
-ln -sf "../../$HOOK_SRC" "$HOOK_DST"
-chmod +x "$HOOK_DST"
-echo "✅ Installed pre-commit hook: $HOOK_DST → $HOOK_SRC"
+  if [ -f "$DST" ] && [ ! -L "$DST" ]; then
+    echo "⚠️  $DST already exists (not a symlink). Backing up to ${DST}.bak"
+    mv "$DST" "${DST}.bak"
+  fi
 
-# Install Hermes skill (if Hermes skills directory exists)
+  ln -sf "../../$SRC" "$DST"
+  chmod +x "$DST"
+  echo "✅ Installed $NAME hook: $DST → $SRC"
+}
+
+install_hook ".agents/scripts/pre-commit.specbridge.sh"
+install_hook ".agents/scripts/pre-push.specbridge.sh"
+
+# ── Install Hermes skill (if Hermes skills directory exists) ──
 SKILL_SRC=".agents/skills/specbridge"
 SKILL_DST="$HOME/.hermes/skills/software-development/specbridge"
 if [ -d "$HOME/.hermes/skills" ]; then
@@ -43,4 +48,8 @@ if [ -d "$HOME/.hermes/skills" ]; then
 fi
 
 echo ""
-echo "Test it with: git commit --allow-empty -m 'test specbridge hook'"
+echo "📋 Active hooks:"
+ls -la .git/hooks/ | grep -E "pre-commit|pre-push" || true
+echo ""
+echo "Test pre-commit:  git commit --allow-empty -m 'test specbridge hook'"
+echo "Test pre-push:    git push origin main (should be blocked)"

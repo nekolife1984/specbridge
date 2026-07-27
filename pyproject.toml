@@ -67,7 +67,9 @@ build-backend = "hatchling.build"
 packages = ["specbridge"]
 include = [
     "scripts/setup.sh",
+    "scripts/install-hooks.sh",
     ".agents/scripts/pre-commit.specbridge.sh",
+    ".agents/scripts/pre-push.specbridge.sh",
     ".agents/skills/specbridge/SKILL.md",
 ]
 

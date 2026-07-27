@@ -240,17 +240,23 @@ max_output_nodes: 40        # Truncation for --top N
 
 Config can also live in `pyproject.toml` under `[tool.specbridge]`.
 
-## Pre-commit Hook Setup
+## Git Hooks Setup
 
 ```bash
-# One-command install
+# One-command install (pre-commit + pre-push)
 bash scripts/install-hooks.sh
 
 # Or manually
 ln -sf ../../.agents/scripts/pre-commit.specbridge.sh .git/hooks/pre-commit
+ln -sf ../../.agents/scripts/pre-push.specbridge.sh .git/hooks/pre-push
 ```
 
-The hook runs `specbridge drift --gate` before each commit — blocks if drift is detected.
+The pre-commit hook:
+1. Validates branch name follows convention (`feat/`, `fix/`, `chore/`, `docs/`, `refactor/`)
+2. Warns if code changed but docs not updated
+3. Runs `specbridge drift --gate` — blocks if drift is detected
+
+The pre-push hook blocks direct pushes to `main` — all changes must go through a PR.
 
 ## Drift Detection
 

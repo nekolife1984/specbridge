@@ -25,9 +25,24 @@ gitGraph
 
 | ブランチ | 目的 | 保護 |
 |---------|------|------|
-| `main` | 常にリリース可能。全CIゲート通過必須。 | 保護 — 直接push禁止 |
+| `main` | 常にリリース可能。全CIゲート通過必須。 | 保護 — pre-push hookが直接pushをブロック |
 
 永続ブランチは1つのみです。すべての開発は短命なトピックブランチで行われ、プルリクエスト経由で `main` にマージされます。
+
+### 🔒 Git Hooksによる強制
+
+2つの自動フックがワークフローを保護します:
+
+| Hook | 動作 | ブロック条件 |
+|------|------|------------|
+| **pre-commit** (`pre-commit.specbridge.sh`) | ブランチ名が命名規則に従っているか検証 | `xyz/abc` は `feat/` 等のプレフィックスに一致しない |
+| **pre-push** (`pre-push.specbridge.sh`) | `main` / `master` への直接pushをブロック | `git push origin main`（`--no-verify` なし） |
+
+両方のインストール:
+
+```bash
+sh scripts/install-hooks.sh
+```
 
 ## 3. ブランチ命名規則
 

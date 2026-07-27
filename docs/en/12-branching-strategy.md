@@ -25,9 +25,24 @@ gitGraph
 
 | Branch | Purpose | Protection |
 |--------|---------|------------|
-| `main` | Always releasable. All CI gates must pass. | Protected — no direct push |
+| `main` | Always releasable. All CI gates must pass. | Protected — pre-push hook blocks direct push |
 
 Only one permanent branch exists. All development happens on short-lived topic branches and merges back to `main` via pull request.
+
+### 🔒 Enforced by Git Hooks
+
+Two automated hooks protect the workflow:
+
+| Hook | What it does | Blocked if |
+|------|-------------|------------|
+| **pre-commit** (`pre-commit.specbridge.sh`) | Validates branch name follows convention | `xyz/abc` doesn't match `feat/`, `fix/`, `chore/`, etc. |
+| **pre-push** (`pre-push.specbridge.sh`) | Blocks direct pushes to `main` or `master` | `git push origin main` without `--no-verify` |
+
+Install both with:
+
+```bash
+sh scripts/install-hooks.sh
+```
 
 ## 3. Branch Naming Convention
 

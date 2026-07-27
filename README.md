@@ -152,7 +152,7 @@ specbridge watch --dir examples/todo-app --merge
 
 ## Project structure
 
-```
+```text
 specbridge/
 ├── specbridge/         # Core library
 │   ├── cli.py          # Click-based CLI (12 commands)
@@ -167,10 +167,14 @@ specbridge/
 │   └── mcp_server.py   # MCP server for AI agents
 ├── examples/
 │   └── todo-app/       # Runnable demo project
-├── docs/               # Design docs (EN + JA, 11 categories)
+├── docs/               # Design docs (EN + JA, 12 categories)
+├── scripts/
+│   ├── setup.sh        # Standalone setup script
+│   └── install-hooks.sh # Install pre-commit + pre-push hooks
 ├── .agents/
 │   ├── scripts/
-│   │   └── pre-commit.specbridge.sh   # Pre-commit drift hook
+│   │   ├── pre-commit.specbridge.sh   # Branch name + drift gate
+│   │   └── pre-push.specbridge.sh     # Block direct push to main
 │   └── skills/
 │       └── specbridge/
 │           └── SKILL.md             # AI agent skill for using specbridge
@@ -205,27 +209,51 @@ That's it. No tags, no annotations — specbridge infers what it can out of the 
 
 ---
 
-## Pre-commit Hook (Drift Gate)
+## Git Hooks
 
-specbridge includes a **pre-commit hook** that automatically checks for trace drift before every commit. If the code has changed but the corresponding spec hasn't been updated (or vice versa), the commit is blocked.
+specbridge ships with **two git hooks** that enforce the branching strategy and traceability discipline:
 
+| Hook | File | What it does |
+|------|------|-------------|
+| **pre-commit** | `.agents/scripts/pre-commit.specbridge.sh` | Validates branch name follows convention + checks trace drift |
+| **pre-push** | `.agents/scripts/pre-push.specbridge.sh` | Blocks direct push to `main` — all changes must go through a PR |
+
+```text
+git commit ─→ pre-commit: branch name OK? + drift clean? ─→ commit OK
+             └→ wrong branch name or drift detected → ❌ commit blocked
+
+git push origin main ─→ pre-push: destination is main? ─→ ❌ blocked
+                                                       (use a PR instead)
 ```
-git commit ─→ specbridge drift --git-base HEAD --gate ─→ no drift → commit OK
-                                                     └→ drift detected → ❌ commit blocked
-```
 
-**Install:**
+### Install
 
 ```bash
-# Recommended: one‑command setup (creates config, installs hook, deploys AGENTS.md)
+# Recommended: one‑command setup (creates config, installs hooks, deploys AGENTS.md)
 specbridge setup
 
-# Or install hook only:
+# Or install hooks only:
 bash scripts/install-hooks.sh
 
 # Or manually:
 ln -sf ../../.agents/scripts/pre-commit.specbridge.sh .git/hooks/pre-commit
+ln -sf ../../.agents/scripts/pre-push.specbridge.sh .git/hooks/pre-push
 ```
+
+### Bypass (emergency only)
+
+```bash
+git commit --no-verify   # Skip pre-commit
+git push --no-verify     # Skip pre-push (e.g. hotfix to main)
+```
+
+### How the pre-commit hook works
+
+The hook does three things:
+
+1. **Branch name validation** — rejects names that don't match `feat/`, `fix/`, `chore/`, `docs/`, or `refactor/`
+2. **Doc sync warning** — warns if code/tests changed but docs/ not updated
+3. **Drift gate** — runs `specbridge drift --git-base HEAD --gate` to block commits with spec↔code drift
 
 **What happens when drift is detected:**
 
