@@ -82,14 +82,14 @@ source_files:
 spec_dirs:
   - docs
   - specs
-spec_files:               # 個別の spec ファイル（_EXCLUDE_FILES をバイパス）
+spec_files:               # Explicit spec files (bypasses _EXCLUDE_FILES)
   - README.md
   - AGENTS.md
 source_dirs:
   - src
   - lib
   - app
-source_files:             # 個別のソースファイル
+source_files:             # Explicit source files
   - scripts/setup.sh
 exclude_dirs:
   - .git
@@ -100,6 +100,7 @@ min_confidence: 0.15
 max_output_nodes: 40
 min_coverage: 50.0
 ````
+```
 ```
 
 
@@ -209,6 +210,42 @@ min_coverage: 50.0   # カバレッジが50%未満で失敗
 `specbridge drift --gate` と組み合わせることで、完全なCI品質ゲートになります：
 - `drift --gate` — スナップショットからspec/codeが乖離している場合にブロック
 - `coverage --gate` — specカバレッジが閾値未満の場合にブロック
+
+### 2.9 YAML形式のSpec定義（`.yaml`/`.yml`）✨ v1.1新機能
+
+specbridgeは従来のMarkdownに加えて、YAMLファイルからのSpec定義の読み取りをサポートします。YAMLのSpecは`spec_dirs`から自動スキャンされ、`spec_files`で明示的に指定することもできます。
+
+**YAML形式：**
+
+```yaml
+# specs/auth.yaml
+specs:
+  - id: 1.1
+    title: Authentication
+    description: ユーザー認証フロー
+    parent: Security
+    tags: [auth, security]
+  - id: 1.1.1
+    title: Login
+    description: メール/パスワードでログイン
+    parent: 1.1
+```
+
+- **`id`**: 一意のSpec識別子（`1.1`のような階層IDに対応）
+- **`title`**: 人間可読なSpecタイトル（必須）
+- **`description`**: Specの説明（ドリフト検出用のボディテキストとして使用）
+- **`parent`**: 別のSpecの`id`を参照して階層を構築（オプション）
+- **`tags`**: カテゴリタグ（オプション、ボディテキストに保存）
+
+**利点：**
+- Markdownのないプロジェクトでもspecbridgeを使用可能
+- プレーンMarkdownでは不可能な構造化メタデータ（カテゴリ、タグ、優先度）を保持
+- 他ツールとのデータ連携が容易
+
+**スキャン動作：**
+- `spec_dirs`下のYAMLファイルは`.md`ファイルと同様に自動検出されます
+- ルート直下のYAML Specは`spec_files`で明示指定可能
+- `_EXCLUDE_FILES`はYAMLファイルには適用されません
 
 `specbridge config` コマンドは解決された設定とそのソースを表示します：
 

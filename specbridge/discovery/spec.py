@@ -140,6 +140,15 @@ def discover_specs(
             rel = str(fpath.relative_to(root))
             seen_files.add(rel)
             candidates.extend(_parse_sections(fpath, text, root))
+        # Also scan .yaml/.yml spec files (v1.1+)
+        for fpath in walk_files(scan_path, {".yaml", ".yml"}, exclude_dirs=exclude_dirs):
+            try:
+                text = fpath.read_text(encoding="utf-8")
+            except Exception:
+                continue
+            rel = str(fpath.relative_to(root))
+            seen_files.add(rel)
+            candidates.extend(_parse_yaml_specs(fpath, text, root))
 
     # ✨ Explicit spec files (bypass _EXCLUDE_FILES, skip if already seen)
     for fname in (spec_files or []):
@@ -155,7 +164,10 @@ def discover_specs(
             text = fpath.read_text(encoding="utf-8")
         except Exception:
             continue
-        candidates.extend(_parse_sections(fpath, text, root))
+        if fpath.suffix.lower() in (".yaml", ".yml"):
+            candidates.extend(_parse_yaml_specs(fpath, text, root))
+        else:
+            candidates.extend(_parse_sections(fpath, text, root))
 
     return candidates
 
@@ -224,3 +236,137 @@ def _parse_sections(fpath: Path, text: str, root: Path) -> list[SpecCandidate]:
         ))
 
     return result
+
+
+def _parse_yaml_specs(fpath: Path, text: str, root: Path) -> list[SpecCandidate]:
+    """Parse YAML spec definitions from a .yaml/.yml file.
+
+    Expected format:
+    ```yaml
+    specs:
+      - id: 1.1
+        title: Authentication
+        description: User authentication flow
+        parent: Security
+        tags: [auth, security]
+    ```
+
+    The ``parent`` field builds the hierarchy. When absent, the spec is top-level.
+    """
+    import hashlib
+    import yaml
+
+    rel = str(fpath.relative_to(root))
+    parent_path = fpath.parent.relative_to(root)
+    file_stem = fpath.stem
+    id_prefix = str(parent_path).replace("/", ".") + "." if str(parent_path) != "." else "root."
+    id_prefix += file_stem + "."
+
+    try:
+        data = yaml.safe_load(text)
+    except Exception:
+        return []
+
+    if not isinstance(data, dict) or "specs" not in data:
+        return []
+
+    raw_specs = data["specs"]
+    if not isinstance(raw_specs, list):
+        return []
+
+    # Build depth map: id → (depth, parent_chain)
+    depth_map: dict[str, tuple[int, list[str]]] = {}
+    spec_map: dict[str, dict[str, Any]] = {}
+
+    for entry in raw_specs:
+        if not isinstance(entry, dict):
+            continue
+        sid = entry.get("id", "")
+        if not isinstance(sid, str):
+            sid = str(sid) if sid is not None else ""
+        if not sid:
+            continue
+        spec_map[sid] = entry
+
+    # Resolve parent hierarchy
+    def _resolve_depth(sid: str, seen: set[str] | None = None) -> tuple[int, list[str]]:
+        if seen is None:
+            seen = set()
+        if sid in seen:
+            return 1, []  # circular reference guard
+        if sid in depth_map:
+            return depth_map[sid]
+        entry = spec_map.get(sid)
+        if not entry:
+            return 1, []
+        parent = entry.get("parent")
+        if not parent or not isinstance(parent, str) or parent == sid:
+            depth_map[sid] = (1, [])
+            return (1, [])
+        seen.add(sid)
+        pdepth, pchain = _resolve_depth(parent, seen)
+        chain = pchain + [spec_map.get(parent, {}).get("title", parent)]
+        depth_map[sid] = (pdepth + 1, chain)
+        return (pdepth + 1, chain)
+
+    # Resolve all depths
+    for sid in spec_map:
+        _resolve_depth(sid)
+
+    candidates: list[SpecCandidate] = []
+    for idx, entry in enumerate(raw_specs):
+        if not isinstance(entry, dict):
+            continue
+        raw_sid = entry.get("id", "")
+        if not isinstance(raw_sid, str):
+            raw_sid = str(raw_sid) if raw_sid is not None else ""
+        spec_id_str: str = raw_sid
+        raw_title = entry.get("title", spec_id_str) if isinstance(entry.get("title"), str) else str(entry.get("title", spec_id_str))
+        title_str: str = raw_title if isinstance(raw_title, str) else str(raw_title)
+        description = entry.get("description", "")
+        raw_parent = entry.get("parent", "")
+        parent = str(raw_parent) if raw_parent is not None else ""
+        tags = entry.get("tags", [])
+
+        depth, parent_chain = depth_map.get(spec_id_str, (1, []))
+        hier_id = spec_id_str.replace(".", ".")
+        auto_id = f"{id_prefix}{hier_id}" if spec_id_str else ""
+
+        # Build body text from all YAML fields
+        body_parts = []
+        if description:
+            body_parts.append(f"Description: {description}")
+        if tags:
+            body_parts.append(f"Tags: {', '.join(tags) if isinstance(tags, list) else str(tags)}")
+        if parent:
+            body_parts.append(f"Parent: {parent}")
+        body_text = "\n".join(body_parts)
+        body_hash = hashlib.sha256(body_text.encode("utf-8")).hexdigest()[:16]
+
+        # Build YAML entry text (without heading line) for content hash
+        yaml_lines = [f"id: {spec_id_str}", f"title: {title_str}"]
+        if description:
+            yaml_lines.append(f"description: {description}")
+        if parent:
+            yaml_lines.append(f"parent: {parent}")
+        if tags:
+            yaml_lines.append(f"tags: {tags}")
+        yaml_content = "\n".join(yaml_lines)
+        body_hash_content = hashlib.sha256(yaml_content.encode("utf-8")).hexdigest()[:16]
+
+        candidates.append(SpecCandidate(
+            file=rel,
+            heading_depth=depth,
+            heading_text=title_str,
+            auto_id=auto_id,
+            title=title_str,
+            line=idx + 2,  # approximate: skip "specs:" line
+            parent_chain=parent_chain if parent_chain else None,
+            body_text=body_text,
+            body_hash=body_hash,
+            body_hash_content=body_hash_content,
+            body_line_count=len(body_parts),
+            body_preview=str(description[:80] if description else title_str),
+        ))
+
+    return candidates

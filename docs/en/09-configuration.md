@@ -205,6 +205,42 @@ Together with `specbridge drift --gate`, this forms a complete CI quality gate:
 - `drift --gate` — blocks if specs/code have diverged from the snapshot
 - `coverage --gate` — blocks if spec coverage is below threshold
 
+### 2.9 YAML Spec Definitions (`.yaml`/`.yml`) ✨ New in v1.1
+
+specbridge now supports reading spec definitions from YAML files alongside traditional Markdown. Specs in YAML are scanned automatically from `spec_dirs` and can also be listed as explicit `spec_files`.
+
+**YAML format:**
+
+```yaml
+# specs/auth.yaml
+specs:
+  - id: 1.1
+    title: Authentication
+    description: User authentication flow
+    parent: Security
+    tags: [auth, security]
+  - id: 1.1.1
+    title: Login
+    description: Login with email/password
+    parent: 1.1
+```
+
+- **`id`**: Unique spec identifier (supports hierarchical IDs like `1.1`)
+- **`title`**: Human-readable spec title (required)
+- **`description`**: Spec description (populates body text for drift detection)
+- **`parent`**: References another spec's `id` to build hierarchy (optional)
+- **`tags`**: Categorization tags (optional, stored in body text)
+
+**Benefits:**
+- Markdown-free projects can still use specbridge
+- Structured metadata (categories, tags, priority) not possible in plain Markdown
+- Easier data exchange with other tools
+
+**Scanning behavior:**
+- YAML files under `spec_dirs` are auto-discovered alongside `.md` files
+- Files can also be listed in `spec_files` to include root-level YAML specs
+- `_EXCLUDE_FILES` does not apply to YAML files
+
 The `specbridge config` command shows the resolved configuration and its source:
 
 ```
