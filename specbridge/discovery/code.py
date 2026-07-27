@@ -10,6 +10,8 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from specbridge.discovery.scanner import walk_files
+
 _SOURCE_MAP: dict[str, tuple[str, str]] = {
     ".py":   ("#",    "Python"),
     ".rb":   ("#",    "Ruby"),
@@ -163,43 +165,41 @@ def discover_code(
         exclude_dirs = set(_EXCLUDE_DIRS)
 
     candidates: list[CodeCandidate] = []
+    source_extensions = set(_SOURCE_MAP.keys())
 
     for sd in source_dirs:
         scan_path = root / sd
         if not scan_path.exists():
             continue
-        for ext, (_, lang) in _SOURCE_MAP.items():
-            for fpath in sorted(scan_path.rglob(f"*{ext}")):
-                if any(part in exclude_dirs for part in fpath.parts):
-                    continue
-                if fpath.name.startswith("."):
-                    continue
-                try:
-                    text = fpath.read_text(encoding="utf-8")
-                except Exception:
-                    continue
+        for fpath in walk_files(scan_path, source_extensions, exclude_dirs=exclude_dirs, exclude_prefixes=(".",)):
+            ext = fpath.suffix
+            _, lang = _SOURCE_MAP[ext]
+            try:
+                text = fpath.read_text(encoding="utf-8")
+            except Exception:
+                continue
 
-                rel = str(fpath.relative_to(root))
-                module = fpath.parent.name if fpath.parent != root else fpath.stem
-                lines = text.split("\n")
+            rel = str(fpath.relative_to(root))
+            module = fpath.parent.name if fpath.parent != root else fpath.stem
+            lines = text.split("\n")
 
-                symbols = sorted(set(_extract_symbol_names(text)))
-                is_test = _is_test_file(fpath)
-                imports = _extract_imports(text, ext)
-                funcs = _extract_func_blocks(text, lines)
-                fhash = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+            symbols = sorted(set(_extract_symbol_names(text)))
+            is_test = _is_test_file(fpath)
+            imports = _extract_imports(text, ext)
+            funcs = _extract_func_blocks(text, lines)
+            fhash = hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
-                candidates.append(CodeCandidate(
-                    file=rel,
-                    module=module,
-                    symbols=symbols,
-                    is_test=is_test,
-                    language=lang,
-                    imports=imports,
-                    line_count=len(lines),
-                    functions=funcs,
-                    file_hash=fhash,
-                ))
+            candidates.append(CodeCandidate(
+                file=rel,
+                module=module,
+                symbols=symbols,
+                is_test=is_test,
+                language=lang,
+                imports=imports,
+                line_count=len(lines),
+                functions=funcs,
+                file_hash=fhash,
+            ))
 
     # ✨ Explicit source files
     for fname in (source_files or []):

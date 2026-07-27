@@ -12,6 +12,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from specbridge.discovery.scanner import walk_files
+
 _EXCLUDE_DIRS = frozenset({
     ".git", "node_modules", ".venv", "__pycache__", "dist", "build",
     ".spectra", ".specbridge", ".artgraph", ".trace",
@@ -128,9 +130,7 @@ def discover_specs(
         scan_path = root / sd
         if not scan_path.exists():
             continue
-        for fpath in sorted(scan_path.rglob("*.md")):
-            if any(part in exclude_dirs for part in fpath.parts):
-                continue
+        for fpath in walk_files(scan_path, {".md"}, exclude_dirs=exclude_dirs):
             if fpath.name in _EXCLUDE_FILES:
                 continue
             try:

@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T07:23:11",
-  "reason": "Session: fast=True default + --func-match flag (#38)",
+  "timestamp": "2026-07-28T07:28:18",
+  "reason": "Session: walk_files scanner for #39",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -8163,6 +8163,461 @@
       "functions": []
     },
     {
+      "file": "specbridge/cache.py",
+      "module": "specbridge",
+      "symbols": [
+        "_file_hash",
+        "_should_exclude",
+        "clear_cache",
+        "filter_cached",
+        "load_cache",
+        "resolved_file_list",
+        "save_cache"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "hashlib",
+        "json"
+      ],
+      "file_hash": "f30153d5f26c2cbf",
+      "functions": [
+        {
+          "name": "_file_hash",
+          "kind": "function",
+          "line": 26,
+          "body_hash": "3d8da63209c23db8",
+          "body_lines": 12
+        },
+        {
+          "name": "_should_exclude",
+          "kind": "function",
+          "line": 38,
+          "body_hash": "b9a59ed69283da50",
+          "body_lines": 9
+        },
+        {
+          "name": "load_cache",
+          "kind": "function",
+          "line": 47,
+          "body_hash": "461454f13cf25ed2",
+          "body_lines": 11
+        },
+        {
+          "name": "save_cache",
+          "kind": "function",
+          "line": 58,
+          "body_hash": "3097362e2662387c",
+          "body_lines": 10
+        },
+        {
+          "name": "resolved_file_list",
+          "kind": "function",
+          "line": 68,
+          "body_hash": "f94e86a38a80a23e",
+          "body_lines": 33
+        },
+        {
+          "name": "filter_cached",
+          "kind": "function",
+          "line": 101,
+          "body_hash": "ed855241c952cfd7",
+          "body_lines": 41
+        },
+        {
+          "name": "clear_cache",
+          "kind": "function",
+          "line": 142,
+          "body_hash": "496c4b590ddc557a",
+          "body_lines": 6
+        }
+      ]
+    },
+    {
+      "file": "specbridge/cli.py",
+      "module": "specbridge",
+      "symbols": [
+        "SpecbridgeHandler",
+        "__init__",
+        "_drift_git",
+        "_emit_completion_script",
+        "_install_completion",
+        "_no_adapter_hint",
+        "_validate_config",
+        "analyze",
+        "call_graph",
+        "cli",
+        "config",
+        "coverage",
+        "diff",
+        "drift",
+        "impact",
+        "init",
+        "on_any_event",
+        "plugins",
+        "serve",
+        "setup",
+        "shell_completion",
+        "snapshot",
+        "status",
+        "suggest",
+        "validate_boundary",
+        "watch"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "typing"
+      ],
+      "file_hash": "f3af3a79c737db97",
+      "functions": [
+        {
+          "name": "cli",
+          "kind": "function",
+          "line": 18,
+          "body_hash": "b6bbe080ebad97e0",
+          "body_lines": 4
+        },
+        {
+          "name": "_no_adapter_hint",
+          "kind": "function",
+          "line": 22,
+          "body_hash": "e061c83e8ee9684d",
+          "body_lines": 36
+        },
+        {
+          "name": "analyze",
+          "kind": "function",
+          "line": 58,
+          "body_hash": "f7659fe7eb0c3a72",
+          "body_lines": 96
+        },
+        {
+          "name": "impact",
+          "kind": "function",
+          "line": 154,
+          "body_hash": "b6d6b7efbf729c80",
+          "body_lines": 88
+        },
+        {
+          "name": "coverage",
+          "kind": "function",
+          "line": 242,
+          "body_hash": "9581ab8e0072ffc1",
+          "body_lines": 53
+        },
+        {
+          "name": "snapshot",
+          "kind": "function",
+          "line": 295,
+          "body_hash": "0cba8996eb6ac415",
+          "body_lines": 41
+        },
+        {
+          "name": "drift",
+          "kind": "function",
+          "line": 336,
+          "body_hash": "d3c3ff19d6403e7d",
+          "body_lines": 48
+        },
+        {
+          "name": "_drift_git",
+          "kind": "function",
+          "line": 384,
+          "body_hash": "f2e693d3de6e8168",
+          "body_lines": 52
+        },
+        {
+          "name": "validate_boundary",
+          "kind": "function",
+          "line": 436,
+          "body_hash": "87aa4915d37ac348",
+          "body_lines": 67
+        },
+        {
+          "name": "status",
+          "kind": "function",
+          "line": 503,
+          "body_hash": "69983f5576368029",
+          "body_lines": 102
+        },
+        {
+          "name": "config",
+          "kind": "function",
+          "line": 605,
+          "body_hash": "4fde42903847f58e",
+          "body_lines": 62
+        },
+        {
+          "name": "watch",
+          "kind": "function",
+          "line": 667,
+          "body_hash": "69cfba071467f247",
+          "body_lines": 19
+        },
+        {
+          "name": "SpecbridgeHandler",
+          "kind": "class",
+          "line": 686,
+          "body_hash": "ae2a7008499982ae",
+          "body_lines": 1
+        },
+        {
+          "name": "__init__",
+          "kind": "function",
+          "line": 687,
+          "body_hash": "67dc46120c3f5b72",
+          "body_lines": 5
+        },
+        {
+          "name": "on_any_event",
+          "kind": "function",
+          "line": 692,
+          "body_hash": "e47dbcd34d55736f",
+          "body_lines": 59
+        },
+        {
+          "name": "plugins",
+          "kind": "function",
+          "line": 751,
+          "body_hash": "48df660ccb0d77f4",
+          "body_lines": 32
+        },
+        {
+          "name": "serve",
+          "kind": "function",
+          "line": 783,
+          "body_hash": "c1dce52f645d6988",
+          "body_lines": 26
+        },
+        {
+          "name": "call_graph",
+          "kind": "function",
+          "line": 809,
+          "body_hash": "c6bc02a60197debe",
+          "body_lines": 54
+        },
+        {
+          "name": "setup",
+          "kind": "function",
+          "line": 863,
+          "body_hash": "e85fc9fa67ba4bc0",
+          "body_lines": 57
+        },
+        {
+          "name": "init",
+          "kind": "function",
+          "line": 920,
+          "body_hash": "56768e834cab37d4",
+          "body_lines": 127
+        },
+        {
+          "name": "shell_completion",
+          "kind": "function",
+          "line": 1047,
+          "body_hash": "90abf912df22a1bf",
+          "body_lines": 55
+        },
+        {
+          "name": "_emit_completion_script",
+          "kind": "function",
+          "line": 1102,
+          "body_hash": "14e738fb634b4fe6",
+          "body_lines": 9
+        },
+        {
+          "name": "_install_completion",
+          "kind": "function",
+          "line": 1111,
+          "body_hash": "cd54f0c95e3acd41",
+          "body_lines": 47
+        },
+        {
+          "name": "diff",
+          "kind": "function",
+          "line": 1158,
+          "body_hash": "aeca0dd827ee9f56",
+          "body_lines": 92
+        },
+        {
+          "name": "suggest",
+          "kind": "function",
+          "line": 1250,
+          "body_hash": "a2555433d8edc6ce",
+          "body_lines": 95
+        },
+        {
+          "name": "_validate_config",
+          "kind": "function",
+          "line": 1345,
+          "body_hash": "24ca1b3568aec8ad",
+          "body_lines": 34
+        }
+      ]
+    },
+    {
+      "file": "specbridge/config.py",
+      "module": "specbridge",
+      "symbols": [
+        "SpecbridgeConfig",
+        "_merge_dict",
+        "_safe_float",
+        "_safe_int",
+        "_try_read_pyproject",
+        "_try_read_yaml",
+        "load"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "pathlib"
+      ],
+      "file_hash": "544b29adad71352e",
+      "functions": [
+        {
+          "name": "SpecbridgeConfig",
+          "kind": "class",
+          "line": 28,
+          "body_hash": "963ad3d2e678d5d1",
+          "body_lines": 11
+        },
+        {
+          "name": "load",
+          "kind": "function",
+          "line": 39,
+          "body_hash": "57217cf15f7906fc",
+          "body_lines": 51
+        },
+        {
+          "name": "_try_read_yaml",
+          "kind": "function",
+          "line": 90,
+          "body_hash": "8ed38c9c3fb32f08",
+          "body_lines": 10
+        },
+        {
+          "name": "_try_read_pyproject",
+          "kind": "function",
+          "line": 100,
+          "body_hash": "8dc2e6d0c18feb86",
+          "body_lines": 17
+        },
+        {
+          "name": "_merge_dict",
+          "kind": "function",
+          "line": 117,
+          "body_hash": "7a2861dc638725e0",
+          "body_lines": 2
+        },
+        {
+          "name": "_safe_float",
+          "kind": "function",
+          "line": 119,
+          "body_hash": "796397fba4845ad0",
+          "body_lines": 6
+        },
+        {
+          "name": "_safe_int",
+          "kind": "function",
+          "line": 125,
+          "body_hash": "5f3bb44ad48ce8a0",
+          "body_lines": 16
+        }
+      ]
+    },
+    {
+      "file": "specbridge/guard.py",
+      "module": "specbridge",
+      "symbols": [
+        "validate_write_path"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib"
+      ],
+      "file_hash": "96a8517a796aa47b",
+      "functions": [
+        {
+          "name": "validate_write_path",
+          "kind": "function",
+          "line": 11,
+          "body_hash": "0318afb32a154f2f",
+          "body_lines": 50
+        }
+      ]
+    },
+    {
+      "file": "specbridge/mcp_server.py",
+      "module": "specbridge",
+      "symbols": [
+        "_analyze_graph",
+        "_load_config",
+        "create_mcp_server",
+        "handle_call_tool",
+        "handle_list_tools",
+        "run_mcp_server"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "pathlib",
+        "typing"
+      ],
+      "file_hash": "bcb6cb545ed2b798",
+      "functions": [
+        {
+          "name": "create_mcp_server",
+          "kind": "function",
+          "line": 29,
+          "body_hash": "20efda68a3b61c6f",
+          "body_lines": 14
+        },
+        {
+          "name": "_analyze_graph",
+          "kind": "function",
+          "line": 43,
+          "body_hash": "56430e40045ed6b9",
+          "body_lines": 8
+        },
+        {
+          "name": "_load_config",
+          "kind": "function",
+          "line": 51,
+          "body_hash": "2a37d86b5217994c",
+          "body_lines": 4
+        },
+        {
+          "name": "handle_list_tools",
+          "kind": "function",
+          "line": 55,
+          "body_hash": "cdcc5854b171a3d2",
+          "body_lines": 58
+        },
+        {
+          "name": "handle_call_tool",
+          "kind": "function",
+          "line": 113,
+          "body_hash": "9136cb82bb86fb40",
+          "body_lines": 140
+        },
+        {
+          "name": "run_mcp_server",
+          "kind": "function",
+          "line": 253,
+          "body_hash": "46095b0a17176521",
+          "body_lines": 9
+        }
+      ]
+    },
+    {
       "file": "specbridge/adapters/__init__.py",
       "module": "adapters",
       "symbols": [],
@@ -8774,374 +9229,6 @@
       ]
     },
     {
-      "file": "specbridge/cache.py",
-      "module": "specbridge",
-      "symbols": [
-        "_file_hash",
-        "_should_exclude",
-        "clear_cache",
-        "filter_cached",
-        "load_cache",
-        "resolved_file_list",
-        "save_cache"
-      ],
-      "is_test": false,
-      "language": "Python",
-      "imports": [
-        "__future__",
-        "hashlib",
-        "json"
-      ],
-      "file_hash": "f30153d5f26c2cbf",
-      "functions": [
-        {
-          "name": "_file_hash",
-          "kind": "function",
-          "line": 26,
-          "body_hash": "3d8da63209c23db8",
-          "body_lines": 12
-        },
-        {
-          "name": "_should_exclude",
-          "kind": "function",
-          "line": 38,
-          "body_hash": "b9a59ed69283da50",
-          "body_lines": 9
-        },
-        {
-          "name": "load_cache",
-          "kind": "function",
-          "line": 47,
-          "body_hash": "461454f13cf25ed2",
-          "body_lines": 11
-        },
-        {
-          "name": "save_cache",
-          "kind": "function",
-          "line": 58,
-          "body_hash": "3097362e2662387c",
-          "body_lines": 10
-        },
-        {
-          "name": "resolved_file_list",
-          "kind": "function",
-          "line": 68,
-          "body_hash": "f94e86a38a80a23e",
-          "body_lines": 33
-        },
-        {
-          "name": "filter_cached",
-          "kind": "function",
-          "line": 101,
-          "body_hash": "ed855241c952cfd7",
-          "body_lines": 41
-        },
-        {
-          "name": "clear_cache",
-          "kind": "function",
-          "line": 142,
-          "body_hash": "496c4b590ddc557a",
-          "body_lines": 6
-        }
-      ]
-    },
-    {
-      "file": "specbridge/cli.py",
-      "module": "specbridge",
-      "symbols": [
-        "SpecbridgeHandler",
-        "__init__",
-        "_drift_git",
-        "_emit_completion_script",
-        "_install_completion",
-        "_no_adapter_hint",
-        "_validate_config",
-        "analyze",
-        "call_graph",
-        "cli",
-        "config",
-        "coverage",
-        "diff",
-        "drift",
-        "impact",
-        "init",
-        "on_any_event",
-        "plugins",
-        "serve",
-        "setup",
-        "shell_completion",
-        "snapshot",
-        "status",
-        "suggest",
-        "validate_boundary",
-        "watch"
-      ],
-      "is_test": false,
-      "language": "Python",
-      "imports": [
-        "__future__",
-        "pathlib",
-        "typing"
-      ],
-      "file_hash": "f3af3a79c737db97",
-      "functions": [
-        {
-          "name": "cli",
-          "kind": "function",
-          "line": 18,
-          "body_hash": "b6bbe080ebad97e0",
-          "body_lines": 4
-        },
-        {
-          "name": "_no_adapter_hint",
-          "kind": "function",
-          "line": 22,
-          "body_hash": "e061c83e8ee9684d",
-          "body_lines": 36
-        },
-        {
-          "name": "analyze",
-          "kind": "function",
-          "line": 58,
-          "body_hash": "f7659fe7eb0c3a72",
-          "body_lines": 96
-        },
-        {
-          "name": "impact",
-          "kind": "function",
-          "line": 154,
-          "body_hash": "b6d6b7efbf729c80",
-          "body_lines": 88
-        },
-        {
-          "name": "coverage",
-          "kind": "function",
-          "line": 242,
-          "body_hash": "9581ab8e0072ffc1",
-          "body_lines": 53
-        },
-        {
-          "name": "snapshot",
-          "kind": "function",
-          "line": 295,
-          "body_hash": "0cba8996eb6ac415",
-          "body_lines": 41
-        },
-        {
-          "name": "drift",
-          "kind": "function",
-          "line": 336,
-          "body_hash": "d3c3ff19d6403e7d",
-          "body_lines": 48
-        },
-        {
-          "name": "_drift_git",
-          "kind": "function",
-          "line": 384,
-          "body_hash": "f2e693d3de6e8168",
-          "body_lines": 52
-        },
-        {
-          "name": "validate_boundary",
-          "kind": "function",
-          "line": 436,
-          "body_hash": "87aa4915d37ac348",
-          "body_lines": 67
-        },
-        {
-          "name": "status",
-          "kind": "function",
-          "line": 503,
-          "body_hash": "69983f5576368029",
-          "body_lines": 102
-        },
-        {
-          "name": "config",
-          "kind": "function",
-          "line": 605,
-          "body_hash": "4fde42903847f58e",
-          "body_lines": 62
-        },
-        {
-          "name": "watch",
-          "kind": "function",
-          "line": 667,
-          "body_hash": "69cfba071467f247",
-          "body_lines": 19
-        },
-        {
-          "name": "SpecbridgeHandler",
-          "kind": "class",
-          "line": 686,
-          "body_hash": "ae2a7008499982ae",
-          "body_lines": 1
-        },
-        {
-          "name": "__init__",
-          "kind": "function",
-          "line": 687,
-          "body_hash": "67dc46120c3f5b72",
-          "body_lines": 5
-        },
-        {
-          "name": "on_any_event",
-          "kind": "function",
-          "line": 692,
-          "body_hash": "e47dbcd34d55736f",
-          "body_lines": 59
-        },
-        {
-          "name": "plugins",
-          "kind": "function",
-          "line": 751,
-          "body_hash": "48df660ccb0d77f4",
-          "body_lines": 32
-        },
-        {
-          "name": "serve",
-          "kind": "function",
-          "line": 783,
-          "body_hash": "c1dce52f645d6988",
-          "body_lines": 26
-        },
-        {
-          "name": "call_graph",
-          "kind": "function",
-          "line": 809,
-          "body_hash": "c6bc02a60197debe",
-          "body_lines": 54
-        },
-        {
-          "name": "setup",
-          "kind": "function",
-          "line": 863,
-          "body_hash": "e85fc9fa67ba4bc0",
-          "body_lines": 57
-        },
-        {
-          "name": "init",
-          "kind": "function",
-          "line": 920,
-          "body_hash": "56768e834cab37d4",
-          "body_lines": 127
-        },
-        {
-          "name": "shell_completion",
-          "kind": "function",
-          "line": 1047,
-          "body_hash": "90abf912df22a1bf",
-          "body_lines": 55
-        },
-        {
-          "name": "_emit_completion_script",
-          "kind": "function",
-          "line": 1102,
-          "body_hash": "14e738fb634b4fe6",
-          "body_lines": 9
-        },
-        {
-          "name": "_install_completion",
-          "kind": "function",
-          "line": 1111,
-          "body_hash": "cd54f0c95e3acd41",
-          "body_lines": 47
-        },
-        {
-          "name": "diff",
-          "kind": "function",
-          "line": 1158,
-          "body_hash": "aeca0dd827ee9f56",
-          "body_lines": 92
-        },
-        {
-          "name": "suggest",
-          "kind": "function",
-          "line": 1250,
-          "body_hash": "a2555433d8edc6ce",
-          "body_lines": 95
-        },
-        {
-          "name": "_validate_config",
-          "kind": "function",
-          "line": 1345,
-          "body_hash": "24ca1b3568aec8ad",
-          "body_lines": 34
-        }
-      ]
-    },
-    {
-      "file": "specbridge/config.py",
-      "module": "specbridge",
-      "symbols": [
-        "SpecbridgeConfig",
-        "_merge_dict",
-        "_safe_float",
-        "_safe_int",
-        "_try_read_pyproject",
-        "_try_read_yaml",
-        "load"
-      ],
-      "is_test": false,
-      "language": "Python",
-      "imports": [
-        "__future__",
-        "dataclasses",
-        "pathlib"
-      ],
-      "file_hash": "544b29adad71352e",
-      "functions": [
-        {
-          "name": "SpecbridgeConfig",
-          "kind": "class",
-          "line": 28,
-          "body_hash": "963ad3d2e678d5d1",
-          "body_lines": 11
-        },
-        {
-          "name": "load",
-          "kind": "function",
-          "line": 39,
-          "body_hash": "57217cf15f7906fc",
-          "body_lines": 51
-        },
-        {
-          "name": "_try_read_yaml",
-          "kind": "function",
-          "line": 90,
-          "body_hash": "8ed38c9c3fb32f08",
-          "body_lines": 10
-        },
-        {
-          "name": "_try_read_pyproject",
-          "kind": "function",
-          "line": 100,
-          "body_hash": "8dc2e6d0c18feb86",
-          "body_lines": 17
-        },
-        {
-          "name": "_merge_dict",
-          "kind": "function",
-          "line": 117,
-          "body_hash": "7a2861dc638725e0",
-          "body_lines": 2
-        },
-        {
-          "name": "_safe_float",
-          "kind": "function",
-          "line": 119,
-          "body_hash": "796397fba4845ad0",
-          "body_lines": 6
-        },
-        {
-          "name": "_safe_int",
-          "kind": "function",
-          "line": 125,
-          "body_hash": "5f3bb44ad48ce8a0",
-          "body_lines": 16
-        }
-      ]
-    },
-    {
       "file": "specbridge/core/__init__.py",
       "module": "core",
       "symbols": [
@@ -9546,49 +9633,49 @@
         "hashlib",
         "re"
       ],
-      "file_hash": "7c364e47062fa7c7",
+      "file_hash": "6090f8c7de6683bb",
       "functions": [
         {
           "name": "FuncBlock",
           "kind": "class",
-          "line": 65,
+          "line": 67,
           "body_hash": "4026555fdf68586c",
           "body_lines": 11
         },
         {
           "name": "CodeCandidate",
           "kind": "class",
-          "line": 76,
+          "line": 78,
           "body_hash": "c70d213067f8134d",
           "body_lines": 12
         },
         {
           "name": "_is_test_file",
           "kind": "function",
-          "line": 88,
+          "line": 90,
           "body_hash": "507ab741dc70b140",
           "body_lines": 5
         },
         {
           "name": "_extract_imports",
           "kind": "function",
-          "line": 93,
+          "line": 95,
           "body_hash": "2ba0014c1c0ea055",
           "body_lines": 14
         },
         {
           "name": "_extract_func_blocks",
           "kind": "function",
-          "line": 107,
+          "line": 109,
           "body_hash": "3e02c3f4e4ac0526",
           "body_lines": 45
         },
         {
           "name": "discover_code",
           "kind": "function",
-          "line": 152,
-          "body_hash": "b97532e64f69b0d2",
-          "body_lines": 93
+          "line": 154,
+          "body_hash": "519ab3dbf6026152",
+          "body_lines": 91
         },
         {
           "name": "_extract_symbol_names",
@@ -9596,6 +9683,30 @@
           "line": 245,
           "body_hash": "947067ac1e77b638",
           "body_lines": 11
+        }
+      ]
+    },
+    {
+      "file": "specbridge/discovery/scanner.py",
+      "module": "discovery",
+      "symbols": [
+        "walk_files"
+      ],
+      "is_test": false,
+      "language": "Python",
+      "imports": [
+        "__future__",
+        "os",
+        "pathlib"
+      ],
+      "file_hash": "b6f82623ee5cd849",
+      "functions": [
+        {
+          "name": "walk_files",
+          "kind": "function",
+          "line": 13,
+          "body_hash": "71fa2730c4b39387",
+          "body_lines": 64
         }
       ]
     },
@@ -9617,42 +9728,42 @@
         "hashlib",
         "re"
       ],
-      "file_hash": "1ee7c2ddb44702b4",
+      "file_hash": "22590b81a7cb33ff",
       "functions": [
         {
           "name": "SpecCandidate",
           "kind": "class",
-          "line": 30,
+          "line": 32,
           "body_hash": "34673365876905f0",
           "body_lines": 19
         },
         {
           "name": "_clean_title",
           "kind": "function",
-          "line": 49,
+          "line": 51,
           "body_hash": "7665bfa39061803d",
           "body_lines": 5
         },
         {
           "name": "_auto_id",
           "kind": "function",
-          "line": 54,
+          "line": 56,
           "body_hash": "10cc333f6c14739a",
           "body_lines": 8
         },
         {
           "name": "_split_sections",
           "kind": "function",
-          "line": 62,
+          "line": 64,
           "body_hash": "a8085a41a1f03d48",
           "body_lines": 43
         },
         {
           "name": "discover_specs",
           "kind": "function",
-          "line": 105,
-          "body_hash": "70028ae869d4a7be",
-          "body_lines": 58
+          "line": 107,
+          "body_hash": "90d8369c9f245cd8",
+          "body_lines": 56
         },
         {
           "name": "_parse_sections",
@@ -9660,29 +9771,6 @@
           "line": 163,
           "body_hash": "d5bcb467a3b26850",
           "body_lines": 65
-        }
-      ]
-    },
-    {
-      "file": "specbridge/guard.py",
-      "module": "specbridge",
-      "symbols": [
-        "validate_write_path"
-      ],
-      "is_test": false,
-      "language": "Python",
-      "imports": [
-        "__future__",
-        "pathlib"
-      ],
-      "file_hash": "96a8517a796aa47b",
-      "functions": [
-        {
-          "name": "validate_write_path",
-          "kind": "function",
-          "line": 11,
-          "body_hash": "0318afb32a154f2f",
-          "body_lines": 50
         }
       ]
     },
@@ -9739,70 +9827,6 @@
           "line": 355,
           "body_hash": "e254681fae85cc83",
           "body_lines": 27
-        }
-      ]
-    },
-    {
-      "file": "specbridge/mcp_server.py",
-      "module": "specbridge",
-      "symbols": [
-        "_analyze_graph",
-        "_load_config",
-        "create_mcp_server",
-        "handle_call_tool",
-        "handle_list_tools",
-        "run_mcp_server"
-      ],
-      "is_test": false,
-      "language": "Python",
-      "imports": [
-        "__future__",
-        "pathlib",
-        "typing"
-      ],
-      "file_hash": "bcb6cb545ed2b798",
-      "functions": [
-        {
-          "name": "create_mcp_server",
-          "kind": "function",
-          "line": 29,
-          "body_hash": "20efda68a3b61c6f",
-          "body_lines": 14
-        },
-        {
-          "name": "_analyze_graph",
-          "kind": "function",
-          "line": 43,
-          "body_hash": "56430e40045ed6b9",
-          "body_lines": 8
-        },
-        {
-          "name": "_load_config",
-          "kind": "function",
-          "line": 51,
-          "body_hash": "2a37d86b5217994c",
-          "body_lines": 4
-        },
-        {
-          "name": "handle_list_tools",
-          "kind": "function",
-          "line": 55,
-          "body_hash": "cdcc5854b171a3d2",
-          "body_lines": 58
-        },
-        {
-          "name": "handle_call_tool",
-          "kind": "function",
-          "line": 113,
-          "body_hash": "9136cb82bb86fb40",
-          "body_lines": 140
-        },
-        {
-          "name": "run_mcp_server",
-          "kind": "function",
-          "line": 253,
-          "body_hash": "46095b0a17176521",
-          "body_lines": 9
         }
       ]
     },
@@ -12680,6 +12704,16 @@
       ]
     },
     {
+      "file": "scripts/install-hooks.sh",
+      "module": "scripts",
+      "symbols": [],
+      "is_test": false,
+      "language": "Shell",
+      "imports": [],
+      "file_hash": "a6e3e72e225fe1a1",
+      "functions": []
+    },
+    {
       "file": "scripts/per_adapter_coverage.py",
       "module": "scripts",
       "symbols": [],
@@ -12691,16 +12725,6 @@
         "pathlib"
       ],
       "file_hash": "2a22cdbd04f6746e",
-      "functions": []
-    },
-    {
-      "file": "scripts/install-hooks.sh",
-      "module": "scripts",
-      "symbols": [],
-      "is_test": false,
-      "language": "Shell",
-      "imports": [],
-      "file_hash": "a6e3e72e225fe1a1",
       "functions": []
     },
     {
@@ -13061,6 +13085,6 @@
     "orphan": 339,
     "coverage_pct": 49.2,
     "spec_count": 679,
-    "code_count": 49
+    "code_count": 50
   }
 }
