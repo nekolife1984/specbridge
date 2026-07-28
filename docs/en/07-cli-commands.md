@@ -151,6 +151,7 @@ Usage: specbridge coverage [OPTIONS]
 Options:
   -d, --dir TEXT          Project directory  [default: .]
   --format TEXT           Output format (text, json)  [default: text]
+  --merge                 Merge all matching adapters for a more complete view
   --gate                  Exit with code 1 if coverage is below min_coverage
                           threshold
   --min-coverage FLOAT    Override min_coverage threshold for --gate

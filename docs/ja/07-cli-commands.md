@@ -151,6 +151,7 @@ Usage: specbridge coverage [OPTIONS]
 Options:
   -d, --dir TEXT          プロジェクトディレクトリ  [default: .]
   --format TEXT           出力形式 (text, json)  [default: text]
+  --merge                 一致する全てのアダプターをマージしてより完全なビューを表示
   --gate                  カバレッジが min_coverage 閾値未満の場合に
                           終了コード1で終了
   --min-coverage FLOAT    --gate の閾値を上書き（デフォルト: configから）
