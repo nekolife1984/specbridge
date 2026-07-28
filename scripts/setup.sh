@@ -54,6 +54,9 @@ _prepend_path() {
 [ -d "$HOME/Library/Python/3.10/bin" ] && _prepend_path "$HOME/Library/Python/3.10/bin"
 [ -d "$HOME/Library/Python/3.9/bin" ] && _prepend_path "$HOME/Library/Python/3.9/bin"
 
+# Bash caches command locations; clear it so PATH changes take effect.
+hash -r 2>/dev/null || true
+
 # ── 1. Install / verify specbridge ────────────────────────────────────────────
 header "1. Installing specbridge"
 INSTALL_URL="git+https://github.com/nekolife1984/specbridge.git"
@@ -104,6 +107,7 @@ if $_should_install; then
             done
             if [ -n "$PIPX_BIN" ]; then
                 _prepend_path "$(dirname "$PIPX_BIN")"
+                hash -r 2>/dev/null || true
                 PV=$(specbridge --version 2>/dev/null || echo "?")
                 ok "specbridge upgraded via pipx ($PV)"
             fi
@@ -146,6 +150,7 @@ if $_should_install; then
             done
             if [ -n "$PIPX_BIN" ]; then
                 _prepend_path "$(dirname "$PIPX_BIN")"
+                hash -r 2>/dev/null || true
             fi
         fi
         if command -v specbridge >/dev/null 2>&1; then
@@ -155,6 +160,7 @@ if $_should_install; then
             for _p in "$HOME/.local/bin" "$HOME/Library/Python/3.12/bin" "$HOME/Library/Python/3.11/bin" "$HOME/Library/Python/3.10/bin" "$HOME/Library/Python/3.9/bin"; do
                 if [ -f "$_p/specbridge" ]; then
                     _prepend_path "$_p"
+                    hash -r 2>/dev/null || true
                     break
                 fi
             done
