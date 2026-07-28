@@ -290,7 +290,7 @@ def _reverse_impact(project_dir: str, file_path: str,
                     output_fmt: str, call_graph: bool, max_depth: int) -> None:
     """Reverse impact: file → affected specs."""
     from specbridge.adapters import detect_adapter
-    from specbridge.core import EdgeRelation, NodeType, find_specs_by_file
+    from specbridge.core import EdgeRelation, NodeType
 
     root = Path(project_dir).resolve()
 
@@ -313,7 +313,7 @@ def _reverse_impact(project_dir: str, file_path: str,
     scored = detect_all(str(root))
     if len(scored) > 1:
         extra_graphs = [graph]
-        for score, inst in scored:
+        for _score, inst in scored:
             if inst is not adapter:
                 extra_graphs.append(inst.analyze(str(root)))
         if len(extra_graphs) > 1:
@@ -455,7 +455,12 @@ def _reverse_impact(project_dir: str, file_path: str,
 def coverage(dir: str, output_fmt: str, gate: bool, min_coverage: float | None) -> None:
     """Show spec coverage statistics."""
     from specbridge.adapters import detect_adapter
-    from specbridge.analyzers import coverage_gate_check, coverage_summary, find_orphan_code, find_orphan_specs
+    from specbridge.analyzers import (
+        coverage_gate_check,
+        coverage_summary,
+        find_orphan_code,
+        find_orphan_specs,
+    )
     from specbridge.config import SpecbridgeConfig
 
     root = Path(dir).resolve()
@@ -1626,7 +1631,6 @@ def session_check(dir: str, cfg_path: str | None, skip_git: bool, skip_hooks: bo
     root = Path(dir).resolve()
     cfg = SpecbridgeConfig.load(str(root), config_path=cfg_path)
 
-    checks: list[dict[str, Any]] = []
     blockers = 0
     warnings = 0
 
@@ -1694,7 +1698,7 @@ def session_check(dir: str, cfg_path: str | None, skip_git: bool, skip_hooks: bo
             ["git", "status", "--porcelain"],
             capture_output=True, text=True, cwd=str(root),
         )
-        uncommitted = [l for l in result.stdout.strip().split("\n") if l]
+        uncommitted = [line for line in result.stdout.strip().split("\n") if line]
         if uncommitted:
             click.echo(f"  ⚠️  Uncommitted changes: {len(uncommitted)} file(s)")
             for u in uncommitted[:10]:

@@ -68,10 +68,9 @@ def render_html_report(graph: TraceGraph, min_coverage: float = 50.0) -> str:
     - Uncovered-only filter
     - Per-spec code file breakdown
     """
-    from specbridge.analyzers import coverage_summary, find_orphan_specs, find_orphan_code
+    from specbridge.analyzers import coverage_summary, find_orphan_code
 
     cov = coverage_summary(graph)
-    orphans_spec = find_orphan_specs(graph)
     orphans_code = find_orphan_code(graph)
 
     # Build spec list with status
@@ -87,7 +86,6 @@ def render_html_report(graph: TraceGraph, min_coverage: float = 50.0) -> str:
         if not impl_edges:
             orphan_specs_list.append(nid)
         else:
-            code_count = len(set(e.src_id for e in impl_edges))
             test_count = len([e for e in impl_edges if e.relation.value == "verifies"])
             if test_count == 0:
                 partial_specs.append(nid)

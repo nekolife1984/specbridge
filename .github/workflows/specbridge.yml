@@ -20,7 +20,7 @@ jobs:
 
       - name: Install specbridge
         run: |
-          pip install specbridge
+          pip install -e .
 
       - name: Verify specbridge version
         run: specbridge --version

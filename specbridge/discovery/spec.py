@@ -254,6 +254,7 @@ def _parse_yaml_specs(fpath: Path, text: str, root: Path) -> list[SpecCandidate]
     The ``parent`` field builds the hierarchy. When absent, the spec is top-level.
     """
     import hashlib
+
     import yaml
 
     rel = str(fpath.relative_to(root))

@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T15:03:35",
-  "reason": "Session: fix graphify package name in setup.sh",
+  "timestamp": "2026-07-28T17:01:26",
+  "reason": "fix: ruff lint errors and specbridge.yml workflow install command",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -8539,7 +8539,7 @@
         "pathlib",
         "typing"
       ],
-      "file_hash": "384c27c5447fb9b0",
+      "file_hash": "13bcdd6f77dcdb1f",
       "functions": [
         {
           "name": "cli",
@@ -8580,169 +8580,169 @@
           "name": "_reverse_impact",
           "kind": "function",
           "line": 289,
-          "body_hash": "7469b8fa3378f572",
+          "body_hash": "270a6028953ddb7a",
           "body_lines": 166
         },
         {
           "name": "coverage",
           "kind": "function",
           "line": 455,
-          "body_hash": "1170fe2adedb970d",
-          "body_lines": 64
+          "body_hash": "cdbde85c75007c3f",
+          "body_lines": 69
         },
         {
           "name": "snapshot",
           "kind": "function",
-          "line": 519,
+          "line": 524,
           "body_hash": "0cba8996eb6ac415",
           "body_lines": 41
         },
         {
           "name": "drift",
           "kind": "function",
-          "line": 560,
+          "line": 565,
           "body_hash": "d3c3ff19d6403e7d",
           "body_lines": 48
         },
         {
           "name": "_drift_git",
           "kind": "function",
-          "line": 608,
+          "line": 613,
           "body_hash": "f2e693d3de6e8168",
           "body_lines": 52
         },
         {
           "name": "validate_boundary",
           "kind": "function",
-          "line": 660,
+          "line": 665,
           "body_hash": "87aa4915d37ac348",
           "body_lines": 67
         },
         {
           "name": "status",
           "kind": "function",
-          "line": 727,
+          "line": 732,
           "body_hash": "69983f5576368029",
           "body_lines": 102
         },
         {
           "name": "config",
           "kind": "function",
-          "line": 829,
+          "line": 834,
           "body_hash": "4fde42903847f58e",
           "body_lines": 62
         },
         {
           "name": "watch",
           "kind": "function",
-          "line": 891,
+          "line": 896,
           "body_hash": "69cfba071467f247",
           "body_lines": 19
         },
         {
           "name": "SpecbridgeHandler",
           "kind": "class",
-          "line": 910,
+          "line": 915,
           "body_hash": "ae2a7008499982ae",
           "body_lines": 1
         },
         {
           "name": "__init__",
           "kind": "function",
-          "line": 911,
+          "line": 916,
           "body_hash": "67dc46120c3f5b72",
           "body_lines": 5
         },
         {
           "name": "on_any_event",
           "kind": "function",
-          "line": 916,
+          "line": 921,
           "body_hash": "e47dbcd34d55736f",
           "body_lines": 59
         },
         {
           "name": "plugins",
           "kind": "function",
-          "line": 975,
+          "line": 980,
           "body_hash": "48df660ccb0d77f4",
           "body_lines": 32
         },
         {
           "name": "serve",
           "kind": "function",
-          "line": 1007,
+          "line": 1012,
           "body_hash": "c1dce52f645d6988",
           "body_lines": 26
         },
         {
           "name": "call_graph",
           "kind": "function",
-          "line": 1033,
+          "line": 1038,
           "body_hash": "c6bc02a60197debe",
           "body_lines": 54
         },
         {
           "name": "setup",
           "kind": "function",
-          "line": 1087,
+          "line": 1092,
           "body_hash": "e85fc9fa67ba4bc0",
           "body_lines": 57
         },
         {
           "name": "init",
           "kind": "function",
-          "line": 1144,
+          "line": 1149,
           "body_hash": "56768e834cab37d4",
           "body_lines": 127
         },
         {
           "name": "shell_completion",
           "kind": "function",
-          "line": 1271,
+          "line": 1276,
           "body_hash": "90abf912df22a1bf",
           "body_lines": 55
         },
         {
           "name": "_emit_completion_script",
           "kind": "function",
-          "line": 1326,
+          "line": 1331,
           "body_hash": "14e738fb634b4fe6",
           "body_lines": 9
         },
         {
           "name": "_install_completion",
           "kind": "function",
-          "line": 1335,
+          "line": 1340,
           "body_hash": "cd54f0c95e3acd41",
           "body_lines": 47
         },
         {
           "name": "diff",
           "kind": "function",
-          "line": 1382,
+          "line": 1387,
           "body_hash": "aeca0dd827ee9f56",
           "body_lines": 92
         },
         {
           "name": "suggest",
           "kind": "function",
-          "line": 1474,
+          "line": 1479,
           "body_hash": "a2555433d8edc6ce",
           "body_lines": 95
         },
         {
           "name": "_validate_config",
           "kind": "function",
-          "line": 1569,
+          "line": 1574,
           "body_hash": "1b03aaea8fb6a67a",
           "body_lines": 40
         },
         {
           "name": "session_check",
           "kind": "function",
-          "line": 1609,
-          "body_hash": "17532b05090a739a",
-          "body_lines": 147
+          "line": 1614,
+          "body_hash": "32f0babe01e8942c",
+          "body_lines": 146
         }
       ]
     },
@@ -8859,7 +8859,7 @@
         "pathlib",
         "typing"
       ],
-      "file_hash": "bffbf2d9f63a0166",
+      "file_hash": "325d2a69029b3f4c",
       "functions": [
         {
           "name": "create_mcp_server",
@@ -8893,13 +8893,13 @@
           "name": "handle_call_tool",
           "kind": "function",
           "line": 152,
-          "body_hash": "15bb456106fbfd2f",
-          "body_lines": 245
+          "body_hash": "09382f4379fb8976",
+          "body_lines": 243
         },
         {
           "name": "run_mcp_server",
           "kind": "function",
-          "line": 397,
+          "line": 395,
           "body_hash": "46095b0a17176521",
           "body_lines": 9
         }
@@ -10035,7 +10035,7 @@
         "hashlib",
         "re"
       ],
-      "file_hash": "284e72c6994d11d2",
+      "file_hash": "1c172d949d7d1606",
       "functions": [
         {
           "name": "SpecCandidate",
@@ -10083,13 +10083,13 @@
           "name": "_parse_yaml_specs",
           "kind": "function",
           "line": 241,
-          "body_hash": "4577cd06e7f72f4d",
-          "body_lines": 51
+          "body_hash": "4bd146601531e2db",
+          "body_lines": 52
         },
         {
           "name": "_resolve_depth",
           "kind": "function",
-          "line": 292,
+          "line": 293,
           "body_hash": "9f3c0641fea16ca5",
           "body_lines": 82
         }
@@ -10179,7 +10179,7 @@
         "json",
         "specbridge.core"
       ],
-      "file_hash": "40e5e174a3bcaeb8",
+      "file_hash": "7847699efa9b6a31",
       "functions": [
         {
           "name": "_graph_data",
@@ -10192,34 +10192,34 @@
           "name": "render_html_report",
           "kind": "function",
           "line": 61,
-          "body_hash": "06613a45f8b12b68",
-          "body_lines": 37
+          "body_hash": "2b2d1c4ed2557fd2",
+          "body_lines": 35
         },
         {
           "name": "_spec_row",
           "kind": "function",
-          "line": 98,
+          "line": 96,
           "body_hash": "1bf208051e2e7f63",
           "body_lines": 141
         },
         {
           "name": "filterTable",
           "kind": "function",
-          "line": 239,
+          "line": 237,
           "body_hash": "e49ee35eabf18408",
           "body_lines": 14
         },
         {
           "name": "searchTable",
           "kind": "function",
-          "line": 253,
+          "line": 251,
           "body_hash": "58b85c1b98777af7",
           "body_lines": 14
         },
         {
           "name": "render_html",
           "kind": "function",
-          "line": 267,
+          "line": 265,
           "body_hash": "06ca197dd35ecfa5",
           "body_lines": 242
         }

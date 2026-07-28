@@ -182,7 +182,7 @@ def create_mcp_server(project_dir: str = ".") -> object:
 
             # Reverse impact: file → specs
             if file_path:
-                from specbridge.core import EdgeRelation, NodeType
+                from specbridge.core import EdgeRelation
                 # Find matched code nodes
                 matched: list[str] = []
                 for nid, node in graph.nodes.items():
@@ -322,7 +322,7 @@ def create_mcp_server(project_dir: str = ".") -> object:
 
         elif name == "gate":
             from specbridge.analyzers import coverage_gate_check
-            min_cov = arguments.get("min_coverage", None)
+            min_cov = arguments.get("min_coverage")
             cfg = _load_config()
             threshold = min_cov if min_cov is not None else cfg.min_coverage
             graph = _analyze_graph()
@@ -362,8 +362,6 @@ def create_mcp_server(project_dir: str = ".") -> object:
             return [TextContent(type="text", text="📋 specbridge Config\n" + "\n".join(lines))]
 
         elif name == "status":
-            from specbridge.analyzers import coverage_summary, find_orphan_code, find_orphan_specs
-            from specbridge.analyzers.drift import compute_drift
 
             cfg = _load_config()
             lines = ["📋 specbridge Status"]
