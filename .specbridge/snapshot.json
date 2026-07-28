@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T15:01:38",
-  "reason": "Session: add CI workflow — drift baseline",
+  "timestamp": "2026-07-28T15:03:35",
+  "reason": "Session: fix graphify package name in setup.sh",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -13335,7 +13335,7 @@
       "is_test": false,
       "language": "Shell",
       "imports": [],
-      "file_hash": "0d20144ba0313d78",
+      "file_hash": "e41247500d9adefd",
       "functions": []
     }
   ],

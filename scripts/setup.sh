@@ -409,7 +409,7 @@ else
     fi
 fi
 
-# ── 9. Offer graphify install ──────────────────────────────────────────────────
+# ── 9. Optional: graphify (AST code graph) ───────────────────────────────────────────────────
 header "9. Optional: graphify (AST code graph)"
 if command -v graphify >/dev/null 2>&1; then
     ok "graphify already installed"
@@ -419,16 +419,16 @@ else
     if [ "$_gf_answer" = "y" ] || [ "$_gf_answer" = "Y" ]; then
         if command -v pipx >/dev/null 2>&1; then
             info "Installing graphify via pipx …"
-            pipx install graphify 2>&1 | tail -1 || warn "graphify install failed"
+            pipx install graphifyy 2>&1 | tail -1 || warn "graphify install failed"
         else
-            pip3 install --user graphify 2>&1 | tail -1 || warn "graphify install failed"
+            pip3 install --user graphifyy 2>&1 | tail -1 || warn "graphify install failed"
         fi
     else
         info "Skipping graphify"
     fi
 fi
 
-# ── Done ───────────────────────────────────────────────────────────────────────
+# ── Done ────────────────────────────────────────────────────────────────────────────────
 header "Done"
 ok "specbridge setup complete"
 info "Next steps:"
