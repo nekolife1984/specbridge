@@ -1,0 +1,32 @@
+name: specbridge traceability
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  specbridge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install specbridge
+        run: |
+          pip install specbridge
+
+      - name: Verify specbridge version
+        run: specbridge --version
+
+      - name: Run drift gate
+        run: specbridge drift --gate
+
+      - name: Run coverage gate
+        run: specbridge coverage --gate

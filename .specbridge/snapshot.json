@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T14:45:06",
-  "reason": "Session: fix setup.sh version detection — drift baseline",
+  "timestamp": "2026-07-28T15:01:38",
+  "reason": "Session: add CI workflow — drift baseline",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -13335,7 +13335,7 @@
       "is_test": false,
       "language": "Shell",
       "imports": [],
-      "file_hash": "c05537be5b613908",
+      "file_hash": "0d20144ba0313d78",
       "functions": []
     }
   ],
