@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T08:54:45",
-  "reason": "Session: AGENTS.md sentinel marker (idempotent install)",
+  "timestamp": "2026-07-28T14:45:06",
+  "reason": "Session: fix setup.sh version detection — drift baseline",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -13335,7 +13335,7 @@
       "is_test": false,
       "language": "Shell",
       "imports": [],
-      "file_hash": "22bc2a3de537feb5",
+      "file_hash": "c05537be5b613908",
       "functions": []
     }
   ],
