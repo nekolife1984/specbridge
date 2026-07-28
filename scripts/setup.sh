@@ -63,11 +63,34 @@ if $_should_install; then
 
     # Strategy A: pipx (best for global CLI tools)
     if command -v pipx >/dev/null 2>&1; then
-        info "Installing via pipx …"
-        if pipx install "$INSTALL_URL" 2>&1 | tail -1; then
-            _installed=true
-        elif pipx upgrade specbridge 2>&1 | tail -1; then
-            _installed=true
+        if [ -n "$_old_ver" ]; then
+            # アップグレード: pipx upgrade で最新を取得させる
+            info "Upgrading via pipx (from $_old_ver) …"
+            if pipx upgrade specbridge 2>&1 | tail -3; then
+                _installed=true
+            fi
+        fi
+        if ! $_installed; then
+            info "Installing via pipx …"
+            if pipx install "$INSTALL_URL" --force 2>&1 | tail -1; then
+                _installed=true
+            fi
+        fi
+        # pipxインストール後、pipxのバイナリパスをPATH先頭に追加
+        # (そうしないとHermes venvなどにある古い specbridge が優先される)
+        if $_installed; then
+            PIPX_BIN=""
+            for _pb in "$HOME/.local/bin" "$HOME/.local/share/pipx/venvs/specbridge/bin"; do
+                if [ -f "$_pb/specbridge" ]; then
+                    PIPX_BIN="$_pb"
+                    break
+                fi
+            done
+            if [ -n "$PIPX_BIN" ]; then
+                export PATH="$(dirname "$PIPX_BIN"):$PATH"
+                PV=$(specbridge --version 2>/dev/null || echo "?")
+                ok "specbridge upgraded via pipx ($PV)"
+            fi
         fi
     fi
 
@@ -96,13 +119,26 @@ if $_should_install; then
     fi
 
     if $_installed; then
+        # pipxでインストールした場合、pipxのバイナリパスが最新版から使えるようにPATH先頭に追加
+        if command -v pipx >/dev/null 2>&1; then
+            PIPX_BIN=""
+            for _pb in "$HOME/.local/bin" "$HOME/.local/share/pipx/venvs/specbridge/bin"; do
+                if [ -f "$_pb/specbridge" ]; then
+                    PIPX_BIN="$_pb"
+                    break
+                fi
+            done
+            if [ -n "$PIPX_BIN" ]; then
+                export PATH="$(dirname "$PIPX_BIN"):$PATH"
+            fi
+        fi
         if command -v specbridge >/dev/null 2>&1; then
             ok "specbridge installed ($(specbridge --version 2>/dev/null || echo "?"))"
         else
             # Try common pip --user binary paths
             for _p in "$HOME/.local/bin" "$HOME/Library/Python/3.12/bin" "$HOME/Library/Python/3.11/bin" "$HOME/Library/Python/3.10/bin" "$HOME/Library/Python/3.9/bin"; do
                 if [ -f "$_p/specbridge" ]; then
-                    export PATH="$PATH:$_p"
+                    export PATH="$(dirname "$_p"):$PATH"
                     break
                 fi
             done
