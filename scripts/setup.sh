@@ -42,15 +42,31 @@ header "specbridge setup — $PROJECT_DIR"
 header "1. Installing specbridge"
 INSTALL_URL="git+https://github.com/nekolife1984/specbridge.git"
 
+_should_install=false
+_old_ver=""
+
 if command -v specbridge >/dev/null 2>&1; then
-    ok "specbridge already installed ($(specbridge --version 2>/dev/null || echo "?"))"
+    _old_ver=$(specbridge --version 2>/dev/null || echo "?")
+    # Check if it's an old version (1.0.x or 0.x — before PEP 668 fix)
+    if echo "$_old_ver" | grep -qE "^1\.0\.|^0\." 2>/dev/null; then
+        info "Old version ($_old_ver) detected — upgrading …"
+        _should_install=true
+    else
+        ok "specbridge already installed ($_old_ver)"
+    fi
 else
+    _should_install=true
+fi
+
+if $_should_install; then
     _installed=false
 
     # Strategy A: pipx (best for global CLI tools)
     if command -v pipx >/dev/null 2>&1; then
         info "Installing via pipx …"
         if pipx install "$INSTALL_URL" 2>&1 | tail -1; then
+            _installed=true
+        elif pipx upgrade specbridge 2>&1 | tail -1; then
             _installed=true
         fi
     fi
@@ -63,10 +79,18 @@ else
         fi
     fi
 
-    # Strategy C: pip --user (bypasses PEP 668)
+    # Strategy C: pip --user (bypasses PEP 668 on most systems)
     if ! $_installed; then
         info "Installing via pip --user …"
         if pip3 install --user "$INSTALL_URL" 2>&1 | tail -1; then
+            _installed=true
+        fi
+    fi
+
+    # Strategy D: pip --user --break-system-packages (bypasses Homebrew PEP 668)
+    if ! $_installed; then
+        info "Installing via pip --user --break-system-packages …"
+        if pip3 install --user --break-system-packages "$INSTALL_URL" 2>&1 | tail -1; then
             _installed=true
         fi
     fi
