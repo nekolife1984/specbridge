@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T18:16:43",
-  "reason": "Auto-fix: add --merge flag to coverage command and update coverage gate threshold",
+  "timestamp": "2026-07-28T18:19:35",
+  "reason": "Auto-fix: fix mypy type inference issue with loop variable name",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -8539,7 +8539,7 @@
         "pathlib",
         "typing"
       ],
-      "file_hash": "40ac8a795439d7dd",
+      "file_hash": "ad97dcc18a566b86",
       "functions": [
         {
           "name": "cli",
@@ -8587,7 +8587,7 @@
           "name": "coverage",
           "kind": "function",
           "line": 458,
-          "body_hash": "d09b6b55baa0a8ef",
+          "body_hash": "034d2ae061bf408f",
           "body_lines": 82
         },
         {

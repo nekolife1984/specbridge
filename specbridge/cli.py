@@ -476,9 +476,9 @@ def coverage(dir: str, output_fmt: str, merge: bool, gate: bool,
             _no_adapter_hint()
             raise click.Abort()
         graphs = []
-        for score, adapter in scored:
-            click.echo(f"   Using {type(adapter).__name__} (confidence {score})", err=True)
-            graphs.append(adapter.analyze(str(root)))
+        for score, adpt in scored:
+            click.echo(f"   Using {type(adpt).__name__} (confidence {score})", err=True)
+            graphs.append(adpt.analyze(str(root)))
         graph = merge_graphs(graphs)
     else:
         adapter = detect_adapter(str(root))
