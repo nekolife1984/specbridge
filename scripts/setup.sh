@@ -32,11 +32,31 @@ warn()  { printf "${YELLOW}⚠️  ${NC}%s\n" "$*"; }
 fail()  { printf "${RED}❌${NC} %s\n" "$*"; exit 1; }
 header(){ printf "\n${BOLD}━━━ %s ━━━${NC}\n" "$*"; }
 
-# ── 0. Pre‑flight checks ──────────────────────────────────────────────────────
+# ── 0. Pre‑flight checks ────────────────────────────────────────────
 PROJECT_DIR="${1:-$(pwd)}"
 cd "$PROJECT_DIR" 2>/dev/null || fail "Directory '$PROJECT_DIR' not found"
 
 header "specbridge setup — $PROJECT_DIR"
+
+# ── 0.5 Sanitize PATH for this installer ───────────────────────────────────────
+# Hermes / uv / venv に入った古い specbridge が PATH 先頭を占拠していると、
+# インストーラが最新版を誤探する。pipx / pip --user のバイナリが
+# 優先されるように PATH 先頭に追加する。
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+if [ -d "$HOME/Library/Python/3.12/bin" ]; then
+    export PATH="$HOME/Library/Python/3.12/bin:$PATH"
+fi
+if [ -d "$HOME/Library/Python/3.11/bin" ]; then
+    export PATH="$HOME/Library/Python/3.11/bin:$PATH"
+fi
+if [ -d "$HOME/Library/Python/3.10/bin" ]; then
+    export PATH="$HOME/Library/Python/3.10/bin:$PATH"
+fi
+if [ -d "$HOME/Library/Python/3.9/bin" ]; then
+    export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+fi
 
 # ── 1. Install / verify specbridge ────────────────────────────────────────────
 header "1. Installing specbridge"
