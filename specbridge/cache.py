@@ -12,15 +12,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+from specbridge.config import DEFAULT_EXCLUDE_DIRS
+
 CACHE_RELPATH = ".specbridge/cache.json"
 
-# Default exclude patterns (merged with per-call excludes)
-DEFAULT_EXCLUDES: set[str] = {
-    ".git", "node_modules", ".venv", "__pycache__", "dist", "build",
-    ".spectra", ".specbridge", ".artgraph", ".trace",
-    "venv", "env", ".tox", ".mypy_cache", ".ruff_cache", ".pytest_cache",
-    ".egg-info", "site-packages", "coverage", "htmlcov",
-}
+# Re-export config's excludes as the single source of truth
+DEFAULT_EXCLUDES: set[str] = DEFAULT_EXCLUDE_DIRS
 
 
 def _file_hash(path: Path, chunk_size: int = 65536) -> str:

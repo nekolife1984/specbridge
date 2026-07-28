@@ -32,3 +32,6 @@ graphify-out/
 
 # OS
 Thumbs.db
+
+# specbridge runtime artifacts
+.specbridge/
