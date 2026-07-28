@@ -25,6 +25,10 @@ jobs:
       - name: Verify specbridge version
         run: specbridge --version
 
+      - name: 📸 Snapshot (baseline)
+        run: specbridge snapshot
+        continue-on-error: true
+
       - name: Run drift gate
         run: specbridge drift --gate
 
