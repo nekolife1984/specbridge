@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T18:20:43",
-  "reason": "Auto-fix: update coverage docs to reflect --merge flag",
+  "timestamp": "2026-07-28T19:24:28",
+  "reason": "Auto-fix: update snapshot after troubleshooting table change in SKILL.md",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -7281,9 +7281,9 @@
       "heading_text": "Troubleshooting",
       "depth": 2,
       "line": 302,
-      "body_hash": "b3da6c941a0046c0",
-      "body_hash_content": "fe58c5b51617be25",
-      "body_line_count": 11,
+      "body_hash": "5f3abb79de27b159",
+      "body_hash_content": "d322dc0bed5d7ff5",
+      "body_line_count": 12,
       "body_preview": "## Troubleshooting  | Symptom | Likely Cause | Fix | |---------|-------------|--"
     },
     {
@@ -7292,7 +7292,7 @@
       "title": "Installing This Skill into Hermes",
       "heading_text": "Installing This Skill into Hermes",
       "depth": 2,
-      "line": 314,
+      "line": 315,
       "body_hash": "77c71f5b690aadd6",
       "body_hash_content": "5f046190424d4104",
       "body_line_count": 2,
@@ -7304,7 +7304,7 @@
       "title": "Symlink from repo to Hermes skills directory",
       "heading_text": "Symlink from repo to Hermes skills directory",
       "depth": 1,
-      "line": 317,
+      "line": 318,
       "body_hash": "4ad2a241dc414972",
       "body_hash_content": "cc13af79eb4bcf08",
       "body_line_count": 4,
@@ -7316,7 +7316,7 @@
       "title": "Related Skills",
       "heading_text": "Related Skills",
       "depth": 2,
-      "line": 322,
+      "line": 323,
       "body_hash": "154778a7f3efc0b3",
       "body_hash_content": "5d82eb5642e3ed8c",
       "body_line_count": 5,
