@@ -40,16 +40,62 @@ header "specbridge setup — $PROJECT_DIR"
 
 # ── 1. Install / verify specbridge ────────────────────────────────────────────
 header "1. Installing specbridge"
+INSTALL_URL="git+https://github.com/nekolife1984/specbridge.git"
+
 if command -v specbridge >/dev/null 2>&1; then
     ok "specbridge already installed ($(specbridge --version 2>/dev/null || echo "?"))"
 else
-    info "Installing specbridge from GitHub …"
-    pip3 install git+https://github.com/nekolife1984/specbridge.git 2>&1 | tail -1
-    if command -v specbridge >/dev/null 2>&1; then
-        ok "specbridge installed"
+    _installed=false
+
+    # Strategy A: pipx (best for global CLI tools)
+    if command -v pipx >/dev/null 2>&1; then
+        info "Installing via pipx …"
+        if pipx install "$INSTALL_URL" 2>&1 | tail -1; then
+            _installed=true
+        fi
+    fi
+
+    # Strategy B: pip inside a virtual environment
+    if ! $_installed && [ -n "${VIRTUAL_ENV:-}" ]; then
+        info "Installing via pip (inside venv) …"
+        if pip install "$INSTALL_URL" 2>&1 | tail -1; then
+            _installed=true
+        fi
+    fi
+
+    # Strategy C: pip --user (bypasses PEP 668)
+    if ! $_installed; then
+        info "Installing via pip --user …"
+        if pip3 install --user "$INSTALL_URL" 2>&1 | tail -1; then
+            _installed=true
+        fi
+    fi
+
+    if $_installed; then
+        if command -v specbridge >/dev/null 2>&1; then
+            ok "specbridge installed ($(specbridge --version 2>/dev/null || echo "?"))"
+        else
+            # Try common pip --user binary paths
+            for _p in "$HOME/.local/bin" "$HOME/Library/Python/3.12/bin" "$HOME/Library/Python/3.11/bin" "$HOME/Library/Python/3.10/bin" "$HOME/Library/Python/3.9/bin"; do
+                if [ -f "$_p/specbridge" ]; then
+                    export PATH="$PATH:$_p"
+                    break
+                fi
+            done
+            if command -v specbridge >/dev/null 2>&1; then
+                ok "specbridge found via PATH update"
+            else
+                warn "specbridge installed but not in PATH."
+                warn "  Run this to add pip --user binaries to your PATH:"
+                warn "    export PATH=\"\$HOME/Library/Python/3.*/bin:\$PATH\""
+                warn "  Or try: python3 -m specbridge --help"
+            fi
+        fi
     else
-        warn "pip install finished but 'specbridge' not in PATH."
-        warn "Try: pip3 install git+https://github.com/nekolife1984/specbridge.git"
+        warn "All install methods failed. Try manually:"
+        warn "  pip3 install --user $INSTALL_URL"
+        warn "  # or"
+        warn "  pipx install $INSTALL_URL"
     fi
 fi
 
