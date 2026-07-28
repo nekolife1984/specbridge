@@ -303,6 +303,7 @@ When multiple specs match, all are displayed with their implementing files.
 
 | Symptom | Likely Cause | Fix |
 |---------|-------------|-----|
+| `coverage --gate` fails with 0.0% or unexpectedly low | Default single adapter (e.g. SpectraAdapter) doesn't find all docs | Use `--merge` flag: `specbridge coverage --merge --gate` |
 | `No recognized SSD framework found` | No `.specbridge.yaml` or it's empty | Create config file |
 | `Coverage: 0.0%` | Wrong `source_dirs` or `spec_dirs` | Check paths in `.specbridge.yaml` |
 | No `@impl` tags being read | Files don't have spectra tags | Heuristic mode works without tags; use `--merge` |
