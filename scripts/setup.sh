@@ -48,7 +48,7 @@ _old_ver=""
 if command -v specbridge >/dev/null 2>&1; then
     _old_ver=$(specbridge --version 2>/dev/null || echo "?")
     # Check if it's an old version (1.0.x or 0.x — before PEP 668 fix)
-    if echo "$_old_ver" | grep -qE "^1\.0\.|^0\." 2>/dev/null; then
+    if echo "$_old_ver" | grep -qE "(version )?(1\.0\.|0\.)" 2>/dev/null; then
         info "Old version ($_old_ver) detected — upgrading …"
         _should_install=true
     else
