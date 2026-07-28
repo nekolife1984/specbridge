@@ -446,15 +446,19 @@ def _reverse_impact(project_dir: str, file_path: str,
 @click.option("--dir", "-d", default=".", help="Project directory", show_default=True)
 @click.option("--format", "output_fmt", default="text", type=click.Choice(["text", "json"]),
               help="Output format", show_default=True)
+@click.option("--merge", is_flag=True, default=False,
+              help="Merge all matching adapters for a more complete view",
+              show_default=True)
 @click.option("--gate", is_flag=True, default=False,
               help="Exit with code 1 if coverage is below min_coverage threshold",
               show_default=True)
 @click.option("--min-coverage", type=float, default=None,
               help="Override min_coverage threshold for --gate (default: from config)",
               show_default=True)
-def coverage(dir: str, output_fmt: str, gate: bool, min_coverage: float | None) -> None:
+def coverage(dir: str, output_fmt: str, merge: bool, gate: bool,
+             min_coverage: float | None) -> None:
     """Show spec coverage statistics."""
-    from specbridge.adapters import detect_adapter
+    from specbridge.adapters import detect_adapter, detect_all, merge_graphs
     from specbridge.analyzers import (
         coverage_gate_check,
         coverage_summary,
@@ -464,13 +468,25 @@ def coverage(dir: str, output_fmt: str, gate: bool, min_coverage: float | None) 
     from specbridge.config import SpecbridgeConfig
 
     root = Path(dir).resolve()
-    adapter = detect_adapter(str(root))
-    if adapter is None:
-        click.echo("❌ No recognized SSD framework found.", err=True)
-        _no_adapter_hint()
-        raise click.Abort()
 
-    graph = adapter.analyze(str(root))
+    if merge:
+        scored = detect_all(str(root))
+        if not scored:
+            click.echo("❌ No recognized SSD framework found.", err=True)
+            _no_adapter_hint()
+            raise click.Abort()
+        graphs = []
+        for score, adapter in scored:
+            click.echo(f"   Using {type(adapter).__name__} (confidence {score})", err=True)
+            graphs.append(adapter.analyze(str(root)))
+        graph = merge_graphs(graphs)
+    else:
+        adapter = detect_adapter(str(root))
+        if adapter is None:
+            click.echo("❌ No recognized SSD framework found.", err=True)
+            _no_adapter_hint()
+            raise click.Abort()
+        graph = adapter.analyze(str(root))
     cfg = SpecbridgeConfig.load(str(root))
     cov = coverage_summary(graph)
     orphans_spec = find_orphan_specs(graph)

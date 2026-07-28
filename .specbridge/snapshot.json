@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-07-28T17:01:26",
-  "reason": "fix: ruff lint errors and specbridge.yml workflow install command",
+  "timestamp": "2026-07-28T18:16:43",
+  "reason": "Auto-fix: add --merge flag to coverage command and update coverage gate threshold",
   "specs": [
     {
       "id": "docs.en.01-architecture.1",
@@ -8539,7 +8539,7 @@
         "pathlib",
         "typing"
       ],
-      "file_hash": "13bcdd6f77dcdb1f",
+      "file_hash": "40ac8a795439d7dd",
       "functions": [
         {
           "name": "cli",
@@ -8580,167 +8580,167 @@
           "name": "_reverse_impact",
           "kind": "function",
           "line": 289,
-          "body_hash": "270a6028953ddb7a",
-          "body_lines": 166
+          "body_hash": "338111fbe5c86b1c",
+          "body_lines": 169
         },
         {
           "name": "coverage",
           "kind": "function",
-          "line": 455,
-          "body_hash": "cdbde85c75007c3f",
-          "body_lines": 69
+          "line": 458,
+          "body_hash": "d09b6b55baa0a8ef",
+          "body_lines": 82
         },
         {
           "name": "snapshot",
           "kind": "function",
-          "line": 524,
+          "line": 540,
           "body_hash": "0cba8996eb6ac415",
           "body_lines": 41
         },
         {
           "name": "drift",
           "kind": "function",
-          "line": 565,
+          "line": 581,
           "body_hash": "d3c3ff19d6403e7d",
           "body_lines": 48
         },
         {
           "name": "_drift_git",
           "kind": "function",
-          "line": 613,
+          "line": 629,
           "body_hash": "f2e693d3de6e8168",
           "body_lines": 52
         },
         {
           "name": "validate_boundary",
           "kind": "function",
-          "line": 665,
+          "line": 681,
           "body_hash": "87aa4915d37ac348",
           "body_lines": 67
         },
         {
           "name": "status",
           "kind": "function",
-          "line": 732,
+          "line": 748,
           "body_hash": "69983f5576368029",
           "body_lines": 102
         },
         {
           "name": "config",
           "kind": "function",
-          "line": 834,
+          "line": 850,
           "body_hash": "4fde42903847f58e",
           "body_lines": 62
         },
         {
           "name": "watch",
           "kind": "function",
-          "line": 896,
+          "line": 912,
           "body_hash": "69cfba071467f247",
           "body_lines": 19
         },
         {
           "name": "SpecbridgeHandler",
           "kind": "class",
-          "line": 915,
+          "line": 931,
           "body_hash": "ae2a7008499982ae",
           "body_lines": 1
         },
         {
           "name": "__init__",
           "kind": "function",
-          "line": 916,
+          "line": 932,
           "body_hash": "67dc46120c3f5b72",
           "body_lines": 5
         },
         {
           "name": "on_any_event",
           "kind": "function",
-          "line": 921,
+          "line": 937,
           "body_hash": "e47dbcd34d55736f",
           "body_lines": 59
         },
         {
           "name": "plugins",
           "kind": "function",
-          "line": 980,
+          "line": 996,
           "body_hash": "48df660ccb0d77f4",
           "body_lines": 32
         },
         {
           "name": "serve",
           "kind": "function",
-          "line": 1012,
+          "line": 1028,
           "body_hash": "c1dce52f645d6988",
           "body_lines": 26
         },
         {
           "name": "call_graph",
           "kind": "function",
-          "line": 1038,
+          "line": 1054,
           "body_hash": "c6bc02a60197debe",
           "body_lines": 54
         },
         {
           "name": "setup",
           "kind": "function",
-          "line": 1092,
+          "line": 1108,
           "body_hash": "e85fc9fa67ba4bc0",
           "body_lines": 57
         },
         {
           "name": "init",
           "kind": "function",
-          "line": 1149,
+          "line": 1165,
           "body_hash": "56768e834cab37d4",
           "body_lines": 127
         },
         {
           "name": "shell_completion",
           "kind": "function",
-          "line": 1276,
+          "line": 1292,
           "body_hash": "90abf912df22a1bf",
           "body_lines": 55
         },
         {
           "name": "_emit_completion_script",
           "kind": "function",
-          "line": 1331,
+          "line": 1347,
           "body_hash": "14e738fb634b4fe6",
           "body_lines": 9
         },
         {
           "name": "_install_completion",
           "kind": "function",
-          "line": 1340,
+          "line": 1356,
           "body_hash": "cd54f0c95e3acd41",
           "body_lines": 47
         },
         {
           "name": "diff",
           "kind": "function",
-          "line": 1387,
+          "line": 1403,
           "body_hash": "aeca0dd827ee9f56",
           "body_lines": 92
         },
         {
           "name": "suggest",
           "kind": "function",
-          "line": 1479,
+          "line": 1495,
           "body_hash": "a2555433d8edc6ce",
           "body_lines": 95
         },
         {
           "name": "_validate_config",
           "kind": "function",
-          "line": 1574,
+          "line": 1590,
           "body_hash": "1b03aaea8fb6a67a",
           "body_lines": 40
         },
         {
           "name": "session_check",
           "kind": "function",
-          "line": 1614,
+          "line": 1630,
           "body_hash": "32f0babe01e8942c",
           "body_lines": 146
         }
@@ -13581,6 +13581,7 @@
     "docs.ja.10-mcp-integration.1.1",
     "docs.ja.10-mcp-integration.1.3.2",
     "docs.ja.10-mcp-integration.1.3.4",
+    "docs.ja.10-mcp-integration.1.3.6",
     "docs.ja.10-mcp-integration.1.3.8",
     "docs.ja.10-mcp-integration.1.5",
     "docs.ja.10-mcp-integration.2",
@@ -13695,9 +13696,9 @@
   ],
   "coverage": {
     "total": 691,
-    "covered": 339,
-    "orphan": 352,
-    "coverage_pct": 49.1,
+    "covered": 338,
+    "orphan": 353,
+    "coverage_pct": 48.9,
     "spec_count": 701,
     "code_count": 51
   }
